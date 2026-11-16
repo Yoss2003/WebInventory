@@ -11,6 +11,8 @@ import { CategoryService } from '../../categories/services/category';
 import { Category } from '../../../core/models/category.model';
 import { ConfirmationDialogService } from '../../../shared/confirm-dialog/confirmation-dialog.service';
 import { LoadingIndicatorComponent } from '../../../shared/loading/loading-indicator';
+import { UiTableActionDirective } from '../../../shared/ui/v2/ui-table-action.directive';
+import { UiButtonDirective } from '../../../shared/ui/v2/ui-button.directive';
 
 type SerialAttrKey = 'attr1' | 'attr2' | 'attr3' | 'attr4' | 'attr5' | 'attr6';
 interface SerialAttributeField { key: SerialAttrKey; label: string; required: boolean; }
@@ -21,7 +23,7 @@ interface SerialUnitDraft {
 }
 
 @Component({ selector: 'app-article-detail-dialog', standalone: true,
-  imports: [MoneyPipe, CommonModule, FormsModule, MatDialogModule, MatIconModule, LoadingIndicatorComponent],
+  imports: [MoneyPipe, CommonModule, FormsModule, MatDialogModule, MatIconModule, LoadingIndicatorComponent, UiButtonDirective, UiTableActionDirective],
   templateUrl: './article-detail-dialog.html', styleUrl: './article-detail-dialog.scss' })
 export class ArticleDetailDialogComponent implements OnInit, OnDestroy {
   readonly dialogRef = inject(MatDialogRef<ArticleDetailDialogComponent>);

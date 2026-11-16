@@ -7,7 +7,7 @@
         <p>Categoría: {{ data.categoryName }}</p>
       </div>
     </div>
-    <button type="button" class="close-button" aria-label="Cerrar administrador de marcas"
+    <button type="button" appUiButton="close" aria-label="Cerrar administrador de marcas"
             [disabled]="isSaving" (click)="close()"><mat-icon>close</mat-icon></button>
   </header>
 
@@ -24,7 +24,7 @@
         <div class="brand-form-row">
           <input id="brand-name" formControlName="name" type="text" maxlength="255"
                  placeholder="Ej. Lenovo" autocomplete="off" [readonly]="isSaving" />
-          <button type="submit" class="save-button" [disabled]="isSaving || brandForm.invalid">
+          <button type="submit" appUiButton="primary" [disabled]="isSaving || brandForm.invalid">
             <mat-icon>{{ editingBrand ? 'save' : 'add' }}</mat-icon>
             {{ isSaving ? 'Guardando...' : editingBrand ? 'Guardar' : 'Agregar' }}
           </button>
@@ -44,7 +44,7 @@
     <section class="list-section" aria-label="Marcas registradas">
       <div class="section-row">
         <h3>Marcas registradas <span *ngIf="!isLoading">({{ visibleBrandCount }})</span></h3>
-        <button type="button" class="refresh-button" (click)="loadBrands(true)"
+        <button type="button" appUiButton="secondary" (click)="loadBrands(true)"
                 [disabled]="isLoading || isRefreshing || isSaving" [attr.aria-busy]="isRefreshing">
           <mat-spinner *ngIf="isRefreshing" [diameter]="16" aria-label="Actualizando marcas"></mat-spinner>
           <mat-icon *ngIf="!isRefreshing">refresh</mat-icon>
@@ -72,7 +72,7 @@
         </div>
         <div *ngIf="errorMessage && !isLoading" class="feedback error list-error" role="alert">
           {{ errorMessage }}
-          <button type="button" (click)="loadBrands(true)">Reintentar</button>
+          <button type="button" appUiButton="secondary" (click)="loadBrands(true)">Reintentar</button>
         </div>
         <p class="list-message" *ngIf="!isLoading && !errorMessage && !filteredBrands.length">
           {{ visibleBrandCount ? 'Ninguna marca coincide con tu búsqueda.' : 'No hay marcas para mostrar.' }}
@@ -101,14 +101,14 @@
               </td>
               <td class="actions-cell">
                 <div class="brand-actions">
-                  <button type="button" class="edit-button"
+                  <button type="button" appUiTableAction="normal"
                           [disabled]="!canManage || isSaving || !brand.isActive"
                           (click)="editingBrand?.id === brand.id ? cancelEdit() : startEdit(brand)"
                           [attr.aria-label]="editingBrand?.id === brand.id ? 'Cancelar edición' : 'Editar marca'"
                           [title]="brand.isActive ? (editingBrand?.id === brand.id ? 'Cancelar edición' : 'Editar') : 'Marca inactiva'">
                     <mat-icon>{{ editingBrand?.id === brand.id ? 'close' : 'edit' }}</mat-icon>
                   </button>
-                  <button type="button" class="delete-button"
+                  <button type="button" appUiTableAction="danger"
                           [disabled]="!canManage || isSaving || !brand.isActive || editingBrand?.id === brand.id"
                           (click)="deleteBrand(brand)"
                           [attr.aria-label]="'Eliminar marca ' + brand.name"
@@ -126,6 +126,6 @@
   </div>
 
   <footer class="brand-footer">
-    <button type="button" class="cancel-button" (click)="close()" [disabled]="isSaving">Cerrar</button>
+    <button type="button" appUiButton="secondary" (click)="close()" [disabled]="isSaving">Cerrar</button>
   </footer>
 </div>

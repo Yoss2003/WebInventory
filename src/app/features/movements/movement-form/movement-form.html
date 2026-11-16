@@ -1,7 +1,7 @@
 <div class="movement-modal ui-v2-dialog ui-v2-dialog--simple">
   <header class="movement-header"><span class="movement-icon"><mat-icon>inventory</mat-icon></span>
     <div><h2>{{ data.actionId === 1 ? 'Nueva entrada de stock' : 'Nueva salida de stock' }}</h2><p>Registra un movimiento real en el inventario</p></div>
-    <button type="button" class="close" (click)="dialogRef.close()" aria-label="Cerrar"><mat-icon>close</mat-icon></button>
+    <button type="button" appUiButton="close" class="close" (click)="dialogRef.close()" aria-label="Cerrar"><mat-icon>close</mat-icon></button>
   </header>
   <app-loading-indicator *ngIf="loading" message="Cargando artículos del inventario..." />
   <form *ngIf="!loading" [formGroup]="form" (ngSubmit)="onSubmit()" autocomplete="off">
@@ -49,8 +49,8 @@
       <p class="message" *ngIf="error" role="alert">{{ error }}</p>
       <p class="hint" *ngIf="selected?.tracking === 1">Los artículos serializados requieren cantidades enteras.</p>
     </main>
-    <footer><button type="button" (click)="dialogRef.close()" [disabled]="saving">Cancelar</button>
-      <button type="submit" class="confirm" [disabled]="!canSave">
+    <footer><button type="button" appUiButton="secondary" (click)="dialogRef.close()" [disabled]="saving">Cancelar</button>
+      <button type="submit" appUiButton="primary" class="confirm" [disabled]="!canSave">
         <app-loading-indicator *ngIf="saving; else movementSave" [compact]="true" message="Guardando..." />
         <ng-template #movementSave><mat-icon>save</mat-icon>Confirmar movimiento</ng-template>
       </button>

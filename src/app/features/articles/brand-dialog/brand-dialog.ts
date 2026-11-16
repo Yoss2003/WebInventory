@@ -13,6 +13,8 @@ import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatIconModule } from '@angular/material/icon';
 import { Brand } from '../../../core/models/brand.model';
 import { BrandService } from '../../../core/services/brands';
+import { UiButtonDirective } from '../../../shared/ui/v2/ui-button.directive';
+import { UiTableActionDirective } from '../../../shared/ui/v2/ui-table-action.directive';
 
 export interface BrandDialogData {
   categoryId: number;
@@ -24,7 +26,7 @@ export interface BrandDialogData {
 @Component({
   selector: 'app-brand-dialog',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule, MatDialogModule, MatIconModule, MatProgressSpinnerModule],
+  imports: [CommonModule, ReactiveFormsModule, MatDialogModule, MatIconModule, MatProgressSpinnerModule, UiButtonDirective, UiTableActionDirective],
   templateUrl: './brand-dialog.html',
   styleUrls: ['./brand-dialog.scss']
 })

@@ -10,9 +10,6 @@
 .user-dialog__icon mat-icon{width:24px;height:24px;font-size:24px}
 .user-dialog__header h2{font-size:18px;font-weight:750;margin:0}
 .user-dialog__header p{font-size:11px;color:#acc0cf;margin:5px 0 0;line-height:1.4}
-.user-dialog__close{display:grid;place-items:center;flex:none;width:35px;height:35px;
-  border:1px solid #546c7e;border-radius:9px;background:#1a2a36;color:#e7f2fb;cursor:pointer}
-.user-dialog__close mat-icon{width:20px;height:20px;font-size:20px}
 .user-dialog__steps{display:flex;justify-content:center;align-items:center;gap:9px;
   padding:13px 20px;border-bottom:1px solid #354a5b;flex:none;background:#162431}
 .user-dialog__steps button{display:flex;align-items:center;gap:8px;border:1px solid transparent;
@@ -79,16 +76,7 @@
 .user-dialog__summary strong{overflow-wrap:anywhere}
 .user-dialog__footer{display:flex;align-items:center;justify-content:flex-end;gap:9px;flex:none;
   border-top:1px solid #405265;background:#1b2936;padding:12px 20px}
-.user-dialog__footer button{display:inline-flex;align-items:center;justify-content:center;gap:7px;
-  min-height:40px;padding:9px 15px;border-radius:9px;font:inherit;font-weight:750;cursor:pointer}
-.user-dialog__footer mat-icon{width:18px;height:18px;font-size:18px}
 .user-dialog__back{margin-right:auto}
-.user-dialog__secondary{background:transparent;border:1px solid transparent;color:#bfcfda}
-.user-dialog__secondary:hover{background:#263b4a;color:#fff}
-.user-dialog__primary{border:1px solid var(--inv-company-accent,#a2d149);border-radius:23px!important;
-  background:var(--inv-company-accent,#a2d149);color:var(--inv-company-on-accent,#172531)}
-.user-dialog button:disabled{opacity:.43;cursor:not-allowed}
-.user-dialog button:focus-visible{outline:2px solid var(--inv-company-accent,#a2d149);outline-offset:2px}
 @media(max-width:660px){
   .user-dialog__header,.user-dialog__footer{padding:12px}
   .user-dialog__steps{padding:9px 8px;gap:2px}

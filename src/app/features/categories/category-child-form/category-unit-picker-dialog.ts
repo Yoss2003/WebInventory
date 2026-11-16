@@ -4,6 +4,7 @@ import { MatCheckboxModule } from '@angular/material/checkbox';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { MatIconModule } from '@angular/material/icon';
 import { MeasurementUnit } from '../../../core/services/measurement-units';
+import { UiButtonDirective } from '../../../shared/ui/v2/ui-button.directive';
 
 export interface CategoryUnitPickerData {
   units: MeasurementUnit[];
@@ -14,7 +15,7 @@ export interface CategoryUnitPickerData {
 @Component({
   selector: 'app-category-unit-picker-dialog',
   standalone: true,
-  imports: [CommonModule, MatCheckboxModule, MatIconModule],
+  imports: [CommonModule, MatCheckboxModule, MatIconModule, UiButtonDirective],
   templateUrl: './category-unit-picker-dialog.html',
   styleUrl: './category-unit-picker-dialog.scss'
 })

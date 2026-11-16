@@ -9,8 +9,6 @@
 .roles-modal__heading{flex:1;min-width:0}
 .roles-modal__heading h2{margin:0;padding:0;font-size:18px;font-weight:750;color:#edf6fc}
 .roles-modal__heading p{margin:4px 0 0;color:#aec5d4;font-size:11px}
-.roles-modal__close{display:grid;place-items:center;min-width:36px;height:36px;border-radius:9px;
-  border:1px solid #678292;background:#284153;color:#eaf4fc;cursor:pointer}
 .roles-modal__body{overflow:auto;min-height:0;padding:16px 19px!important;scrollbar-width:thin}
 .roles-modal__hint{margin:0 0 13px;color:#b6cbd8;line-height:1.5;font-size:12px}
 .roles-modal__selector{display:flex;flex-direction:column;gap:7px;margin-bottom:14px}
@@ -35,11 +33,4 @@
 .roles-modal__error{color:#ffbac2;font-size:12px}
 .roles-modal__actions{display:flex;justify-content:flex-end;gap:9px;
   flex:0 0 auto;margin:0;padding:13px 19px!important;background:#1e303e;border-top:1px solid #506879}
-.roles-modal__actions button{display:inline-flex;align-items:center;justify-content:center;gap:7px;
-  min-height:39px;padding:8px 15px;border-radius:9px;font-size:12px;font-weight:750;cursor:pointer}
-.roles-modal__cancel{border:1px solid #688296;background:#2a4353;color:#eef7fc}
-.roles-modal__save{border:1px solid var(--inv-company-accent,#a2d149);
-  background:var(--inv-company-accent,#a2d149);color:#122230}
-.roles-modal__actions button:disabled{opacity:.45;cursor:not-allowed}
-.roles-modal__actions mat-icon{height:18px;width:18px;font-size:18px}
 @media(max-width:560px){.roles-modal__grid{grid-template-columns:1fr}}

@@ -78,22 +78,7 @@ $muted: #a8b5c2;
   color: $muted;
 }
 
-.header-close {
-  border: 1px solid #5b6b7b;
-  color: #dce6ef;
-  background: #18232e;
-  width: 35px;
-  height: 35px;
-  border-radius: 9px;
-  display: grid;
-  place-items: center;
-  cursor: pointer;
-}
 
-.header-close:hover {
-  border-color: $lime;
-  color: white;
-}
 
 .category-content.mat-mdc-dialog-content {
   display: block;
@@ -1373,86 +1358,4 @@ $muted: #a8b5c2;
 /* 3. Espacio flexible entre acciones */
 .category-modal .footer-spacer {
   flex: 1;
-}
-
-/* 4. Estilo compartido de botones */
-.category-modal .btn-text,
-.category-modal .btn-pill-green {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  gap: 7px;
-  font: inherit;
-  font-size: 12px;
-  font-weight: 750;
-  white-space: nowrap;
-  cursor: pointer;
-}
-
-/* 5. Atrás y Cancelar */
-.category-modal .btn-text {
-  background: transparent;
-  border: 1px solid transparent;
-  border-radius: 8px;
-  padding: 10px 12px;
-  color: #b1bbca;
-}
-
-.category-modal .btn-text:hover {
-  background: #24303a;
-  color: #fff;
-}
-
-.category-modal .btn-text mat-icon {
-  width: 16px;
-  height: 16px;
-  font-size: 16px;
-}
-
-/* 6. Siguiente y Guardar */
-.category-modal .btn-pill-green {
-  border: none;
-  background: var(--inv-company-accent, #a2d149);
-  color: var(--inv-company-on-accent, #12202b);
-  border-radius: 24px;
-  padding: 12px 20px;
-  transition: filter 140ms ease;
-}
-
-.category-modal .btn-pill-green:hover:not(:disabled) {
-  filter: brightness(1.09);
-}
-
-.category-modal .btn-pill-green:disabled {
-  opacity: 0.4;
-  cursor: not-allowed;
-}
-
-.category-modal .btn-pill-green mat-icon {
-  width: 17px;
-  height: 17px;
-  font-size: 17px;
-}
-
-/* 7. Adaptación a pantallas pequeñas */
-@media (max-width: 900px) {
-  .category-modal .category-footer {
-    padding: 14px 18px;
-  }
-}
-
-@media (max-width: 530px) {
-  .category-modal .category-footer {
-    padding: 11px 12px;
-    gap: 4px;
-  }
-
-  .category-modal .btn-text {
-    padding: 9px 8px;
-  }
-
-  .category-modal .btn-pill-green {
-    padding: 11px 12px;
-    font-size: 11px;
-  }
 }

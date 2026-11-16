@@ -7,7 +7,7 @@
         <p>Configura la identidad, las reglas y los atributos del inventario</p>
       </div>
     </div>
-    <button type="button" class="header-close" aria-label="Cerrar formulario" (click)="dialogRef.close()">
+    <button type="button" appUiButton="close" class="header-close" aria-label="Cerrar formulario" (click)="dialogRef.close()">
       <mat-icon>close</mat-icon>
     </button>
   </header>
@@ -265,6 +265,7 @@
     <button
       *ngIf="stepper.selectedIndex > 0"
       type="button"
+      appUiButton="secondary"
       class="btn-text back"
       (click)="stepper.previous()">
       <mat-icon>arrow_back</mat-icon>
@@ -275,6 +276,7 @@
 
     <button
       type="button"
+      appUiButton="secondary"
       class="btn-text"
       (click)="dialogRef.close()">
       Cancelar
@@ -284,6 +286,7 @@
     <button
       *ngIf="stepper.selectedIndex === 0"
       type="button"
+      appUiButton="primary"
       class="btn-pill-green"
       [disabled]="identityForm.invalid"
       (click)="stepper.next()">
@@ -297,6 +300,7 @@
             showAttributesStep &&
             rulesForm.get('isNamingLibre')?.value"
       type="button"
+      appUiButton="primary"
       class="btn-pill-green"
       [disabled]="rulesForm.invalid"
       (click)="stepper.next()">
@@ -311,6 +315,7 @@
               !(showAttributesStep &&
                 rulesForm.get('isNamingLibre')?.value))"
       type="button"
+      appUiButton="primary"
       class="btn-pill-green"
       [disabled]="!isFormComplete || (isEdit && !hasEditChanges)"
       (click)="onSubmit()">

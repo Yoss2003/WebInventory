@@ -9,6 +9,7 @@ import { MatSelectModule } from '@angular/material/select';
 import { ExternalConsultasService } from '../../core/services/external-consultas';
 import { ManagedRole, UserManagementService } from '../../core/services/user-management';
 import { suggestedUsername } from '../../shared/user-name';
+import { UiButtonDirective } from '../../shared/ui/v2/ui-button.directive';
 
 export interface FirstAdminDialogData {
   companyId: number;
@@ -30,7 +31,7 @@ export interface FirstAdminCreated {
   selector: 'app-first-admin-dialog',
   standalone: true,
   imports: [CommonModule, FormsModule, MatDialogModule, MatIconModule,
-    MatFormFieldModule, MatSelectModule],
+    MatFormFieldModule, MatSelectModule, UiButtonDirective],
   templateUrl: './first-admin-dialog.html',
   styleUrl: './first-admin-dialog.scss'
 })

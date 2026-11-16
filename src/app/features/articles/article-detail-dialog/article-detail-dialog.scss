@@ -32,18 +32,6 @@
     color: #a8b9c6;
 }
 
- .record-dialog header button {transition:border-color 160ms ease,background-color 160ms ease,transform 160ms ease;}
-.record-dialog header button:hover{border-color:var(--inv-company-accent,#a2d149);transform:translateY(-1px);}
-.record-dialog header button {
-    background: #13212c;
-    color: #dfeaf4;
-    border: 1px solid #677b8d;
-    border-radius: 8px;
-    width: 35px;
-    height: 35px;
-    cursor: pointer;
-}
-
 .record-dialog main {
     min-height: 0;
     flex: 1;
@@ -133,15 +121,6 @@
     padding: 12px 20px;
     background: #21303c;
     border-top: 1px solid #405568;
-}
-
-.record-dialog footer button {
-    border: 1px solid #5c7285;
-    color: #eef4fc;
-    background: #253746;
-    padding: 8px 15px;
-    border-radius: 8px;
-    cursor: pointer;
 }
 
 @media (max-width:600px) {

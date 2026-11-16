@@ -5,7 +5,7 @@
       <h2>Unidades de medida</h2>
       <p>Elige las unidades permitidas en esta categoría hija</p>
     </div>
-    <button type="button" class="unit-picker__close" (click)="cancel()" aria-label="Cerrar sin guardar"><mat-icon>close</mat-icon></button>
+    <button type="button" appUiButton="close" (click)="cancel()" aria-label="Cerrar sin guardar"><mat-icon>close</mat-icon></button>
   </header>
 
   <div class="unit-picker__body">
@@ -20,8 +20,8 @@
 
     <div class="unit-picker__actions">
       <div class="unit-picker__count">{{selectedCount}} seleccionadas · {{visibleUnits.length}} resultados</div>
-      <button type="button" (click)="selectAllVisible()" [disabled]="visibleUnits.length === 0 || allVisibleSelected">Seleccionar todas</button>
-      <button type="button" (click)="clearAllVisible()" [disabled]="selectedVisibleCount === 0">Deseleccionar todas</button>
+      <button type="button" appUiButton="secondary" (click)="selectAllVisible()" [disabled]="visibleUnits.length === 0 || allVisibleSelected">Seleccionar todas</button>
+      <button type="button" appUiButton="secondary" (click)="clearAllVisible()" [disabled]="selectedVisibleCount === 0">Deseleccionar todas</button>
     </div>
     <p *ngIf="search.trim()" class="unit-picker__filter-note">Estas dos acciones se aplican a los resultados visibles de la búsqueda.</p>
 
@@ -38,8 +38,8 @@
   </div>
 
   <footer class="unit-picker__footer">
-    <button type="button" class="unit-picker__cancel" (click)="cancel()">Cancelar</button>
-    <button type="button" class="unit-picker__apply" (click)="apply()" [disabled]="selectedCount === 0">
+    <button type="button" appUiButton="secondary" (click)="cancel()">Cancelar</button>
+    <button type="button" appUiButton="primary" (click)="apply()" [disabled]="selectedCount === 0">
       <mat-icon>check</mat-icon> Aplicar selección
     </button>
   </footer>

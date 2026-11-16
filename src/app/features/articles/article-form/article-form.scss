@@ -862,58 +862,6 @@ $red: #fb8585;
   flex: 1;
 }
 
-.btn-text,
-.btn-pill-green {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  gap: 7px;
-  cursor: pointer;
-  font: inherit;
-  font-weight: 750;
-  white-space: nowrap;
-}
-
-.btn-text {
-  background: transparent;
-  border: 1px solid transparent;
-  border-radius: 8px;
-  padding: 10px 12px;
-  color: #b1bbca;
-  font-size: 12px;
-
-  &:hover {
-    background: #24303a;
-    color: #fff;
-  }
-
-  mat-icon {
-    width: 16px;
-    height: 16px;
-    font-size: 16px;
-  }
-}
-
-.btn-pill-green {
-  border: none;
-  background: var(--inv-company-accent, #A2D149);
-  color: var(--inv-company-on-accent, #12202b);
-  border-radius: 24px;
-  padding: 12px 20px;
-  font-size: 12px;
-  transition: background .14s;
-
-  &:hover {
-    filter: brightness(1.09);
-  }
-
-  mat-icon {
-    width: 17px;
-    height: 17px;
-    font-size: 17px;
-  }
-}
-
 button:focus-visible {
   outline: 2px solid $lime;
   outline-offset: 2px;

@@ -1,44 +1,108 @@
 /* Botones: el (click), [disabled] y ngSubmit quedan en sus vistas originales. */
-.ui-v2-screen .ui-v2-button,
-.ui-v2-dialog .ui-v2-button {
+:is(.ui-v2-screen, .ui-v2-dialog, body) .ui-v2-button,
+.ui-v2-button,
+button[appUiButton] {
   display:inline-flex; justify-content:center; align-items:center; gap:8px;
-  box-sizing:border-box; min-height:var(--inv-v2-button-height); height:auto;
-  padding:9px 15px; border-radius:var(--inv-v2-radius-control);
+  box-sizing:border-box; min-height:var(--inv-v2-button-height, 38px); height:auto;
+  padding:9px 15px; border-radius:var(--inv-v2-radius-control, 9px);
   border:1px solid #667f90; background:#263b4a; color:#edf5fb;
   font:inherit; font-size:12px; font-weight:700; line-height:1.25;
-  text-align:center; cursor:pointer; white-space:normal;
+  text-align:center; cursor:pointer; white-space:nowrap;
+  transition: filter .15s ease, background .15s ease, border-color .15s ease;
 }
-.ui-v2-screen .ui-v2-button--primary,
-.ui-v2-dialog .ui-v2-button--primary {background:var(--inv-v2-accent-bg); border-color:#90b343; color:#f8ffeb;}
-.ui-v2-screen .ui-v2-button--secondary,
-.ui-v2-dialog .ui-v2-button--secondary {background:#273b49; border-color:#698092; color:#edf5fd;}
-.ui-v2-screen .ui-v2-button--danger,
-.ui-v2-dialog .ui-v2-button--danger {background:var(--inv-v2-danger-bg); border-color:#84535e; color:var(--inv-v2-danger);}
-.ui-v2-screen .ui-v2-button > mat-icon,
-.ui-v2-dialog .ui-v2-button > mat-icon {
+:is(.ui-v2-screen, .ui-v2-dialog, body) .ui-v2-button--primary,
+.ui-v2-button--primary {
+  background:var(--inv-v2-accent-bg, var(--inv-company-accent, #a2d149)) !important;
+  border-color:var(--inv-v2-accent-bg, var(--inv-company-accent, #a2d149)) !important;
+  color:var(--inv-company-on-accent, #12202b) !important;
+}
+:is(.ui-v2-screen, .ui-v2-dialog, body) .ui-v2-button--secondary,
+.ui-v2-button--secondary {
+  background:#273b49; border-color:#698092; color:#edf5fd;
+}
+:is(.ui-v2-screen, .ui-v2-dialog, body) .ui-v2-button--secondary:hover:not(:disabled),
+.ui-v2-button--secondary:hover:not(:disabled) {
+  background:#314b5d; border-color:#829cb0;
+}
+:is(.ui-v2-screen, .ui-v2-dialog, body) .ui-v2-button--danger,
+.ui-v2-button--danger {
+  background:var(--inv-v2-danger-bg, #422a31) !important;
+  border-color:#84535e !important;
+  color:var(--inv-v2-danger, #ffaeb7) !important;
+}
+:is(.ui-v2-screen, .ui-v2-dialog, body) .ui-v2-button--danger:hover:not(:disabled),
+.ui-v2-button--danger:hover:not(:disabled) {
+  background:#5a333d !important;
+  border-color:#a25f6e !important;
+}
+:is(.ui-v2-screen, .ui-v2-dialog, body) .ui-v2-button--ghost,
+.ui-v2-button--ghost {
+  background:transparent !important;
+  border-color:transparent !important;
+  color:#b1bbca !important;
+}
+:is(.ui-v2-screen, .ui-v2-dialog, body) .ui-v2-button--ghost:hover:not(:disabled),
+.ui-v2-button--ghost:hover:not(:disabled) {
+  background:#24303a !important;
+  color:#fff !important;
+}
+:is(.ui-v2-screen, .ui-v2-dialog, body) .ui-v2-button--close,
+.ui-v2-button--close {
+  display:grid !important; place-items:center !important; flex:0 0 35px !important;
+  width:35px !important; height:35px !important; min-height:35px !important; min-width:35px !important;
+  padding:0 !important; margin:0 !important;
+  border:1px solid #5e7385 !important; border-radius:9px !important;
+  background:#182732 !important; color:#e8f1f8 !important; cursor:pointer !important;
+}
+:is(.ui-v2-screen, .ui-v2-dialog, body) .ui-v2-button--close:hover:not(:disabled),
+.ui-v2-button--close:hover:not(:disabled) {
+  border-color:var(--inv-company-accent, #a2d149) !important;
+  color:#ffffff !important;
+}
+:is(.ui-v2-screen, .ui-v2-dialog, body) .ui-v2-button--close mat-icon,
+.ui-v2-button--close mat-icon {
+  width:21px !important; height:21px !important; font-size:21px !important; line-height:21px !important;
+}
+.ui-v2-button > mat-icon:not(.ui-v2-button--close mat-icon) {
   width:19px; height:19px; font-size:19px; line-height:1;
 }
-.ui-v2-screen .ui-v2-button:hover:not(:disabled),
-.ui-v2-dialog .ui-v2-button:hover:not(:disabled) {filter:brightness(1.11);}
-.ui-v2-screen .ui-v2-button:disabled,
-.ui-v2-dialog .ui-v2-button:disabled {opacity:.45;cursor:not-allowed;filter:none;}
-.ui-v2-screen button.ui-v2-table-action {
+.ui-v2-button:hover:not(:disabled) {filter:brightness(1.11);}
+.ui-v2-button:disabled {opacity:.45 !important;cursor:not-allowed !important;filter:none !important;}
+
+:is(.ui-v2-screen, .ui-v2-dialog, body) button.ui-v2-table-action,
+button.ui-v2-table-action,
+button[appUiTableAction] {
   display:inline-grid;place-items:center; vertical-align:middle;
-  box-sizing:border-box; flex:none; width:var(--inv-v2-action-size);
-  height:var(--inv-v2-action-size); min-width:var(--inv-v2-action-size);
-  min-height:var(--inv-v2-action-size); padding:0;
+  box-sizing:border-box; flex:none; width:var(--inv-v2-action-size, 34px);
+  height:var(--inv-v2-action-size, 34px); min-width:var(--inv-v2-action-size, 34px);
+  min-height:var(--inv-v2-action-size, 34px); padding:0;
   border:1px solid #5c7689; border-radius:8px;
   background:#263b4a; color:#bfe6ff; cursor:pointer;
   margin:0 4px 0 0;
+  transition: filter .15s ease, border-color .15s ease, background .15s ease;
 }
-.ui-v2-screen button.ui-v2-table-action--danger {
-  border-color:#79545c;background:#332b38;color:#ffabb4;
+:is(.ui-v2-screen, .ui-v2-dialog, body) button.ui-v2-table-action--danger,
+button.ui-v2-table-action--danger {
+  border-color:#79545c !important;background:#332b38 !important;color:#ffabb4 !important;
 }
-.ui-v2-screen button.ui-v2-table-action mat-icon {
+:is(.ui-v2-screen, .ui-v2-dialog, body) button.ui-v2-table-action--success,
+button.ui-v2-table-action--success {
+  border-color:#467657 !important;background:#1e3427 !important;color:#b0e6bc !important;
+}
+button.ui-v2-table-action mat-icon {
   display:block; width:18px; height:18px; font-size:18px; line-height:18px;
 }
-.ui-v2-screen button.ui-v2-table-action:hover:not(:disabled) {filter:brightness(1.17);}
-.ui-v2-screen button.ui-v2-table-action:disabled {opacity:.35;cursor:not-allowed;}
+button.ui-v2-table-action:hover:not(:disabled) {
+  filter:brightness(1.17);
+  border-color:var(--inv-company-accent, #a2d149);
+}
+button.ui-v2-table-action--danger:hover:not(:disabled) {
+  border-color:#ffabb4;
+}
+button.ui-v2-table-action--success:hover:not(:disabled) {
+  border-color:#b0e6bc;
+}
+button.ui-v2-table-action:disabled {opacity:.35;cursor:not-allowed;}
 .ui-v2-screen :is(button.ui-v2-table-action,button.ui-v2-button,input.ui-v2-control,
   select.ui-v2-control,textarea.ui-v2-control):focus-visible,
 .ui-v2-dialog :is(button,input,textarea,select):focus-visible {

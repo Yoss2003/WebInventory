@@ -6,12 +6,12 @@ import { HttpClient } from '@angular/common/http';
 import { MatDialogModule, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { MatIconModule } from '@angular/material/icon';
 import { Movement } from '../../../core/models/movement.model';
-
 import { SalesService, SaleInstallmentsSummary } from '../../../core/services/sales';
+import { UiButtonDirective } from '../../../shared/ui/v2/ui-button.directive';
 
 interface EmployeeName {firstName?:string|null;lastName?:string|null;}
 @Component({selector:'app-movement-detail-dialog',standalone:true,
-  imports:[MoneyPipe, CleanArticleNamePipe, CommonModule,MatDialogModule,MatIconModule],
+  imports:[MoneyPipe, CleanArticleNamePipe, CommonModule,MatDialogModule,MatIconModule,UiButtonDirective],
   templateUrl:'./movement-detail-dialog.html',styleUrl:'./movement-detail-dialog.scss'})
 export class MovementDetailDialogComponent implements OnInit {
   readonly dialogRef=inject(MatDialogRef<MovementDetailDialogComponent>);

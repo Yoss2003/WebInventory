@@ -5,7 +5,7 @@
       <h2 mat-dialog-title>Permisos por rol</h2>
       <p>Exclusivo del desarrollador · aplica a todas las empresas</p>
     </div>
-    <button class="roles-modal__close" type="button" (click)="close()" aria-label="Cerrar">
+    <button appUiButton="close" type="button" (click)="close()" aria-label="Cerrar">
       <mat-icon aria-hidden="true">close</mat-icon>
     </button>
   </header>
@@ -34,8 +34,8 @@
     </div>
   </mat-dialog-content>
   <mat-dialog-actions class="roles-modal__actions">
-    <button type="button" class="roles-modal__cancel" (click)="close()">Cancelar</button>
-    <button type="button" class="roles-modal__save" (click)="save()" [disabled]="saving || loading || !roleId">
+    <button type="button" appUiButton="secondary" (click)="close()">Cancelar</button>
+    <button type="button" appUiButton="primary" (click)="save()" [disabled]="saving || loading || !roleId">
       <mat-icon aria-hidden="true">save</mat-icon>
       {{saving ? 'Guardando...' : 'Guardar permisos'}}
     </button>

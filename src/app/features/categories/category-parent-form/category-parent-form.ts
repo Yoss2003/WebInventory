@@ -1,3 +1,4 @@
+import { UiButtonDirective } from '../../../shared/ui/v2/ui-button.directive';
 import { ChangeDetectorRef, Component, inject, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
@@ -18,7 +19,7 @@ import { LoadingIndicatorComponent } from '../../../shared/loading/loading-indic
 
 @Component({
   selector: 'app-category-parent-form', standalone: true,
-  imports: [CommonModule, ReactiveFormsModule, MatIconModule, MatSelectModule, MatFormFieldModule, LoadingIndicatorComponent],
+  imports: [UiButtonDirective, CommonModule, ReactiveFormsModule, MatIconModule, MatSelectModule, MatFormFieldModule, LoadingIndicatorComponent],
   templateUrl: './category-parent-form.html',styleUrl: './category-parent-form.scss'
 })
 export class CategoryParentFormComponent implements OnInit {

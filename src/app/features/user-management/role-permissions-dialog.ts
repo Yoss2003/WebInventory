@@ -10,12 +10,13 @@ import {
   ManagedRole, PermissionItem, UserManagementService
 } from '../../core/services/user-management';
 import { ConfirmationDialogService } from '../../shared/confirm-dialog/confirmation-dialog.service';
+import { UiButtonDirective } from '../../shared/ui/v2/ui-button.directive';
 
 @Component({
   selector: 'app-role-permissions-dialog',
   standalone: true,
   imports: [CommonModule, FormsModule, MatDialogModule, MatIconModule,
-    MatFormFieldModule, MatSelectModule],
+    MatFormFieldModule, MatSelectModule, UiButtonDirective],
   templateUrl: './role-permissions-dialog.html',
   styleUrl: './role-permissions-dialog.scss'
 })

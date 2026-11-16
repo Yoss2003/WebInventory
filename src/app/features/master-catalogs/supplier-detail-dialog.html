@@ -8,7 +8,7 @@
         <p>Datos comerciales y situación fiscal registrada</p>
       </div>
     </div>
-    <button type="button" class="close-icon" (click)="close()"
+    <button type="button" appUiButton="close" (click)="close()"
             aria-label="Cerrar detalle de proveedor" title="Cerrar">
       <mat-icon aria-hidden="true">close</mat-icon>
     </button>
@@ -93,6 +93,6 @@
   </div>
   <footer class="detail-footer">
     <span class="detail-footer-note"><mat-icon aria-hidden="true">lock_outline</mat-icon> Solo lectura</span>
-    <button type="button" (click)="close()">Cerrar</button>
+    <button type="button" appUiButton="secondary" (click)="close()">Cerrar</button>
   </footer>
 </div>

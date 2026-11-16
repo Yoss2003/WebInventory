@@ -9,7 +9,7 @@
         <p>Verifica los detalles antes de continuar.</p>
       </div>
     </div>
-    <button type="button" class="confirm-close" aria-label="Cerrar confirmación"
+    <button type="button" appUiButton="close" aria-label="Cerrar confirmación"
             (click)="dialogRef.close()">
       <mat-icon aria-hidden="true">close</mat-icon>
     </button>
@@ -28,8 +28,8 @@
     </div>
   </mat-dialog-content>
   <mat-dialog-actions class="confirm-actions">
-    <button type="button" class="confirm-cancel" (click)="dialogRef.close()">Cancelar</button>
-    <button type="button" class="confirm-accept" [class.confirm-accept--danger]="data.tone === 'danger'"
+    <button type="button" appUiButton="secondary" (click)="dialogRef.close()">Cancelar</button>
+    <button type="button" [appUiButton]="data.tone === 'danger' ? 'danger' : 'primary'"
             [disabled]="!canConfirm" (click)="accept()">
       <mat-icon aria-hidden="true">{{data.tone === 'danger' ? 'block' : 'check'}}</mat-icon>
       {{data.confirmLabel}}

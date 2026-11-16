@@ -5,7 +5,6 @@
 .supplier-modal__heading{min-width:0;flex:1}
 .supplier-modal__heading h2{margin:0;font-size:18px;font-weight:750}
 .supplier-modal__heading p{margin:4px 0 0;color:#a9bdca;font-size:11px;line-height:1.4}
-.supplier-modal__close{width:34px;height:34px;border:1px solid #61798a;border-radius:8px;background:#15232d;color:#eaf2f8;cursor:pointer}
 .supplier-modal__body{overflow:auto;min-height:0;padding:16px 20px;display:grid;gap:13px}
 .supplier-modal__section{border:1px solid #3c5364;border-radius:12px;background:#17242e;padding:14px;display:grid;gap:11px}
 .supplier-modal__section-title{display:flex;align-items:center;gap:10px}
@@ -25,9 +24,6 @@
 .supplier-modal__fiscal{display:flex;gap:14px;flex-wrap:wrap;color:#a9c1cf;font-size:11px}
 .supplier-modal__fiscal strong{color:#b8e7c4}
 .supplier-modal__footer{display:flex;justify-content:flex-end;gap:9px;padding:13px 18px;background:#1b2b37;border-top:1px solid #405769}
-.supplier-modal__cancel,.supplier-modal__save{min-height:38px;border-radius:9px;padding:8px 14px;font-size:11px;font-weight:750;cursor:pointer}
-.supplier-modal__cancel{border:1px solid #607b8d;background:#243a48;color:#eaf2f8}
-.supplier-modal__save{border:1px solid var(--inv-company-accent,#a2d149);background:var(--inv-company-accent,#a2d149);color:#15232d}
-.supplier-modal__save mat-icon,.supplier-modal__lookup mat-icon{width:17px;height:17px;font-size:17px}
+.supplier-modal__lookup mat-icon{width:17px;height:17px;font-size:17px}
 .supplier-modal button:disabled{opacity:.45;cursor:not-allowed}
 @media(max-width:600px){.supplier-modal__grid{grid-template-columns:1fr}.supplier-modal__ruc-row{grid-template-columns:1fr}.supplier-modal__body{padding:12px}}

@@ -5,7 +5,7 @@
       <h2>{{editing ? 'Editar proveedor' : 'Nuevo proveedor'}}</h2>
       <p>Catálogo maestro de la empresa · Los datos de contacto se pueden completar manualmente.</p>
     </div>
-    <button type="button" class="supplier-modal__close" (click)="close()" aria-label="Cerrar"><mat-icon>close</mat-icon></button>
+    <button type="button" appUiButton="close" (click)="close()" aria-label="Cerrar"><mat-icon>close</mat-icon></button>
   </header>
 
   <form [formGroup]="form" (ngSubmit)="save()">
@@ -18,7 +18,7 @@
             <input formControlName="ruc" maxlength="11" inputmode="numeric" placeholder="11 dígitos" />
             <small *ngIf="form.controls.ruc.touched && form.controls.ruc.invalid">El RUC debe contener exactamente 11 dígitos.</small>
           </label>
-          <button type="button" class="supplier-modal__lookup" (click)="lookupRuc()" [disabled]="lookingUpRuc || saving || form.controls.ruc.invalid">
+          <button type="button" appUiButton="secondary" class="supplier-modal__lookup" (click)="lookupRuc()" [disabled]="lookingUpRuc || saving || form.controls.ruc.invalid">
             <app-loading-indicator *ngIf="lookingUpRuc; else rucLookupLabel" [compact]="true" message="Consultando..." />
             <ng-template #rucLookupLabel><mat-icon>manage_search</mat-icon>Consultar RUC</ng-template>
           </button>
@@ -47,8 +47,8 @@
     </main>
 
     <footer class="supplier-modal__footer">
-      <button type="button" class="supplier-modal__cancel" (click)="close()" [disabled]="saving">Cancelar</button>
-      <button type="submit" class="supplier-modal__save" [disabled]="saving || lookingUpRuc || form.invalid">
+      <button type="button" appUiButton="secondary" (click)="close()" [disabled]="saving">Cancelar</button>
+      <button type="submit" appUiButton="primary" [disabled]="saving || lookingUpRuc || form.invalid">
         <app-loading-indicator *ngIf="saving; else supplierSaveLabel" [compact]="true" message="Guardando..." />
         <ng-template #supplierSaveLabel><mat-icon>save</mat-icon>{{editing ? 'Guardar cambios' : 'Registrar proveedor'}}</ng-template>
       </button>

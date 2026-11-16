@@ -1,3 +1,4 @@
+import { UiButtonDirective } from '../../../shared/ui/v2/ui-button.directive';
 import { Component, inject, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
@@ -27,6 +28,7 @@ import {MeasurementUnitsService, MeasurementUnit} from '../../../core/services/m
     selector: 'app-category-child-form',
     standalone: true,
     imports: [
+        UiButtonDirective,
         ReactiveFormsModule, MatInputModule, MatButtonModule, MatDialogModule,
         MatSelectModule, MatStepperModule, MatSlideToggleModule, MatCheckboxModule,
         MatIconModule, MatTooltipModule, CommonModule, InventoryDialogMotionDirective

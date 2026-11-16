@@ -1,3 +1,4 @@
+import { UiButtonDirective } from '../../../shared/ui/v2/ui-button.directive';
 import { ChangeDetectorRef, Component, OnInit, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
@@ -16,7 +17,7 @@ import { LoadingIndicatorComponent } from '../../../shared/loading/loading-indic
 @Component({
   selector: 'app-login',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule, MatIconModule, CompanySelectorComponent, LoadingIndicatorComponent],
+  imports: [UiButtonDirective, CommonModule, ReactiveFormsModule, MatIconModule, CompanySelectorComponent, LoadingIndicatorComponent],
   templateUrl: './login.html',
   styleUrl: './login.scss'
 })

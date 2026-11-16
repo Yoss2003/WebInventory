@@ -9,7 +9,7 @@
         <p>{{data.companyName}} · Empresa #{{data.companyId}}</p>
       </div>
     </div>
-    <button type="button" class="first-admin-close" (click)="close()"
+    <button type="button" appUiButton="close" (click)="close()"
       [disabled]="saving" title="Cerrar" aria-label="Cerrar modal">
       <mat-icon aria-hidden="true">close</mat-icon>
     </button>
@@ -46,7 +46,7 @@
         <div class="first-admin-dni-control">
           <input [(ngModel)]="dni" maxlength="8" inputmode="numeric"
             autocomplete="off" placeholder="8 dígitos" />
-          <button type="button" (click)="consultDni()"
+          <button type="button" appUiButton="secondary" (click)="consultDni()"
             [disabled]="saving || lookingUpDni || dni.length !== 8 || !isFirstAdmin && !dni"
             title="Consultar DNI mediante RENIEC">
             <mat-icon aria-hidden="true">{{lookingUpDni ? 'hourglass_top' : 'manage_search'}}</mat-icon>
@@ -82,8 +82,8 @@
   </mat-dialog-content>
 
   <mat-dialog-actions class="first-admin-actions">
-    <button type="button" class="first-admin-cancel" (click)="close()" [disabled]="saving">Cancelar</button>
-    <button type="button" class="first-admin-submit" (click)="save()" [disabled]="!valid">
+    <button type="button" appUiButton="secondary" (click)="close()" [disabled]="saving">Cancelar</button>
+    <button type="button" appUiButton="primary" (click)="save()" [disabled]="!valid">
       <mat-icon aria-hidden="true">{{saving ? 'hourglass_top' : 'person_add'}}</mat-icon>
       {{saving ? 'Registrando y enviando correo...' : isFirstAdmin ? 'Crear administrador' : 'Crear usuario'}}
     </button>

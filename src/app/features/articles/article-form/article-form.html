@@ -85,7 +85,7 @@
               <div class="form-group">
                 <div class="field-heading"><label for="article-category">Categoría <span class="required">*</span></label>
                   <span class="field-feedback" [class.is-error]="(!!categoriesError || isInvalid('identity','categoryId'))" aria-live="polite">
-                    <ng-container *ngIf="categoriesError; else categoryStandard">{{categoriesError}} <button type="button" class="catalog-retry" (click)="loadCategories(true)">Reintentar</button></ng-container>
+                    <ng-container *ngIf="categoriesError; else categoryStandard">{{categoriesError}} <button type="button" appUiButton="secondary" class="catalog-retry" (click)="loadCategories(true)">Reintentar</button></ng-container>
                     <ng-template #categoryStandard>{{ isInvalid('identity','categoryId') ? 'Selecciona una categoría.' : isLoadingCategories ? 'Cargando categorías...' : currentTrackingMode ? 'Rastreo: ' + currentTrackingMode : 'Elige una categoría hija.' }}</ng-template>
                   </span>
                 </div>
@@ -100,7 +100,7 @@
               <div class="form-group">
                 <div class="field-heading"><label for="article-brand">Marca <span class="required">*</span></label>
                   <span class="field-feedback" [class.is-error]="(!!brandsError || isInvalid('identity','brandId'))" aria-live="polite">
-                    <ng-container *ngIf="brandsError; else brandStandard">{{brandsError}} <button type="button" class="catalog-retry" (click)="loadBrands(undefined,true)">Reintentar</button></ng-container>
+                    <ng-container *ngIf="brandsError; else brandStandard">{{brandsError}} <button type="button" appUiButton="secondary" class="catalog-retry" (click)="loadBrands(undefined,true)">Reintentar</button></ng-container>
                     <ng-template #brandStandard>{{ isInvalid('identity','brandId') ? 'Selecciona una marca.' : !selectedCategory ? 'Selecciona primero una categoría hija.' : isLoadingBrands ? 'Cargando marcas...' : !marcasFiltradas.length ? 'No hay marcas; pulsa + para crear una.' : 'Elige una marca de la lista.' }}</ng-template>
                   </span></div>
                 <div class="field-with-button">
@@ -226,10 +226,10 @@
                   <strong>{{ isOpeningCamera ? 'Abriendo cámara...' : 'Seleccionar imagen' }}</strong>
                   <small>JPG, PNG u otra imagen</small>
                   <div class="upload-actions">
-                    <button type="button" class="media-button primary" (click)="openPhotoCapture(photoInput)" [disabled]="isOpeningCamera" aria-label="Usar cámara del dispositivo">
+                    <button type="button" appUiButton="primary" class="media-button primary" (click)="openPhotoCapture(photoInput)" [disabled]="isOpeningCamera" aria-label="Usar cámara del dispositivo">
                       <mat-icon>photo_camera</mat-icon> Cámara
                     </button>
-                    <button type="button" class="media-button" (click)="photoInput.click()" [disabled]="isOpeningCamera" aria-label="Elegir imagen desde archivos">
+                    <button type="button" appUiButton="secondary" class="media-button" (click)="photoInput.click()" [disabled]="isOpeningCamera" aria-label="Elegir imagen desde archivos">
                       <mat-icon>folder_open</mat-icon> Elegir archivo
                     </button>
                   </div>
@@ -238,10 +238,10 @@
                 <div class="camera-box" *ngIf="isCameraOpen">
                   <video #cameraVideo class="camera-video" autoplay playsinline muted aria-label="Vista en directo de la cámara"></video>
                   <div class="media-toolbar camera-toolbar">
-                    <button type="button" class="media-button primary" (click)="capturePhoto()" [disabled]="isCapturingPhoto">
+                    <button type="button" appUiButton="primary" class="media-button primary" (click)="capturePhoto()" [disabled]="isCapturingPhoto">
                       <mat-icon>camera</mat-icon> {{ isCapturingPhoto ? 'Capturando...' : 'Tomar foto' }}
                     </button>
-                    <button type="button" class="media-button" (click)="stopCamera()">Cancelar</button>
+                    <button type="button" appUiButton="secondary" class="media-button" (click)="stopCamera()">Cancelar</button>
                   </div>
                 </div>
 
@@ -251,13 +251,13 @@
                     <mat-icon>open_in_full</mat-icon> Ampliar
                   </button>
                   <div class="media-toolbar">
-                    <button type="button" class="media-button" (click)="openPhotoCapture(photoInput)" [disabled]="isOpeningCamera" aria-label="Cambiar foto usando la cámara">
+                    <button type="button" appUiButton="secondary" class="media-button" (click)="openPhotoCapture(photoInput)" [disabled]="isOpeningCamera" aria-label="Cambiar foto usando la cámara">
                       <mat-icon>photo_camera</mat-icon> Cámara
                     </button>
-                    <button type="button" class="media-button" (click)="photoInput.click()" aria-label="Cambiar foto desde archivos">
+                    <button type="button" appUiButton="secondary" class="media-button" (click)="photoInput.click()" aria-label="Cambiar foto desde archivos">
                       <mat-icon>sync</mat-icon> Cambiar
                     </button>
-                    <button type="button" class="media-button danger" (click)="removeFile('photo')" aria-label="Eliminar fotografía seleccionada">
+                    <button type="button" appUiButton="danger" class="media-button danger" (click)="removeFile('photo')" aria-label="Eliminar fotografía seleccionada">
                       <mat-icon>delete_outline</mat-icon> Quitar
                     </button>
                   </div>
@@ -271,7 +271,7 @@
                   <mat-icon>receipt_long</mat-icon>
                   <strong>Adjuntar comprobante</strong>
                   <small>Imagen o PDF</small>
-                  <button type="button" class="media-button primary" (click)="voucherInput.click()" aria-label="Seleccionar comprobante de imagen o PDF">
+                  <button type="button" appUiButton="primary" class="media-button primary" (click)="voucherInput.click()" aria-label="Seleccionar comprobante de imagen o PDF">
                     <mat-icon>folder_open</mat-icon> Elegir archivo
                   </button>
                 </div>
@@ -284,10 +284,10 @@
                   </button>
                   <div class="media-toolbar">
                     <span class="media-file-name" [title]="voucherFile?.name">{{ voucherFile?.name }}</span>
-                    <button type="button" class="media-button" (click)="voucherInput.click()" aria-label="Cambiar comprobante">
+                    <button type="button" appUiButton="secondary" class="media-button" (click)="voucherInput.click()" aria-label="Cambiar comprobante">
                       <mat-icon>sync</mat-icon> Cambiar
                     </button>
-                    <button type="button" class="media-button danger" (click)="removeFile('voucher')" aria-label="Eliminar comprobante seleccionado">
+                    <button type="button" appUiButton="danger" class="media-button danger" (click)="removeFile('voucher')" aria-label="Eliminar comprobante seleccionado">
                       <mat-icon>delete_outline</mat-icon> Quitar
                     </button>
                   </div>
@@ -469,16 +469,16 @@
   </main>
 
   <footer class="modal-footer">
-    <button *ngIf="currentStep > 1" type="button" class="btn-text back" (click)="setStep(currentStep - 1)">
+    <button *ngIf="currentStep > 1" type="button" appUiButton="secondary" class="btn-text back" (click)="setStep(currentStep - 1)">
       <mat-icon>arrow_back</mat-icon> Atrás
     </button>
     <span class="footer-spacer"></span>
-    <button type="button" class="btn-text" mat-dialog-close>Cancelar</button>
-    <button *ngIf="currentStep === 1" type="button" class="btn-pill-green" (click)="goNextFromIdentity()">Siguiente: Logística <mat-icon>arrow_forward</mat-icon>
+    <button type="button" appUiButton="secondary" class="btn-text" mat-dialog-close>Cancelar</button>
+    <button *ngIf="currentStep === 1" type="button" appUiButton="primary" class="btn-pill-green" (click)="goNextFromIdentity()">Siguiente: Logística <mat-icon>arrow_forward</mat-icon>
     </button>
-    <button *ngIf="currentStep === 2" type="button" class="btn-pill-green" (click)="goNextFromLogistics()">Siguiente: Finanzas <mat-icon>arrow_forward</mat-icon>
+    <button *ngIf="currentStep === 2" type="button" appUiButton="primary" class="btn-pill-green" (click)="goNextFromLogistics()">Siguiente: Finanzas <mat-icon>arrow_forward</mat-icon>
     </button>
-    <button *ngIf="currentStep === 3" type="button" class="btn-pill-green" [disabled]="isSaving" (click)="onSubmit()">
+    <button *ngIf="currentStep === 3" type="button" appUiButton="primary" class="btn-pill-green" [disabled]="isSaving" (click)="onSubmit()">
       <mat-icon>save</mat-icon> {{ isSaving ? 'Guardando...' : isEditMode ? 'Actualizar artículo' : 'Guardar artículo' }}
     </button>
   </footer>
@@ -512,7 +512,7 @@
             <mat-icon>restart_alt</mat-icon>
           </button>
         </ng-container>
-        <button type="button" class="media-viewer-control close-viewer" (click)="closeMediaPreview()" aria-label="Cerrar vista ampliada" title="Cerrar vista ampliada">
+        <button type="button" appUiButton="close" class="media-viewer-control close-viewer" (click)="closeMediaPreview()" aria-label="Cerrar vista ampliada" title="Cerrar vista ampliada">
           <mat-icon>close</mat-icon>
         </button>
       </div>

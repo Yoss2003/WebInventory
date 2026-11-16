@@ -7,29 +7,19 @@
   white-space: nowrap;
 }
 
-:host .sharing-change {
-  display: inline-grid;
-  place-items: center;
-  width: 32px;
-  height: 32px;
-  border: 1px solid #668196;
-  border-radius: 8px;
-  color: #e8f2f8;
-  background: #263d4c;
-  cursor: pointer;
-}
+:host .recipient-input-group {
+  display: flex;
+  align-items: center;
+  gap: 8px;
 
-:host .sharing-change:hover:not(:disabled) {
-  border-color: var(--inv-company-accent, #a2d149);
-}
+  input {
+    flex: 1;
+    min-width: 0;
+  }
 
-:host .sharing-change:disabled {
-  opacity: .45;
-  cursor: not-allowed;
-}
-
-:host .sharing-change mat-icon {
-  width: 18px;
-  height: 18px;
-  font-size: 18px;
+  .picker-launch-btn {
+    flex: none;
+    white-space: nowrap;
+    padding: 8px 12px !important;
+  }
 }

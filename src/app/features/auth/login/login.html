@@ -4,7 +4,7 @@
     <aside class="login-side"><div class="app-mark"><mat-icon>inventory_2</mat-icon></div><div class="welcome-copy"><span class="eyebrow">OMNISTOCK</span><h1>Controla tu inventario desde un solo lugar.</h1><p>Acceso seguro por empresa. Cada sesión trabaja únicamente con los datos autorizados de la organización seleccionada.</p></div><div class="login-company-chooser">
         <div class="company-field">
           <div class="field-heading"><label for="login-company">Empresa / sucursal <span>*</span></label>
-            <button class="inline-refresh" type="button" (click)="loadCompanies()" [disabled]="loadingCompanies || submitting" title="Actualizar empresas">
+            <button class="inline-refresh" type="button" appUiButton="secondary" (click)="loadCompanies()" [disabled]="loadingCompanies || submitting" title="Actualizar empresas">
               <ng-container *ngIf="loadingCompanies; else loginRefresh"><app-loading-indicator [compact]="true" message="Cargando..." /></ng-container>
               <ng-template #loginRefresh><mat-icon>refresh</mat-icon> Actualizar</ng-template>
             </button>
@@ -28,7 +28,7 @@
         <div class="form-field"><label for="login-password">Contraseña <span>*</span></label><div class="input-wrap"><mat-icon>lock_outline</mat-icon><input id="login-password" [type]="showPassword ? 'text' : 'password'" formControlName="password" autocomplete="current-password" placeholder="Ingresa tu contraseña" /><button type="button" class="password-toggle" (click)="showPassword = !showPassword" [attr.aria-label]="showPassword ? 'Ocultar contraseña' : 'Mostrar contraseña'"><mat-icon>{{ showPassword ? 'visibility_off' : 'visibility' }}</mat-icon></button></div></div>
         <div *ngIf="requiresTwoFactor" class="form-field two-factor-field"><label for="login-2fa">Código de verificación <span>*</span></label><div class="input-wrap"><mat-icon>pin</mat-icon><input id="login-2fa" type="text" formControlName="twoFactorCode" maxlength="6" inputmode="numeric" autocomplete="one-time-code" placeholder="000000" /></div><small>Introduce los 6 dígitos generados por tu aplicación de autenticación.</small></div>
         <div class="login-error" *ngIf="loginError" role="alert"><mat-icon>error_outline</mat-icon><span>{{ loginError }}</span></div>
-        <button type="submit" class="login-submit" [disabled]="submitting || loadingCompanies || !companies.length || loginForm.invalid">
+        <button type="submit" appUiButton="primary" class="login-submit" [disabled]="submitting || loadingCompanies || !companies.length || loginForm.invalid">
           <mat-icon *ngIf="!submitting">login</mat-icon>
           <app-loading-indicator *ngIf="submitting; else loginButtonLabel" [compact]="true" message="Validando acceso..." />
           <ng-template #loginButtonLabel>Ingresar a mi empresa</ng-template>
@@ -64,11 +64,11 @@
         <p class="login-error" *ngIf="initialPasswordForm.get('confirmPassword')?.value &&
            initialPasswordForm.get('newPassword')?.value !== initialPasswordForm.get('confirmPassword')?.value"
            role="alert"><mat-icon>info_outline</mat-icon><span>Las contraseñas deben coincidir.</span></p>
-        <button type="submit" class="login-submit" [disabled]="!canCompleteInitialPassword">
+        <button type="submit" appUiButton="primary" class="login-submit" [disabled]="!canCompleteInitialPassword">
           <mat-icon *ngIf="!changingInitialPassword">verified</mat-icon>
           {{changingInitialPassword ? 'Actualizando...' : 'Establecer contraseña'}}
         </button>
-        <button type="button" class="initial-password-cancel" (click)="cancelInitialPassword()"
+        <button type="button" appUiButton="secondary" class="initial-password-cancel" (click)="cancelInitialPassword()"
                 [disabled]="changingInitialPassword">Volver al inicio de sesión</button>
       </form>
       <p *ngIf="initialPasswordDone" class="initial-password-success" role="status">

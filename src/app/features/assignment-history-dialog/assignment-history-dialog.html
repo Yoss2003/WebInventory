@@ -15,7 +15,7 @@
 
     <button
       type="button"
-      class="assignment-dialog__close"
+      appUiButton="close"
       (click)="dialogRef.close()"
       aria-label="Cerrar">
       <mat-icon>close</mat-icon>
@@ -160,6 +160,7 @@
 
             <button
               type="button"
+              appUiButton="secondary"
               class="evidence-update-button"
               [disabled]="evidenceUploading"
               (click)="evidenceInput.click()">
@@ -291,6 +292,7 @@
         <button
           type="button"
           class="assignment-return-submit"
+          appUiButton="primary"
           [disabled]="!canReturn"
           (click)="returnArticle()">
 
@@ -317,7 +319,7 @@
   <mat-dialog-actions class="assignment-dialog__footer">
     <button
       type="button"
-      class="custody-footer-close"
+      appUiButton="secondary"
       (click)="dialogRef.close()">
       Cerrar
     </button>

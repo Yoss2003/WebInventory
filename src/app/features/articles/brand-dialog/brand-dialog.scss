@@ -84,25 +84,6 @@ p {
   margin-top: 3px;
 }
 
-.close-button {
-  display: grid;
-  place-items: center;
-  flex: 0 0 34px;
-  width: 34px;
-  height: 34px;
-  padding: 3px;
-  color: #d8e2ea;
-  border: 1px solid #506475;
-  border-radius: 9px;
-  background: #182531;
-  cursor: pointer;
-}
-
-.close-button:hover:not(:disabled) {
-  color: #fff;
-  border-color: var(--inv-company-accent, #A2D149);
-}
-
 /* SIN scroll exterior. Los dos bloques no se mueven al editar. */
 .brand-content {
   display: flex;
@@ -547,15 +528,6 @@ p {
   justify-content: flex-end;
   padding: 11px 19px;
   border-top: 1px solid #344b5c;
-}
-
-.cancel-button {
-  padding: 8px 14px;
-  border: 1px solid #526577;
-  border-radius: 8px;
-  background: #253442;
-  color: #edf1f5;
-  cursor: pointer;
 }
 
 button:disabled {

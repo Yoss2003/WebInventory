@@ -8,6 +8,7 @@ import {
   ArticleReferenceDataService, ArticleSupplierReference
 } from '../../../core/services/article-reference-data';
 import { LoadingIndicatorComponent } from '../../../shared/loading/loading-indicator';
+import { UiButtonDirective } from '../../../shared/ui/v2/ui-button.directive';
 
 export interface ArticleSupplierDialogData {
   masterInventoryId: number;
@@ -17,7 +18,7 @@ export interface ArticleSupplierDialogData {
 @Component({
   selector: 'app-article-supplier-dialog',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule, MatDialogModule, MatIconModule, LoadingIndicatorComponent],
+  imports: [CommonModule, ReactiveFormsModule, MatDialogModule, MatIconModule, LoadingIndicatorComponent, UiButtonDirective],
   templateUrl: './article-supplier-dialog.html',
   styleUrl: './article-supplier-dialog.scss'
 })

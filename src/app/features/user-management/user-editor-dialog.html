@@ -8,7 +8,7 @@
         <p>{{isEdit ? 'Actualiza los datos y accesos de esta cuenta.' : 'Registra un usuario y configura su acceso.'}}</p>
       </div>
     </div>
-    <button type="button" class="user-dialog__close" (click)="close()" [disabled]="saving"
+    <button type="button" appUiButton="close" (click)="close()" [disabled]="saving"
       aria-label="Cerrar modal" title="Cerrar"><mat-icon aria-hidden="true">close</mat-icon></button>
   </header>
 
@@ -67,7 +67,7 @@
           <span class="user-dialog__dni-control">
             <input [(ngModel)]="editing.dni" maxlength="8" inputmode="numeric"
               autocomplete="off" placeholder="8 dígitos"/>
-            <button type="button" class="user-dialog__lookup" (click)="consultDni()"
+            <button type="button" appUiButton="secondary" class="user-dialog__lookup" (click)="consultDni()"
               [disabled]="saving || lookingUpDni || !editing.dni || editing.dni.length !== 8"
               title="Consultar DNI"><mat-icon aria-hidden="true">manage_search</mat-icon>
               {{lookingUpDni ? 'Consultando' : 'Consultar'}}
@@ -149,14 +149,14 @@
   </main>
 
   <footer class="user-dialog__footer">
-    <button type="button" class="user-dialog__secondary user-dialog__back" *ngIf="step > 1" (click)="goStep(step - 1)"
+    <button type="button" appUiButton="secondary" class="user-dialog__back" *ngIf="step > 1" (click)="goStep(step - 1)"
       [disabled]="saving"><mat-icon aria-hidden="true">arrow_back</mat-icon> Anterior</button>
-    <button type="button" class="user-dialog__secondary" (click)="close()" [disabled]="saving">Cancelar</button>
-    <button type="button" class="user-dialog__primary" *ngIf="step < 3"
+    <button type="button" appUiButton="secondary" (click)="close()" [disabled]="saving">Cancelar</button>
+    <button type="button" appUiButton="primary" *ngIf="step < 3"
       (click)="goStep(step + 1)" [disabled]="saving || (step === 1 && !personalValid) || (step === 2 && !roleValid)">
       Siguiente <mat-icon aria-hidden="true">arrow_forward</mat-icon>
     </button>
-    <button type="button" class="user-dialog__primary" *ngIf="step === 3"
+    <button type="button" appUiButton="primary" *ngIf="step === 3"
       (click)="save()" [disabled]="!canSubmit">
       <mat-icon aria-hidden="true">{{saving ? 'hourglass_top' : isEdit ? 'save' : 'person_add'}}</mat-icon>
       {{saving ? 'Guardando...' : isEdit ? 'Guardar cambios' : 'Crear usuario'}}

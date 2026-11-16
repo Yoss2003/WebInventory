@@ -1,3 +1,4 @@
+import { UiButtonDirective } from '../../shared/ui/v2/ui-button.directive';
 import { CommonModule } from '@angular/common';
 import { ChangeDetectorRef, Component, OnInit, inject } from '@angular/core';
 import { FormsModule } from '@angular/forms';
@@ -8,7 +9,7 @@ import { CompanySelectorComponent } from '../../shared/company-selector/company-
 import { CompanyPublic } from '../../core/models/company-public.model';
 import { LoadingIndicatorComponent } from '../../shared/loading/loading-indicator';
 
-@Component({selector:'app-password-recovery',standalone:true,imports:[CommonModule,FormsModule,RouterModule,CompanySelectorComponent,LoadingIndicatorComponent],templateUrl:'./password-recovery.html',styleUrl:'./password-recovery.scss'})
+@Component({selector:'app-password-recovery',standalone:true,imports:[UiButtonDirective, CommonModule,FormsModule,RouterModule,CompanySelectorComponent,LoadingIndicatorComponent],templateUrl:'./password-recovery.html',styleUrl:'./password-recovery.scss'})
 export class PasswordRecoveryComponent implements OnInit {
   private readonly http=inject(HttpClient);
   private readonly route=inject(ActivatedRoute);

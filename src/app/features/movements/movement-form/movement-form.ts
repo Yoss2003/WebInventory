@@ -1,3 +1,4 @@
+import { UiButtonDirective } from '../../../shared/ui/v2/ui-button.directive';
 import { ChangeDetectorRef, Component, OnInit, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
@@ -14,7 +15,7 @@ import { isUnitConversion, fixedUnitFactor, isMeasuredUnit, validPieces, validQu
 
 @Component({
   selector: 'app-movement-form', standalone: true,
-  imports: [CommonModule, ReactiveFormsModule, MatIconModule, MatSelectModule, MatFormFieldModule, LoadingIndicatorComponent],
+  imports: [UiButtonDirective, CommonModule, ReactiveFormsModule, MatIconModule, MatSelectModule, MatFormFieldModule, LoadingIndicatorComponent],
   templateUrl: './movement-form.html', styleUrl: './movement-form.scss'
 })
 export class MovementForm implements OnInit {

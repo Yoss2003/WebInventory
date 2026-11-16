@@ -1,62 +1,68 @@
 import { CommonModule } from '@angular/common';
-import { Component, OnInit, inject } from '@angular/core';
+import { ChangeDetectorRef, Component, OnInit, inject } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { MatIconModule } from '@angular/material/icon';
+import { MatSelectModule } from '@angular/material/select';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatDialog, MatDialogModule } from '@angular/material/dialog';
 import { RouterLink } from '@angular/router';
-import { forkJoin, of } from 'rxjs';
+import { catchError, forkJoin, of } from 'rxjs';
 
 import { UiPageHeadingComponent } from '../../shared/ui/v2/ui-page-heading.component';
 import { UiButtonDirective } from '../../shared/ui/v2/ui-button.directive';
+import { UiControlDirective } from '../../shared/ui/v2/ui-control.directive';
 import { UiTableActionDirective } from '../../shared/ui/v2/ui-table-action.directive';
 import { ConfirmationDialogService } from '../../shared/confirm-dialog/confirmation-dialog.service';
 import { ToastService } from '../../shared/toast/toast.service';
 import { AccessService } from '../../core/services/access';
-import { InventoryService, InventorySummary, InventoryShare } from '../../core/services/inventories';
+import { InventoryService, InventorySummary } from '../../core/services/inventories';
 import { UserManagementService, ManagedUser } from '../../core/services/user-management';
+import { EmployeeService } from '../../core/services/employees';
+import { Employee } from '../../core/models/employee.model';
 import { LoadingIndicatorComponent } from '../../shared/loading/loading-indicator';
+import { InventoryEditDialogComponent } from './inventory-edit-dialog/inventory-edit-dialog.component';
+import { ShareInventoryDialogComponent } from './share-inventory-dialog/share-inventory-dialog.component';
 
 @Component({
   selector: 'app-inventory-management',
   standalone: true,
-  imports: [CommonModule, FormsModule, MatIconModule, RouterLink,
-    UiPageHeadingComponent, UiButtonDirective, UiTableActionDirective, LoadingIndicatorComponent],
+  imports: [
+    CommonModule, FormsModule, MatIconModule, MatSelectModule, MatFormFieldModule,
+    MatDialogModule, RouterLink, UiPageHeadingComponent, UiButtonDirective,
+    UiControlDirective, UiTableActionDirective, LoadingIndicatorComponent
+  ],
   templateUrl: './inventory-management.html',
   styleUrl: './inventory-management.scss'
 })
 export class InventoryManagementComponent implements OnInit {
   private readonly api = inject(InventoryService);
   private readonly usersApi = inject(UserManagementService);
+  private readonly employeesApi = inject(EmployeeService);
   private readonly access = inject(AccessService);
   private readonly toast = inject(ToastService);
   private readonly confirms = inject(ConfirmationDialogService);
+  private readonly dialog = inject(MatDialog);
+  private readonly cdr = inject(ChangeDetectorRef);
 
   isManager = false;
   canCreate = false;
   canManageAccess = false;
   selfId = 0;
-  loading = false;
+  loading = true; // Inicia inmediatamente en true para evitar pantalla vacía
   saving = false;
   error = '';
   rows: InventorySummary[] = [];
   users: ManagedUser[] = [];
+  employees: Employee[] = [];
 
   name = '';
   alias = '';
   ownerId = 0;
-  editId: number | null = null;
-  editName = '';
-  editAlias = '';
-  sharing: InventorySummary | null = null;
-  shares: InventoryShare[] = [];
-  loadingShares = false;
-  shareWith = '';
-  shareMode: 1 | 2 = 1;
-  sharingBusy = false;
-  updatingShareId: number | null = null;
 
   get operational(): InventorySummary[] {
     return this.rows.filter(r => !r.isMaster);
   }
+
   get canSubmit(): boolean {
     return this.canCreate && !this.saving && this.name.trim().length > 0 &&
       this.name.trim().length <= 255 &&
@@ -64,42 +70,66 @@ export class InventoryManagementComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    this.load();
+  }
+
+  load(): void {
+    this.loading = true;
+    this.error = '';
+
     this.access.me().subscribe({
       next: a => {
         this.selfId = a.userId;
         this.isManager = a.isDeveloper || a.isAdministrator;
         this.canCreate = (a.permissions || []).includes('CREATE_INVENTORIES');
         this.canManageAccess = (a.permissions || []).includes('MANAGE_INVENTORY_ACCESS');
-        this.ownerId = a.userId;
-        this.load();
-      },
-      error: () => { this.error = 'No se pudieron verificar los permisos de la sesión.'; }
-    });
-  }
+        if (!this.ownerId) {
+          this.ownerId = a.userId;
+        }
 
-  load(): void {
-    this.loading = true;
-    const members = this.isManager ? this.usersApi.users() : of([] as ManagedUser[]);
-    // La administración ve metadatos de la empresa, sin otorgar acceso
-    // implícito a los artículos/stock privado de cada empleado.
-    const inventories = this.isManager ? this.api.companyInventories() : this.api.getInventories();
-    forkJoin({ inventories, users: members }).subscribe({
-      next: ({inventories, users}) => {
-        this.rows = (inventories || []).filter(i => i.isActive);
-        this.users = (users || []).filter(u => u.isActive && u.statusId === 1);
-        if (this.isManager && !this.users.some(u => u.id === this.ownerId))
-          this.ownerId = this.users[0]?.id ?? 0;
-        this.loading = false;
+        const members = this.isManager ? this.usersApi.users().pipe(catchError(() => of([] as ManagedUser[]))) : of([] as ManagedUser[]);
+        const inventories = this.isManager ? this.api.companyInventories() : this.api.getInventories();
+        const employeesReq = this.employeesApi.getEmployees().pipe(catchError(() => of([] as Employee[])));
+
+        forkJoin({ inventories, users: members, employees: employeesReq }).subscribe({
+          next: ({ inventories, users, employees }) => {
+            this.rows = (inventories || []).filter(i => i.isActive);
+            this.users = (users || []).filter(u => u.isActive && u.statusId === 1);
+            this.employees = (employees || []).filter(e => e.isActive);
+
+            if (this.isManager && !this.users.some(u => u.id === this.ownerId)) {
+              this.ownerId = this.users[0]?.id ?? this.selfId;
+            }
+            this.loading = false;
+            this.cdr.markForCheck();
+          },
+          error: e => {
+            this.loading = false;
+            this.error = String(e?.error?.error || 'No se pudieron cargar inventarios y usuarios.');
+            this.cdr.markForCheck();
+          }
+        });
       },
-      error: e => {
+      error: () => {
         this.loading = false;
-        this.error = String(e?.error?.error || 'No se pudieron cargar inventarios y usuarios.');
+        this.error = 'No se pudieron verificar los permisos de la sesión.';
+        this.cdr.markForCheck();
       }
     });
   }
+
   ownerName(id: number): string {
-    return this.users.find(x => x.id === id)?.username ||
-      (id === this.selfId ? 'Mi cuenta' : `Usuario #${id}`);
+    const emp = this.employees.find(e => e.userId === id);
+    if (emp) {
+      const full = `${emp.firstName || ''} ${emp.lastName || ''}`.trim();
+      if (full) return `${full} (${emp.user?.username || emp.dni || 'ID #' + id})`;
+    }
+    const user = this.users.find(x => x.id === id);
+    if (user) {
+      const full = `${user.firstName || ''} ${user.lastName || ''}`.trim();
+      return full ? `${full} (${user.username})` : user.username;
+    }
+    return id === this.selfId ? 'Mi cuenta' : `Usuario #${id}`;
   }
 
   create(): void {
@@ -108,121 +138,76 @@ export class InventoryManagementComponent implements OnInit {
     const request = this.isManager
       ? this.api.assign(this.ownerId, this.name.trim(), this.alias.trim() || null)
       : this.api.create(this.name.trim(), this.alias.trim() || null);
+
     request.subscribe({
       next: inventory => {
         this.saving = false;
         this.name = '';
         this.alias = '';
-        this.toast.success(`Inventario #${inventory.id} creado. Recarga la aplicación para seleccionarlo en la barra superior.`);
+        this.toast.success(`Inventario #${inventory.id} creado correctamente.`);
         this.load();
       },
-      error: e => { this.saving = false; this.toast.error(String(e?.error?.error || 'No se pudo crear el inventario.')); }
-    });
-  }
-  manageShares(row: InventorySummary): void {
-    if (!this.canManageAccess || (!this.isManager && row.userId !== this.selfId)) return;
-    this.sharing = row;
-    this.shares = [];
-    this.loadingShares = false;
-    this.shareWith = '';
-    this.loadShares();
-  }
-  loadShares(): void {
-    if (!this.sharing) return;
-    this.loadingShares = true;
-    this.api.getShares(this.sharing.id).subscribe({
-      next: result => { this.shares = result || []; this.loadingShares = false; },
-      error: err => { this.loadingShares = false; this.toast.error(String(err?.error?.error || 'No se pudieron consultar los accesos.')); }
-    });
-  }
-  saveShare(): void {
-    if (!this.sharing || !this.canManageAccess || this.sharingBusy || !this.shareWith.trim()) return;
-    this.sharingBusy = true;
-    this.api.share(this.sharing.id, this.shareWith.trim(), this.shareMode).subscribe({
-      next: () => {
-        this.sharingBusy = false;
-        this.shareWith = '';
-        this.toast.success('Acceso compartido correctamente.');
-        this.loadShares();
-      },
-      error: err => {
-        this.sharingBusy = false;
-        this.toast.error(String(err?.error?.error || 'No se pudo compartir el inventario.'));
+      error: e => {
+        this.saving = false;
+        this.toast.error(String(e?.error?.error || 'No se pudo crear el inventario.'));
       }
     });
   }
-  changeShareAccess(item: InventoryShare): void {
-    if (!this.sharing || this.updatingShareId !== null || !this.canManageAccess) return;
-    const nextAccess: 1 | 2 = item.accessLevel === 2 ? 1 : 2;
-    const nextLabel = nextAccess === 2 ? 'Editor' : 'Lector';
-    this.confirms.confirm({
-      title: 'Cambiar permiso',
-      message: `¿Cambiar el acceso de «${item.username || 'este usuario'}» a ${nextLabel}?`,
-      confirmLabel: `Cambiar a ${nextLabel}`, tone: 'primary', icon: 'swap_horiz'
-    }).subscribe(confirmed => {
-      if (!confirmed || this.updatingShareId !== null) return;
-      this.updatingShareId = item.id;
-      this.api.updateShareAccess(item.id, nextAccess).subscribe({
-        next: () => {
-          this.shares = this.shares.map(row => row.id === item.id ? { ...row, accessLevel: nextAccess } : row);
-          this.updatingShareId = null;
-          this.toast.success(`Permiso actualizado a ${nextLabel}.`);
-        },
-        error: e => {
-          this.updatingShareId = null;
-          this.toast.error(String(e?.error?.error || 'No se pudo actualizar el permiso.'));
-        }
-      });
-    });
-  }
 
-  revokeShare(item: InventoryShare): void {
-    if (!this.sharing || !this.canManageAccess) return;
-    this.confirms.confirm({
-      title: 'Revocar acceso',
-      message: `¿Revocar el acceso de ${item.username || 'este usuario'}? El inventario y su historial se conservarán.`,
-      confirmLabel: 'Revocar acceso', tone: 'danger', icon: 'person_remove'
-    }).subscribe(ok => {
-      if (!ok) return;
-      this.api.revoke(item.id).subscribe({
-        next: () => { this.toast.success('Acceso revocado.'); this.loadShares(); },
-        error: err => this.toast.error(String(err?.error?.error || 'No se pudo revocar el acceso.'))
-      });
+  manageShares(row: InventorySummary): void {
+    if (!this.canManageAccess || (!this.isManager && row.userId !== this.selfId)) return;
+
+    const dialogRef = this.dialog.open(ShareInventoryDialogComponent, {
+      width: '720px',
+      maxWidth: '96vw',
+      panelClass: 'inv-v2-dialog-panel',
+      data: {
+        inventory: row,
+        allInventories: this.operational,
+        isManager: this.isManager
+      }
+    });
+
+    dialogRef.afterClosed().subscribe(() => {
+      this.load();
     });
   }
 
   edit(row: InventorySummary): void {
     if (!this.canCreate || (!this.isManager && row.userId !== this.selfId)) return;
-    this.editId = row.id;
-    this.editName = row.inventoryName;
-    this.editAlias = row.alias || '';
-  }
-  saveEdit(): void {
-    const row = this.operational.find(x => x.id === this.editId);
-    if (!row || !this.editName.trim() || this.saving) return;
-    this.saving = true;
-    this.api.update(row, this.editName.trim(), this.editAlias.trim() || null).subscribe({
-      next: () => {
-        this.saving = false;
-        this.editId = null;
-        this.toast.success('Inventario actualizado.');
+
+    const dialogRef = this.dialog.open(InventoryEditDialogComponent, {
+      width: '520px',
+      maxWidth: '94vw',
+      panelClass: 'inv-v2-dialog-panel',
+      data: {
+        inventory: row
+      }
+    });
+
+    dialogRef.afterClosed().subscribe(result => {
+      if (result) {
         this.load();
-      },
-      error: e => { this.saving = false; this.toast.error(String(e?.error?.error || 'No se pudo actualizar el inventario.')); }
+      }
     });
   }
+
   deactivate(row: InventorySummary): void {
     if (!this.canCreate || (!this.isManager && row.userId !== this.selfId)) return;
     this.confirms.confirm({
       title: 'Desactivar inventario',
       message: `¿Desactivar «${row.alias || row.inventoryName}»? No debe tener artículos, movimientos, asignaciones ni accesos compartidos pendientes.`,
       confirmLabel: 'Desactivar',
-      tone: 'danger', icon: 'inventory_2'
+      tone: 'danger',
+      icon: 'inventory_2'
     }).subscribe(ok => {
       if (!ok) return;
       this.api.deactivate(row.id).subscribe({
-        next: () => { this.toast.success('Inventario desactivado.'); this.load(); },
-        error: e => this.toast.error(String(e?.error?.error || 'No se puede desactivar ese inventario.'))
+        next: () => {
+          this.toast.success('Inventario desactivado.');
+          this.load();
+        },
+        error: () => this.toast.error('No se puede desactivar ese inventario mientras tenga registros asociados.')
       });
     });
   }

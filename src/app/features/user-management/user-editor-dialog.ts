@@ -14,6 +14,7 @@ import {
 import { suggestedUsername } from '../../shared/user-name';
 import { ToastService } from '../../shared/toast/toast.service';
 import { InventoryDialogMotionDirective } from '../../shared/ui/inv-dialog-motion.directive';
+import { UiButtonDirective } from '../../shared/ui/v2/ui-button.directive';
 
 export interface UserEditorDialogData {
   user?: ManagedUser;
@@ -31,7 +32,7 @@ export type UserEditorDialogResult =
   selector: 'app-user-editor-dialog',
   standalone: true,
   imports: [CommonModule, FormsModule, MatIconModule, MatFormFieldModule,
-    MatSelectModule, InventoryDialogMotionDirective],
+    MatSelectModule, InventoryDialogMotionDirective, UiButtonDirective],
   templateUrl: './user-editor-dialog.html',
   styleUrl: './user-editor-dialog.scss'
 })

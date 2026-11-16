@@ -18,7 +18,7 @@
       </div>      <app-ui-search [(value)]="companySearch" placeholder="Buscar empresa, RUC o plan" label="Filtrar empresas" />
     </div>
     <p *ngIf="companiesError" class="inline-alert inline-alert--error" role="alert"><mat-icon>error_outline</mat-icon>{{companiesError}}</p>
-    <button *ngIf="companiesError" type="button" (click)="loadCompanies()" [disabled]="loadingCompanies">Reintentar empresas</button>
+    <button *ngIf="companiesError" type="button" appUiButton="secondary" (click)="loadCompanies()" [disabled]="loadingCompanies">Reintentar empresas</button>
     <app-loading-indicator *ngIf="loadingCompanies && !companies.length" message="Cargando empresas..." />
     <div class="overflow companies-table inv-core-table-wrap" *ngIf="companies.length">
       <table>
@@ -50,17 +50,18 @@
             <td><span class="status-pill" [class.status-muted]="!c.isActive" [class.status-warning]="c.isActive && (!c.license || c.license.isEnabled === false)" [class.status-danger]="c.isActive && c.license?.isEnabled !== false && (daysRemaining(c) ?? 1) < 0">{{!c.isActive ? 'Inactiva' : !c.license ? 'Sin licencia' : c.license.isEnabled === false ? 'Suspendida' : (daysRemaining(c) ?? 1) < 0 ? 'Vencida' : 'Activa'}}</span></td>
             <td class="action-cell"><div class="table-actions">
               <button *ngIf="c.isActive && c.adminCount === 0" type="button"
+                appUiButton="secondary"
                 class="action-first-admin" (click)="registerFirstAdmin(c)"
                 [disabled]="saving || renewing || workingRequestId !== null"
                 [attr.aria-label]="'Registrar primer administrador de ' + c.businessName"
                 title="Registrar primer administrador y su inventario personal">
                 <mat-icon aria-hidden="true">person_add</mat-icon>Primer administrador
               </button>
-              <button type="button" class="action-edit" (click)="select(c)" [disabled]="saving || renewing"><mat-icon>edit</mat-icon>Editar</button>
-              <button *ngIf="c.isActive" type="button" class="danger-button" (click)="deactivate(c)" [disabled]="isProtectedCompany(c) || workingRequestId !== null || saving || renewing" [title]="isProtectedCompany(c) ? 'Empresa administradora protegida' : 'Desactivar empresa si no tiene registros asociados'">
+              <button type="button" appUiTableAction="normal" class="action-edit" (click)="select(c)" [disabled]="saving || renewing"><mat-icon>edit</mat-icon>Editar</button>
+              <button *ngIf="c.isActive" type="button" appUiTableAction="danger" class="danger-button" (click)="deactivate(c)" [disabled]="isProtectedCompany(c) || workingRequestId !== null || saving || renewing" [title]="isProtectedCompany(c) ? 'Empresa administradora protegida' : 'Desactivar empresa si no tiene registros asociados'">
                 <mat-icon>{{workingRequestId === c.id ? 'hourglass_top' : 'block'}}</mat-icon>{{workingRequestId === c.id ? 'Procesando...' : 'Desactivar'}}
               </button>
-              <button *ngIf="!c.isActive" type="button" class="action-reactivate" (click)="reactivate(c)" [disabled]="isProtectedCompany(c) || workingRequestId !== null || saving || renewing" [title]="isProtectedCompany(c) ? 'Empresa administradora protegida' : 'Reactivar sin modificar la licencia'">
+              <button *ngIf="!c.isActive" type="button" appUiTableAction="success" class="action-reactivate" (click)="reactivate(c)" [disabled]="isProtectedCompany(c) || workingRequestId !== null || saving || renewing" [title]="isProtectedCompany(c) ? 'Empresa administradora protegida' : 'Reactivar sin modificar la licencia'">
                 <mat-icon>{{workingRequestId === c.id ? 'hourglass_top' : 'check_circle_outline'}}</mat-icon>{{workingRequestId === c.id ? 'Procesando...' : 'Reactivar'}}
               </button>
             </div></td>
@@ -78,7 +79,7 @@
         <h2>{{editing ? 'Editar empresa' : 'Registrar empresa'}}</h2>
         <small>{{editing ? 'Los cambios empresariales no renuevan la licencia.' : 'El vencimiento se calculará en la API al registrar.'}}</small>
       </div>
-      <button type="button" class="muted" (click)="newCompany()" [disabled]="saving || renewing"><mat-icon>restart_alt</mat-icon> Limpiar campos</button>
+      <button type="button" appUiButton="secondary" (click)="newCompany()" [disabled]="saving || renewing"><mat-icon>restart_alt</mat-icon> Limpiar campos</button>
     </div>
 
     <form (ngSubmit)="save()" class="dev-form" #companyForm="ngForm">
@@ -90,7 +91,7 @@
             <input name="ruc" [(ngModel)]="form.ruc" (ngModelChange)="onRucChanged()" type="text" inputmode="numeric" maxlength="11" minlength="11" pattern="[0-9]{11}" required
               [readonly]="isSelectedProtected" placeholder="11 dígitos"  appUiControl />
           </label>
-          <div class="ruc-lookup"><button type="button" (click)="lookupRuc()" [disabled]="lookingUpRuc || form.ruc.length !== 11">
+          <div class="ruc-lookup"><button type="button" appUiButton="secondary" (click)="lookupRuc()" [disabled]="lookingUpRuc || form.ruc.length !== 11">
               <mat-icon *ngIf="!lookingUpRuc">manage_search</mat-icon>
               <app-loading-indicator *ngIf="lookingUpRuc" [compact]="true" message="Consultando..." />
               <span *ngIf="!lookingUpRuc">Consultar RUC</span>
@@ -169,7 +170,7 @@
       </div>
 
       <div class="form-actions">
-        <button type="submit" class="save" [disabled]="saving || renewing || !companyForm.valid">
+        <button type="submit" appUiButton="primary" [disabled]="saving || renewing || !companyForm.valid">
           <app-loading-indicator *ngIf="saving; else saveText" [compact]="true" message="Guardando..." />
           <ng-template #saveText><mat-icon>save</mat-icon> {{editing ? 'Guardar cambios' : 'Crear empresa'}}</ng-template>
         </button>
@@ -186,7 +187,7 @@
             <mat-option *ngFor="let plan of plans" [value]="plan">{{plan}}</mat-option>
           </mat-select>
         </mat-form-field>
-        <button type="button" class="renew-btn" (click)="renewLicense()"
+        <button type="button" appUiButton="primary" (click)="renewLicense()"
           [disabled]="renewing || saving || isSelectedProtected || !selectedCompany?.isActive">
           <app-loading-indicator *ngIf="renewing; else renewText" [compact]="true" message="Renovando..." />
           <ng-template #renewText><mat-icon>event_repeat</mat-icon> Renovar {{renewDurationLabel}}</ng-template>
@@ -198,7 +199,7 @@
 
   <section class="dev-card" aria-label="Solicitudes de recuperación">
     <div class="section-head section-head--table"><div><h2>Solicitudes de recuperación <span class="count-chip">{{pending.length}}</span></h2><small>Revisa las solicitudes antes de aprobar o rechazar el acceso.</small></div>
-      <button type="button" (click)="loadPending()" [disabled]="loadingPending"><app-loading-indicator *ngIf="loadingPending; else refreshPending" [compact]="true" message="Cargando..." /><ng-template #refreshPending><mat-icon>refresh</mat-icon> Actualizar</ng-template></button>
+      <button type="button" appUiButton="secondary" (click)="loadPending()" [disabled]="loadingPending"><app-loading-indicator *ngIf="loadingPending; else refreshPending" [compact]="true" message="Cargando..." /><ng-template #refreshPending><mat-icon>refresh</mat-icon> Actualizar</ng-template></button>
     </div>
     <p *ngIf="pendingError" class="inline-alert inline-alert--error" role="alert"><mat-icon>error_outline</mat-icon>{{pendingError}}</p>
     <app-loading-indicator *ngIf="loadingPending && !pending.length" message="Cargando recuperaciones..." />
@@ -210,7 +211,7 @@
           <td>{{r.company}}</td>
           <td>{{r.requestedAt | date:'dd/MM/yyyy HH:mm'}}</td>
           <td><span class="status-pill status-warning">Pendiente</span></td>
-          <td class="action-cell"><div class="table-actions"><button type="button" class="action-edit" (click)="review(r,true)" [disabled]="workingRecoveryId !== null"><mat-icon>check_circle</mat-icon> Aprobar</button><button type="button" class="danger-button" (click)="review(r,false)" [disabled]="workingRecoveryId !== null"><mat-icon>close</mat-icon> Rechazar</button></div></td>
+          <td class="action-cell"><div class="table-actions"><button type="button" appUiTableAction="success" class="action-edit" (click)="review(r,true)" [disabled]="workingRecoveryId !== null"><mat-icon>check_circle</mat-icon> Aprobar</button><button type="button" appUiTableAction="danger" class="danger-button" (click)="review(r,false)" [disabled]="workingRecoveryId !== null"><mat-icon>close</mat-icon> Rechazar</button></div></td>
         </tr>
       </tbody>
     </table></div>

@@ -5,7 +5,6 @@
 .assignment-dialog__title {display:flex;align-items:center;gap:11px;min-width:0}
 .assignment-dialog__icon {background:#2b3e25;color:#c4ee73;border-radius:11px;width:41px;height:41px;display:grid;place-items:center;flex:none}
 .assignment-dialog__header h2{margin:0;font-size:18px;font-weight:750}.assignment-dialog__header p{margin:3px 0 0;color:#a8bacc;font-size:12px}
-.assignment-dialog__close {border:1px solid #65798a;background:#1a2530;color:#e6eef6;border-radius:8px;display:grid;place-items:center;width:35px;height:35px;cursor:pointer}
 .assignment-dialog__body.mat-mdc-dialog-content {padding:19px 22px!important;max-height:none;overflow:auto;color:inherit}
 .assignment-dialog__notice {padding:11px 13px;border-radius:9px;background:#213449;border:1px solid #4d6d88;color:#c9dfef;font-size:12px;display:flex;gap:9px;align-items:flex-start;line-height:1.5;margin-bottom:17px}
 .assignment-dialog__notice mat-icon {font-size:18px;height:18px;width:18px;flex:none}
@@ -607,26 +606,6 @@
 
   background: #151e27;
   border-top: 1px solid #344353;
-}
-
-.assignment-dialog .assignment-dialog__footer .custody-footer-close {
-  padding: 10px 14px;
-
-  border: 1px solid transparent;
-  border-radius: 8px;
-  background: transparent;
-  color: #b1bbca;
-
-  font-size: 12px;
-  font-weight: 750;
-  cursor: pointer;
-}
-
-.assignment-dialog
-.assignment-dialog__footer
-.custody-footer-close:hover {
-  background: #24303a;
-  color: #fff;
 }
 
 /* RESPONSIVE */

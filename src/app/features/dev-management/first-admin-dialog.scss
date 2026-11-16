@@ -12,9 +12,6 @@
 .first-admin-symbol mat-icon{width:23px;height:23px;font-size:23px}
 .first-admin-heading h2{margin:0;padding:0;font-size:18px;font-weight:760;line-height:1.35}
 .first-admin-heading p{margin:4px 0 0;color:#acc5d5;font-size:11px}
-.first-admin-close{display:grid;place-items:center;flex:0 0 36px;height:36px;width:36px;
-  border:1px solid #648196;border-radius:9px;background:#213748;color:#e6f3fc;cursor:pointer}
-.first-admin-close mat-icon{width:20px;height:20px;font-size:20px}
 .first-admin-body{flex:1 1 auto;overflow-y:auto;overflow-x:hidden;min-height:0;
   padding:16px 19px 14px!important;scrollbar-width:thin;
   scrollbar-color:var(--inv-company-accent,#a2d149) transparent}
@@ -58,14 +55,6 @@
 .first-admin-actions{flex:0 0 auto;display:flex;align-items:center;justify-content:flex-end;
   gap:9px;flex-wrap:wrap;margin:0;padding:12px 19px!important;
   background:#1d303e;border-top:1px solid #506879}
-.first-admin-actions button{display:inline-flex;align-items:center;justify-content:center;gap:7px;
-  min-height:39px;padding:8px 15px;border-radius:9px;font:inherit;font-size:12px;font-weight:730;cursor:pointer}
-.first-admin-cancel{border:1px solid #657f91;background:#2a4353;color:#eef7fc}
-.first-admin-submit{background:var(--inv-company-accent,var(--core-accent,#a2d149));
-  border:1px solid var(--inv-company-accent,var(--core-accent,#a2d149));color:#142631}
-.first-admin-actions button mat-icon{height:18px;width:18px;font-size:18px}
-:host button:disabled{opacity:.4;cursor:not-allowed}
-:host button:focus-visible{outline:2px solid var(--inv-company-accent,#a2d149);outline-offset:2px}
 @media(max-width:580px){.first-admin-header,.first-admin-actions{padding-inline:13px!important}
   .first-admin-body{padding-inline:13px!important}
   .first-admin-fields{grid-template-columns:1fr}

@@ -823,36 +823,6 @@ select:not([multiple]):focus-visible {
   width: 100%;
 }
 
-/* Botón principal */
-.cdk-overlay-pane.fx-history-modal .fx-history-controls>.fx-search-button {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  gap: 8px;
-  grid-column: 1 / -1;
-
-  width: 100%;
-  min-height: 43px;
-  padding: 10px 16px;
-
-  border: 0;
-  border-radius: 24px;
-  background: var(--inv-company-accent, #a2d149);
-  color: var(--inv-company-on-accent, #12202b);
-
-  font-weight: 750;
-  cursor: pointer;
-}
-
-.fx-search-button:hover:not(:disabled) {
-  filter: brightness(1.09);
-}
-
-.fx-search-button:disabled {
-  opacity: .45;
-  cursor: not-allowed;
-}
-
 /* Tabla */
 .fx-unified-content .history-rates-scroll {
   margin-top: 14px;

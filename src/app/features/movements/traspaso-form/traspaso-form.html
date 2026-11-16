@@ -2,7 +2,7 @@
   <header class="transfer-header">
     <span class="transfer-icon"><mat-icon>swap_horiz</mat-icon></span>
     <div class="transfer-title"><h2>Registrar salida o asignación</h2><p>Entrega, custodia y baja de artículos con registro de movimientos.</p></div>
-    <button type="button" class="close-button" (click)="close()" aria-label="Cerrar"><mat-icon>close</mat-icon></button>
+    <button type="button" appUiButton="close" (click)="close()" aria-label="Cerrar"><mat-icon>close</mat-icon></button>
   </header>
   <nav class="wizard-nav" aria-label="Etapas del traspaso">
     <button type="button" [class.active]="step===1" [class.done]="step>1" (click)="goStep(1)"><span>1</span>Artículo y salida</button>
@@ -75,8 +75,8 @@
     </section>
   </div>
   <footer class="transfer-footer">
-    <button type="button" class="outline-btn" [disabled]="isSaving" (click)="step>1?previousStep():close()">{{step>1?'Anterior':'Cancelar'}}</button>
-    <button type="button" class="submit-btn" *ngIf="step<3" [disabled]="step===1?!canAdvanceOperation:!canAdvanceRecipient" (click)="nextStep()">Siguiente <mat-icon>arrow_forward</mat-icon></button>
-    <button type="button" class="submit-btn" *ngIf="step===3" [disabled]="!canSubmit" (click)="onSubmit()"><mat-icon>save</mat-icon>{{isSaving?'Guardando...':'Confirmar operación'}}</button>
+    <button type="button" appUiButton="secondary" [disabled]="isSaving" (click)="step>1?previousStep():close()">{{step>1?'Anterior':'Cancelar'}}</button>
+    <button type="button" appUiButton="primary" *ngIf="step<3" [disabled]="step===1?!canAdvanceOperation:!canAdvanceRecipient" (click)="nextStep()">Siguiente <mat-icon>arrow_forward</mat-icon></button>
+    <button type="button" appUiButton="primary" *ngIf="step===3" [disabled]="!canSubmit" (click)="onSubmit()"><mat-icon>save</mat-icon>{{isSaving?'Guardando...':'Confirmar operación'}}</button>
   </footer>
 </div>

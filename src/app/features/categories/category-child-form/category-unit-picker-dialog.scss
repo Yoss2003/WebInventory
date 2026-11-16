@@ -7,7 +7,6 @@ $accent: var(--inv-company-accent, #a2d149);
 .unit-picker__titles { flex: 1; min-width: 0; }
 .unit-picker h2 { font-size: 18px; line-height: 1.25; margin: 0 0 3px; }
 .unit-picker__titles p { font-size: 12px; color: #b1bfcd; margin: 0; }
-.unit-picker__close { border: 1px solid #556e80; background: #1a2734; border-radius: 9px; width: 34px; height: 34px; color: #e3edf7; cursor: pointer; display: grid; place-items: center; }
 .unit-picker__body { padding: 16px 20px; display: flex; flex-direction: column; gap: 11px; min-height: 0; overflow: hidden; }
 .unit-picker__search-label { font-size: 12px; font-weight: 700; color: #cddae7; }
 .unit-picker__search { position: relative; display: flex; align-items: center; }
@@ -29,10 +28,6 @@ $accent: var(--inv-company-accent, #a2d149);
 .unit-picker__empty { padding: 19px; text-align: center; font-size: 12px; color: #afc0d0; }
 .unit-picker__invalid { font-size: 11px; color: #ff9d9d; margin: 0; }
 .unit-picker__footer { display: flex; justify-content: flex-end; gap: 10px; padding: 13px 20px; border-top: 1px solid #435668; background: #1e2d3c; }
-.unit-picker__footer button { padding: 9px 14px; border: 1px solid #66798a; border-radius: 9px; color: #e5edf7; background: #243140; cursor: pointer; font-weight: 600; display: inline-flex; align-items: center; gap: 6px; }
-.unit-picker__footer .unit-picker__apply { border-color: $accent; background: $accent; color: #132116; }
-.unit-picker__footer .unit-picker__apply:disabled { opacity: .4; cursor: default; }
-.unit-picker__footer mat-icon { font-size: 18px; height: 18px; width: 18px; }
 @media (max-width: 520px) { .unit-picker__header, .unit-picker__body, .unit-picker__footer { padding-inline: 13px; } .unit-picker__count { flex-basis: 100%; } .unit-picker__actions { justify-content: flex-start; } }
 
 /* WEBINVENTORY_UNIDADES_UX_V1 */

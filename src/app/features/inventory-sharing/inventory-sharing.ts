@@ -1,5 +1,10 @@
+import { MatDialog, MatDialogModule } from '@angular/material/dialog';
+import { WorkerPickerDialogComponent } from '../inventory-management/worker-picker-dialog/worker-picker-dialog.component';
+import { Employee } from '../../core/models/employee.model';
 import { UiControlDirective } from '../../shared/ui/v2/ui-control.directive';
 import { UiPageHeadingComponent } from '../../shared/ui/v2/ui-page-heading.component';
+import { UiButtonDirective } from '../../shared/ui/v2/ui-button.directive';
+import { UiTableActionDirective } from '../../shared/ui/v2/ui-table-action.directive';
 import { ChangeDetectorRef, Component, OnInit, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
@@ -14,7 +19,7 @@ import { LoadingIndicatorComponent } from '../../shared/loading/loading-indicato
 
 @Component({
   selector: 'app-inventory-sharing', standalone: true,
-  imports: [UiControlDirective, UiPageHeadingComponent, CommonModule, FormsModule, MatIconModule, MatFormFieldModule, MatSelectModule, LoadingIndicatorComponent],
+  imports: [MatDialogModule, UiControlDirective, UiPageHeadingComponent, UiButtonDirective, UiTableActionDirective, CommonModule, FormsModule, MatIconModule, MatFormFieldModule, MatSelectModule, LoadingIndicatorComponent],
   templateUrl: './inventory-sharing.html', styleUrl: './inventory-sharing.scss'
 })
 export class InventorySharingComponent implements OnInit {
@@ -22,6 +27,7 @@ export class InventorySharingComponent implements OnInit {
   private readonly access = inject(AccessService);
   private readonly snack = inject(MatSnackBar);
   private readonly confirms = inject(ConfirmationDialogService);
+  private readonly dialog = inject(MatDialog);
   private readonly cdr = inject(ChangeDetectorRef);
   myUserId = 0;
   canManageAccess = false;
@@ -126,6 +132,24 @@ export class InventorySharingComponent implements OnInit {
         this.sharesLoaded = true;
         this.loadingShares = false;
         this.error = String(err?.error?.error || 'No se pudieron consultar los permisos de este inventario.');
+        this.cdr.markForCheck();
+      }
+    });
+  }
+
+  openWorkerPicker(): void {
+    const dialogRef = this.dialog.open(WorkerPickerDialogComponent, {
+      width: '780px',
+      maxWidth: '96vw',
+      panelClass: 'inv-v2-dialog-panel',
+      data: {
+        excludeUserId: this.myUserId
+      }
+    });
+
+    dialogRef.afterClosed().subscribe((emp: Employee | undefined) => {
+      if (emp) {
+        this.identifier = emp.dni || emp.user?.username || emp.user?.email || emp.firstName || '';
         this.cdr.markForCheck();
       }
     });

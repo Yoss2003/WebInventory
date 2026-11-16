@@ -1,0 +1,55 @@
+<div class="inventory-edit-dialog ui-v2-dialog ui-v2-dialog--simple" role="document">
+  <header class="edit-dialog-header">
+    <div class="edit-dialog-heading">
+      <span class="edit-dialog-symbol">
+        <mat-icon aria-hidden="true">warehouse</mat-icon>
+      </span>
+      <div class="edit-dialog-heading__text">
+        <h2 mat-dialog-title>Editar inventario</h2>
+        <p>Almacén #{{ data.inventory.id }} · {{ data.inventory.inventoryName }}</p>
+      </div>
+    </div>
+    <button type="button" appUiButton="close" (click)="dialogRef.close()"
+      [disabled]="saving" title="Cerrar" aria-label="Cerrar modal">
+      <mat-icon aria-hidden="true">close</mat-icon>
+    </button>
+  </header>
+
+  <mat-dialog-content class="edit-dialog-content">
+    <form (ngSubmit)="save()" class="edit-dialog-form">
+      <div class="field">
+        <label for="inv-edit-name">Nombre técnico <span class="required">*</span></label>
+        <input id="inv-edit-name" [(ngModel)]="name" name="name"
+          maxlength="255" placeholder="Ej. YosMG_Invent_1"
+          required appUiControl />
+        <small class="field-hint">Identificador interno del almacén u operativo.</small>
+      </div>
+
+      <div class="field">
+        <label for="inv-edit-alias">Alias / Nombre visible <span class="optional">(opcional)</span></label>
+        <input id="inv-edit-alias" [(ngModel)]="alias" name="alias"
+          maxlength="255" placeholder="Ej. Almacén Central"
+          appUiControl />
+        <small class="field-hint">Nombre descriptivo visible en selectores y reportes.</small>
+      </div>
+
+      <p *ngIf="error" class="error-notice" role="alert">
+        <mat-icon aria-hidden="true">error_outline</mat-icon>
+        <span>{{ error }}</span>
+      </p>
+    </form>
+  </mat-dialog-content>
+
+  <mat-dialog-actions class="edit-dialog-footer">
+    <button type="button" appUiButton="secondary" (click)="dialogRef.close()" [disabled]="saving">
+      Cancelar
+    </button>
+    <button type="button" appUiButton="primary" (click)="save()" [disabled]="!isValid || saving">
+      <app-loading-indicator *ngIf="saving; else saveLabel" [compact]="true" message="Guardando..." />
+      <ng-template #saveLabel>
+        <mat-icon aria-hidden="true">save</mat-icon>
+        Guardar cambios
+      </ng-template>
+    </button>
+  </mat-dialog-actions>
+</div>
