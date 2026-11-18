@@ -1,0 +1,210 @@
+:host {
+  display: block;
+  width: 100%;
+}
+
+.inventory-create-dialog {
+  width: min(520px, 94vw);
+  background: #141f29;
+  border-radius: 16px;
+  overflow: hidden;
+  box-shadow: 0 16px 45px rgba(0, 0, 0, 0.45);
+}
+
+.create-dialog-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 15px 19px;
+  background: #1d2c38;
+  border-bottom: 1px solid #364958;
+}
+
+.create-dialog-heading {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  min-width: 0;
+}
+
+.create-dialog-symbol {
+  display: grid;
+  place-items: center;
+  width: 40px;
+  height: 40px;
+  border-radius: 10px;
+  background: rgba(162, 209, 73, 0.12);
+  color: var(--inv-company-accent, #a2d149);
+  flex: none;
+
+  mat-icon {
+    font-size: 22px;
+    width: 22px;
+    height: 22px;
+  }
+}
+
+.create-dialog-heading__text {
+  min-width: 0;
+
+  h2 {
+    font-size: 16px;
+    font-weight: 700;
+    color: #edf5fb;
+    margin: 0;
+  }
+
+  p {
+    font-size: 11px;
+    color: #92a7b8;
+    margin: 2px 0 0;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+}
+
+.create-dialog-actions {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex: none;
+}
+
+.create-dialog-info-btn {
+  display: grid;
+  place-items: center;
+  width: 32px;
+  height: 32px;
+  border: 1px solid #4a6376;
+  border-radius: 8px;
+  background: #1b2834;
+  color: #a4bed2;
+  cursor: pointer;
+  transition: all .15s ease;
+
+  mat-icon {
+    font-size: 18px;
+    width: 18px;
+    height: 18px;
+  }
+
+  &:hover {
+    color: var(--inv-company-accent, #a2d149);
+    border-color: var(--inv-company-accent, #a2d149);
+  }
+}
+
+.create-dialog-content {
+  padding: 18px 20px;
+  max-height: 70vh;
+  overflow-y: auto;
+}
+
+.create-dialog-form {
+  display: grid;
+  gap: 15px;
+}
+
+.field {
+  display: grid;
+  gap: 6px;
+
+  label {
+    font-size: 12px;
+    font-weight: 650;
+    color: #d1e2ee;
+
+    .required {
+      color: var(--inv-company-accent, #a2d149);
+    }
+
+    .optional {
+      font-size: 11px;
+      color: #8fa5b6;
+      font-weight: 400;
+    }
+  }
+
+  .field-hint {
+    font-size: 11px;
+    color: #849cae;
+  }
+}
+
+/* Selector Material acorde al tema oscuro */
+:host ::ng-deep .inventory-select.mat-mdc-form-field {
+  width: 100%;
+  --mdc-outlined-text-field-outline-color: #5c768a;
+  --mdc-outlined-text-field-hover-outline-color: #8fb0c8;
+  --mdc-outlined-text-field-focus-outline-color: var(--inv-company-accent, #a2d149);
+  --mdc-outlined-text-field-container-shape: 9px;
+  --mat-select-enabled-trigger-text-color: #edf5fb;
+  --mat-select-placeholder-text-color: #8da4b7;
+  --mat-select-enabled-arrow-color: #c0d3e2;
+  --mat-select-focused-arrow-color: var(--inv-company-accent, #a2d149);
+}
+
+:host ::ng-deep .inventory-select .mat-mdc-text-field-wrapper {
+  background: #101c26;
+  height: 42px;
+  min-height: 42px;
+  border-radius: 9px;
+}
+
+:host ::ng-deep .inventory-select .mat-mdc-form-field-infix {
+  height: 42px;
+  min-height: 42px;
+  padding: 8px 0;
+  box-sizing: border-box;
+}
+
+:host ::ng-deep .inventory-select .mat-mdc-select-value {
+  font-size: 12px;
+  color: #edf5fb;
+}
+
+:host ::ng-deep .inventory-select .mat-mdc-form-field-subscript-wrapper {
+  display: none;
+}
+
+.warning-notice,
+.error-notice {
+  margin: 0;
+  padding: 10px 12px;
+  border-radius: 8px;
+  font-size: 12px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+
+  mat-icon {
+    font-size: 18px;
+    width: 18px;
+    height: 18px;
+    flex: none;
+  }
+}
+
+.warning-notice {
+  background: rgba(234, 179, 8, 0.12);
+  border: 1px solid rgba(234, 179, 8, 0.4);
+  color: #fde047;
+}
+
+.error-notice {
+  background: rgba(239, 68, 68, 0.12);
+  border: 1px solid rgba(239, 68, 68, 0.4);
+  color: #fca5a5;
+}
+
+.create-dialog-footer {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 10px;
+  padding: 13px 19px;
+  background: #1d2c38;
+  border-top: 1px solid #364958;
+}

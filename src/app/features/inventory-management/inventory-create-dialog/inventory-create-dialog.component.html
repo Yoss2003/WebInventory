@@ -1,0 +1,82 @@
+<div class="inventory-create-dialog ui-v2-dialog ui-v2-dialog--simple" role="document">
+  <header class="create-dialog-header">
+    <div class="create-dialog-heading">
+      <span class="create-dialog-symbol">
+        <mat-icon aria-hidden="true">add_business</mat-icon>
+      </span>
+      <div class="create-dialog-heading__text">
+        <h2 mat-dialog-title>Crear inventario</h2>
+        <p>Registra un nuevo almacén operativo para artículos y existencias</p>
+      </div>
+    </div>
+    <div class="create-dialog-actions">
+      <button type="button" class="create-dialog-info-btn"
+        matTooltip="Los inventarios operativos gestionan existencias directas. El inventario maestro se mantiene separado para catálogos globales."
+        matTooltipPosition="below"
+        aria-label="Información sobre inventarios operativos"
+        title="Información">
+        <mat-icon aria-hidden="true">info_outline</mat-icon>
+      </button>
+      <button type="button" appUiButton="close" (click)="close()"
+        [disabled]="saving" title="Cerrar" aria-label="Cerrar modal">
+        <mat-icon aria-hidden="true">close</mat-icon>
+      </button>
+    </div>
+  </header>
+
+  <mat-dialog-content class="create-dialog-content">
+    <form (ngSubmit)="create()" class="create-dialog-form" id="create-inventory-form">
+      <div class="field">
+        <label for="new-inv-name">Nombre del inventario <span class="required">*</span></label>
+        <input id="new-inv-name" name="name" [(ngModel)]="name"
+          maxlength="255" placeholder="Ej. Almacén Central"
+          required autocomplete="off" appUiControl />
+        <small class="field-hint">Identificador principal del nuevo almacén.</small>
+      </div>
+
+      <div class="field">
+        <label for="new-inv-alias">Alias <span class="optional">(opcional)</span></label>
+        <input id="new-inv-alias" name="alias" [(ngModel)]="alias"
+          maxlength="120" placeholder="Ej. Principal"
+          autocomplete="off" appUiControl />
+        <small class="field-hint">Nombre corto o descriptivo visible en selectores.</small>
+      </div>
+
+      <div class="field" *ngIf="data.isManager">
+        <label for="new-inv-owner">Propietario / Titular <span class="required">*</span></label>
+        <mat-form-field appearance="outline" class="inventory-select">
+          <mat-select id="new-inv-owner" name="ownerId" [(ngModel)]="ownerId" required
+            panelClass="inventory-select-options">
+            <mat-option *ngFor="let user of data.users" [value]="user.id">
+              {{ user.firstName ? (user.firstName + ' ' + (user.lastName || '') + ' · ' + user.username) : user.username }}
+            </mat-option>
+          </mat-select>
+        </mat-form-field>
+        <small class="field-hint">Usuario responsable que administrará este almacén.</small>
+      </div>
+
+      <p *ngIf="data.isManager && (!data.users || !data.users.length)" class="warning-notice" role="alert">
+        <mat-icon aria-hidden="true">warning_amber</mat-icon>
+        <span>No se encontraron usuarios activos para asignar como titular.</span>
+      </p>
+
+      <p *ngIf="error" class="error-notice" role="alert">
+        <mat-icon aria-hidden="true">error_outline</mat-icon>
+        <span>{{ error }}</span>
+      </p>
+    </form>
+  </mat-dialog-content>
+
+  <mat-dialog-actions class="create-dialog-footer">
+    <button type="button" appUiButton="secondary" (click)="close()" [disabled]="saving">
+      Cancelar
+    </button>
+    <button type="submit" form="create-inventory-form" appUiButton="primary" [disabled]="!isValid || saving">
+      <app-loading-indicator *ngIf="saving; else createLabel" [compact]="true" message="Creando..." />
+      <ng-template #createLabel>
+        <mat-icon aria-hidden="true">add</mat-icon>
+        Crear inventario
+      </ng-template>
+    </button>
+  </mat-dialog-actions>
+</div>

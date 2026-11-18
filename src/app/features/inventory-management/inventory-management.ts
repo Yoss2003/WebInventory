@@ -10,7 +10,6 @@ import { catchError, forkJoin, of } from 'rxjs';
 
 import { UiPageHeadingComponent } from '../../shared/ui/v2/ui-page-heading.component';
 import { UiButtonDirective } from '../../shared/ui/v2/ui-button.directive';
-import { UiControlDirective } from '../../shared/ui/v2/ui-control.directive';
 import { UiTableActionDirective } from '../../shared/ui/v2/ui-table-action.directive';
 import { ConfirmationDialogService } from '../../shared/confirm-dialog/confirmation-dialog.service';
 import { ToastService } from '../../shared/toast/toast.service';
@@ -21,6 +20,7 @@ import { EmployeeService } from '../../core/services/employees';
 import { Employee } from '../../core/models/employee.model';
 import { LoadingIndicatorComponent } from '../../shared/loading/loading-indicator';
 import { InventoryEditDialogComponent } from './inventory-edit-dialog/inventory-edit-dialog.component';
+import { InventoryCreateDialogComponent } from './inventory-create-dialog/inventory-create-dialog.component';
 import { ShareInventoryDialogComponent } from './share-inventory-dialog/share-inventory-dialog.component';
 
 @Component({
@@ -29,7 +29,7 @@ import { ShareInventoryDialogComponent } from './share-inventory-dialog/share-in
   imports: [
     CommonModule, FormsModule, MatIconModule, MatSelectModule, MatFormFieldModule,
     MatDialogModule, RouterLink, UiPageHeadingComponent, UiButtonDirective,
-    UiControlDirective, UiTableActionDirective, LoadingIndicatorComponent
+    UiTableActionDirective, LoadingIndicatorComponent
   ],
   templateUrl: './inventory-management.html',
   styleUrl: './inventory-management.scss'
@@ -49,24 +49,13 @@ export class InventoryManagementComponent implements OnInit {
   canManageAccess = false;
   selfId = 0;
   loading = true; // Inicia inmediatamente en true para evitar pantalla vacía
-  saving = false;
   error = '';
   rows: InventorySummary[] = [];
   users: ManagedUser[] = [];
   employees: Employee[] = [];
 
-  name = '';
-  alias = '';
-  ownerId = 0;
-
   get operational(): InventorySummary[] {
     return this.rows.filter(r => !r.isMaster);
-  }
-
-  get canSubmit(): boolean {
-    return this.canCreate && !this.saving && this.name.trim().length > 0 &&
-      this.name.trim().length <= 255 &&
-      (!this.isManager || this.ownerId > 0);
   }
 
   ngOnInit(): void {
@@ -83,9 +72,6 @@ export class InventoryManagementComponent implements OnInit {
         this.isManager = a.isDeveloper || a.isAdministrator;
         this.canCreate = (a.permissions || []).includes('CREATE_INVENTORIES');
         this.canManageAccess = (a.permissions || []).includes('MANAGE_INVENTORY_ACCESS');
-        if (!this.ownerId) {
-          this.ownerId = a.userId;
-        }
 
         const members = this.isManager ? this.usersApi.users().pipe(catchError(() => of([] as ManagedUser[]))) : of([] as ManagedUser[]);
         const inventories = this.isManager ? this.api.companyInventories() : this.api.getInventories();
@@ -96,10 +82,6 @@ export class InventoryManagementComponent implements OnInit {
             this.rows = (inventories || []).filter(i => i.isActive);
             this.users = (users || []).filter(u => u.isActive && u.statusId === 1);
             this.employees = (employees || []).filter(e => e.isActive);
-
-            if (this.isManager && !this.users.some(u => u.id === this.ownerId)) {
-              this.ownerId = this.users[0]?.id ?? this.selfId;
-            }
             this.loading = false;
             this.cdr.markForCheck();
           },
@@ -132,24 +114,23 @@ export class InventoryManagementComponent implements OnInit {
     return id === this.selfId ? 'Mi cuenta' : `Usuario #${id}`;
   }
 
-  create(): void {
-    if (!this.canSubmit) return;
-    this.saving = true;
-    const request = this.isManager
-      ? this.api.assign(this.ownerId, this.name.trim(), this.alias.trim() || null)
-      : this.api.create(this.name.trim(), this.alias.trim() || null);
+  openCreateDialog(): void {
+    if (!this.canCreate) return;
 
-    request.subscribe({
-      next: inventory => {
-        this.saving = false;
-        this.name = '';
-        this.alias = '';
-        this.toast.success(`Inventario #${inventory.id} creado correctamente.`);
+    const dialogRef = this.dialog.open(InventoryCreateDialogComponent, {
+      width: '520px',
+      maxWidth: '94vw',
+      panelClass: ['inv-v2-dialog-panel', 'inv-seven-modal'],
+      data: {
+        isManager: this.isManager,
+        users: this.users,
+        selfId: this.selfId
+      }
+    });
+
+    dialogRef.afterClosed().subscribe(result => {
+      if (result) {
         this.load();
-      },
-      error: e => {
-        this.saving = false;
-        this.toast.error(String(e?.error?.error || 'No se pudo crear el inventario.'));
       }
     });
   }
@@ -160,11 +141,14 @@ export class InventoryManagementComponent implements OnInit {
     const dialogRef = this.dialog.open(ShareInventoryDialogComponent, {
       width: '720px',
       maxWidth: '96vw',
-      panelClass: 'inv-v2-dialog-panel',
+      panelClass: ['inv-v2-dialog-panel', 'inv-seven-modal'],
       data: {
         inventory: row,
         allInventories: this.operational,
-        isManager: this.isManager
+        isManager: this.isManager,
+        users: this.users,
+        employees: this.employees,
+        selfId: this.selfId
       }
     });
 
@@ -179,7 +163,7 @@ export class InventoryManagementComponent implements OnInit {
     const dialogRef = this.dialog.open(InventoryEditDialogComponent, {
       width: '520px',
       maxWidth: '94vw',
-      panelClass: 'inv-v2-dialog-panel',
+      panelClass: ['inv-v2-dialog-panel', 'inv-seven-modal'],
       data: {
         inventory: row
       }
@@ -199,15 +183,17 @@ export class InventoryManagementComponent implements OnInit {
       message: `¿Desactivar «${row.alias || row.inventoryName}»? No debe tener artículos, movimientos, asignaciones ni accesos compartidos pendientes.`,
       confirmLabel: 'Desactivar',
       tone: 'danger',
-      icon: 'inventory_2'
-    }).subscribe(ok => {
-      if (!ok) return;
+      icon: 'block'
+    }).subscribe(confirmed => {
+      if (!confirmed) return;
       this.api.deactivate(row.id).subscribe({
         next: () => {
           this.toast.success('Inventario desactivado.');
           this.load();
         },
-        error: () => this.toast.error('No se puede desactivar ese inventario mientras tenga registros asociados.')
+        error: e => {
+          this.toast.error(String(e?.error?.error || 'No se pudo desactivar el inventario.'));
+        }
       });
     });
   }

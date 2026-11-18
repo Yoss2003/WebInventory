@@ -1,3 +1,8 @@
+$bg: #11161d;
+$text: #edf1f5;
+$muted: #a4afbe;
+$lime: var(--inv-company-accent, #A2D149);
+
 /* Ancho general máximo 650 px. Nunca se fuerza en los modales especiales ya aprobados. */
 .cdk-overlay-pane:has(.ui-v2-dialog--simple) {
   max-width:min(var(--inv-v3-modal-general-width),calc(100vw - 24px))!important;
@@ -18,4 +23,320 @@
 .ui-v2-dialog :is(.step-num,.heading-icon,.section-icon,.header-icon,.modal-icon).active {
   color:var(--inv-v3-brand);
 }
-/* El scroll vertical no se oculta: si el contenido supera el alto disponible, debe poder verse. */
+
+.custom-modal {
+  width: 100%;
+  height: min(760px, calc(100dvh - 28px));
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  background: $bg;
+  color: $text;
+}
+
+.title-area {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  margin-bottom: 22px;
+
+  .title-mark {
+    width: 46px;
+    height: 46px;
+    flex: none;
+    display: grid;
+    place-items: center;
+    border: 1px solid #465769;
+    background: #1d2935;
+    border-radius: 12px;
+    color: #eaf3dc;
+  }
+
+  .title-mark mat-icon {
+    font-size: 27px;
+    width: 27px;
+    height: 27px;
+  }
+
+  h2 {
+    margin: 0;
+    font-size: 21px;
+    font-weight: 750;
+    line-height: 1.25;
+    letter-spacing: .2px;
+  }
+
+  p {
+    margin: 4px 0 0;
+    color: $muted;
+    font-size: 12px;
+  }
+}
+
+.steps-nav {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  padding: 0 0 17px;
+
+  .step {
+    appearance: none;
+    border: 1px solid transparent;
+    border-radius: 10px;
+    background: transparent;
+    display: flex;
+    align-items: center;
+    gap: 9px;
+    color: $muted;
+    padding: 10px 11px;
+    white-space: nowrap;
+    cursor: pointer;
+    transition: background .15s, color .15s;
+
+    &:hover:not(:disabled) {
+      background: #1f2a35;
+      color: $text;
+    }
+
+    &.active {
+      background: #263445;
+      border-color: #40566b;
+      color: $text;
+    }
+
+    &.active .step-num {
+      background: $lime;
+      color: #12200c;
+      border-color: $lime;
+    }
+
+    &.completed .step-num {
+      border-color: var(--inv-company-accent, #A2D149);
+      color: $lime;
+    }
+
+    &:disabled {
+      opacity: .55;
+      cursor: not-allowed;
+    }
+  }
+
+  .step-num {
+    display: grid;
+    place-items: center;
+    flex: none;
+    width: 27px;
+    height: 27px;
+    border-radius: 50%;
+    background: #cbd5e3;
+    border: 1px solid #cbd5e3;
+    color: #11161d;
+    font-size: 13px;
+    font-weight: 750;
+
+    mat-icon {
+      font-size: 17px;
+      width: 17px;
+      height: 17px;
+    }
+  }
+
+  .step-text {
+    font-size: 13px;
+    font-weight: 700;
+  }
+
+  .step-divider {
+    height: 1px;
+    flex: 0 1 70px;
+    min-width: 16px;
+    background: #55606e;
+  }
+}
+
+.modal-body {
+  flex: 1;
+  min-height: 0;
+  overflow: auto;
+  padding: 24px 28px;
+  scrollbar-gutter: auto;
+
+  &::-webkit-scrollbar {
+    width: 8px;
+  }
+
+  &::-webkit-scrollbar-thumb {
+    background: var(--inv-company-accent, #A2D149);
+    border-radius: 8px;
+  }
+
+  &::-webkit-scrollbar-track {
+    background: transparent;
+  }
+}
+
+.modal-footer {
+  flex: none;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 16px 28px;
+  background: #151e27;
+  border-top: 1px solid #344353;
+}
+
+/* ========================================================
+   ESTRUCTURA DE WIZARD DIALOGS (V3)
+   ======================================================== */
+.empty-state { display: flex; flex-direction: column; align-items: center; gap: 9px; padding: 36px 20px; text-align: center; border: 1px dashed #526376; border-radius: 9px; background: #16202b; color: $muted; mat-icon { color: $lime; font-size: 28px; width: 28px; height: 28px; } p { font-size: 13px; line-height: 1.5; max-width: 340px; margin: 0; } }
+.text-link { color: $lime; border: none; background: transparent; font: inherit; font-size: 12px; cursor: pointer; text-decoration: underline; }
+.form-grid { align-items: center; display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 18px 16px; }
+.grid-full { grid-column: 1 / -1; }
+.form-group { display: flex; flex-direction: column; gap: 7px; min-width: 0; }
+
+/* ========================================================
+   ESTRUCTURA DE WIZARD DIALOGS ESTANDARIZADA (V3)
+   (Cabeceras Flexibles, espaciados y Footer)
+   ======================================================== */
+.modal-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start; /* Alineación superior para el título */
+  padding: 24px 28px 18px; /* Espaciado ajustado para no chocar arriba */
+  background: linear-gradient(180deg, #121922, $bg);
+  border-bottom: 1px solid #293440;
+}
+
+.title-area { 
+  margin-bottom: 0; 
+}
+
+.steps-nav { 
+  padding-top: 5px; 
+  padding-bottom: 0; 
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+}
+
+.steps-nav .step {
+  appearance: none;
+  border: 1px solid transparent;
+  border-radius: 10px;
+  background: transparent;
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  color: $muted;
+  padding: 10px 11px;
+  white-space: nowrap;
+  cursor: pointer;
+  transition: background .15s, color .15s;
+
+  &:hover:not(:disabled) {
+    background: #1f2a35;
+    color: $text;
+  }
+
+  /* Paso actual (Activo) */
+  &.active {
+    background: #263445;
+    border-color: #40566b;
+    color: $text;
+    
+    .step-num {
+      background: $lime;
+      color: #12200c;
+      border-color: $lime;
+    }
+  }
+
+  /* Paso finalizado (Completado) */
+  &.completed {
+    .step-num {
+      background: var(--inv-company-accent, #A2D149); /* Fondo sólido corporativo */
+      border-color: var(--inv-company-accent, #A2D149);
+      color: var(--inv-company-on-accent, #12202b); /* Ícono de check contrastante */
+    }
+  }
+
+  &:disabled {
+    opacity: .55;
+    cursor: not-allowed;
+  }
+}
+
+/* Círculo base de los números de paso */
+.steps-nav .step-num {
+  display: grid;
+  place-items: center;
+  flex: none;
+  width: 27px;
+  height: 27px;
+  border-radius: 50%;
+  background: #cbd5e3;
+  border: 1px solid #cbd5e3;
+  color: #11161d;
+  font-size: 13px;
+  font-weight: 750;
+  transition: background-color 0.2s, color 0.2s, border-color 0.2s;
+
+  mat-icon {
+    font-size: 17px;
+    width: 17px;
+    height: 17px;
+  }
+}
+
+.steps-nav .step-text {
+  font-size: 13px;
+  font-weight: 700;
+}
+
+.steps-nav .step-divider {
+  height: 1px;
+  flex: 0 1 70px;
+  min-width: 16px;
+  background: #55606e;
+}
+
+/* FOOTER CORRECTO: Atrás (Izq) - Espacio - Cancelar/Siguiente (Der) */
+.modal-footer {
+  display: flex;
+  align-items: center;
+  padding: 16px 28px;
+  background: #151e27;
+  border-top: 1px solid #344353;
+}
+.footer-spacer { flex: 1; }
+
+/* DISEÑO DE BOTONES DEL FOOTER RESTAURADOS */
+.modal-footer .btn-text {
+  appearance: none; background: transparent; border: none; color: #a9bdcb; font: inherit; font-size: 13px; font-weight: 650; cursor: pointer; padding: 8px 12px; border-radius: 8px; transition: color .15s, background .15s;
+  &:hover { color: #edf1f5; background: rgba(255,255,255,.05); }
+}
+.modal-footer .btn-pill-green {
+  appearance: none; display: inline-flex; align-items: center; gap: 6px; padding: 11px 18px; border-radius: 20px; font: inherit; font-size: 13px; font-weight: 700; cursor: pointer; transition: filter .15s;
+  background: var(--inv-company-accent, #A2D149);
+  color: var(--inv-company-on-accent, #12202b);
+  border: 1px solid color-mix(in srgb, var(--inv-company-accent, #A2D149) 80%, white);
+  mat-icon { font-size: 18px; width: 18px; height: 18px; }
+  &:hover { filter: brightness(1.1); }
+  &:disabled { opacity: .5; cursor: not-allowed; }
+}
+.modal-footer .btn-text.back { display: inline-flex; align-items: center; gap: 5px; color: #cbd5e3; }
+.modal-footer .btn-text.back mat-icon { font-size: 20px; width: 20px; height: 20px; }
+
+/* RECUADRO TIPO DE CAMBIO */
+.exchange-rate-card {
+  border: 1px solid #3f5265; border-radius: 8px; background: #17222d; padding: 12px 16px; margin-top: 8px;
+  .exchange-header { display: flex; align-items: center; gap: 6px; color: $muted; font-size: 11px; margin-bottom: 8px; mat-icon { font-size: 15px; width: 15px; height: 15px; color: $lime; } }
+  .exchange-rates { display: flex; gap: 20px; font-size: 13px; color: #a9bdcb; strong { color: #eff8fc; font-weight: 600; } }
+}
+
+@media (max-width: 900px) {
+  .modal-header { flex-direction: column; align-items: flex-start; gap: 16px; padding: 19px 18px 0; }
+}

@@ -5,10 +5,12 @@ import { MatDialogRef, MAT_DIALOG_DATA, MatDialog, MatDialogModule } from '@angu
 import { MatIconModule } from '@angular/material/icon';
 import { MatSelectModule } from '@angular/material/select';
 import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatTooltipModule } from '@angular/material/tooltip';
 import { UiButtonDirective } from '../../../shared/ui/v2/ui-button.directive';
 import { UiControlDirective } from '../../../shared/ui/v2/ui-control.directive';
 import { UiTableActionDirective } from '../../../shared/ui/v2/ui-table-action.directive';
 import { InventoryService, InventorySummary, InventoryShare } from '../../../core/services/inventories';
+import { ManagedUser } from '../../../core/services/user-management';
 import { Employee } from '../../../core/models/employee.model';
 import { WorkerPickerDialogComponent } from '../worker-picker-dialog/worker-picker-dialog.component';
 import { ToastService } from '../../../shared/toast/toast.service';
@@ -19,14 +21,26 @@ export interface ShareInventoryDialogData {
   inventory: InventorySummary;
   allInventories?: InventorySummary[];
   isManager?: boolean;
+  users?: ManagedUser[];
+  employees?: Employee[];
+  selfId?: number;
 }
 
 @Component({
   selector: 'app-share-inventory-dialog',
   standalone: true,
   imports: [
-    CommonModule, FormsModule, MatDialogModule, MatIconModule, MatSelectModule, MatFormFieldModule,
-    UiButtonDirective, UiControlDirective, UiTableActionDirective, LoadingIndicatorComponent
+    CommonModule,
+    FormsModule,
+    MatDialogModule,
+    MatIconModule,
+    MatSelectModule,
+    MatFormFieldModule,
+    MatTooltipModule,
+    UiButtonDirective,
+    UiControlDirective,
+    UiTableActionDirective,
+    LoadingIndicatorComponent
   ],
   templateUrl: './share-inventory-dialog.component.html',
   styleUrl: './share-inventory-dialog.component.scss'
@@ -43,8 +57,14 @@ export class ShareInventoryDialogComponent implements OnInit {
   currentStep = 1;
 
   // Paso 1: Inventario
-  selectedInventoryId = this.data.inventory.id;
-  availableInventories: InventorySummary[] = this.data.allInventories || [this.data.inventory];
+  selectedInventoryId = this.data.inventory?.id || 0;
+
+  get availableInventories(): InventorySummary[] {
+    const list = this.data.allInventories && this.data.allInventories.length > 0
+      ? this.data.allInventories
+      : [this.data.inventory];
+    return list.filter(i => i.isActive && !i.isMaster);
+  }
 
   // Paso 2: Colaborador y Permiso
   selectedEmployee: Employee | null = null;
@@ -92,10 +112,44 @@ export class ShareInventoryDialogComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    if (!this.selectedInventoryId && this.availableInventories.length > 0) {
+      this.selectedInventoryId = this.availableInventories[0].id;
+    }
     this.loadShares();
   }
 
+  getOwnerName(userId: number): string {
+    if (this.data.employees?.length) {
+      const emp = this.data.employees.find(e => e.userId === userId);
+      if (emp) {
+        const full = `${emp.firstName || ''} ${emp.lastName || ''}`.trim();
+        if (full) return `${full} (${emp.user?.username || emp.dni || 'ID #' + userId})`;
+      }
+    }
+    if (this.data.users?.length) {
+      const user = this.data.users.find(u => u.id === userId);
+      if (user) {
+        const full = `${user.firstName || ''} ${user.lastName || ''}`.trim();
+        return full ? `${full} (${user.username})` : user.username;
+      }
+    }
+    return userId === this.data.selfId ? 'Mi cuenta' : `Usuario #${userId}`;
+  }
+
+  getShareEmail(userId: number): string | null {
+    if (this.data.employees?.length) {
+      const emp = this.data.employees.find(e => e.userId === userId);
+      if (emp?.user?.email) return emp.user.email;
+    }
+    if (this.data.users?.length) {
+      const user = this.data.users.find(u => u.id === userId);
+      if (user?.email) return user.email;
+    }
+    return null;
+  }
+
   loadShares(): void {
+    if (!this.selectedInventoryId) return;
     this.loadingShares = true;
     this.api.getShares(this.selectedInventoryId).subscribe({
       next: res => {
@@ -113,13 +167,17 @@ export class ShareInventoryDialogComponent implements OnInit {
     this.loadShares();
   }
 
+  toggleTab(): void {
+    this.activeTab = this.activeTab === 'wizard' ? 'current' : 'wizard';
+  }
+
   openWorkerPicker(): void {
     const pickerRef = this.dialog.open(WorkerPickerDialogComponent, {
       width: '780px',
       maxWidth: '96vw',
-      panelClass: 'inv-v2-dialog-panel',
+      panelClass: ['inv-v2-dialog-panel', 'inv-seven-modal'],
       data: {
-        excludeUserId: this.currentInventory.userId
+        excludeUserId: this.currentInventory?.userId
       }
     });
 

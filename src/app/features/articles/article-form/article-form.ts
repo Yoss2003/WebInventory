@@ -2,7 +2,7 @@ import { UiButtonDirective } from '../../../shared/ui/v2/ui-button.directive';
 import { ChangeDetectorRef, Component, ElementRef, OnDestroy, OnInit, ViewChild, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { InventoryDialogMotionDirective } from '../../../shared/ui/inv-dialog-motion.directive';
-import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
+import { FormBuilder, FormGroup, Validators, ReactiveFormsModule, FormArray } from '@angular/forms';
 import { MatDialog, MatDialogRef, MatDialogModule, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { HttpErrorResponse } from '@angular/common/http';
 import { catchError, forkJoin, of } from 'rxjs';
@@ -12,7 +12,7 @@ import { MatSelectModule } from '@angular/material/select';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
-import { BrowserMultiFormatReader } from '@zxing/browser';
+import { BarcodeFormat, BrowserMultiFormatReader } from '@zxing/browser';
 
 import { CategoryService } from '../../categories/services/category';
 import { BrandService } from '../../../core/services/brands';
@@ -29,6 +29,7 @@ import {
   ArticleReferenceDataService, ArticleSupplierReference, ArticleParameterReference,
   CurrencyReference, ExchangeRateReference
 } from '../../../core/services/article-reference-data';
+import { DecodeHintType } from '@zxing/library';
 
 interface AttributeField {
   control: string;
@@ -42,6 +43,7 @@ interface AttributeField {
   templateUrl: './article-form.html',
   styleUrls: ['./article-form.scss']
 })
+
 export class ArticleFormComponent implements OnInit, OnDestroy {
   private fb = inject(FormBuilder);
   private cdr = inject(ChangeDetectorRef);
@@ -68,19 +70,27 @@ export class ArticleFormComponent implements OnInit, OnDestroy {
   marcasFiltradas: Brand[] = [];
   isLoadingCategories = false;
   isLoadingBrands = false;
+  isScanningLive = false;
+  isCameraActive = false;
+  isContinuousScanMode = false;
+  private currentScanTarget: string = '';
+  private scanControls: any = null;
   categoriesError = '';
   brandsError = '';
   unidades: string[] = [];
   private previousPurchaseUnit = '';
   unitLoadError = '';
+  activeTargetEntryLabel = '';
 
   proveedores: ArticleSupplierReference[] = [];
   estados: ArticleParameterReference[] = [];
   condiciones: ArticleParameterReference[] = [];
   ubicaciones: ArticleParameterReference[] = [];
+  exchangeRatesInfo: { date: string, usd: number, eur: number } | null = null;
   supplierError = '';
   canManageSuppliers = false;
   masterInventoryId = 0;
+  activeTargetEntryIdx = -1;
   parameterError = '';
   currencyError = '';
   isLoadingReferences = false;
@@ -124,6 +134,13 @@ export class ArticleFormComponent implements OnInit, OnDestroy {
     if (this.mediaPreviewKind === 'voucher') return this.voucherFile?.name || 'Comprobante';
     return 'Vista ampliada';
   }
+
+  @ViewChild('multiScannerModal') multiScannerModal!: ElementRef<HTMLDialogElement>;
+  isMultiScanning = false;
+  pendingSerialsCount = 0;
+  currentScanIndex = 0;
+  totalExpectedSerials = 0;
+  private multiScanControls: any = null;
 
   @ViewChild('cameraVideo') cameraVideo?: ElementRef<HTMLVideoElement>;
   isCameraOpen = false;
@@ -325,6 +342,8 @@ export class ArticleFormComponent implements OnInit, OnDestroy {
   ngOnDestroy(): void {
     this.closeMediaPreview();
     this.stopCamera();
+    this.stopBarcodeScanner();
+    this.closeMultiScannerModal();
     this.releaseObjectUrl('photo');
     this.releaseObjectUrl('voucher');
   }
@@ -496,7 +515,7 @@ export class ArticleFormComponent implements OnInit, OnDestroy {
     forkJoin({ usd: usd$, eur: eur$ }).subscribe(({ usd, eur }) => {
       this.monedas = this.monedas.map(currency => {
         const kind = this.currencyKind(currency.code);
-        const quotation: ExchangeRateReference | null = kind === 'USD' ? usd : kind === 'EUR' ? eur : null;
+        const quotation = kind === 'USD' ? usd : kind === 'EUR' ? eur : null;
         if (kind === 'PEN') return { ...currency, rate: 1, rateDate: null };
         return {
           ...currency,
@@ -504,15 +523,16 @@ export class ArticleFormComponent implements OnInit, OnDestroy {
           rateDate: quotation?.date ?? null
         };
       });
-      const describe = (label: string, rate: ExchangeRateReference | null) => {
-        if (!rate || !(Number(rate.sellPrice) > 0)) return label + ': sin cotización disponible';
-        const date = String(rate.date ?? '').slice(0, 10);
-        return label + ': S/ ' + Number(rate.sellPrice).toFixed(4) + (date ? ' (' + date + ')' : '');
-      };
-      this.exchangeRateNotice = [
-        usd ? describe('USD venta', usd) : 'USD: sin cotización disponible',
-        eur ? describe('EUR venta', eur) : 'EUR: sin cotización disponible'
-      ].join(' · ');
+
+      // Lógica para el nuevo recuadro visual de tipo de cambio
+      if (usd || eur) {
+        this.exchangeRatesInfo = {
+          date: (usd?.date || eur?.date || '').slice(0, 10),
+          usd: Number(usd?.sellPrice) || 0,
+          eur: Number(eur?.sellPrice) || 0
+        };
+      }
+
       this.calculateProfit();
       this.cdr.markForCheck();
     });
@@ -523,10 +543,10 @@ export class ArticleFormComponent implements OnInit, OnDestroy {
     this.categoriesError = '';
     this.categoryService.getCategories(refresh).subscribe({
       next: (cats) => {
-        // Solo subcategorías activas, nunca categorías padre ni inactivas.
         this.categoriasHijas = (Array.isArray(cats) ? cats : [])
           .filter(c => c.isActive && c.parentCategoryId != null && Number(c.parentCategoryId) > 0)
           .sort((a, b) => a.name.localeCompare(b.name, 'es'));
+        
         this.isLoadingCategories = false;
         if (!this.categoriasHijas.length) {
           this.categoriesError = 'La API no devolvió categorías hijas activas.';
@@ -1454,8 +1474,275 @@ export class ArticleFormComponent implements OnInit, OnDestroy {
     if (typeof body === 'string') return body.slice(0, 260);
     return String(body?.error ?? body?.title ?? body?.message ?? `HTTP ${error.status}`);
   }
+
+  // Inicia el escáner de código de barras usando la cámara del dispositivo en tiempo real.
+  async openBarcodeScanner(targetControl: string): Promise<void> {
+    this.currentScanTarget = targetControl;
+    this.isScanningLive = true;
+    this.cdr.detectChanges();
+
+    // Le damos a Angular 50ms para que el elemento <video id="video"> exista realmente en el DOM
+    setTimeout(async () => {
+      const videoElement = document.getElementById('video') as HTMLVideoElement;
+      if (!videoElement) {
+        this.snackBar.open('Error al inicializar el visor de la cámara.', 'Cerrar', { duration: 3000 });
+        this.isScanningLive = false;
+        this.cdr.markForCheck();
+        return;
+      }
+
+      try {
+        const videoInputDevices = await BrowserMultiFormatReader.listVideoInputDevices();
+        if (videoInputDevices.length === 0) throw new Error('No se encontraron cámaras');
+
+        let selectedDeviceId = videoInputDevices[0].deviceId;
+        const backCamera = videoInputDevices.find((device: any) => 
+          device.label.toLowerCase().includes('back') || device.label.toLowerCase().includes('trasera')
+        );
+        
+        if (backCamera) selectedDeviceId = backCamera.deviceId;
+
+        // Limpiamos el valor previo del input para que se vea el cambio si el usuario escanea otro distinto
+        this.identityForm.get(this.currentScanTarget)?.setValue('');
+
+        const readerConfig = this.codeReader as any;
+        readerConfig.timeBetweenDecodingAttempts = 350; 
+        readerConfig.delayBetweenScanAttempts = 350;
+
+        const hints = new Map();
+        const formats = [
+          BarcodeFormat.EAN_13, 
+          BarcodeFormat.EAN_8, 
+          BarcodeFormat.CODE_128, 
+          BarcodeFormat.QR_CODE,
+          BarcodeFormat.UPC_A
+        ];
+        hints.set(DecodeHintType.POSSIBLE_FORMATS, formats);
+        this.codeReader.setHints(hints);
+
+        this.codeReader.decodeFromVideoDevice(
+          selectedDeviceId, 
+          videoElement, 
+          (result, err, controls) => {
+            this.scanControls = controls;
+            
+            if (result && this.isScanningLive) {
+              // Evitamos dobles lecturas instantáneas apagando la bandera de inmediato
+              this.isScanningLive = false;
+              
+              const text = result.getText();
+              
+              // Actualizamos el formulario y forzamos el render
+              this.identityForm.get(this.currentScanTarget)?.setValue(text);
+              this.identityForm.get(this.currentScanTarget)?.markAsDirty();
+              
+              this.snackBar.open(`Código detectado: ${text}`, 'Cerrar', { duration: 2500 });
+              this.stopBarcodeScanner();
+            }
+
+            // Filtramos la basura de la consola: solo imprimimos errores reales, no los de "buscando..."
+            if (err && !(err.name === 'NotFoundException' || err.name === 'FormatException' || err.name === 'ChecksumException')) {
+               console.warn('Error del escáner:', err);
+            }
+          }
+        );
+      } catch (error) {
+        console.error(error);
+        this.snackBar.open('No se pudo acceder a la cámara. Revisa los permisos.', 'Cerrar', { duration: 4000 });
+        this.stopBarcodeScanner();
+      }
+    }, 50); 
+  }
+
+  // Detiene el escáner de la cámara y oculta el visor.
+  stopBarcodeScanner(): void {
+    if (this.scanControls) {
+      try { this.scanControls.stop(); } catch { /* ignorar si ya estaba detenido */ }
+      this.scanControls = null;
+    }
+    try { (this.codeReader as any).reset(); } catch {}
+    
+    this.isScanningLive = false;
+    this.currentScanTarget = '';
+    this.cdr.markForCheck();
+  }
+
+  get missingSerialsCount(): number {
+    const totalStock = Number(this.logisticsForm.get('stock')?.value) || 0;
+    const expectedAdditionalCount = Math.max(0, totalStock - 1);
+    
+    if (this.extraSerialNumbers.length !== expectedAdditionalCount) {
+      if (this.extraSerialNumbers.length < expectedAdditionalCount) {
+        while (this.extraSerialNumbers.length < expectedAdditionalCount) {
+          this.extraSerialNumbers.push('');
+        }
+      } else {
+        this.extraSerialNumbers = this.extraSerialNumbers.slice(0, expectedAdditionalCount);
+      }
+    }
+
+    const filledCount = this.extraSerialNumbers.filter(val => val && val.trim().length > 0).length;
+    return Math.max(0, expectedAdditionalCount - filledCount);
+  }
+
+  openMultiScannerModal(): void {
+    const totalStock = Number(this.logisticsForm.get('stock')?.value) || 0;
+    this.totalExpectedSerials = totalStock;
+    
+    if (totalStock <= 1) {
+      this.snackBar.open('El stock total debe ser mayor a 1 para usar el ingreso masivo.', 'Cerrar', { duration: 3000 });
+      return;
+    }
+
+    const expectedAdditionalCount = Math.max(0, totalStock - 1);
+    if (this.extraSerialNumbers.length !== expectedAdditionalCount) {
+      this.extraSerialNumbers = Array.from({ length: expectedAdditionalCount }, (_, i) => this.extraSerialNumbers[i] || '');
+    }
+
+    this.pendingSerialsCount = this.missingSerialsCount;
+    this.isCameraActive = false; // Arranca mostrando la lista de entries
+    this.isMultiScanning = true;
+    this.cdr.detectChanges(); 
+
+    setTimeout(() => {
+      const dialogElement = this.multiScannerModal?.nativeElement;
+      if (dialogElement && typeof dialogElement.showModal === 'function' && !dialogElement.open) {
+        dialogElement.showModal();
+      }
+    }, 50);
+  }
+
+  openSingleEntryCamera(idx: number): void {
+    this.activeTargetEntryIdx = idx;
+    this.activeTargetEntryLabel = `Serie / IMEI ${idx + 2}`;
+    this.isContinuousScanMode = false; // MODO DE UN SOLO GOLPE
+    this.isCameraActive = true;
+    this.cdr.detectChanges();
+    this.startContinuousScanner();
+  }
+
+  toggleCameraMode(): void {
+    this.isCameraActive = !this.isCameraActive;
+    this.isContinuousScanMode = this.isCameraActive; // Activamos el modo continuo
+
+    if (this.isCameraActive) {
+      // Apuntamos al primer entry vacío disponible
+      const firstEmpty = this.extraSerialNumbers.findIndex(val => !val || val.trim() === '');
+      this.activeTargetEntryIdx = firstEmpty !== -1 ? firstEmpty : 0;
+      this.activeTargetEntryLabel = `Serie / IMEI ${this.activeTargetEntryIdx + 2}`;
+      this.startContinuousScanner();
+    } else {
+      if (this.multiScanControls) {
+        try { this.multiScanControls.stop(); } catch {}
+        this.multiScanControls = null;
+      }
+    }
+    this.cdr.markForCheck();
+  }
+
+  private async startContinuousScanner(): Promise<void> {
+    setTimeout(async () => {
+      const videoElement = document.getElementById('multi-video') as HTMLVideoElement;
+      if (!videoElement) return;
+
+      try {
+        const videoInputDevices = await BrowserMultiFormatReader.listVideoInputDevices();
+        if (videoInputDevices.length === 0) throw new Error('No cámaras');
+
+        let selectedDeviceId = videoInputDevices[0].deviceId;
+        const backCamera = videoInputDevices.find((d: any) => d.label.toLowerCase().includes('back') || d.label.toLowerCase().includes('trasera'));
+        if (backCamera) selectedDeviceId = backCamera.deviceId;
+
+        const readerConfig = this.codeReader as any;
+        readerConfig.timeBetweenDecodingAttempts = 600;
+        readerConfig.delayBetweenScanAttempts = 600;
+
+        let lastScannedCode = '';
+
+        this.codeReader.decodeFromVideoDevice(selectedDeviceId, videoElement, (result, err, controls) => {
+          this.multiScanControls = controls;
+
+          if (result && this.isMultiScanning && this.isCameraActive) {
+            const text = result.getText().trim();
+            if (!text || text === lastScannedCode) return;
+            lastScannedCode = text;
+
+            // CASO A: BOTÓN DE FILA (Escaneo único para este entry y se cierra)
+            if (!this.isContinuousScanMode) {
+              if (this.activeTargetEntryIdx !== -1) {
+                this.extraSerialNumbers[this.activeTargetEntryIdx] = text;
+                this.cdr.detectChanges();
+
+                this.snackBar.open(`¡${this.activeTargetEntryLabel} registrada: ${text}!`, '', { duration: 1500 });
+                
+                // Cerramos la cámara de inmediato
+                this.isCameraActive = false;
+                if (this.multiScanControls) {
+                  try { this.multiScanControls.stop(); } catch {}
+                  this.multiScanControls = null;
+                }
+                this.cdr.markForCheck();
+                return;
+              }
+            } 
+            
+            // CASO B: BOTÓN SUPERIOR (Escaneo masivo continuo, avanza al siguiente casillero vacío)
+            else {
+              const targetIdx = this.extraSerialNumbers.findIndex(val => !val || val.trim() === '');
+              if (targetIdx !== -1) {
+                this.extraSerialNumbers[targetIdx] = text;
+                this.cdr.detectChanges();
+
+                this.snackBar.open(`¡Serie ${targetIdx + 2} agregada: ${text}!`, '', { duration: 1500 });
+                
+                this.pendingSerialsCount = this.missingSerialsCount;
+                const filledCount = this.extraSerialNumbers.filter(val => val && val.trim().length > 0).length;
+                this.currentScanIndex = filledCount + 1;
+
+                // Si ya se llenaron todos, cerramos todo automáticamente
+                if (this.pendingSerialsCount <= 0) {
+                  this.snackBar.open('✅ Todas las series completadas con éxito.', 'Cerrar', { duration: 3000 });
+                  this.closeMultiScannerModal();
+                } else {
+                  // Actualizamos el label del siguiente a escanear
+                  const nextEmpty = this.extraSerialNumbers.findIndex(val => !val || val.trim() === '');
+                  if (nextEmpty !== -1) {
+                    this.activeTargetEntryIdx = nextEmpty;
+                    this.activeTargetEntryLabel = `Serie / IMEI ${nextEmpty + 2}`;
+                  }
+                }
+              }
+            }
+          }
+
+          // Filtrar excepciones continuas de búsqueda
+          if (err) {
+            const errName = err.name || '';
+            const isIgnorable = errName === 'NotFoundException' || errName === 'FormatException' || errName === 'ChecksumException';
+            if (!isIgnorable) console.warn('Advertencia del escáner:', err);
+          }
+        });
+      } catch (error) {
+        console.error(error);
+        this.snackBar.open('Error al acceder a la cámara.', 'Cerrar', { duration: 3000 });
+      }
+    }, 50);
+  }
+
+  closeMultiScannerModal(): void {
+    if (this.multiScanControls) {
+      try { this.multiScanControls.stop(); } catch {}
+      this.multiScanControls = null;
+    }
+    try { (this.codeReader as any).reset(); } catch {}
+
+    this.isMultiScanning = false;
+    this.isCameraActive = false;
+    
+    const dialogElement = this.multiScannerModal?.nativeElement;
+    if (dialogElement && dialogElement.open) {
+      dialogElement.close();
+    }
+    this.cdr.markForCheck();
+  }
 }
-
-/* WEBINVENTORY_UNIDADES_INGRESOS_2026_V1: articleTs */
-
-/* WEBINVENTORY_UNIDADES_UX_V1 */

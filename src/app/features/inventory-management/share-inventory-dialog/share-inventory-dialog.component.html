@@ -1,4 +1,5 @@
-<div class="share-inventory-dialog ui-v2-dialog" role="document">
+<div class="share-inventory-dialog ui-v2-dialog ui-v2-dialog--special" role="document">
+  <!-- Cabecera compacta estandarizada -->
   <header class="share-dialog-header">
     <div class="share-dialog-heading">
       <span class="share-dialog-symbol">
@@ -6,205 +7,225 @@
       </span>
       <div class="share-dialog-heading__text">
         <h2 mat-dialog-title>Compartir inventario</h2>
-        <p>{{ currentInventory.alias || currentInventory.inventoryName }} · ID #{{ currentInventory.id }}</p>
+        <p>Otorga acceso colaborativo a trabajadores de tu empresa</p>
       </div>
     </div>
-    <button type="button" appUiButton="close" (click)="dialogRef.close()" aria-label="Cerrar modal">
-      <mat-icon aria-hidden="true">close</mat-icon>
-    </button>
+    <div class="share-dialog-header-actions">
+      <!-- Botón de información con tooltip que reemplaza el bloque redundante de seguridad -->
+      <button type="button" class="share-header-info-btn"
+        matTooltip="Compartir un inventario permite al colaborador trabajar sobre el stock de este almacén sin modificar su titular ni autorizar a otras empresas."
+        matTooltipPosition="below"
+        aria-label="Información de acceso y privacidad"
+        title="Información de seguridad">
+        <mat-icon aria-hidden="true">info_outline</mat-icon>
+      </button>
+      <!-- Botón de cierre estándar ui-v2 -->
+      <button type="button" appUiButton="close" (click)="dialogRef.close()"
+        aria-label="Cerrar modal" title="Cerrar">
+        <mat-icon aria-hidden="true">close</mat-icon>
+      </button>
+    </div>
   </header>
 
-  <!-- Navegación de pestañas principales -->
-  <div class="dialog-tabs-bar" role="tablist">
-    <button type="button" class="tab-item" [class.is-active]="activeTab === 'wizard'"
-      (click)="activeTab = 'wizard'" role="tab" [attr.aria-selected]="activeTab === 'wizard'">
-      <mat-icon aria-hidden="true">person_add</mat-icon>
-      <span>Nuevo acceso</span>
-    </button>
-    <button type="button" class="tab-item" [class.is-active]="activeTab === 'current'"
-      (click)="activeTab = 'current'" role="tab" [attr.aria-selected]="activeTab === 'current'">
-      <mat-icon aria-hidden="true">how_to_reg</mat-icon>
-      <span>Colaboradores activos</span>
-      <span class="count-chip" *ngIf="shares.length">{{ shares.length }}</span>
-    </button>
-  </div>
+  <!-- Barra de navegación compacta (pasos y alternador de vista en una sola fila) -->
+  <nav class="share-subnav" aria-label="Navegación del modal de compartir">
+    <div class="wizard-steps-nav" *ngIf="activeTab === 'wizard'">
+      <button type="button" class="step-nav-btn" [class.active]="currentStep === 1"
+        [class.completed]="currentStep > 1" (click)="setStep(1)">
+        <span class="step-num-circle">
+          <mat-icon *ngIf="currentStep > 1">check</mat-icon>
+          <span *ngIf="currentStep <= 1">1</span>
+        </span>
+        <span class="step-name">1. Inventario</span>
+      </button>
+
+      <span class="step-nav-connector"></span>
+
+      <button type="button" class="step-nav-btn" [class.active]="currentStep === 2"
+        [class.completed]="currentStep > 2" (click)="setStep(2)" [disabled]="!isStep1Valid">
+        <span class="step-num-circle">
+          <mat-icon *ngIf="currentStep > 2">check</mat-icon>
+          <span *ngIf="currentStep <= 2">2</span>
+        </span>
+        <span class="step-name">2. Colaborador y Rol</span>
+      </button>
+
+      <span class="step-nav-connector"></span>
+
+      <button type="button" class="step-nav-btn" [class.active]="currentStep === 3"
+        (click)="setStep(3)" [disabled]="!isStep1Valid || !isStep2Valid">
+        <span class="step-num-circle">3</span>
+        <span class="step-name">3. Resumen</span>
+      </button>
+    </div>
+
+    <!-- Píldora para alternar entre el Asistente y los Colaboradores activos -->
+    <div class="view-switch-nav">
+      <button type="button" class="view-toggle-pill" [class.is-active]="activeTab === 'current'"
+        (click)="toggleTab()"
+        [title]="activeTab === 'wizard' ? 'Ver y administrar colaboradores con acceso vigente' : 'Regresar al asistente para compartir'">
+        <mat-icon aria-hidden="true">{{ activeTab === 'wizard' ? 'how_to_reg' : 'person_add' }}</mat-icon>
+        <span>{{ activeTab === 'wizard' ? 'Colaboradores activos' : 'Nuevo acceso' }}</span>
+        <span class="view-count-badge" *ngIf="activeTab === 'wizard' && shares.length">{{ shares.length }}</span>
+      </button>
+    </div>
+  </nav>
 
   <mat-dialog-content class="share-dialog-content">
-    <!-- VISTA 1: ASISTENTE POR PASOS -->
-    <div class="wizard-container" *ngIf="activeTab === 'wizard'">
-      <!-- Indicador de pasos -->
-      <nav class="wizard-stepper" aria-label="Pasos para compartir inventario">
-        <button type="button" class="step-pill" [class.is-active]="currentStep === 1"
-          [class.is-done]="currentStep > 1" (click)="setStep(1)">
-          <span class="step-num"><mat-icon *ngIf="currentStep > 1">check</mat-icon><span *ngIf="currentStep <= 1">1</span></span>
-          <span class="step-label">1. Inventario</span>
-        </button>
-        <span class="step-connector"></span>
-        <button type="button" class="step-pill" [class.is-active]="currentStep === 2"
-          [class.is-done]="currentStep > 2" (click)="setStep(2)" [disabled]="!isStep1Valid">
-          <span class="step-num"><mat-icon *ngIf="currentStep > 2">check</mat-icon><span *ngIf="currentStep <= 2">2</span></span>
-          <span class="step-label">2. Colaborador</span>
-        </button>
-        <span class="step-connector"></span>
-        <button type="button" class="step-pill" [class.is-active]="currentStep === 3"
-          (click)="setStep(3)" [disabled]="!isStep1Valid || !isStep2Valid">
-          <span class="step-num">3</span>
-          <span class="step-label">3. Resumen</span>
-        </button>
-      </nav>
+    <!-- ==================== VISTA 1: ASISTENTE POR PASOS ==================== -->
+    <div class="wizard-panel-wrap" *ngIf="activeTab === 'wizard'">
 
       <!-- PASO 1: SELECCIÓN DE INVENTARIO -->
-      <section class="wizard-step" *ngIf="currentStep === 1">
-        <div class="step-intro">
-          <h3>Paso 1: Inventario a compartir</h3>
-          <p>Confirma el almacén o inventario operativo al que otorgarás acceso colaborativo.</p>
+      <section class="wizard-step-panel" *ngIf="currentStep === 1">
+        <!-- 1. ComboBox por ENCIMA del recuadro del inventario -->
+        <div class="field-wrap">
+          <label for="share-inventory-select" class="field-label">
+            Inventario activo a compartir <span class="required">*</span>
+          </label>
+          <mat-form-field appearance="outline" class="inventory-select">
+            <mat-select id="share-inventory-select" [value]="selectedInventoryId"
+              (selectionChange)="onInventoryChange($event.value)"
+              panelClass="inventory-select-options">
+              <mat-option *ngFor="let inv of availableInventories" [value]="inv.id">
+                {{ inv.alias ? (inv.alias + ' · ' + inv.inventoryName) : inv.inventoryName }} (ID #{{ inv.id }})
+              </mat-option>
+            </mat-select>
+          </mat-form-field>
+          <small class="field-hint">Selecciona el almacén o inventario operativo al que otorgarás acceso colaborativo.</small>
         </div>
 
-        <div class="inventory-info-card">
-          <div class="inv-card-header">
-            <mat-icon aria-hidden="true">warehouse</mat-icon>
-            <div>
-              <strong>{{ currentInventory.alias || currentInventory.inventoryName }}</strong>
-              <small>{{ currentInventory.inventoryName }} · ID #{{ currentInventory.id }}</small>
+        <!-- 2. Recuadro que describe el inventario elegido (POR DEBAJO DEL SELECTOR) -->
+        <div class="inventory-preview-card" *ngIf="currentInventory">
+          <div class="preview-card-head">
+            <div class="preview-card-symbol">
+              <mat-icon aria-hidden="true">warehouse</mat-icon>
             </div>
-            <span class="inv-status-pill">Operativo</span>
+            <div class="preview-card-text">
+              <h4>{{ currentInventory.alias || currentInventory.inventoryName }}</h4>
+              <p>{{ currentInventory.inventoryName }} · ID #{{ currentInventory.id }}</p>
+            </div>
+            <span class="preview-card-badge">Operativo</span>
           </div>
 
-          <div class="field" *ngIf="availableInventories.length > 1">
-            <label for="share-inventory-select">Cambiar de inventario a compartir</label>
-            <mat-form-field appearance="outline" class="inventory-select">
-              <mat-select id="share-inventory-select" [value]="selectedInventoryId"
-                (selectionChange)="onInventoryChange($event.value)"
-                panelClass="inventory-select-options">
-                <mat-option *ngFor="let inv of availableInventories" [value]="inv.id">
-                  {{ inv.alias || inv.inventoryName }} (ID #{{ inv.id }})
-                </mat-option>
-              </mat-select>
-            </mat-form-field>
-          </div>
-        </div>
-
-        <div class="info-callout">
-          <mat-icon aria-hidden="true">shield</mat-icon>
-          <div>
-            <strong>Seguridad y privacidad</strong>
-            <p>Compartir un inventario permite al colaborador trabajar sobre el stock de este almacén sin modificar su titular ni autorizar a otras empresas.</p>
+          <div class="preview-card-grid">
+            <div class="preview-grid-item">
+              <span class="grid-label">Titular / Propietario</span>
+              <strong class="grid-value">{{ getOwnerName(currentInventory.userId) }}</strong>
+            </div>
+            <div class="preview-grid-item">
+              <span class="grid-label">Accesos concedidos</span>
+              <strong class="grid-value">
+                <ng-container *ngIf="!loadingShares">
+                  {{ shares.length }} colaborador{{ shares.length === 1 ? '' : 'es' }}
+                </ng-container>
+                <ng-container *ngIf="loadingShares">Consultando...</ng-container>
+              </strong>
+            </div>
           </div>
         </div>
       </section>
 
-      <!-- PASO 2: COLABORADORES Y PERMISOS -->
-      <section class="wizard-step" *ngIf="currentStep === 2">
-        <div class="step-intro">
-          <h3>Paso 2: Colaborador y nivel de permiso</h3>
-          <p>Selecciona un trabajador de tu empresa y el rol de acceso que desempeñará.</p>
-        </div>
-
-        <!-- Selector de trabajador -->
+      <!-- PASO 2: COLABORADOR Y PERMISO -->
+      <section class="wizard-step-panel" *ngIf="currentStep === 2">
         <div class="collaborator-picker-block">
-          <label class="field-title">Colaborador de tu empresa <span class="required">*</span></label>
+          <label class="field-label">Colaborador de tu empresa <span class="required">*</span></label>
 
-          <!-- Si ya seleccionó uno de la tabla -->
+          <!-- Tarjeta de colaborador seleccionado -->
           <div class="selected-worker-card" *ngIf="selectedEmployee">
             <div class="worker-avatar">
               <img *ngIf="selectedEmployee.pictureUrl" [src]="selectedEmployee.pictureUrl" [alt]="selectedEmployee.firstName || ''" />
-              <span *ngIf="!selectedEmployee.pictureUrl">{{ (selectedEmployee.firstName || 'C')[0] | uppercase }}</span>
+              <span *ngIf="!selectedEmployee.pictureUrl">
+                {{ (selectedEmployee.firstName ? selectedEmployee.firstName.charAt(0) : 'U').toUpperCase() }}
+              </span>
             </div>
             <div class="worker-details">
-              <strong>{{ (selectedEmployee.firstName || '') + ' ' + (selectedEmployee.lastName || '') | titlecase }}</strong>
-              <span>{{ collaboratorExtra }}</span>
+              <strong>{{ collaboratorDisplay }}</strong>
+              <small>{{ collaboratorExtra }}</small>
             </div>
-            <button type="button" appUiButton="secondary" class="change-worker-btn" (click)="openWorkerPicker()">
-              <mat-icon aria-hidden="true">sync</mat-icon> Cambiar
-            </button>
-            <button type="button" appUiButton="close" class="remove-worker-btn" (click)="clearSelectedEmployee()" title="Quitar colaborador">
+            <button type="button" appUiButton="close" (click)="clearSelectedEmployee()"
+              title="Cambiar colaborador" aria-label="Quitar selección">
               <mat-icon aria-hidden="true">close</mat-icon>
             </button>
           </div>
 
-          <!-- Si no ha seleccionado aún -->
-          <div class="worker-search-launcher" *ngIf="!selectedEmployee">
-            <button type="button" appUiButton="secondary" class="launch-picker-btn" (click)="openWorkerPicker()">
-              <mat-icon aria-hidden="true">person_search</mat-icon>
-              <span>Buscar y seleccionar trabajador activo de la empresa</span>
+          <!-- Botón para abrir el selector modal de trabajadores -->
+          <div class="picker-actions" *ngIf="!selectedEmployee">
+            <button type="button" appUiButton="secondary" class="open-picker-btn" (click)="openWorkerPicker()">
+              <mat-icon aria-hidden="true">badge</mat-icon>
+              <span>Buscar en lista de trabajadores...</span>
             </button>
+          </div>
 
-            <div class="manual-input-fallback">
-              <span class="fallback-divider">O escribe su usuario, correo o DNI:</span>
-              <div class="input-with-icon">
-                <mat-icon aria-hidden="true">person</mat-icon>
-                <input type="text" [(ngModel)]="guestIdentifier"
-                  placeholder="Ej. alexandro / 72345678 / usuario@empresa.com"
-                  appUiControl />
-              </div>
-            </div>
+          <!-- Entrada manual alternativa / DNI o correo -->
+          <div class="manual-input-wrap" *ngIf="!selectedEmployee">
+            <span class="manual-or-separator">o ingresa el usuario o correo directamente:</span>
+            <input type="text" [(ngModel)]="guestIdentifier" name="guestIdentifier"
+              placeholder="Ej. usuario o correo@empresa.com"
+              maxlength="254" autocomplete="off" appUiControl />
           </div>
         </div>
 
-        <!-- Nivel de acceso -->
-        <div class="permission-level-block">
-          <label class="field-title">Nivel de permiso (Rol de contexto) <span class="required">*</span></label>
-
-          <div class="permission-cards-grid">
-            <div class="permission-card" [class.is-selected]="accessLevel === 1" (click)="accessLevel = 1">
-              <div class="card-radio">
-                <span class="radio-dot" *ngIf="accessLevel === 1"></span>
-              </div>
-              <div class="card-body">
-                <div class="card-header">
+        <!-- Selector de nivel de permiso -->
+        <div class="field-wrap permission-block">
+          <label class="field-label">Nivel de acceso <span class="required">*</span></label>
+          <div class="role-cards-grid">
+            <label class="role-option-card" [class.is-selected]="accessLevel === 1">
+              <input type="radio" name="accessLevel" [value]="1" [(ngModel)]="accessLevel" />
+              <div class="role-option-body">
+                <div class="role-option-head">
                   <mat-icon aria-hidden="true">visibility</mat-icon>
-                  <strong>Solo Lector (Nivel 1)</strong>
+                  <strong>Solo Lector</strong>
                 </div>
-                <p>Permite consultar existencias, artículos y movimientos sin autorización para agregar, editar o realizar salidas.</p>
+                <p>Permite consultar existencias, artículos y movimientos sin modificar datos ni crear registros.</p>
               </div>
-            </div>
+            </label>
 
-            <div class="permission-card" [class.is-selected]="accessLevel === 2" (click)="accessLevel = 2">
-              <div class="card-radio">
-                <span class="radio-dot" *ngIf="accessLevel === 2"></span>
-              </div>
-              <div class="card-body">
-                <div class="card-header">
-                  <mat-icon aria-hidden="true">edit_document</mat-icon>
-                  <strong>Editor (Nivel 2)</strong>
+            <label class="role-option-card" [class.is-selected]="accessLevel === 2">
+              <input type="radio" name="accessLevel" [value]="2" [(ngModel)]="accessLevel" />
+              <div class="role-option-body">
+                <div class="role-option-head">
+                  <mat-icon aria-hidden="true">edit</mat-icon>
+                  <strong>Editor de almacén</strong>
                 </div>
-                <p>Permite registrar entradas, salidas, ventas rápidas y modificar el inventario colaborativo.</p>
+                <p>Permite registrar ingresos, salidas, ajustes de inventario y dar de alta artículos.</p>
               </div>
-            </div>
+            </label>
           </div>
         </div>
       </section>
 
       <!-- PASO 3: RESUMEN Y CONFIRMACIÓN -->
-      <section class="wizard-step" *ngIf="currentStep === 3">
-        <div class="step-intro">
-          <h3>Paso 3: Resumen y confirmación</h3>
-          <p>Revisa la configuración del acceso antes de confirmarla.</p>
-        </div>
-
+      <section class="wizard-step-panel" *ngIf="currentStep === 3">
         <div class="summary-card">
-          <div class="summary-row">
-            <span class="summary-label"><mat-icon>warehouse</mat-icon> Inventario</span>
-            <div class="summary-value">
-              <strong>{{ currentInventory.alias || currentInventory.inventoryName }}</strong>
-              <small>{{ currentInventory.inventoryName }} · ID #{{ currentInventory.id }}</small>
+          <div class="summary-head">
+            <mat-icon aria-hidden="true">verified</mat-icon>
+            <div>
+              <h3>Resumen de la autorización</h3>
+              <p>Revisa la configuración antes de conceder el acceso.</p>
             </div>
           </div>
 
-          <div class="summary-row">
-            <span class="summary-label"><mat-icon>person</mat-icon> Colaborador</span>
-            <div class="summary-value">
-              <strong>{{ collaboratorDisplay }}</strong>
-              <small>{{ collaboratorExtra }}</small>
+          <div class="summary-details">
+            <div class="summary-row">
+              <span class="summary-label">Almacén a compartir:</span>
+              <strong class="summary-value">{{ currentInventory.alias || currentInventory.inventoryName }} (ID #{{ currentInventory.id }})</strong>
             </div>
-          </div>
 
-          <div class="summary-row">
-            <span class="summary-label"><mat-icon>verified_user</mat-icon> Nivel asignado</span>
-            <div class="summary-value">
-              <span class="access-badge" [class.badge-editor]="accessLevel === 2" [class.badge-reader]="accessLevel === 1">
-                <mat-icon>{{ accessLevel === 2 ? 'edit_document' : 'visibility' }}</mat-icon>
-                {{ accessLevel === 2 ? 'Editor (Modificar y registrar)' : 'Solo Lector (Consultar existencias)' }}
+            <div class="summary-row">
+              <span class="summary-label">Titular responsable:</span>
+              <span class="summary-value">{{ getOwnerName(currentInventory.userId) }}</span>
+            </div>
+
+            <div class="summary-row">
+              <span class="summary-label">Colaborador autorizado:</span>
+              <strong class="summary-value highlight">{{ collaboratorDisplay }}</strong>
+            </div>
+
+            <div class="summary-row">
+              <span class="summary-label">Nivel de permiso:</span>
+              <span class="summary-pill" [class.editor]="accessLevel === 2">
+                <mat-icon aria-hidden="true">{{ accessLevel === 2 ? 'edit' : 'visibility' }}</mat-icon>
+                {{ accessLevel === 2 ? 'Editor (Lectura y Escritura)' : 'Lector (Solo Consulta)' }}
               </span>
             </div>
           </div>
@@ -214,81 +235,66 @@
           <mat-icon aria-hidden="true">error_outline</mat-icon>
           <span>{{ error }}</span>
         </p>
-
-        <div class="info-callout">
-          <mat-icon aria-hidden="true">info</mat-icon>
-          <div>
-            <strong>Activación inmediata</strong>
-            <p>Al confirmar, el colaborador verá este almacén disponible en su selector superior de inventarios al recargar o iniciar sesión.</p>
-          </div>
-        </div>
       </section>
     </div>
 
-    <!-- VISTA 2: COLABORADORES ACTIVOS -->
-    <div class="current-shares-container" *ngIf="activeTab === 'current'">
-      <div class="shares-header">
+    <!-- ==================== VISTA 2: LISTA DE COLABORADORES ACTIVOS ==================== -->
+    <div class="shares-panel-wrap" *ngIf="activeTab === 'current'">
+      <div class="shares-panel-heading">
         <div>
-          <h3>Accesos concedidos en este inventario</h3>
-          <p>{{ currentInventory.alias || currentInventory.inventoryName }} · Total: {{ shares.length }}</p>
+          <h3>Accesos vigentes en «{{ currentInventory.alias || currentInventory.inventoryName }}»</h3>
+          <p>Colaboradores que actualmente tienen autorización en este inventario.</p>
         </div>
-        <button type="button" appUiButton="secondary" (click)="loadShares()" [disabled]="loadingShares">
+        <button type="button" appUiButton="secondary" (click)="loadShares()" [disabled]="loadingShares"
+          title="Actualizar lista">
           <mat-icon aria-hidden="true">refresh</mat-icon> Actualizar
         </button>
       </div>
 
-      <app-loading-indicator *ngIf="loadingShares" message="Consultando accesos activos..." />
+      <div *ngIf="loadingShares" class="shares-loading">
+        <app-loading-indicator message="Consultando accesos colaborativos..." />
+      </div>
 
       <div class="inv-core-table-wrap shares-table-wrap" *ngIf="!loadingShares && shares.length > 0">
-        <table class="shares-table">
+        <table>
           <thead>
             <tr>
               <th scope="col">Colaborador</th>
-              <th scope="col">Permiso</th>
-              <th scope="col">Fecha de concesión</th>
-              <th scope="col" class="action-col">Acciones</th>
+              <th scope="col">Nivel de acceso</th>
+              <th scope="col" class="inv-core-action-cell">Acciones</th>
             </tr>
           </thead>
           <tbody>
             <tr *ngFor="let s of shares">
               <td>
-                <div class="user-row">
-                  <mat-icon aria-hidden="true">account_circle</mat-icon>
-                  <strong>{{ s.username || 'Usuario #' + s.userId }}</strong>
-                </div>
+                <strong>{{ s.username || ('Usuario #' + s.userId) }}</strong>
+                <small *ngIf="getShareEmail(s.userId)">{{ getShareEmail(s.userId) }}</small>
               </td>
               <td>
-                <span class="access-badge" [class.badge-editor]="s.accessLevel === 2" [class.badge-reader]="s.accessLevel === 1">
+                <span class="share-role-chip" [class.editor]="s.accessLevel === 2">
+                  <mat-icon aria-hidden="true">{{ s.accessLevel === 2 ? 'edit' : 'visibility' }}</mat-icon>
                   {{ s.accessLevel === 2 ? 'Editor' : 'Lector' }}
                 </span>
               </td>
-              <td>
-                {{ s.sharedDate | date:'dd/MM/yyyy HH:mm' }}
-              </td>
-              <td class="action-col">
-                <div class="action-buttons-group">
-                  <button type="button" appUiTableAction="normal"
-                    (click)="changeShareAccess(s)" [disabled]="updatingShareId === s.id"
-                    [title]="s.accessLevel === 2 ? 'Cambiar a Solo Lector' : 'Cambiar a Editor'"
-                    aria-label="Cambiar nivel de permiso">
-                    <mat-icon aria-hidden="true">swap_horiz</mat-icon>
-                  </button>
-                  <button type="button" appUiTableAction="danger"
-                    (click)="revokeShare(s)" [disabled]="updatingShareId === s.id"
-                    title="Revocar acceso" aria-label="Revocar acceso al inventario">
-                    <mat-icon aria-hidden="true">delete</mat-icon>
-                  </button>
-                </div>
+              <td class="inv-core-action-cell">
+                <button type="button" appUiTableAction="normal" (click)="changeShareAccess(s)"
+                  [disabled]="updatingShareId === s.id"
+                  [title]="s.accessLevel === 2 ? 'Cambiar a Solo Lector' : 'Cambiar a Editor'">
+                  <mat-icon aria-hidden="true">swap_horiz</mat-icon>
+                </button>
+                <button type="button" appUiTableAction="danger" (click)="revokeShare(s)"
+                  title="Revocar acceso">
+                  <mat-icon aria-hidden="true">person_remove</mat-icon>
+                </button>
               </td>
             </tr>
           </tbody>
         </table>
       </div>
 
-      <div class="empty-shares" *ngIf="!loadingShares && shares.length === 0">
+      <div class="shares-empty" *ngIf="!loadingShares && !shares.length">
         <mat-icon aria-hidden="true">group_off</mat-icon>
-        <strong>No hay colaboradores vinculados</strong>
-        <p>Este inventario no tiene accesos compartidos aún.</p>
+        <p>No hay colaboradores adicionales con acceso a este inventario.</p>
         <button type="button" appUiButton="primary" (click)="activeTab = 'wizard'">
           <mat-icon aria-hidden="true">person_add</mat-icon> Compartir con un colaborador
         </button>
@@ -296,43 +302,40 @@
     </div>
   </mat-dialog-content>
 
-  <!-- PIE DEL MODAL (SEGÚN LA PESTAÑA) -->
+  <!-- Pie de diálogo estándar con botones unificados -->
   <mat-dialog-actions class="share-dialog-footer">
+    <button type="button" appUiButton="secondary" (click)="dialogRef.close()" [disabled]="submitting">
+      Cerrar
+    </button>
+
     <ng-container *ngIf="activeTab === 'wizard'">
-      <button *ngIf="currentStep > 1" type="button" appUiButton="secondary"
-        (click)="currentStep = currentStep - 1" [disabled]="submitting">
-        <mat-icon aria-hidden="true">arrow_back</mat-icon> Atrás
+      <button type="button" appUiButton="secondary" *ngIf="currentStep > 1" (click)="setStep(currentStep - 1)"
+        [disabled]="submitting">
+        <mat-icon aria-hidden="true">arrow_back</mat-icon> Anterior
       </button>
 
-      <span class="footer-spacer"></span>
-
-      <button type="button" appUiButton="secondary" (click)="dialogRef.close()" [disabled]="submitting">
-        Cancelar
-      </button>
-
-      <button *ngIf="currentStep === 1" type="button" appUiButton="primary"
-        (click)="setStep(2)" [disabled]="!isStep1Valid">
+      <button type="button" appUiButton="primary" *ngIf="currentStep === 1" (click)="setStep(2)"
+        [disabled]="!isStep1Valid">
         Siguiente: Colaborador <mat-icon aria-hidden="true">arrow_forward</mat-icon>
       </button>
 
-      <button *ngIf="currentStep === 2" type="button" appUiButton="primary"
-        (click)="setStep(3)" [disabled]="!isStep2Valid">
+      <button type="button" appUiButton="primary" *ngIf="currentStep === 2" (click)="setStep(3)"
+        [disabled]="!isStep2Valid">
         Siguiente: Resumen <mat-icon aria-hidden="true">arrow_forward</mat-icon>
       </button>
 
-      <button *ngIf="currentStep === 3" type="button" appUiButton="primary"
-        (click)="submitShare()" [disabled]="!isStep2Valid || submitting">
-        <app-loading-indicator *ngIf="submitting; else submitLabel" [compact]="true" message="Otorgando acceso..." />
-        <ng-template #submitLabel>
-          <mat-icon aria-hidden="true">check_circle</mat-icon> Otorgar acceso
+      <button type="button" appUiButton="primary" *ngIf="currentStep === 3" (click)="submitShare()"
+        [disabled]="!isStep2Valid || submitting">
+        <app-loading-indicator *ngIf="submitting; else shareSubmitLabel" [compact]="true" message="Concediendo..." />
+        <ng-template #shareSubmitLabel>
+          <mat-icon aria-hidden="true">group_add</mat-icon> Conceder acceso
         </ng-template>
       </button>
     </ng-container>
 
     <ng-container *ngIf="activeTab === 'current'">
-      <span class="footer-spacer"></span>
-      <button type="button" appUiButton="secondary" (click)="dialogRef.close()">
-        Cerrar
+      <button type="button" appUiButton="primary" (click)="activeTab = 'wizard'">
+        <mat-icon aria-hidden="true">person_add</mat-icon> Compartir inventario
       </button>
     </ng-container>
   </mat-dialog-actions>

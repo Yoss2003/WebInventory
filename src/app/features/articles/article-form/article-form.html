@@ -1,6 +1,4 @@
-<div class="custom-modal ui-v2-dialog ui-v2-dialog--special"
-  [invDialogMotion]="currentStep + '-' + activeSubTab"
-  [invDialogMotionWidth]="currentStep === 1 ? 'min(1080px, calc(100vw - 24px))' : currentStep === 2 ? 'min(950px, calc(100vw - 24px))' : 'min(1040px, calc(100vw - 24px))'">
+<div class="custom-modal ui-v2-dialog ui-v2-dialog--special" [invDialogMotion]="currentStep + '-' + activeSubTab" [invDialogMotionWidth]="currentStep === 1 ? 'min(1080px, calc(100vw - 24px))' : currentStep === 2 ? 'min(950px, calc(100vw - 24px))' : 'min(1040px, calc(100vw - 24px))'">
   <header class="modal-header">
     <div class="title-area">
       <span class="title-mark"><mat-icon>inventory_2</mat-icon></span>
@@ -10,18 +8,19 @@
       </div>
     </div>
 
+    <!-- Navegación de pasos (ahora se alineará a la derecha mediante el SCSS global) -->
     <nav class="steps-nav" aria-label="Etapas del artículo">
-      <button type="button" class="step" [class.active]="currentStep === 1" [class.completed]="currentStep > 1" (click)="setStep(1)" [attr.aria-current]="currentStep === 1 ? 'step' : null">
+      <button type="button" class="step" [class.active]="currentStep === 1" [class.completed]="currentStep > 1" (click)="setStep(1)">
         <span class="step-num"><mat-icon *ngIf="currentStep > 1">check</mat-icon><span *ngIf="currentStep <= 1">1</span></span>
         <span class="step-text">Identidad</span>
       </button>
       <span class="step-divider"></span>
-      <button type="button" class="step" [class.active]="currentStep === 2" [disabled]="!isIdentityComplete" (click)="setStep(2)" [attr.aria-current]="currentStep === 2 ? 'step' : null">
+      <button type="button" class="step" [class.active]="currentStep === 2" [class.completed]="currentStep > 2" [disabled]="!isIdentityComplete" (click)="setStep(2)">
         <span class="step-num"><mat-icon *ngIf="currentStep > 2">check</mat-icon><span *ngIf="currentStep <= 2">2</span></span>
         <span class="step-text">Logística</span>
       </button>
       <span class="step-divider"></span>
-      <button type="button" class="step" [class.active]="currentStep === 3" [disabled]="!isIdentityComplete || logisticsForm.invalid" (click)="setStep(3)" [attr.aria-current]="currentStep === 3 ? 'step' : null">
+      <button type="button" class="step" [class.active]="currentStep === 3" [disabled]="!isIdentityComplete || logisticsForm.invalid" (click)="setStep(3)">
         <span class="step-num">3</span><span class="step-text">Finanzas</span>
       </button>
     </nav>
@@ -127,7 +126,7 @@
                 </div>
                 <div class="field-with-button supplier-select-row">
                   <mat-form-field appearance="outline" class="inventory-select">
-                    <mat-select id="article-supplier" formControlName="supplierId" panelClass="inventory-select-options">
+                    <mat-select id="article-supplier" formControlName="supplierId" placeholder="Sin proveedor asociado" panelClass="inventory-select-options">
                       <mat-option [value]="null">Sin proveedor asociado</mat-option>
                       <mat-option *ngFor="let supplier of proveedores" [value]="supplier.id">
                         {{supplier.businessName}} · RUC {{supplier.ruc}}
@@ -151,10 +150,15 @@
                 <div class="field-heading"><label for="article-barcode">Código de barras <span class="required">*</span></label><span class="field-feedback" [class.is-error]="isInvalid('identity','barcode')">{{ isInvalid('identity','barcode') ? 'El código de barras es obligatorio.' : '' }}</span></div>
                 <div class="input-with-actions">
                   <input id="article-barcode" type="text" formControlName="barcode" (focus)="resetFieldMessage('identity','barcode')" class="custom-input" [class.invalid]="isInvalid('identity', 'barcode')" placeholder="Ingresa o escanea un código" />
-                  <input type="file" #camScanInput accept="image/*" capture="environment" (change)="scanBarcodeFromImage($event, 'barcode')" hidden>
+                  
+                  <!-- NUEVO: Botón para abrir el lector en vivo -->
+                  <button type="button" class="btn-icon btn-blue" (click)="openBarcodeScanner('barcode')" [disabled]="isScanningLive" title="Escanear con cámara" aria-label="Escanear código con cámara">
+                    <mat-icon>qr_code_scanner</mat-icon>
+                  </button>
+                  
+                  <!-- Mantenemos la opción de galería como respaldo -->
                   <input type="file" #galScanInput accept="image/*" (change)="scanBarcodeFromImage($event, 'barcode')" hidden>
-                  <button type="button" class="btn-icon btn-blue" (click)="camScanInput.click()" [disabled]="isScanning" title="Escanear con cámara" aria-label="Escanear código con cámara"><mat-icon>photo_camera</mat-icon></button>
-                  <button type="button" class="btn-icon btn-dark" (click)="galScanInput.click()" [disabled]="isScanning" title="Escanear desde imagen" aria-label="Escanear desde galería"><mat-icon>image</mat-icon></button>
+                  <button type="button" class="btn-icon btn-dark" (click)="galScanInput.click()" [disabled]="isScanningLive" title="Escanear desde imagen" aria-label="Escanear desde galería"><mat-icon>image</mat-icon></button>
                 </div>                
               </div>
 
@@ -171,9 +175,12 @@
                 <div class="field-heading"><label for="article-serial">Número de serie / IMEI <span class="required">*</span></label><span class="field-feedback" [class.is-error]="isInvalid('identity','serialNumber')">{{ isInvalid('identity','serialNumber') ? 'La serie es obligatoria.' : '' }}</span></div>
                 <div class="input-with-actions">
                   <input id="article-serial" type="text" formControlName="serialNumber" (focus)="resetFieldMessage('identity','serialNumber')" class="custom-input" [class.invalid]="isInvalid('identity', 'serialNumber')" [readonly]="hasSeveralExistingSerials" placeholder="Ingresa o escanea la primera serie" />
-                  <input type="file" #camScanSerie accept="image/*" capture="environment" (change)="scanBarcodeFromImage($event, 'serialNumber')" hidden>
-                  <button type="button" class="btn-icon btn-blue" (click)="camScanSerie.click()" [disabled]="isScanning" title="Escanear número de serie" aria-label="Escanear serie"><mat-icon>qr_code_scanner</mat-icon></button>
-                </div>                
+                  
+                  <!-- NUEVO: Botón para abrir el lector en vivo -->
+                  <button type="button" class="btn-icon btn-blue" (click)="openBarcodeScanner('serialNumber')" [disabled]="isScanningLive" title="Escanear número de serie" aria-label="Escanear serie">
+                    <mat-icon>qr_code_scanner</mat-icon>
+                  </button>
+                </div>
               </div>
 
               <ng-container *ngIf="attributeFields.length === 0">
@@ -303,14 +310,27 @@
     <!-- PASO 2: cuadrícula recomendada -->
     <section class="step-content centered-card" *ngIf="currentStep === 2" aria-label="Logística del artículo">
       <div class="card-section">
-        <div class="section-header">
-          <div class="section-icon lime"><mat-icon>inventory</mat-icon></div>
-          <div class="section-heading"><h3>Configuración logística</h3><p>Define cómo se compra, vende y contabiliza el producto.</p></div>
+        <div class="section-header" style="display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 12px; margin-bottom: 16px;">
+          <div style="display: flex; align-items: center; gap: 12px; min-width: 0;">
+            <div class="section-icon lime"><mat-icon>assignment</mat-icon></div>
+            <div class="section-heading">
+              <h3>Configuración logística</h3>
+              <p>Define cómo se compra, vende y contabiliza el producto.</p>
+            </div>
+          </div>
+          
+          <!-- Botón de Escaneo Rápido de Series -->
+          <button *ngIf="currentTrackingMode === 'Serializado' && (+logisticsForm.get('stock')?.value || 0) > 1" 
+                  type="button" 
+                  class="media-button primary" 
+                  (click)="openMultiScannerModal()">
+            <mat-icon>qr_code_scanner</mat-icon> Escaneo Rápido de Series
+          </button>
         </div>
+        
         <form [formGroup]="logisticsForm" (ngSubmit)="goNextFromLogistics()">
           <!-- WEBINVENTORY_UNIDADES_INGRESOS_2026_V1: compra, venta y stock según regla de unidad -->
-          <div class="tile-grid" [class.has-conversion]="requiresUnitConversion"
-               [class.fixed-conversion]="requiresUnitConversion && fixedFactor !== null">
+          <div class="tile-grid" [class.has-conversion]="requiresUnitConversion" [class.fixed-conversion]="requiresUnitConversion && fixedFactor !== null">
             <div class="field-tile">
               <div class="tile-label"><mat-icon>local_shipping</mat-icon><label for="acq-unit">Se compra por <span class="required">*</span></label></div>
               <mat-form-field appearance="outline" class="inventory-select">
@@ -365,20 +385,13 @@
             </div>
           </div>
           <p class="units-load-error" *ngIf="unitLoadError" role="alert">{{unitLoadError}}</p>
-          <p *ngIf="currentTrackingMode === 'Serializado' && !isEditMode" class="helper-note"><mat-icon>info_outline</mat-icon> Cada unidad de stock necesita una serie distinta. Ingresa la primera en Identidad y las restantes aquí (máximo 1000 por alta).</p>
-          <div *ngIf="currentTrackingMode === 'Serializado' && !isEditMode && additionalSerialIndexes.length > 0" class="serial-series-grid">
-            <label *ngFor="let idx of additionalSerialIndexes; trackBy: trackBySerialIndex" class="serial-series-field">
-              <span>Serie / IMEI {{idx + 2}} <span class="required">*</span></span>
-              <input type="text" class="custom-input" maxlength="150" autocomplete="off" [value]="extraSerialNumbers[idx] || ''" (input)="setExtraSerial(idx, $event)" [attr.aria-label]="'Serie / IMEI ' + (idx + 2)" placeholder="Número de serie único" />
-            </label>
-          </div>
           <p *ngIf="currentTrackingMode === 'Serializado' && isEditMode" class="helper-note"><mat-icon>info_outline</mat-icon> Para agregar nuevas unidades a un artículo existente usa Gestión de series, que también registra su movimiento. El stock no se cambia aquí.</p>
 
           <div class="article-parameter-grid">
             <div class="field-tile">
               <label for="article-status">Estado</label>
               <mat-form-field appearance="outline" class="inventory-select">
-                <mat-select id="article-status" formControlName="statusId" panelClass="inventory-select-options">
+                <mat-select id="article-status" formControlName="statusId" placeholder="Sin especificar" panelClass="inventory-select-options">
                   <mat-option [value]="null">Sin especificar</mat-option>
                   <mat-option *ngFor="let item of estados" [value]="item.id">{{item.name}}</mat-option>
                 </mat-select>
@@ -387,7 +400,7 @@
             <div class="field-tile">
               <label for="article-condition">Condición física</label>
               <mat-form-field appearance="outline" class="inventory-select">
-                <mat-select id="article-condition" formControlName="conditionId" panelClass="inventory-select-options">
+                <mat-select id="article-condition" formControlName="conditionId" placeholder="Sin especificar" panelClass="inventory-select-options">
                   <mat-option [value]="null">Sin especificar</mat-option>
                   <mat-option *ngFor="let item of condiciones" [value]="item.id">{{item.name}}</mat-option>
                 </mat-select>
@@ -396,7 +409,7 @@
             <div class="field-tile">
               <label for="article-location">Ubicación</label>
               <mat-form-field appearance="outline" class="inventory-select">
-                <mat-select id="article-location" formControlName="locationId" panelClass="inventory-select-options">
+                <mat-select id="article-location" formControlName="locationId" placeholder="Sin especificar" panelClass="inventory-select-options">
                   <mat-option [value]="null">Sin especificar</mat-option>
                   <mat-option *ngFor="let item of ubicaciones" [value]="item.id">{{item.name}}</mat-option>
                 </mat-select>
@@ -422,21 +435,33 @@
               <div class="money-input">
                 <input id="acq-price" type="number" min="0" step="0.01" formControlName="acqPrice" class="custom-input" placeholder="0.00" [class.invalid]="isInvalid('finance', 'acqPrice')" />
                 <mat-form-field appearance="outline" class="inventory-select" aria-label="Moneda de adquisición">
-                  <mat-select formControlName="acqCurrency" aria-label="Moneda de adquisición" panelClass="inventory-select-options">
-                    <mat-option *ngFor="let m of monedas" [value]="m.code">{{ m.label }}</mat-option>
+                  <mat-select formControlName="acqCurrency" panelClass="inventory-select-options">
+                    <mat-option *ngFor="let m of monedas" [value]="m.code">{{ m.code }}</mat-option>
                   </mat-select>
                 </mat-form-field>
               </div>
             </div>
+            
             <div class="finance-row">
               <div class="finance-label"><mat-icon>sell</mat-icon><label for="sale-price">Precio de venta (por unidad)</label></div>
               <div class="money-input">
                 <input id="sale-price" type="number" min="0" step="0.01" formControlName="salePrice" class="custom-input" placeholder="0.00" [class.invalid]="isInvalid('finance', 'salePrice')" />
                 <mat-form-field appearance="outline" class="inventory-select" aria-label="Moneda de venta">
-                  <mat-select formControlName="saleCurrency" aria-label="Moneda de venta" panelClass="inventory-select-options">
-                    <mat-option *ngFor="let m of monedas" [value]="m.code">{{ m.label }}</mat-option>
+                  <mat-select formControlName="saleCurrency" panelClass="inventory-select-options">
+                    <mat-option *ngFor="let m of monedas" [value]="m.code">{{ m.code }}</mat-option>
                   </mat-select>
                 </mat-form-field>
+              </div>
+            </div>
+            
+            <!-- NUEVO CUADRO DE TIPO DE CAMBIO (Reemplaza al texto plano viejo) -->
+            <div class="exchange-rate-card" *ngIf="exchangeRatesInfo">
+              <div class="exchange-header">
+                <mat-icon>currency_exchange</mat-icon> Tipo de cambio ({{exchangeRatesInfo.date}})
+              </div>
+              <div class="exchange-rates">
+                <span *ngIf="exchangeRatesInfo.usd">USD: <strong>S/ {{exchangeRatesInfo.usd | number:'1.4-4'}}</strong></span>
+                <span *ngIf="exchangeRatesInfo.eur">EUR: <strong>S/ {{exchangeRatesInfo.eur | number:'1.4-4'}}</strong></span>
               </div>
             </div>
             <p class="exchange-rate-note" *ngIf="exchangeRateNotice">{{exchangeRateNotice}}</p>
@@ -444,22 +469,46 @@
             <p class="exchange-rate-warning" *ngIf="currencyRateWarning" role="alert">{{currencyRateWarning}}</p>
           </div>
 
-          <div class="profitability-dashboard" [class.is-loss]="isLoss">
-            <div class="dash-header"><mat-icon>calculate</mat-icon><div><strong>Vista de rentabilidad (estimada)</strong><p>Cálculos por unidad de venta, expresados en soles</p></div><button type="button" class="finance-info-button" aria-label="Información y limitaciones del cálculo de rentabilidad" title="Estimación para operaciones gravadas. No determina el impuesto a declarar ni verifica el crédito fiscal. No incluye descuentos ni otros gastos. Las cotizaciones provienen del servicio de tipos de cambio y pueden corresponder a la última fecha disponible."><mat-icon>info_outline</mat-icon></button></div>
-            <label class="igv-option"><input type="checkbox" [checked]="pricesIncludeIgv" (change)="setPricesIncludeIgv($event)" /><span>Precios ingresados incluyen IGV (18 %)</span></label>
-            <div class="dash-metrics" *ngIf="hasFinancialEstimate; else awaitingValues">
-              <div class="metric"><mat-icon>paid</mat-icon><span class="label">Utilidad por unidad</span><span class="value">S/ {{ utilityPerUnit | number:'1.2-2' }}</span></div>
-              <div class="metric"><mat-icon>percent</mat-icon><span class="label">Ganancia sobre costo</span><span class="value">{{ marginPercent | number:'1.2-2' }} %</span></div>
-              <div class="metric"><mat-icon>trending_up</mat-icon><span class="label">Relación venta/costo</span><span class="value">{{ profitabilityRatio | number:'1.2-2' }} x</span></div>
+          <div class="profitability-dashboard" [class.is-loss]="isLoss && hasFinancialEstimate">
+            <div class="dash-header">
+              <mat-icon>calculate</mat-icon>
+              <div>
+                <strong>Vista de rentabilidad (estimada)</strong>
+                <p>Cálculos por unidad de venta, expresados en soles</p>
+              </div>
+              <button type="button" class="finance-info-button" aria-label="Información y limitaciones del cálculo de rentabilidad" title="Estimación para operaciones gravadas. No determina el impuesto a declarar ni verifica el crédito fiscal. No incluye descuentos ni otros gastos. Las cotizaciones provienen del servicio de tipos de cambio y pueden corresponder a la última fecha disponible."><mat-icon>info_outline</mat-icon></button>
             </div>
-            <div class="igv-details" *ngIf="hasFinancialEstimate">
-              <div><span>Venta sin IGV</span><strong>S/ {{netSalePerUnit | number:'1.2-2'}}</strong></div>
-              <div><span>Costo sin IGV</span><strong>S/ {{netCostPerUnit | number:'1.2-2'}}</strong></div>
-              <div><span>IGV estimado de venta</span><strong>S/ {{igvSalePerUnit | number:'1.2-2'}}</strong></div>
-              <div><span>IGV estimado de compra</span><strong>S/ {{igvCostPerUnit | number:'1.2-2'}}</strong></div>
-              <div class="igv-total"><span>Diferencia referencial</span><strong>S/ {{igvDifferencePerUnit | number:'1.2-2'}}</strong></div>
+            
+            <label class="igv-option">
+              <input type="checkbox" [checked]="pricesIncludeIgv" (change)="setPricesIncludeIgv($event)" />
+              <span>Precios ingresados incluyen IGV (18 %)</span>
+            </label>
+            
+            <div class="dash-metrics">
+              <div class="metric">
+                <mat-icon>paid</mat-icon>
+                <span class="label">Utilidad por unidad</span>
+                <span class="value">{{ hasFinancialEstimate ? ('S/ ' + (utilityPerUnit | number:'1.2-2')) : '-' }}</span>
+              </div>
+              <div class="metric">
+                <mat-icon>percent</mat-icon>
+                <span class="label">Ganancia sobre costo</span>
+                <span class="value">{{ hasFinancialEstimate ? ((marginPercent | number:'1.2-2') + ' %') : '-' }}</span>
+              </div>
+              <div class="metric">
+                <mat-icon>trending_up</mat-icon>
+                <span class="label">Relación venta/costo</span>
+                <span class="value">{{ hasFinancialEstimate ? ((profitabilityRatio | number:'1.2-2') + ' x') : '-' }}</span>
+              </div>
             </div>
-            <ng-template #awaitingValues><div class="awaiting-values"><mat-icon>info_outline</mat-icon> Ingresa costos y precio de venta para ver la estimación.</div></ng-template>
+            
+            <div class="igv-details">
+              <div><span>Venta sin IGV</span><strong>{{ hasFinancialEstimate ? ('S/ ' + (netSalePerUnit | number:'1.2-2')) : '-' }}</strong></div>
+              <div><span>Costo sin IGV</span><strong>{{ hasFinancialEstimate ? ('S/ ' + (netCostPerUnit | number:'1.2-2')) : '-' }}</strong></div>
+              <div><span>IGV estimado de venta</span><strong>{{ hasFinancialEstimate ? ('S/ ' + (igvSalePerUnit | number:'1.2-2')) : '-' }}</strong></div>
+              <div><span>IGV estimado de compra</span><strong>{{ hasFinancialEstimate ? ('S/ ' + (igvCostPerUnit | number:'1.2-2')) : '-' }}</strong></div>
+              <div class="igv-total"><span>Diferencia referencial</span><strong>{{ hasFinancialEstimate ? ('S/ ' + (igvDifferencePerUnit | number:'1.2-2')) : '-' }}</strong></div>
+            </div>
           </div>
           <!-- MODAL_SERIES_FINANZAS_2026: detalles de la estimación accesibles desde el icono de información. -->
           </div>
@@ -469,21 +518,33 @@
   </main>
 
   <footer class="modal-footer">
-    <button *ngIf="currentStep > 1" type="button" appUiButton="secondary" class="btn-text back" (click)="setStep(currentStep - 1)">
+    <button *ngIf="currentStep > 1" type="button" class="btn-text back" (click)="setStep(currentStep - 1)">
       <mat-icon>arrow_back</mat-icon> Atrás
     </button>
+    
+    <!-- Este espaciador empuja lo que esté a la derecha hacia el borde -->
     <span class="footer-spacer"></span>
-    <button type="button" appUiButton="secondary" class="btn-text" mat-dialog-close>Cancelar</button>
-    <button *ngIf="currentStep === 1" type="button" appUiButton="primary" class="btn-pill-green" (click)="goNextFromIdentity()">Siguiente: Logística <mat-icon>arrow_forward</mat-icon>
-    </button>
-    <button *ngIf="currentStep === 2" type="button" appUiButton="primary" class="btn-pill-green" (click)="goNextFromLogistics()">Siguiente: Finanzas <mat-icon>arrow_forward</mat-icon>
-    </button>
-    <button *ngIf="currentStep === 3" type="button" appUiButton="primary" class="btn-pill-green" [disabled]="isSaving" (click)="onSubmit()">
-      <mat-icon>save</mat-icon> {{ isSaving ? 'Guardando...' : isEditMode ? 'Actualizar artículo' : 'Guardar artículo' }}
-    </button>
+    
+    <button type="button" class="btn-text" mat-dialog-close>Cancelar</button>
+    <button *ngIf="currentStep === 1" type="button" class="btn-pill-green" (click)="goNextFromIdentity()">Siguiente: Logística <mat-icon>arrow_forward</mat-icon></button>
+    <button *ngIf="currentStep === 2" type="button" class="btn-pill-green" (click)="goNextFromLogistics()">Siguiente: Finanzas <mat-icon>arrow_forward</mat-icon></button>
+    <button *ngIf="currentStep === 3" type="button" class="btn-pill-green" [disabled]="isSaving" (click)="onSubmit()"><mat-icon>save</mat-icon> {{ isSaving ? 'Guardando...' : isEditMode ? 'Actualizar artículo' : 'Guardar artículo' }}</button>
   </footer>
-</div>
 
+  <div class="scanner-overlay" *ngIf="isScanningLive">
+    <div class="scanner-container">
+      <div class="scanner-header">
+        <h4>Escaneando Código</h4>
+        <button type="button" class="btn-close" (click)="stopBarcodeScanner()"><mat-icon>close</mat-icon></button>
+      </div>
+      <div class="scanner-video-wrapper">
+        <video #scannerVideo id="video" width="100%" height="100%"></video>
+        <div class="scanner-target-box"></div> <!-- Cuadro de ayuda visual -->
+      </div>
+      <p>Apunta la cámara al código. La detección es automática.</p>
+    </div>
+  </div>
+</div>
 
 <!-- Visor ampliado. El elemento nativo dialog evita que el modal de artículo recorte su contenido. -->
 <dialog #mediaViewer class="media-lightbox" aria-labelledby="media-lightbox-title" (close)="onMediaPreviewClosed()" (click)="onMediaBackdropClick($event)">
@@ -527,6 +588,68 @@
   </div>
 </dialog>
 
-<!-- /* FASE 4.1 */ -->
+<!-- Sub-Modal de Lista de Entries y Escaneo de Series -->
+<dialog #multiScannerModal class="media-lightbox multi-scanner-modal" (close)="closeMultiScannerModal()">
+  <div class="media-lightbox-shell" *ngIf="isMultiScanning">
+    
+    <div class="media-lightbox-header">
+      <div class="media-lightbox-heading">
+        <mat-icon>qr_code_scanner</mat-icon>
+        <div>
+          <h3>Ingreso Masivo de Series ({{ totalExpectedSerials }} unidades)</h3>
+          <p>Faltan <strong>{{ pendingSerialsCount }}</strong> series por registrar</p>
+        </div>
+      </div>
+      <div class="media-lightbox-actions">
+        <!-- Botón para alternar entre vista de lista y modo cámara continua -->
+        <button type="button" class="media-button primary" (click)="toggleCameraMode()">
+          <mat-icon>{{ isCameraActive ? 'list' : 'photo_camera' }}</mat-icon> 
+          {{ isCameraActive ? 'Ver Lista' : 'Escanear con Cámara' }}
+        </button>
+        <button type="button" class="media-viewer-control close-viewer" (click)="closeMultiScannerModal()" title="Cerrar">
+          <mat-icon>close</mat-icon>
+        </button>
+      </div>
+    </div>
+    
+    <!-- CUERPO DEL MODAL: Dos modos (Lista de Entries vs Vista de Cámara) -->
+    <div class="media-lightbox-body multi-scanner-body" style="background: #071019; padding: 20px; overflow-y: auto;">
+      
+      <!-- VISTA A: LISTA DE ENTRIES (Todas las series que se deben llenar) -->
+      <div *ngIf="!isCameraActive" class="entries-list-container" style="display: flex; flex-direction: column; gap: 10px;">
+        <div class="entry-row" *ngFor="let idx of additionalSerialIndexes; let i = index" style="display: flex; align-items: center; gap: 12px; background: #121b25; padding: 10px 14px; border: 1px solid #33485e; border-radius: 8px;">
+          <span style="font-weight: 700; color: #a2d149; min-width: 100px;">Serie / IMEI {{ i + 2 }}</span>
+          
+          <input type="text" class="custom-input" style="flex: 1;" 
+                 [value]="extraSerialNumbers[idx] || ''" 
+                 (input)="setExtraSerial(idx, $event)" 
+                 placeholder="Número de serie único o escanea..." />
+                 
+          <button type="button" class="media-button" (click)="openSingleEntryCamera(idx)" title="Escanear esta serie específica">
+            <mat-icon>qr_code_scanner</mat-icon> Escanear
+          </button>
+        </div>
+      </div>
 
-<!-- WEBINVENTORY_UNIDADES_UX_V1 -->
+      <!-- VISTA B: CÁMARA ACTIVA PARA UN ENTRY ESPECÍFICO O CONTINUO -->
+      <div *ngIf="isCameraActive" style="position: relative; width: 100%; height: 100%; display: flex; flex-direction: column; align-items: center; justify-content: center;">
+        <div class="scan-status-overlay" style="margin-bottom: 12px;">
+          <span>Escaneando para: <strong>{{ activeTargetEntryLabel }}</strong></span>
+        </div>
+        <div class="scanner-video-wrapper" style="width: 100%; max-height: 350px; position: relative;">
+          <video #multiScannerVideo id="multi-video" width="100%" height="100%" style="object-fit: cover; border-radius: 8px;"></video>
+          <div class="scanner-target-box"></div>
+        </div>
+        <button type="button" class="media-button" style="margin-top: 15px;" (click)="isCameraActive = false">
+          <mat-icon>arrow_back</mat-icon> Volver a la lista
+        </button>
+      </div>
+
+    </div>
+    
+    <footer class="media-lightbox-help" style="display: flex; justify-content: space-between; align-items: center;">
+      <span>Puedes escribir manualmente en cada casilla o usar el botón de escaneo.</span>
+      <button type="button" class="media-button primary" (click)="closeMultiScannerModal()">Guardar y Cerrar</button>
+    </footer>
+  </div>
+</dialog>s

@@ -2,10 +2,15 @@
   <header class="inv-core-header">
     <app-ui-page-heading icon="warehouse" title="Gestión de inventarios"
       subtitle="Inventarios operativos para artículos y existencias. Los maestros se mantienen separados."></app-ui-page-heading>
-    <button type="button" appUiButton="secondary" (click)="load()" [disabled]="loading">
-      <app-loading-indicator *ngIf="loading; else inventoryRefreshLabel" [compact]="true" message="Cargando..." />
-      <ng-template #inventoryRefreshLabel><mat-icon aria-hidden="true">refresh</mat-icon> Actualizar</ng-template>
-    </button>
+    <div class="inv-core-header-actions">
+      <button type="button" appUiButton="secondary" class="reload" (click)="load()" [disabled]="loading">
+        <app-loading-indicator *ngIf="loading; else inventoryRefreshLabel" [compact]="true" message="Cargando..." />
+        <ng-template #inventoryRefreshLabel><mat-icon aria-hidden="true">refresh</mat-icon> Actualizar</ng-template>
+      </button>
+      <button *ngIf="canCreate" type="button" appUiButton="primary" (click)="openCreateDialog()">
+        <mat-icon aria-hidden="true">add</mat-icon> Crear inventario
+      </button>
+    </div>
   </header>
 
   <section class="inv-manage-card">
@@ -86,55 +91,5 @@
     <p class="inv-manage-note" *ngIf="!loading && !operational.length && !error">
       No hay inventarios operativos registrados. El inventario general no aparece aquí porque no almacena existencias.
     </p>
-  </section>
-
-  <!-- Crear inventario adicional -->
-  <section *ngIf="canCreate" class="inv-manage-card">
-    <div class="inv-manage-heading">
-      <div>
-        <h2>Crear inventario adicional</h2>
-        <p>El permiso CREATE_INVENTORIES controla esta operación desde la API.</p>
-      </div>
-    </div>
-
-    <form class="inv-manage-form" (ngSubmit)="create()">
-      <div class="form-field-wrap">
-        <label for="new-inv-name">Nombre del inventario <span class="required">*</span></label>
-        <input id="new-inv-name" name="inventoryName" [(ngModel)]="name" maxlength="255"
-          placeholder="Ej. Almacén de herramientas" required appUiControl />
-      </div>
-
-      <div class="form-field-wrap">
-        <label for="new-inv-alias">Alias <span class="optional">(opcional)</span></label>
-        <input id="new-inv-alias" name="alias" [(ngModel)]="alias" maxlength="120"
-          placeholder="Ej. Herramientas" appUiControl />
-      </div>
-
-      <!-- ComboBox estilizado con Angular Material mat-select dark mode -->
-      <div class="form-field-wrap" *ngIf="isManager">
-        <label for="new-inv-owner">Propietario <span class="required">*</span></label>
-        <mat-form-field appearance="outline" class="inventory-select">
-          <mat-select id="new-inv-owner" name="ownerId" [(ngModel)]="ownerId" required
-            panelClass="inventory-select-options">
-            <mat-option *ngFor="let user of users" [value]="user.id">
-              {{ user.firstName ? (user.firstName + ' ' + (user.lastName || '') + ' · ' + user.username) : user.username }}
-            </mat-option>
-          </mat-select>
-        </mat-form-field>
-      </div>
-
-      <p *ngIf="isManager && !users.length" class="inv-manage-note">
-        No hay usuarios activos en esta empresa. Registra primero su administrador desde Gestión Dev.
-      </p>
-
-      <div class="inv-manage-actions">
-        <button type="submit" appUiButton="primary" [disabled]="!canSubmit">
-          <app-loading-indicator *ngIf="saving; else createInventoryLabel" [compact]="true" message="Creando..." />
-          <ng-template #createInventoryLabel>
-            <mat-icon aria-hidden="true">add</mat-icon> Crear inventario
-          </ng-template>
-        </button>
-      </div>
-    </form>
   </section>
 </section>
