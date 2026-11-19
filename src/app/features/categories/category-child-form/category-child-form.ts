@@ -22,12 +22,13 @@ import { FormControl } from '@angular/forms';
 import type { Observable } from 'rxjs';
 import { CategoryUnitPickerDialogComponent } from './category-unit-picker-dialog';
 import {MeasurementUnitsService, MeasurementUnit} from '../../../core/services/measurement-units';
+import { UiControlDirective } from '../../../shared/ui/directives/ui-control.directive';
 
 @Component({
     selector: 'app-category-child-form',
     standalone: true,
     imports: [
-        UiButtonDirective,
+        UiButtonDirective, UiControlDirective,
         ReactiveFormsModule, MatInputModule, MatButtonModule, MatDialogModule,
         MatSelectModule, MatStepperModule, MatSlideToggleModule, MatCheckboxModule,
         MatIconModule, MatTooltipModule, CommonModule, InventoryDialogMotionDirective

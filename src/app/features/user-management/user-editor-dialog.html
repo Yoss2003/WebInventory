@@ -45,27 +45,27 @@
       </div>
       <div class="user-dialog__grid">
         <label><span class="user-dialog__label">Nombre <span class="required">*</span></span>
-          <input [(ngModel)]="editing.firstName" (ngModelChange)="onNamesChanged()"
+          <input appUiControl [(ngModel)]="editing.firstName" (ngModelChange)="onNamesChanged()"
             maxlength="100" autocomplete="off" placeholder="Nombre(s)"/>
         </label>
         <label><span class="user-dialog__label">Apellidos <span class="required">*</span></span>
-          <input [(ngModel)]="editing.lastName" (ngModelChange)="onNamesChanged()"
+          <input appUiControl [(ngModel)]="editing.lastName" (ngModelChange)="onNamesChanged()"
             maxlength="100" autocomplete="off" placeholder="Apellidos"/>
         </label>
         <label>Usuario (automático)
           <span class="user-dialog__readonly">
-            <input [value]="editing.username" readonly tabindex="-1" aria-label="Usuario generado"
+            <input appUiControl [value]="editing.username" readonly tabindex="-1" aria-label="Usuario generado"
               placeholder="Se genera automáticamente"/>
             <mat-icon aria-hidden="true">lock_outline</mat-icon>
           </span>
         </label>
         <label><span class="user-dialog__label">Correo electrónico <span class="required">*</span></span>
-          <input type="email" [(ngModel)]="editing.email" maxlength="254"
+          <input appUiControl type="email" [(ngModel)]="editing.email" maxlength="254"
             autocomplete="off" placeholder="correo@ejemplo.com"/>
         </label>
         <label class="user-dialog__dni">DNI (opcional)
           <span class="user-dialog__dni-control">
-            <input [(ngModel)]="editing.dni" maxlength="8" inputmode="numeric"
+            <input appUiControl [(ngModel)]="editing.dni" maxlength="8" inputmode="numeric"
               autocomplete="off" placeholder="8 dígitos"/>
             <button type="button" appUiButton="secondary" class="user-dialog__lookup" (click)="consultDni()"
               [disabled]="saving || lookingUpDni || !editing.dni || editing.dni.length !== 8"

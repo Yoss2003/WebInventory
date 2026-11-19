@@ -31,6 +31,7 @@ import {
 } from '../../../core/services/article-reference-data';
 import { DecodeHintType } from '@zxing/library';
 import { MatTooltipModule } from '@angular/material/tooltip';
+import { UiControlDirective } from '../../../shared/ui/directives/ui-control.directive';
 
 interface AttributeField {
   control: string;
@@ -41,7 +42,7 @@ interface AttributeField {
   selector: 'app-article-form',
   standalone: true,
   imports: [
-    UiButtonDirective, CommonModule, ReactiveFormsModule, MatDialogModule,
+    UiButtonDirective, UiControlDirective, CommonModule, ReactiveFormsModule, MatDialogModule,
     MatIconModule, MatSelectModule, MatFormFieldModule, MatTooltipModule,
     InventoryDialogMotionDirective
   ],

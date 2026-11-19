@@ -22,11 +22,14 @@ import { LoadingIndicatorComponent } from '../../shared/loading/loading-indicato
 import { InventoryEditDialogComponent } from './inventory-edit-dialog/inventory-edit-dialog.component';
 import { InventoryCreateDialogComponent } from './inventory-create-dialog/inventory-create-dialog.component';
 import { ShareInventoryDialogComponent } from './share-inventory-dialog/share-inventory-dialog.component';
+import { UiStatusComponent } from '../../shared/ui/components/ui-status.component';
+import { UiEmptyStateComponent } from '../../shared/ui/components/ui-empty-state.component';
 
 @Component({
   selector: 'app-inventory-management',
   standalone: true,
   imports: [
+    UiEmptyStateComponent, UiStatusComponent,
     CommonModule, FormsModule, MatIconModule, MatSelectModule, MatFormFieldModule,
     MatDialogModule, RouterLink, UiPageHeadingComponent, UiButtonDirective,
     UiTableActionDirective, LoadingIndicatorComponent

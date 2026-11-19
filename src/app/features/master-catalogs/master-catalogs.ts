@@ -13,6 +13,9 @@ import { InventoryContextService } from '../../core/services/inventory-context';
 import { MasterCatalogsService } from '../../core/services/master-catalogs';
 import { ToastService } from '../../shared/toast/toast.service';
 import { UiSearchComponent } from '../../shared/ui/components/ui-search.component';
+import { UiEmptyStateComponent } from '../../shared/ui/components/ui-empty-state.component';
+import { UiStatusComponent } from '../../shared/ui/components/ui-status.component';
+import { LoadingIndicatorComponent } from '../../shared/loading/loading-indicator';
 
 export interface SupplierRecord {
   id: number;
@@ -59,10 +62,13 @@ interface ParameterRecord {
   selector: 'app-master-catalogs',
   standalone: true,
   imports: [
+    LoadingIndicatorComponent,
     UiControlDirective,
     UiTableActionDirective,
     UiButtonDirective,
     UiPageHeadingComponent,
+    UiEmptyStateComponent,
+    UiStatusComponent,
     CommonModule,
     FormsModule,
     MatIconModule,

@@ -56,7 +56,7 @@
               <small>{{ row.inventoryName }} · ID {{ row.id }}</small>
             </td>
             <td>{{ ownerName(row.userId) }}</td>
-            <td><span class="inv-manage-active">Activo</span></td>
+            <td><app-ui-status label="Activo" tone="success" /></td>
             <td class="inv-core-action-cell">
               <!-- Compartir inventario (abre modal asistente en 3 secciones) -->
               <button *ngIf="canManageAccess" type="button" appUiTableAction="normal"
@@ -88,8 +88,10 @@
     </div>
 
     <!-- Estado vacío -->
-    <p class="inv-manage-note" *ngIf="!loading && !operational.length && !error">
-      No hay inventarios operativos registrados. El inventario general no aparece aquí porque no almacena existencias.
-    </p>
+    <app-ui-empty-state
+      *ngIf="!loading && !operational.length && !error"
+      icon="warehouse"
+      message="No hay inventarios operativos registrados"
+      hint="El inventario general no aparece aquí porque no almacena existencias." />
   </section>
 </section>

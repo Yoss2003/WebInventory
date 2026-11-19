@@ -19,13 +19,14 @@ import {
 import { CompanyPublicService } from '../../core/services/companies';
 import { LoadingIndicatorComponent } from '../../shared/loading/loading-indicator';
 import { ToastService } from '../../shared/toast/toast.service';
-
+import { UiEmptyStateComponent } from '../../shared/ui/components/ui-empty-state.component';
+import { UiStatusComponent } from '../../shared/ui/components/ui-status.component';
 import { UiSearchComponent } from '../../shared/ui/components/ui-search.component';
 
 @Component({
   selector: 'app-dev-management',
   standalone: true,
-  imports: [UiControlDirective, UiButtonDirective, UiTableActionDirective, UiPageHeadingComponent, CommonModule, FormsModule, MatFormFieldModule, MatSelectModule, MatIconModule, LoadingIndicatorComponent,UiSearchComponent],
+  imports: [UiControlDirective, UiButtonDirective, UiTableActionDirective, UiPageHeadingComponent, UiEmptyStateComponent, UiStatusComponent, CommonModule, FormsModule, MatFormFieldModule, MatSelectModule, MatIconModule, LoadingIndicatorComponent,UiSearchComponent],
   templateUrl: './dev-management.html',
   styleUrl: './dev-management.scss'
 })

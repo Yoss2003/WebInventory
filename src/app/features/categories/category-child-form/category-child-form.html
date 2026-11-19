@@ -64,7 +64,7 @@
             <div class="identity-grid">
               <div class="category-field">
                 <label for="child-category-name">Nombre de la subcategoría <span class="required">*</span></label>
-                <input id="child-category-name" type="text" class="category-input" formControlName="name"
+                <input appUiControl id="child-category-name" type="text" class="category-input" formControlName="name"
                   maxlength="255" placeholder="Ej. Verano"
                   [class.invalid]="identityForm.get('name')?.invalid && identityForm.get('name')?.touched" />
                 <span class="field-error"
@@ -85,7 +85,7 @@
               </div>
               <div class="category-field field-wide">
                 <label for="child-category-description">Descripción (opcional)</label>
-                <textarea id="child-category-description" class="category-input category-textarea"
+                <textarea appUiControl id="child-category-description" class="category-input category-textarea"
                   formControlName="description" rows="2" placeholder="Describe esta categoría"></textarea>
               </div>
             </div>
@@ -208,7 +208,7 @@
                       matTooltip="Habilitar o deshabilitar el botón de este atributo en la fórmula">
                     </mat-checkbox>
                   </div>
-                  <input type="text" class="category-input attr-input" [formControlName]="'label' + i"
+                  <input appUiControl type="text" class="category-input attr-input" [formControlName]="'label' + i"
                     [class.invalid]="hasDuplicateAttributeName(i)" (input)="onAttributeLabelInput(i)"
                     [attr.aria-label]="'Nombre del atributo ' + i" [attr.aria-invalid]="hasDuplicateAttributeName(i)"
                     placeholder="Nombre del atributo" autocomplete="off" />
@@ -234,7 +234,7 @@
               </div>
               <div class="category-field formula-input">
                 <label for="child-category-formula">Fórmula personalizada</label>
-                <input id="child-category-formula" type="text" class="category-input" formControlName="namingCustom"
+                <input appUiControl id="child-category-formula" type="text" class="category-input" formControlName="namingCustom"
                   spellcheck="false" autocomplete="off" placeholder="[Pres.] + [Marca] | [color]"
                   (focus)="onNamingFocused()" (input)="onNamingInput($event)" (blur)="onNamingUnfocused()" />
               </div>
@@ -354,7 +354,7 @@
       <div class="preview-inputs" *ngIf="getActiveTags().length > 0; else emptyFormulaMsg">
         <div class="preview-input-group" *ngFor="let tag of getActiveTags()">
           <label>{{ tag.replace('[', '').replace(']', '') }}</label>
-          <input type="text" class="preview-input" [formControl]="getPreviewControl(tag)"
+          <input appUiControl type="text" class="preview-input" [formControl]="getPreviewControl(tag)"
             [placeholder]="'Ej. valor para ' + tag.replace('[', '').replace(']', '')" />
         </div>
       </div>

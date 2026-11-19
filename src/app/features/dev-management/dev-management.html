@@ -47,7 +47,11 @@
               <ng-container *ngIf="c.license?.expiresAt; else noExpiry">{{c.license?.expiresAt | date:'dd/MM/yyyy'}}<small class="days-left" [class.expired]="(daysRemaining(c) ?? 0) < 0">{{daysRemaining(c)}} días restantes</small></ng-container>
               <ng-template #noExpiry><span class="subtle">Sin configurar</span></ng-template>
             </td>
-            <td><span class="status-pill" [class.status-muted]="!c.isActive" [class.status-warning]="c.isActive && (!c.license || c.license.isEnabled === false)" [class.status-danger]="c.isActive && c.license?.isEnabled !== false && (daysRemaining(c) ?? 1) < 0">{{!c.isActive ? 'Inactiva' : !c.license ? 'Sin licencia' : c.license.isEnabled === false ? 'Suspendida' : (daysRemaining(c) ?? 1) < 0 ? 'Vencida' : 'Activa'}}</span></td>
+            <td>
+              <app-ui-status
+                [label]="!c.isActive ? 'Inactiva' : !c.license ? 'Sin licencia' : c.license.isEnabled === false ? 'Suspendida' : (daysRemaining(c) ?? 1) < 0 ? 'Vencida' : 'Activa'"
+                [tone]="!c.isActive ? 'neutral' : (!c.license || c.license.isEnabled === false) ? 'warning' : (daysRemaining(c) ?? 1) < 0 ? 'danger' : 'success'" />
+            </td>
             <td class="action-cell"><div class="table-actions">
               <button *ngIf="c.isActive && c.adminCount === 0" type="button"
                 appUiButton="secondary"
@@ -69,8 +73,15 @@
         </tbody>
       </table>
     </div>
-    <div *ngIf="companies.length && filteredCompanies.length === 0" class="empty-table"><mat-icon>search_off</mat-icon><strong>Sin resultados</strong><span>Prueba con otro nombre, RUC o tipo de licencia.</span></div>
-    <div *ngIf="!companies.length && !loadingCompanies" class="empty-table"><mat-icon>apartment</mat-icon><strong>{{companiesError ? 'No se pudo consultar la lista' : 'Aún no hay empresas disponibles'}}</strong></div>
+    <app-ui-empty-state
+      *ngIf="companies.length && filteredCompanies.length === 0"
+      icon="search_off"
+      message="Sin resultados"
+      hint="Prueba con otro nombre, RUC o tipo de licencia." />
+    <app-ui-empty-state
+      *ngIf="!companies.length && !loadingCompanies"
+      icon="apartment"
+      [message]="companiesError ? 'No se pudo consultar la lista' : 'Aún no hay empresas disponibles'" />
   </section>
 
   <section class="dev-card company-editor" aria-label="Formulario de empresa">
@@ -146,7 +157,7 @@
         <div class="fields-grid">
           <div class="field">
             <label class="field-label" for="dev-license-plan">Tipo de licencia <span class="required" *ngIf="!editing">*</span></label>
-            <mat-form-field *ngIf="!editing; else currentPlan" appearance="outline" class="dev-select">
+            <mat-form-field *ngIf="!editing; else currentPlan" appearance="outline" class="inventory-select dev-select">
               <mat-select id="dev-license-plan" name="plan" [(ngModel)]="form.plan" (selectionChange)="onPlanChanged()" panelClass="inventory-select-options">
                 <mat-option *ngFor="let plan of plans" [value]="plan">{{plan}}</mat-option>
               </mat-select>
@@ -181,7 +192,7 @@
     <div *ngIf="editing" class="renew-box" aria-label="Renovar licencia">
       <div><h3>Renovación independiente</h3><p>Renovar añade tiempo al vencimiento actual si aún está vigente. Si venció, la nueva vigencia inicia hoy.</p></div>
       <div class="renew-controls">
-        <mat-form-field appearance="outline" class="dev-select">
+        <mat-form-field appearance="outline" class="inventory-select dev-select">
           <mat-select [(ngModel)]="renewPlan" [ngModelOptions]="{standalone:true}" panelClass="inventory-select-options" aria-label="Plan para renovar"
             [disabled]="isSelectedProtected || !selectedCompany?.isActive || renewing || saving">
             <mat-option *ngFor="let plan of plans" [value]="plan">{{plan}}</mat-option>
@@ -210,12 +221,16 @@
           <td class="company-cell"><strong>{{r.username}}</strong><small>ID {{r.userId}}</small></td>
           <td>{{r.company}}</td>
           <td>{{r.requestedAt | date:'dd/MM/yyyy HH:mm'}}</td>
-          <td><span class="status-pill status-warning">Pendiente</span></td>
+          <td><app-ui-status label="Pendiente" tone="warning" /></td>
           <td class="action-cell"><div class="table-actions"><button type="button" appUiTableAction="success" class="action-edit" (click)="review(r,true)" [disabled]="workingRecoveryId !== null"><mat-icon>check_circle</mat-icon> Aprobar</button><button type="button" appUiTableAction="danger" class="danger-button" (click)="review(r,false)" [disabled]="workingRecoveryId !== null"><mat-icon>close</mat-icon> Rechazar</button></div></td>
         </tr>
       </tbody>
     </table></div>
-    <div *ngIf="!pending.length && !loadingPending" class="empty-table"><mat-icon>task_alt</mat-icon><strong>{{pendingError ? 'No se pudieron consultar las solicitudes' : 'Todo al día'}}</strong><span *ngIf="!pendingError">No hay solicitudes de recuperación pendientes.</span></div>
+    <app-ui-empty-state
+      *ngIf="!pending.length && !loadingPending"
+      icon="task_alt"
+      [message]="pendingError ? 'No se pudieron consultar las solicitudes' : 'Todo al día'"
+      [hint]="pendingError ? '' : 'No hay solicitudes de recuperación pendientes.'" />
   </section>
 </div>
 <ng-template #forbidden><p class="error">Esta área requiere una sesión del desarrollador.</p></ng-template>

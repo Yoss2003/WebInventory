@@ -51,14 +51,14 @@
           <ng-template #presentationField>
               <div class="form-group" *ngIf="currentTrackingMode !== 'Serializado'">
                 <label for="article-presentation">Presentación</label>
-                <input id="article-presentation" type="text" formControlName="presentation" class="custom-input" placeholder="Ej. Unidad, paquete, caja" />
+                <input id="article-presentation" type="text" formControlName="presentation" appUiControl class="custom-input" placeholder="Ej. Unidad, paquete, caja" />
               </div>
           </ng-template>
 
           <ng-template #modelField>
               <div class="form-group">
                 <label for="article-model">Modelo / versión</label>
-                <input id="article-model" type="text" formControlName="model" class="custom-input" placeholder="Ej. Modelo 2026" />
+                <input id="article-model" type="text" formControlName="model" appUiControl class="custom-input" placeholder="Ej. Modelo 2026" />
               </div>
           </ng-template>
 
@@ -67,7 +67,7 @@
                 <div class="field-heading"><label for="article-name">Nombre final del artículo <span class="required">*</span></label>
                   <span class="field-feedback" [class.is-error]="showNameError" aria-live="polite">{{ showNameError ? 'Completa los datos necesarios para obtener un nombre.' : (identityForm.get('name')?.disabled ? 'Se genera con los datos ingresados.' : 'Puedes escribir el nombre manualmente.') }}</span></div>
                 <div class="name-field">
-                  <input id="article-name" type="text" formControlName="name" class="custom-input" [class.invalid]="showNameError" [class.input-locked]="identityForm.get('name')?.disabled" (focus)="resetFieldMessage('identity','name')" [placeholder]="identityForm.get('name')?.disabled ? 'Se generará según la categoría' : 'Escribe el nombre del artículo'" />
+                  <input id="article-name" type="text" formControlName="name" appUiControl class="custom-input" [class.invalid]="showNameError" [class.input-locked]="identityForm.get('name')?.disabled" (focus)="resetFieldMessage('identity','name')" [placeholder]="identityForm.get('name')?.disabled ? 'Se generará según la categoría' : 'Escribe el nombre del artículo'" />
                   <mat-icon *ngIf="identityForm.get('name')?.disabled" title="Nombre generado automáticamente">lock</mat-icon>
                 </div>
 
@@ -149,7 +149,7 @@
               <div class="form-group" *ngIf="currentTrackingMode === 'Estándar'">
                 <div class="field-heading"><label for="article-barcode">Código de barras <span class="required">*</span></label><span class="field-feedback" [class.is-error]="isInvalid('identity','barcode')">{{ isInvalid('identity','barcode') ? 'El código de barras es obligatorio.' : '' }}</span></div>
                 <div class="input-with-actions">
-                  <input id="article-barcode" type="text" formControlName="barcode" (focus)="resetFieldMessage('identity','barcode')" class="custom-input" [class.invalid]="isInvalid('identity', 'barcode')" placeholder="Ingresa o escanea un código" />
+                  <input id="article-barcode" type="text" formControlName="barcode" (focus)="resetFieldMessage('identity','barcode')" appUiControl class="custom-input" [class.invalid]="isInvalid('identity', 'barcode')" placeholder="Ingresa o escanea un código" />
                   
                   <!-- NUEVO: Botón para abrir el lector en vivo -->
                   <button type="button" class="btn-icon btn-blue" (click)="openBarcodeScanner('barcode')" [disabled]="isScanningLive" title="Escanear con cámara" aria-label="Escanear código con cámara">
@@ -164,7 +164,7 @@
 
               <div class="form-group" *ngIf="currentTrackingMode === 'A Granel' || currentTrackingMode === 'Serializado'">
                 <div class="field-heading"><label for="article-sku">Código SKU interno <span *ngIf="currentTrackingMode === 'A Granel'" class="required">*</span></label><span class="field-feedback" [class.is-error]="isInvalid('identity','sku')">{{ isInvalid('identity','sku') ? 'El SKU es obligatorio en artículos a granel.' : '' }}</span></div>
-                <input id="article-sku" type="text" formControlName="sku" (focus)="resetFieldMessage('identity','sku')" class="custom-input" [class.invalid]="isInvalid('identity', 'sku')" placeholder="Ingresa el código interno" />
+                <input id="article-sku" type="text" formControlName="sku" (focus)="resetFieldMessage('identity','sku')" appUiControl class="custom-input" [class.invalid]="isInvalid('identity', 'sku')" placeholder="Ingresa el código interno" />
               </div>
 
               <ng-container *ngIf="attributeFields.length === 0">
@@ -174,7 +174,7 @@
               <div class="form-group" *ngIf="currentTrackingMode === 'Serializado'">
                 <div class="field-heading"><label for="article-serial">Número de serie / IMEI <span class="required">*</span></label><span class="field-feedback" [class.is-error]="isInvalid('identity','serialNumber')">{{ isInvalid('identity','serialNumber') ? 'La serie es obligatoria.' : '' }}</span></div>
                 <div class="input-with-actions">
-                  <input id="article-serial" type="text" formControlName="serialNumber" (focus)="resetFieldMessage('identity','serialNumber')" class="custom-input" [class.invalid]="isInvalid('identity', 'serialNumber')" [readonly]="hasSeveralExistingSerials" placeholder="Ingresa o escanea la primera serie" />
+                  <input id="article-serial" type="text" formControlName="serialNumber" (focus)="resetFieldMessage('identity','serialNumber')" appUiControl class="custom-input" [class.invalid]="isInvalid('identity', 'serialNumber')" [readonly]="hasSeveralExistingSerials" placeholder="Ingresa o escanea la primera serie" />
                   
                   <!-- NUEVO: Botón para abrir el lector en vivo -->
                   <button type="button" class="btn-icon btn-blue" (click)="openBarcodeScanner('serialNumber')" [disabled]="isScanningLive" title="Escanear número de serie" aria-label="Escanear serie">
@@ -212,7 +212,7 @@
               <ng-container *ngTemplateOutlet="modelField"></ng-container>
               <div class="form-group" *ngFor="let field of attributeFields; trackBy: trackByAttribute">
                 <label [for]="field.control">{{ field.label }}</label>
-                <input type="text" class="custom-input" [id]="field.control" [formControlName]="field.control" [placeholder]="'Ingresa ' + field.label.toLowerCase()" (focus)="resetFieldMessage('identity','name')" />
+                <input type="text" appUiControl class="custom-input" [id]="field.control" [formControlName]="field.control" [placeholder]="'Ingresa ' + field.label.toLowerCase()" (focus)="resetFieldMessage('identity','name')" />
               </div>
               <ng-container *ngTemplateOutlet="nameField"></ng-container>
             </div>
@@ -357,7 +357,7 @@
                 <span class="error-text" *ngIf="isInvalid('logistics','initialQuantity')">Ingresa un número entero de agrupaciones.</span>
               </div>
               <input id="initial-quantity" type="number" min="0" step="1" formControlName="initialQuantity"
-                class="custom-input" [readonly]="currentTrackingMode === 'Serializado' && isEditMode"
+                appUiControl class="custom-input" [readonly]="currentTrackingMode === 'Serializado' && isEditMode"
                 [class.invalid]="isInvalid('logistics','initialQuantity')"
                 (focus)="resetFieldMessage('logistics','initialQuantity')" (input)="onUnitQuantityInput('initialQuantity')" (blur)="onUnitQuantityBlur('initialQuantity', $event)" />
             </div>
@@ -367,7 +367,7 @@
                 <span class="error-text" *ngIf="isInvalid('logistics','conversionFactor')">Solo valores enteros mayores que cero.</span>
               </div>
               <input id="conversion" type="number" min="1" step="1" formControlName="conversionFactor"
-                class="custom-input" [class.invalid]="isInvalid('logistics','conversionFactor')"
+                appUiControl class="custom-input" [class.invalid]="isInvalid('logistics','conversionFactor')"
                 (focus)="resetFieldMessage('logistics','conversionFactor')" (input)="onUnitQuantityInput('conversionFactor')" (blur)="onUnitQuantityBlur('conversionFactor', $event)" />
             </div>
             <div class="field-tile" [class.stock-calculated]="requiresUnitConversion">
@@ -378,7 +378,7 @@
                 </span>
               </div>
               <input id="article-stock" type="number" min="0" [attr.step]="stockStep" formControlName="stock"
-                class="custom-input" [class.invalid]="isInvalid('logistics','stock')"
+                appUiControl class="custom-input" [class.invalid]="isInvalid('logistics','stock')"
                 [readonly]="requiresUnitConversion || (currentTrackingMode === 'Serializado' && isEditMode)"
                 (focus)="resetFieldMessage('logistics','stock')" (input)="onUnitQuantityInput('stock')" (blur)="onUnitQuantityBlur('stock', $event)" />              
             </div>
@@ -431,7 +431,7 @@
             <div class="finance-row">
               <div class="finance-label"><mat-icon>payments</mat-icon><label for="acq-price">Costo de adquisición</label></div>
               <div class="money-input">
-                <input id="acq-price" type="number" min="0" step="0.01" formControlName="acqPrice" class="custom-input" placeholder="0.00" [class.invalid]="isInvalid('finance', 'acqPrice')" />
+                <input id="acq-price" type="number" min="0" step="0.01" formControlName="acqPrice" appUiControl class="custom-input" placeholder="0.00" [class.invalid]="isInvalid('finance', 'acqPrice')" />
                 <mat-form-field appearance="outline" class="inventory-select" aria-label="Moneda de adquisición">
                   <mat-select formControlName="acqCurrency" panelClass="inventory-select-options">
                     <mat-option *ngFor="let m of monedas" [value]="m.code">{{ m.code }}</mat-option>
@@ -443,7 +443,7 @@
             <div class="finance-row">
               <div class="finance-label"><mat-icon>sell</mat-icon><label for="sale-price">Precio de venta (por unidad)</label></div>
               <div class="money-input">
-                <input id="sale-price" type="number" min="0" step="0.01" formControlName="salePrice" class="custom-input" placeholder="0.00" [class.invalid]="isInvalid('finance', 'salePrice')" />
+                <input id="sale-price" type="number" min="0" step="0.01" formControlName="salePrice" appUiControl class="custom-input" placeholder="0.00" [class.invalid]="isInvalid('finance', 'salePrice')" />
                 <mat-form-field appearance="outline" class="inventory-select" aria-label="Moneda de venta">
                   <mat-select formControlName="saleCurrency" panelClass="inventory-select-options">
                     <mat-option *ngFor="let m of monedas" [value]="m.code">{{ m.code }}</mat-option>

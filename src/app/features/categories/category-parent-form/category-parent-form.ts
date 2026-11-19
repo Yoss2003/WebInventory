@@ -16,10 +16,11 @@ import { InventoryService, InventorySummary } from '../../../core/services/inven
 import { InventoryContextService } from '../../../core/services/inventory-context';
 import { MatSelectModule } from '@angular/material/select';
 import { LoadingIndicatorComponent } from '../../../shared/loading/loading-indicator';
+import { UiControlDirective } from '../../../shared/ui/directives/ui-control.directive';
 
 @Component({
   selector: 'app-category-parent-form', standalone: true,
-  imports: [UiButtonDirective, CommonModule, ReactiveFormsModule, MatIconModule, MatSelectModule, MatFormFieldModule, LoadingIndicatorComponent],
+  imports: [UiButtonDirective, UiControlDirective, CommonModule, ReactiveFormsModule, MatIconModule, MatSelectModule, MatFormFieldModule, LoadingIndicatorComponent],
   templateUrl: './category-parent-form.html',styleUrl: './category-parent-form.scss'
 })
 export class CategoryParentFormComponent implements OnInit {
