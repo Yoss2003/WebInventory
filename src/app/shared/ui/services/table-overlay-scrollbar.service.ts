@@ -39,6 +39,10 @@ export class TableOverlayScrollbarService {
     if (this.started || !isPlatformBrowser(this.platformId)) return;
     this.started = true;
 
+    if (typeof window === 'undefined' || typeof ResizeObserver === 'undefined') {
+      return;
+    }
+    
     this.resizes = new ResizeObserver(() => this.schedule());
     this.mutation = new MutationObserver(() => this.schedule());
     this.mutation.observe(this.doc.body, { childList: true, subtree: true });

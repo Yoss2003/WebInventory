@@ -4,7 +4,7 @@ import { of } from 'rxjs';
 import { MatDialog } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { CategoryListComponent } from './category-list';
-import { CategoryService } from '../services/category';
+import { CategoryService } from '../../../core/services/category';
 
 describe('CategoryListComponent', () => {
   it('creates and loads categories', async () => {

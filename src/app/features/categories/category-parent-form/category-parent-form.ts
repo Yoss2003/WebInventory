@@ -10,7 +10,7 @@ import type { Observable } from 'rxjs';
 import { HttpErrorResponse } from '@angular/common/http';
 import { ToastService } from '../../../shared/toast/toast.service';
 import { CatalogSimilarDialogComponent, CatalogSimilarChoice } from '../../../shared/catalog-similar-dialog/catalog-similar-dialog';
-import { CategoryService } from '../services/category';
+import { CategoryService } from '../../../core/services/category';
 import { Category } from '../../../core/models/category.model';
 import { InventoryService, InventorySummary } from '../../../core/services/inventories';
 import { InventoryContextService } from '../../../core/services/inventory-context';

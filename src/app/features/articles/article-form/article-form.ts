@@ -10,11 +10,11 @@ import type { Observable } from 'rxjs';
 import { MatIconModule } from '@angular/material/icon';
 import { MatSelectModule } from '@angular/material/select';
 import { MatFormFieldModule } from '@angular/material/form-field';
-import { MatSnackBar } from '@angular/material/snack-bar';
+import { ToastService } from '../../../shared/toast/toast.service';
 import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
 import { BarcodeFormat, BrowserMultiFormatReader } from '@zxing/browser';
 
-import { CategoryService } from '../../categories/services/category';
+import { CategoryService } from '../../../core/services/category';
 import { BrandService } from '../../../core/services/brands';
 import { Brand } from '../../../core/models/brand.model';
 import { ArticleService } from '../../../core/services/articles';
@@ -58,7 +58,7 @@ export class ArticleFormComponent implements OnInit, OnDestroy {
   private articleService = inject(ArticleService);
   private inventoryContext = inject(InventoryContextService);
   private dialog = inject(MatDialog);
-  private snackBar = inject(MatSnackBar);
+  private readonly toast = inject(ToastService);
   private readonly measurementUnitsService = inject(MeasurementUnitsService);
   private readonly referenceData = inject(ArticleReferenceDataService);
   private readonly access = inject(AccessService);
@@ -256,11 +256,7 @@ export class ArticleFormComponent implements OnInit, OnDestroy {
         this.cdr.markForCheck();
       },
       error: () => {
-        this.snackBar.open(
-          'No se pudieron cargar las unidades de medida.',
-          'Cerrar',
-          { duration: 4000 }
-        );
+        this.toast.error('No se pudieron cargar las unidades de medida.');
       }
     });
   }
@@ -348,7 +344,7 @@ export class ArticleFormComponent implements OnInit, OnDestroy {
         error: () => {
           this.isEditLoading = false;
           this.cdr.markForCheck();
-          this.snackBar.open('No se pudieron cargar los datos del artículo para editar.', 'Cerrar', { duration: 5000 });
+          this.toast.error('No se pudieron cargar los datos del artículo para editar.');
         }
       });
     }
@@ -625,7 +621,7 @@ export class ArticleFormComponent implements OnInit, OnDestroy {
     if (!this.categoriasHijas.some(c => Number(c.id) === Number(a.categoryId))) {
       this.isEditLoading = false;
       this.cdr.markForCheck();
-      this.snackBar.open('La categoría del artículo no está disponible para edición.', 'Cerrar', { duration: 4500 });
+      this.toast.warning('La categoría del artículo no está disponible para edición.');
       return;
     }
     this.editHydrated = true;
@@ -839,7 +835,7 @@ export class ArticleFormComponent implements OnInit, OnDestroy {
         .every(key => !this.identityForm.get(key)?.invalid);
       this.activeSubTab = needsName && identificationComplete && this.attributeFields.length > 0
         ? 'attributes' : 'general';
-      this.snackBar.open('Completa los datos requeridos de Identidad.', 'Cerrar', { duration: 3200 });
+      this.toast.warning('Completa los datos requeridos de Identidad.');
       return;
     }
     this.stopCamera();
@@ -852,7 +848,7 @@ export class ArticleFormComponent implements OnInit, OnDestroy {
     this.attemptedLogistics = true;
     this.logisticsForm.markAllAsTouched();
     if (this.logisticsForm.invalid) {
-      this.snackBar.open('Revisa los datos de Logística.', 'Cerrar', { duration: 3200 });
+      this.toast.warning('Revisa los datos de Logística.');
       return;
     }
     this.triggerStepTransition();
@@ -941,9 +937,8 @@ export class ArticleFormComponent implements OnInit, OnDestroy {
       this.proveedores.sort((a, b) => a.businessName.localeCompare(b.businessName, 'es'));
       this.identityForm.get('supplierId')?.setValue(saved.id);
       this.identityForm.get('supplierId')?.markAsDirty();
-      this.snackBar.open(
-        selected ? 'Proveedor actualizado y asociado al artículo.' : 'Proveedor registrado y asociado al artículo.',
-        'Cerrar', { duration: 3500 }
+      this.toast.success(
+        selected ? 'Proveedor actualizado y asociado al artículo.' : 'Proveedor registrado y asociado al artículo.'
       );
       this.cdr.markForCheck();
     });
@@ -952,7 +947,7 @@ export class ArticleFormComponent implements OnInit, OnDestroy {
   agregarNuevaMarca(): void {
     const category = this.selectedCategory;
     if (!category) {
-      this.snackBar.open('Primero selecciona una categoría hija.', 'Cerrar', { duration: 3000 });
+      this.toast.warning('Primero selecciona una categoría hija.');
       return;
     }
 
@@ -1058,9 +1053,7 @@ export class ArticleFormComponent implements OnInit, OnDestroy {
     } catch {
       if (requestId === this.cameraRequestId) {
         this.stopCamera();
-        this.snackBar.open('No se pudo usar la cámara. Selecciona una imagen del equipo.', 'Cerrar', { duration: 3500 });
-        // Los navegadores pueden limitar la apertura automática después de una operación asíncrona.
-        // También queda disponible el botón «Elegir archivo».
+        this.toast.warning('No se pudo usar la cámara. Selecciona una imagen del equipo.');
         photoInput.click();
       }
     } finally {
@@ -1073,7 +1066,7 @@ export class ArticleFormComponent implements OnInit, OnDestroy {
     const video = this.cameraVideo?.nativeElement;
     if (!this.isCameraOpen || !video || this.isCapturingPhoto) return;
     if (!video.videoWidth || !video.videoHeight) {
-      this.snackBar.open('La cámara aún no está lista.', 'Cerrar', { duration: 2500 });
+      this.toast.warning('La cámara aún no está lista.');
       return;
     }
 
@@ -1090,7 +1083,7 @@ export class ArticleFormComponent implements OnInit, OnDestroy {
       const file = new File([blob], `foto-articulo-${Date.now()}.jpg`, { type: 'image/jpeg' });
       this.setPhotoFile(file);
     } catch {
-      this.snackBar.open('No se pudo capturar la fotografía. Intenta nuevamente.', 'Cerrar', { duration: 3500 });
+      this.toast.error('No se pudo capturar la fotografía. Intenta nuevamente.');
     } finally {
       this.isCapturingPhoto = false;
       this.cdr.markForCheck();
@@ -1200,7 +1193,7 @@ export class ArticleFormComponent implements OnInit, OnDestroy {
     const isImage = file.type.startsWith('image/');
     const isPdf = file.type === 'application/pdf';
     if ((type === 'photo' && !isImage) || (type === 'voucher' && !isImage && !isPdf)) {
-      this.snackBar.open(type === 'photo' ? 'Selecciona un archivo de imagen.' : 'Selecciona una imagen o un PDF.', 'Cerrar', { duration: 3500 });
+      this.toast.warning(type === 'photo' ? 'Selecciona un archivo de imagen.' : 'Selecciona una imagen o un PDF.');
       return;
     }
 
@@ -1271,10 +1264,10 @@ export class ArticleFormComponent implements OnInit, OnDestroy {
       const text = result.getText();
       if (text) {
         this.identityForm.get(controlName)?.setValue(text);
-        this.snackBar.open(`Código detectado: ${text}`, 'Cerrar', { duration: 3000 });
+        this.toast.success(`Código detectado: ${text}`);
       }
     } catch {
-      this.snackBar.open('No se detectó ningún código en la imagen.', 'Cerrar', { duration: 3000 });
+      this.toast.warning('No se detectó ningún código en la imagen.');
     } finally {
       URL.revokeObjectURL(imageUrl);
       input.value = '';
@@ -1337,23 +1330,23 @@ export class ArticleFormComponent implements OnInit, OnDestroy {
     if (!this.isIdentityComplete) {
       this.currentStep = 1;
       this.activeSubTab = 'general';
-      this.snackBar.open('Revisa los datos de Identidad.', 'Cerrar', { duration: 3000 });
+      this.toast.warning('Revisa los datos de Identidad.');
       return;
     }
     if (this.logisticsForm.invalid) {
       this.currentStep = 2;
-      this.snackBar.open('Revisa los datos de Logística.', 'Cerrar', { duration: 3000 });
+      this.toast.warning('Revisa los datos de Logística.');
       return;
     }
     if (this.financeForm.invalid) {
-      this.snackBar.open('Revisa los importes de Finanzas.', 'Cerrar', { duration: 3000 });
+      this.toast.warning('Revisa los importes de Finanzas.');
       return;
     }
 
     if (this.isSaving) return;
     const category = this.selectedCategory;
     if (!category || Number(category.inventoryId) <= 0) {
-      this.snackBar.open('La categoría no tiene un almacén válido. Corrige su configuración.', 'Cerrar', { duration: 4500 });
+      this.toast.warning('La categoría no tiene un almacén válido. Corrige su configuración.');
       return;
     }
     const identity = this.identityForm.getRawValue();
@@ -1363,7 +1356,7 @@ export class ArticleFormComponent implements OnInit, OnDestroy {
       this.currentTrackingMode === 'A Granel' ? 2 : 0;
     const code = String(identity.sku || identity.barcode || identity.serialNumber || '').trim();
     if (!code) {
-      this.snackBar.open('Ingresa SKU, código de barras o número de serie.', 'Cerrar', { duration: 4000 });
+      this.toast.warning('Ingresa SKU, código de barras o número de serie.');
       return;
     }
     const attrs: Record<string, string> = {};
@@ -1382,7 +1375,7 @@ export class ArticleFormComponent implements OnInit, OnDestroy {
     if (this.isEditMode && this.existingArticle && Number(this.existingArticle.stock) > 0 &&
         saleName !== String(this.existingArticle.saleUnit ?? this.existingArticle.measurementUnit)) {
       this.currentStep = 2;
-      this.snackBar.open('No cambies la unidad de stock de un artículo con existencias.', 'Cerrar', {duration:6000});
+      this.toast.warning('No cambies la unidad de stock de un artículo con existencias.');
       return;
     }
     const configurationValid = this.unidades.includes(purchaseName) &&
@@ -1392,7 +1385,7 @@ export class ArticleFormComponent implements OnInit, OnDestroy {
     const quantityValid = validQuantity(logistics.stock, saleName, mode === 1);
     if (!configurationValid || !quantityValid) {
       this.currentStep = 2;
-      this.snackBar.open('Revisa unidades, cantidades y equivalencias en Logística.', 'Cerrar', {duration:5000});
+      this.toast.warning('Revisa unidades, cantidades y equivalencias en Logística.');
       return;
     }
     const requestedStock = Number(logistics.stock);
@@ -1405,13 +1398,13 @@ export class ArticleFormComponent implements OnInit, OnDestroy {
           initialSerials.length !== requestedStock || initialSerials.some(value => !value || value.length > 150) ||
           unique.size !== requestedStock) {
         this.currentStep = 2;
-        this.snackBar.open('El stock serializado requiere exactamente una serie válida y distinta por unidad.', 'Cerrar', { duration: 6500 });
+        this.toast.warning('El stock serializado requiere exactamente una serie válida y distinta por unidad.');
         return;
       }
     }
     const targetInventoryId = this.existingArticle?.inventoryId ?? this.inventoryContext.activeInventoryId;
     if (!targetInventoryId) {
-      this.snackBar.open('Selecciona un inventario de trabajo antes de registrar artículos.', 'Cerrar', { duration: 5000 });
+      this.toast.warning('Selecciona un inventario de trabajo antes de registrar artículos.');
       return;
     }
     const payload: Partial<Article> & { id: number } = {
@@ -1453,7 +1446,7 @@ export class ArticleFormComponent implements OnInit, OnDestroy {
         const articleId = this.existingArticle?.id ?? (saved as Article | undefined)?.id;
         if (!articleId) {
           this.isSaving = false;
-          this.snackBar.open('El servidor no devolvió el ID del artículo.', 'Cerrar', {duration: 5000});
+          this.toast.error('El servidor no devolvió el ID del artículo.');
           return;
         }
         const mediaOperations: Observable<unknown>[] = [];
@@ -1466,19 +1459,19 @@ export class ArticleFormComponent implements OnInit, OnDestroy {
         (mediaOperations.length ? forkJoin(mediaOperations) : of([])).subscribe({
           next: () => {
             this.isSaving = false;
-            this.snackBar.open('Artículo y archivos guardados correctamente.', 'Cerrar', { duration: 3300 });
+            this.toast.success('Artículo y archivos guardados correctamente.');
             this.dialogRef.close({ created: !this.isEditMode, tracking: mode, articleId });
           },
           error: (error: HttpErrorResponse) => {
             this.isSaving = false;
-            this.snackBar.open(`Artículo guardado, pero falló el archivo: ${this.readApiError(error)}`, 'Cerrar', { duration: 8500 });
+            this.toast.warning(`Artículo guardado, pero falló el archivo: ${this.readApiError(error)}`);
             this.dialogRef.close({ created: !this.isEditMode, tracking: mode, articleId });
           }
         });
       },
       error: (error: HttpErrorResponse) => {
         this.isSaving = false;
-        this.snackBar.open(this.readApiError(error), 'Cerrar', { duration: 7500 });
+        this.toast.error(this.readApiError(error));
       }
     });
   }
@@ -1499,7 +1492,7 @@ export class ArticleFormComponent implements OnInit, OnDestroy {
     setTimeout(async () => {
       const videoElement = document.getElementById('video') as HTMLVideoElement;
       if (!videoElement) {
-        this.snackBar.open('Error al inicializar el visor de la cámara.', 'Cerrar', { duration: 3000 });
+        this.toast.error('Error al inicializar el visor de la cámara.');
         this.isScanningLive = false;
         this.cdr.markForCheck();
         return;
@@ -1550,7 +1543,7 @@ export class ArticleFormComponent implements OnInit, OnDestroy {
               this.identityForm.get(this.currentScanTarget)?.setValue(text);
               this.identityForm.get(this.currentScanTarget)?.markAsDirty();
               
-              this.snackBar.open(`Código detectado: ${text}`, 'Cerrar', { duration: 2500 });
+              this.toast.success(`Código detectado: ${text}`);
               this.stopBarcodeScanner();
             }
 
@@ -1562,7 +1555,7 @@ export class ArticleFormComponent implements OnInit, OnDestroy {
         );
       } catch (error) {
         console.error(error);
-        this.snackBar.open('No se pudo acceder a la cámara. Revisa los permisos.', 'Cerrar', { duration: 4000 });
+        this.toast.error('No se pudo acceder a la cámara. Revisa los permisos.');
         this.stopBarcodeScanner();
       }
     }, 50); 
@@ -1604,7 +1597,7 @@ export class ArticleFormComponent implements OnInit, OnDestroy {
     this.totalExpectedSerials = totalStock;
 
     if (totalStock <= 1) {
-      this.snackBar.open('El stock total debe ser mayor a 1 para usar el ingreso masivo.', 'Cerrar', { duration: 3000 });
+      this.toast.warning('El stock total debe ser mayor a 1 para usar el ingreso masivo.');
       return;
     }
 
@@ -1693,7 +1686,7 @@ export class ArticleFormComponent implements OnInit, OnDestroy {
 
             if (isDuplicate) {
               lastScannedCode = text;
-              this.snackBar.open(`Atención: la serie ${text} ya está registrada.`, 'Cerrar', { duration: 2200 });
+              this.toast.warning(`Atención: la serie ${text} ya está registrada.`);
               return;
             }
 
@@ -1705,7 +1698,7 @@ export class ArticleFormComponent implements OnInit, OnDestroy {
                 this.draftExtraSerialNumbers[this.activeTargetEntryIdx] = text;
                 this.cdr.detectChanges();
 
-                this.snackBar.open(`¡${this.activeTargetEntryLabel} registrada: ${text}!`, '', { duration: 1500 });
+                this.toast.success(`¡${this.activeTargetEntryLabel} registrada: ${text}!`);
                 this.isCameraActive = false;
                 if (this.multiScanControls) {
                   try { this.multiScanControls.stop(); } catch {}
@@ -1722,10 +1715,10 @@ export class ArticleFormComponent implements OnInit, OnDestroy {
                 this.draftExtraSerialNumbers[targetIdx] = text;
                 this.cdr.detectChanges();
 
-                this.snackBar.open(`¡Serie ${targetIdx + 2} agregada: ${text}!`, '', { duration: 1500 });
+                this.toast.success(`¡Serie ${targetIdx + 2} agregada: ${text}!`);
 
                 if (this.draftPendingSerialsCount <= 0) {
-                  this.snackBar.open('Todas las series escaneadas. Pulsa "Guardar y Cerrar" para confirmar.', 'Cerrar', { duration: 3500 });
+                  this.toast.success('Todas las series escaneadas. Pulsa "Guardar y Cerrar" para confirmar.');
                   this.isCameraActive = false;
                   if (this.multiScanControls) {
                     try { this.multiScanControls.stop(); } catch {}
@@ -1751,7 +1744,7 @@ export class ArticleFormComponent implements OnInit, OnDestroy {
         });
       } catch (error) {
         console.error(error);
-        this.snackBar.open('Error al acceder a la cámara.', 'Cerrar', { duration: 3000 });
+        this.toast.error('Error al acceder a la cámara.');
       }
     }, 50);
   }
@@ -1852,11 +1845,7 @@ export class ArticleFormComponent implements OnInit, OnDestroy {
 
   saveAndCloseMultiScannerModal(): void {
     if (this.hasDraftDuplicates()) {
-      this.snackBar.open(
-        'Atención: hay series repetidas (marcadas en rojo). Revisa y corrígelas antes de guardar.',
-        'Cerrar',
-        { duration: 4000 }
-      );
+      this.toast.warning('Atención: hay series repetidas (marcadas en rojo). Revisa y corrígelas antes de guardar.');
       return;
     }
 
@@ -1865,13 +1854,11 @@ export class ArticleFormComponent implements OnInit, OnDestroy {
 
     const pending = this.draftPendingSerialsCount;
     if (pending === 0) {
-      this.snackBar.open('Se guardaron todas las series correctamente.', 'Cerrar', { duration: 3500 });
+      this.toast.success('Se guardaron todas las series correctamente.');
     } else {
       const savedCount = this.extraSerialNumbers.filter(v => v.length > 0).length;
-      this.snackBar.open(
-        `Atención: se guardaron ${savedCount} ${savedCount === 1 ? 'serie' : 'series'}, pero debes completar ${pending} más.`,
-        'Cerrar',
-        { duration: 4500 }
+      this.toast.warning(
+        `Atención: se guardaron ${savedCount} ${savedCount === 1 ? 'serie' : 'series'}, pero debes completar ${pending} más.`
       );
     }
 

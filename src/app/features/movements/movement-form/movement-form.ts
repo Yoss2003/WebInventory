@@ -6,7 +6,7 @@ import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { MatIconModule } from '@angular/material/icon';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatSelectModule } from '@angular/material/select';
-import { MatSnackBar } from '@angular/material/snack-bar';
+import { ToastService } from '../../../shared/toast/toast.service';
 import { ArticleService } from '../../../core/services/articles';
 import { MovementService } from '../../../core/services/movement';
 import { Article } from '../../../core/models/article.model';
@@ -22,7 +22,7 @@ export class MovementForm implements OnInit {
   private readonly fb = inject(FormBuilder);
   private readonly articlesApi = inject(ArticleService);
   private readonly movementsApi = inject(MovementService);
-  private readonly snack = inject(MatSnackBar);
+  private readonly toast = inject(ToastService);
   private readonly cdr = inject(ChangeDetectorRef);
   readonly dialogRef = inject(MatDialogRef<MovementForm>);
   readonly data: { actionId: number } = inject(MAT_DIALOG_DATA);
@@ -162,7 +162,7 @@ export class MovementForm implements OnInit {
     }).subscribe({
       next: () => {
         this.saving = false;
-        this.snack.open('Movimiento registrado. Stock actualizado.', 'Cerrar', {duration: 3000});
+        this.toast.success('Movimiento registrado. Stock actualizado.');
         this.dialogRef.close(true);
       },
       error: e => {

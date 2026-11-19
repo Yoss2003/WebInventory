@@ -4,7 +4,7 @@ import { MatDialog } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { ArticleListComponent } from './article-list';
 import { ArticleService } from '../../../core/services/articles';
-import { CategoryService } from '../../categories/services/category';
+import { CategoryService } from '../../../core/services/category';
 import { BrandService } from '../../../core/services/brands';
 
 describe('ArticleListComponent', () => {

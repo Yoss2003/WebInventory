@@ -10,14 +10,13 @@ import { MatCheckboxModule } from '@angular/material/checkbox';
 import { MatIconModule } from '@angular/material/icon';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { MatDialogRef, MatDialogModule, MAT_DIALOG_DATA } from '@angular/material/dialog';
-import { MatSnackBar } from '@angular/material/snack-bar';
 import { MatDialog } from '@angular/material/dialog';
 import { HttpErrorResponse } from '@angular/common/http';
 import { ToastService } from '../../../shared/toast/toast.service';
 import { CatalogSimilarDialogComponent, CatalogSimilarChoice } from '../../../shared/catalog-similar-dialog/catalog-similar-dialog';
 import { CommonModule } from '@angular/common';
 import { InventoryDialogMotionDirective } from '../../../shared/ui/directives/inv-dialog-motion.directive';
-import { CategoryService } from '../services/category';
+import { CategoryService } from '../../../core/services/category';
 import { Category } from '../../../core/models/category.model';
 import { FormControl } from '@angular/forms';
 import type { Observable } from 'rxjs';
@@ -40,7 +39,6 @@ export class CategoryChildFormComponent implements OnInit {
     private originalEditSnapshot = '';
     private fb = inject(FormBuilder);
     private categoryService = inject(CategoryService);
-    private snackBar = inject(MatSnackBar);
     private readonly toast = inject(ToastService);
     private readonly dialogs = inject(MatDialog);
     public dialogRef = inject(MatDialogRef<CategoryChildFormComponent>);
@@ -509,10 +507,7 @@ export class CategoryChildFormComponent implements OnInit {
         const control = this.attributesForm.get('namingCustom');
         const formula = this.normalizeFormula(String(control?.value ?? ''));
         if (formula && !this.formulaIsValid(formula)) {
-            this.snackBar.open(
-                'Revisa las etiquetas y los separadores. No uses espacios dentro de [etiqueta]; usa _ para nombres compuestos.',
-                'Cerrar', { duration: 4200 }
-            );
+            this.toast.warning('Revisa las etiquetas y los separadores. No uses espacios dentro de [etiqueta]; usa _ para nombres compuestos.');
             control?.setValue(this.formulaBackup);
             return;
         }

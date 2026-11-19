@@ -630,7 +630,7 @@
         <div class="entry-row" *ngFor="let idx of additionalSerialIndexes; let i = index; trackBy: trackBySerialIndex">
           <span class="entry-label">Serie / IMEI {{ i + 2 }}</span>
           
-          <input type="text" class="custom-input" 
+          <input type="text" class="custom-input entry-input"
                  [class.invalid]="isDraftSerialDuplicate(idx)"
                  [value]="draftExtraSerialNumbers[idx] || ''" 
                  (input)="setDraftSerial(idx, $event)" 

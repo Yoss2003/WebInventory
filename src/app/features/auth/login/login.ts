@@ -6,7 +6,7 @@ import { HttpErrorResponse } from '@angular/common/http';
 import { Router } from '@angular/router';
 import { MatIconModule } from '@angular/material/icon';
 import { CompanySelectorComponent } from '../../../shared/company-selector/company-selector';
-import { MatSnackBar } from '@angular/material/snack-bar';
+import { ToastService } from '../../../shared/toast/toast.service';
 import { AuthService } from '../../../core/services/auth.service';
 import { CompanyPublicService } from '../../../core/services/companies';
 import { CompanyThemeService } from '../../../shared/ui/services/company-theme.service';
@@ -27,7 +27,7 @@ export class Login implements OnInit {
   private readonly companiesService = inject(CompanyPublicService);
   private readonly companyTheme = inject(CompanyThemeService);
   private readonly router = inject(Router);
-  private readonly snackBar = inject(MatSnackBar);
+  private readonly toast = inject(ToastService);
   private readonly cdr = inject(ChangeDetectorRef);
 
   readonly loginForm: FormGroup = this.fb.group({
@@ -63,7 +63,7 @@ export class Login implements OnInit {
         this.loginForm.get('password')?.reset('');
         this.initialPasswordDone = true;
         this.loginError = '';
-        this.snackBar.open('Contraseña actualizada. Ingresa con tu nueva clave.', 'Cerrar', { duration: 5000 });
+        this.toast.success('Contraseña actualizada. Ingresa con tu nueva clave.');
         this.cdr.markForCheck();
       },
       error: err => {
@@ -241,7 +241,7 @@ export class Login implements OnInit {
           this.loginError = error.message || 'No se pudo iniciar sesión.';
         }
         this.cdr.markForCheck();
-        this.snackBar.open(this.loginError, 'Cerrar', { duration: 4500 });
+        this.toast.error(this.loginError);
       }
     });
   }

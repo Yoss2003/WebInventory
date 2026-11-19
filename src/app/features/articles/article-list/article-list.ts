@@ -13,12 +13,12 @@ import { forkJoin, filter, take } from 'rxjs';
 import { ConfirmationDialogService } from '../../../shared/confirm-dialog/confirmation-dialog.service';
 import { ArticleService } from '../../../core/services/articles';
 import { InventoryContextService } from '../../../core/services/inventory-context';
-import { CategoryService } from '../../categories/services/category';
+import { CategoryService } from '../../../core/services/category';
 import { BrandService } from '../../../core/services/brands';
 import { Article } from '../../../core/models/article.model';
 import { ArticleDetailDialogComponent } from '../article-detail-dialog/article-detail-dialog';
 import { ArticleFormComponent } from '../article-form/article-form';
-import { MatSnackBar } from '@angular/material/snack-bar';
+import { ToastService } from '../../../shared/toast/toast.service';
 import { LoadingIndicatorComponent } from '../../../shared/loading/loading-indicator';
 
 interface ArticleRow extends Article { categoryName: string; brandName: string; }
@@ -35,7 +35,7 @@ export class ArticleListComponent implements OnInit {
   private readonly dialog=inject(MatDialog);
   private readonly confirms=inject(ConfirmationDialogService);
   private readonly cdr=inject(ChangeDetectorRef);
-  private readonly snack=inject(MatSnackBar);
+  private readonly toast = inject(ToastService);
   dataSource:ArticleRow[]=[];
   search='';showInactive=false;loading=false;hasLoaded=false;error='';
   get hasOperationalInventory(): boolean { return this.inventoryContext.activeInventoryId !== null; }
@@ -99,8 +99,11 @@ export class ArticleListComponent implements OnInit {
     }).subscribe(confirmed=>{
       if(!confirmed || !row.isActive)return;
       this.articles.deleteArticle(row.id).subscribe({
-        next:()=>{this.snack.open('Artículo desactivado.','Cerrar',{duration:3000});this.load();},
-        error:err=>this.snack.open(String(err?.error?.error||'No se pudo desactivar el artículo. Verifica el stock y sus asignaciones.'),'Cerrar',{duration:6000})
+        next: () => {
+          this.toast.success('Artículo desactivado.');
+          this.load();
+        },
+        error: err => this.toast.error(String(err?.error?.error || 'No se pudo desactivar el artículo. Verifica el stock y sus asignaciones.'))
       });
     });
   }

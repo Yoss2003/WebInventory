@@ -17,7 +17,7 @@ import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { MatDialog } from '@angular/material/dialog';
 import { ConfirmationDialogService } from '../../../shared/confirm-dialog/confirmation-dialog.service';
-import { CategoryService } from '../../../features/categories/services/category';
+import { CategoryService } from '../../../core/services/category';
 import { Category } from '../../../core/models/category.model';
 import { CategoryParentFormComponent } from '../category-parent-form/category-parent-form';
 import { CategoryChildFormComponent } from '../category-child-form/category-child-form';

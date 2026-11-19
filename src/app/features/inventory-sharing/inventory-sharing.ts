@@ -9,7 +9,7 @@ import { ChangeDetectorRef, Component, OnInit, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { MatIconModule } from '@angular/material/icon';
-import { MatSnackBar } from '@angular/material/snack-bar';
+import { ToastService } from '../../shared/toast/toast.service';
 import { ConfirmationDialogService } from '../../shared/confirm-dialog/confirmation-dialog.service';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatSelectModule } from '@angular/material/select';
@@ -25,7 +25,7 @@ import { LoadingIndicatorComponent } from '../../shared/loading/loading-indicato
 export class InventorySharingComponent implements OnInit {
   private readonly api = inject(InventoryService);
   private readonly access = inject(AccessService);
-  private readonly snack = inject(MatSnackBar);
+  private readonly toast = inject(ToastService);
   private readonly confirms = inject(ConfirmationDialogService);
   private readonly dialog = inject(MatDialog);
   private readonly cdr = inject(ChangeDetectorRef);
@@ -163,13 +163,13 @@ export class InventorySharingComponent implements OnInit {
       next: () => {
         this.saving = false;
         this.identifier = '';
-        this.snack.open('Acceso otorgado al inventario.', 'Cerrar', {duration: 3300});
+        this.toast.success('Acceso otorgado al inventario.');
         this.loadShares();
         this.cdr.markForCheck();
       },
       error: err => {
         this.saving = false;
-        this.snack.open(String(err?.error?.error ?? 'No se pudo compartir el inventario.'), 'Cerrar', {duration: 6000});
+        this.toast.error(String(err?.error?.error ?? 'No se pudo compartir el inventario.'));
         this.cdr.markForCheck();
       }
     });
@@ -190,12 +190,12 @@ export class InventorySharingComponent implements OnInit {
         next: () => {
           this.shares = this.shares.map(row => row.id === item.id ? { ...row, accessLevel: nextAccess } : row);
           this.updatingShareId = null;
-          this.snack.open(`Permiso actualizado a ${nextLabel}.`, 'Cerrar', { duration: 3000 });
+          this.toast.success(`Permiso actualizado a ${nextLabel}.`);
           this.cdr.markForCheck();
         },
         error: err => {
           this.updatingShareId = null;
-          this.snack.open(String(err?.error?.error ?? 'No se pudo actualizar el permiso.'), 'Cerrar', { duration: 6000 });
+          this.toast.error(String(err?.error?.error ?? 'No se pudo actualizar el permiso.'));
           this.cdr.markForCheck();
         }
       });
@@ -211,8 +211,8 @@ export class InventorySharingComponent implements OnInit {
     }).subscribe(confirmed=>{
       if(!confirmed || !this.canManageAccess)return;
       this.api.revoke(item.id).subscribe({
-        next: () => {this.snack.open('Acceso revocado.', 'Cerrar', {duration: 3000});this.loadShares();},
-        error: err => this.snack.open(String(err?.error?.error ?? 'No se pudo revocar.'), 'Cerrar', {duration: 6000})
+        next: () => {this.toast.success('Acceso revocado.');this.loadShares();},
+        error: err => this.toast.error(String(err?.error?.error ?? 'No se pudo revocar.'))
       });
     });
   }

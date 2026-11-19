@@ -1,12 +1,13 @@
 import { Injectable, inject } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable, catchError, shareReplay, tap, throwError } from 'rxjs';
-import { Category } from '../../../core/models/category.model';
+import { Category } from '../models/category.model';
+import { API_URL } from '../config/api.config';
 
 @Injectable({providedIn:'root'})
 export class CategoryService {
   private readonly http=inject(HttpClient);
-  private readonly apiUrl='https://localhost:7295/api/Categories';
+  private readonly apiUrl=`${API_URL}/Categories`;
   private cache$?:Observable<Category[]>;
   getCategories(refresh=false):Observable<Category[]>{
     if(refresh||!this.cache$)this.cache$=this.http.get<Category[]>(this.apiUrl).pipe(

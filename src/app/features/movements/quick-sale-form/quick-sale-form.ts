@@ -14,7 +14,7 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatSelectModule } from '@angular/material/select';
 import { MatInputModule } from '@angular/material/input';
-import { MatSnackBar } from '@angular/material/snack-bar';
+import { ToastService } from '../../../shared/toast/toast.service';
 import { Subscription, timeout } from 'rxjs';
 
 import { ArticleService } from '../../../core/services/articles';
@@ -56,7 +56,7 @@ export class QuickSaleFormComponent implements OnInit, OnDestroy {
   private readonly serialsApi = inject(SerialUnitsService);
   private readonly salesApi = inject(SalesService);
   private readonly sunatApi = inject(ExternalConsultasService);
-  private readonly snackBar = inject(MatSnackBar);
+  private readonly toast = inject(ToastService);
   private readonly cdr = inject(ChangeDetectorRef);
 
   readonly dialogRef = inject(MatDialogRef<QuickSaleFormComponent>);
@@ -327,11 +327,7 @@ export class QuickSaleFormComponent implements OnInit, OnDestroy {
         this.cdr.markForCheck();
       },
       error: () => {
-        this.snackBar.open(
-          'No se pudieron cargar los artículos.',
-          'Cerrar',
-          { duration: 4000 }
-        );
+        this.toast.error('No se pudieron cargar los artículos.');
         this.cdr.markForCheck();
       }
     });
@@ -506,23 +502,12 @@ export class QuickSaleFormComponent implements OnInit, OnDestroy {
     }).subscribe({
       next: ({ saleId }) => {
         this.submitting = false;
-        this.snackBar.open(
-          `Venta #${saleId} registrada con stock actualizado.`,
-          'Cerrar',
-          { duration: 4000 }
-        );
+        this.toast.success(`Venta #${saleId} registrada con stock actualizado.`);
         this.dialogRef.close(true);
       },
       error: err => {
         this.submitting = false;
-        this.snackBar.open(
-          String(
-            err?.error?.error ??
-            'No se pudo registrar la venta.'
-          ),
-          'Cerrar',
-          { duration: 6000 }
-        );
+        this.toast.error(String(err?.error?.error ?? 'No se pudo registrar la venta.'));
         this.cdr.markForCheck();
       }
     });

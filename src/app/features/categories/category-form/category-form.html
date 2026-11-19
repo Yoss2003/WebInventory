@@ -1,0 +1,22 @@
+<div class="category-simple-dialog ui-v2-dialog ui-v2-dialog--simple">
+  <h2 mat-dialog-title>Nueva Categoría</h2>
+  <mat-dialog-content>
+    <form [formGroup]="categoryForm" class="category-simple-form">
+      <mat-form-field appearance="outline">
+        <mat-label>Nombre de la Categoría</mat-label>
+        <input matInput formControlName="name" placeholder="Ej. Electrónicos" />
+      </mat-form-field>
+
+      <mat-form-field appearance="outline">
+        <mat-label>Descripción (Opcional)</mat-label>
+        <textarea matInput formControlName="description" rows="3"></textarea>
+      </mat-form-field>
+    </form>
+  </mat-dialog-content>
+  <mat-dialog-actions align="end">
+    <button type="button" appUiButton="secondary" mat-dialog-close>Cancelar</button>
+    <button type="button" appUiButton="primary" [disabled]="categoryForm.invalid" (click)="onSubmit()">
+      Guardar
+    </button>
+  </mat-dialog-actions>
+</div>

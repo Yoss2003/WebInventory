@@ -18,5 +18,7 @@ jobs:
           cache: 'npm'
       - name: Dependencias
         run: npm ci
+      - name: Pruebas unitarias
+        run: npm run test:ci
       - name: Compilación
         run: npm run build

@@ -10,9 +10,9 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatTabsModule } from '@angular/material/tabs';
 import { TabViewTransitionDirective } from '../../../shared/ui/directives/tab-view-transition.directive';
 import { MatDialog } from '@angular/material/dialog';
-import { MatSnackBar } from '@angular/material/snack-bar';
+import { ToastService } from '../../../shared/toast/toast.service';
 import { forkJoin, filter, take, catchError, of } from 'rxjs';
-import { CategoryService } from '../../categories/services/category';
+import { CategoryService } from '../../../core/services/category';
 import { BrandService } from '../../../core/services/brands';
 import { ConfirmationDialogService } from '../../../shared/confirm-dialog/confirmation-dialog.service';
 import { ArticleService } from '../../../core/services/articles';
@@ -35,7 +35,7 @@ export class EntradasComponent implements OnInit {
   private readonly articles=inject(ArticleService);
   private readonly inventoryContext=inject(InventoryContextService);
   private readonly movementsApi=inject(MovementService);
-  private readonly snackbar=inject(MatSnackBar);
+  private readonly toast = inject(ToastService);
   private readonly cdr=inject(ChangeDetectorRef);
   private readonly categories = inject(CategoryService);
   private readonly brands = inject(BrandService);
@@ -94,7 +94,8 @@ export class EntradasComponent implements OnInit {
       },error:err=>{
         this.loading=false;this.hasLoaded=true;
         this.error=String(err?.error?.error??'No se pudieron cargar las entradas. Los datos anteriores pueden estar desactualizados.');
-        this.snackbar.open(this.error,'Cerrar',{duration:5000});this.cdr.markForCheck();
+        this.toast.error(this.error);
+        this.cdr.markForCheck();
       }
     });
   }
@@ -154,8 +155,8 @@ export class EntradasComponent implements OnInit {
     }).subscribe(confirmed=>{
       if(!confirmed)return;
       this.articles.deleteArticle(a.id).subscribe({
-        next:()=>{this.snackbar.open('Artículo dado de baja.','Cerrar',{duration:3200});this.loadRealData();},
-        error:err=>this.snackbar.open(String(err?.error?.error??'No se puede dar de baja el artículo.'),'Cerrar',{duration:5500})
+        next: () => { this.toast.success('Artículo dado de baja.'); this.loadRealData(); },
+        error: err => this.toast.error(String(err?.error?.error ?? 'No se puede dar de baja el artículo.'))
       });
     });
   }
