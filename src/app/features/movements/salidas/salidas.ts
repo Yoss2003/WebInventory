@@ -1,8 +1,8 @@
-import { UiEmptyStateComponent } from '../../../shared/ui/v2/ui-empty-state.component';
-import { UiStatusComponent } from '../../../shared/ui/v2/ui-status.component';
-import { UiTableActionDirective } from '../../../shared/ui/v2/ui-table-action.directive';
-import { UiButtonDirective } from '../../../shared/ui/v2/ui-button.directive';
-import { UiPageHeadingComponent } from '../../../shared/ui/v2/ui-page-heading.component';
+import { UiEmptyStateComponent } from '../../../shared/ui/components/ui-empty-state.component';
+import { UiStatusComponent } from '../../../shared/ui/components/ui-status.component';
+import { UiTableActionDirective } from '../../../shared/ui/directives/ui-table-action.directive';
+import { UiButtonDirective } from '../../../shared/ui/directives/ui-button.directive';
+import { UiPageHeadingComponent } from '../../../shared/ui/components/ui-page-heading.component';
 import { cleanArticleDisplayName } from '../../../shared/clean-article-name.pipe';
 import { ToastService } from '../../../shared/toast/toast.service';
 import { ChangeDetectorRef, Component, OnInit, inject } from '@angular/core';
@@ -10,7 +10,7 @@ import { CommonModule } from '@angular/common';
 import { MoneyPipe } from '../../../shared/money.pipe';
 import { MatIconModule } from '@angular/material/icon';
 import { MatTabsModule } from '@angular/material/tabs';
-import { TabViewTransitionDirective } from '../../../shared/ui/tab-view-transition.directive';
+import { TabViewTransitionDirective } from '../../../shared/ui/directives/tab-view-transition.directive';
 import { MatDialog } from '@angular/material/dialog';
 import { Router } from '@angular/router';
 import { forkJoin, filter, take } from 'rxjs';
@@ -26,7 +26,7 @@ import { QuickSaleFormComponent } from '../quick-sale-form/quick-sale-form';
 import { MovementDetailDialogComponent } from '../movement-detail-dialog/movement-detail-dialog';
 import { LoadingIndicatorComponent } from '../../../shared/loading/loading-indicator';
 
-import { UiSearchComponent } from '../../../shared/ui/ui-search.component';
+import { UiSearchComponent } from '../../../shared/ui/components/ui-search.component';
 
 @Component({selector:'app-salidas',standalone:true,imports:[MoneyPipe, UiEmptyStateComponent, UiStatusComponent, UiTableActionDirective, UiButtonDirective, UiPageHeadingComponent, CommonModule,MatIconModule,MatTabsModule,TabViewTransitionDirective,LoadingIndicatorComponent,UiSearchComponent],templateUrl:'./salidas.html',styleUrl:'./salidas.scss'})
 export class SalidasComponent implements OnInit {

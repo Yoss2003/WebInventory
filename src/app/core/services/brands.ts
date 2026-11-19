@@ -2,11 +2,12 @@ import { Injectable, inject } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable, catchError, shareReplay, tap, throwError } from 'rxjs';
 import { Brand, CreateBrandRequest } from '../models/brand.model';
+import { API_URL } from '../config/api.config';
 
 @Injectable({ providedIn: 'root' })
 export class BrandService {
   private readonly http = inject(HttpClient);
-  private readonly apiUrl = 'https://localhost:7295/api/Brands';
+  private readonly apiUrl = `${API_URL}/Brands`;
   private brandsCache$?: Observable<Brand[]>;
 
   getBrands(refresh = false): Observable<Brand[]> {

@@ -13,8 +13,8 @@ import {
 } from '../../core/services/user-management';
 import { suggestedUsername } from '../../shared/user-name';
 import { ToastService } from '../../shared/toast/toast.service';
-import { InventoryDialogMotionDirective } from '../../shared/ui/inv-dialog-motion.directive';
-import { UiButtonDirective } from '../../shared/ui/v2/ui-button.directive';
+import { InventoryDialogMotionDirective } from '../../shared/ui/directives/inv-dialog-motion.directive';
+import { UiButtonDirective } from '../../shared/ui/directives/ui-button.directive';
 
 export interface UserEditorDialogData {
   user?: ManagedUser;

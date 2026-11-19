@@ -1,8 +1,8 @@
-import { UiEmptyStateComponent } from '../../../shared/ui/v2/ui-empty-state.component';
-import { UiStatusComponent } from '../../../shared/ui/v2/ui-status.component';
-import { UiTableActionDirective } from '../../../shared/ui/v2/ui-table-action.directive';
-import { UiButtonDirective } from '../../../shared/ui/v2/ui-button.directive';
-import { UiPageHeadingComponent } from '../../../shared/ui/v2/ui-page-heading.component';
+import { UiEmptyStateComponent } from '../../../shared/ui/components/ui-empty-state.component';
+import { UiStatusComponent } from '../../../shared/ui/components/ui-status.component';
+import { UiTableActionDirective } from '../../../shared/ui/directives/ui-table-action.directive';
+import { UiButtonDirective } from '../../../shared/ui/directives/ui-button.directive';
+import { UiPageHeadingComponent } from '../../../shared/ui/components/ui-page-heading.component';
 import { ChangeDetectorRef, Component, OnInit, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { MoneyPipe } from '../../../shared/money.pipe';
@@ -22,7 +22,7 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 import { LoadingIndicatorComponent } from '../../../shared/loading/loading-indicator';
 
 interface ArticleRow extends Article { categoryName: string; brandName: string; }
-import { UiSearchComponent } from '../../../shared/ui/ui-search.component';
+import { UiSearchComponent } from '../../../shared/ui/components/ui-search.component';
 
 @Component({selector:'app-article-list',standalone:true,
   imports:[MoneyPipe, UiEmptyStateComponent, UiStatusComponent, UiTableActionDirective, UiButtonDirective, UiPageHeadingComponent, CommonModule,FormsModule,MatIconModule,LoadingIndicatorComponent,UiSearchComponent],
@@ -59,9 +59,29 @@ export class ArticleListComponent implements OnInit {
       },error:err=>{this.loading=false;this.hasLoaded=true;this.error=String(err?.error?.error??'No se pudo cargar el catálogo. Los datos anteriores pueden estar desactualizados.');this.cdr.markForCheck();}
     });
   }
-  showDetail(row:ArticleRow):void{
-    const ref=this.dialog.open(ArticleDetailDialogComponent,{panelClass:'inv-seven-modal',enterAnimationDuration:260,exitAnimationDuration:220,data:{id:row.id},width:'min(780px,calc(100vw - 24px))',maxWidth:'calc(100vw - 24px)',maxHeight:'calc(100dvh - 24px)'});
-    ref.afterClosed().subscribe(changed=>{if(changed)this.load();});
+  showDetail(row: ArticleRow): void {
+    const inv = this.inventoryContext.options.find(i => Number(i.id) === Number(row.inventoryId)) as
+      { name?: string; inventoryName?: string } | undefined;
+    const inventoryName = inv?.name || inv?.inventoryName || undefined;
+
+    const ref = this.dialog.open(ArticleDetailDialogComponent, {
+      panelClass: ['inv-seven-modal', 'article-detail-wide-modal'],
+      enterAnimationDuration: 260,
+      exitAnimationDuration: 220,
+      data: {
+        id: row.id,
+        articleName: row.name,
+        categoryName: row.categoryName,
+        brandName: row.brandName,
+        inventoryName
+      },
+      width: 'min(1380px, calc(100vw - 24px))',
+      maxWidth: 'calc(100vw - 24px)',
+      maxHeight: 'calc(100dvh - 24px)'
+    });
+    ref.afterClosed().subscribe(changed => {
+      if (changed || ref.componentInstance?.hasChanges) this.load();
+    });
   }
   create():void {this.openEditor(null);}
   edit(row:ArticleRow,event:Event):void {event.stopPropagation();if(row.isActive)this.openEditor(row.id);}

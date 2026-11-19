@@ -26,7 +26,7 @@
     </nav>
   </header>
 
-  <main class="modal-body">
+  <main class="modal-body" [class.is-transitioning]="isTransitioningStep">
     <!-- PASO 1: opción 2: pestañas laterales y panel de datos -->
     <section class="step-content identity-layout" *ngIf="currentStep === 1" aria-label="Identidad del artículo">
       <nav class="sidebar-menu" aria-label="Secciones de identidad">
@@ -301,7 +301,6 @@
                 </div>
               </div>
             </div>
-            <p class="helper-note"><mat-icon>info_outline</mat-icon> Los archivos se mantienen seleccionados al cambiar de pestaña.</p>
           </div>
         </form>
       </div>
@@ -355,37 +354,36 @@
                 <label for="initial-quantity">{{initialQuantityLabel}} <span class="required">*</span>
                   <span class="fixed-factor" *ngIf="fixedFactor !== null">({{fixedFactor}} unid. c/u)</span>
                 </label>
+                <span class="error-text" *ngIf="isInvalid('logistics','initialQuantity')">Ingresa un número entero de agrupaciones.</span>
               </div>
               <input id="initial-quantity" type="number" min="0" step="1" formControlName="initialQuantity"
                 class="custom-input" [readonly]="currentTrackingMode === 'Serializado' && isEditMode"
                 [class.invalid]="isInvalid('logistics','initialQuantity')"
                 (focus)="resetFieldMessage('logistics','initialQuantity')" (input)="onUnitQuantityInput('initialQuantity')" (blur)="onUnitQuantityBlur('initialQuantity', $event)" />
-              <span class="error-text" *ngIf="isInvalid('logistics','initialQuantity')">Ingresa un número entero de agrupaciones.</span>
             </div>
             <div class="field-tile" *ngIf="requiresUnitConversion && fixedFactor === null">
               <div class="tile-label"><mat-icon>layers</mat-icon>
                 <label for="conversion">Unidades por {{logisticsForm.get('acqUnit')?.value}} <span class="required">*</span></label>
+                <span class="error-text" *ngIf="isInvalid('logistics','conversionFactor')">Solo valores enteros mayores que cero.</span>
               </div>
               <input id="conversion" type="number" min="1" step="1" formControlName="conversionFactor"
                 class="custom-input" [class.invalid]="isInvalid('logistics','conversionFactor')"
                 (focus)="resetFieldMessage('logistics','conversionFactor')" (input)="onUnitQuantityInput('conversionFactor')" (blur)="onUnitQuantityBlur('conversionFactor', $event)" />
-              <span class="error-text" *ngIf="isInvalid('logistics','conversionFactor')">Solo valores enteros mayores que cero.</span>
             </div>
             <div class="field-tile" [class.stock-calculated]="requiresUnitConversion">
               <div class="tile-label"><mat-icon>warehouse</mat-icon>
                 <label for="article-stock">Stock total ({{logisticsForm.get('saleUnit')?.value}}) <span class="required">*</span></label>
+                <span class="error-text" *ngIf="isInvalid('logistics','stock')">
+                  {{stockStep === 1 ? 'Solo números enteros válidos.' : 'Máximo dos decimales.'}}
+                </span>
               </div>
               <input id="article-stock" type="number" min="0" [attr.step]="stockStep" formControlName="stock"
                 class="custom-input" [class.invalid]="isInvalid('logistics','stock')"
                 [readonly]="requiresUnitConversion || (currentTrackingMode === 'Serializado' && isEditMode)"
-                (focus)="resetFieldMessage('logistics','stock')" (input)="onUnitQuantityInput('stock')" (blur)="onUnitQuantityBlur('stock', $event)" />
-              <span class="error-text" *ngIf="isInvalid('logistics','stock')">
-                {{stockStep === 1 ? 'Solo números enteros válidos.' : 'Máximo dos decimales.'}}
-              </span>
+                (focus)="resetFieldMessage('logistics','stock')" (input)="onUnitQuantityInput('stock')" (blur)="onUnitQuantityBlur('stock', $event)" />              
             </div>
           </div>
           <p class="units-load-error" *ngIf="unitLoadError" role="alert">{{unitLoadError}}</p>
-          <p *ngIf="currentTrackingMode === 'Serializado' && isEditMode" class="helper-note"><mat-icon>info_outline</mat-icon> Para agregar nuevas unidades a un artículo existente usa Gestión de series, que también registra su movimiento. El stock no se cambia aquí.</p>
 
           <div class="article-parameter-grid">
             <div class="field-tile">
@@ -476,7 +474,12 @@
                 <strong>Vista de rentabilidad (estimada)</strong>
                 <p>Cálculos por unidad de venta, expresados en soles</p>
               </div>
-              <button type="button" class="finance-info-button" aria-label="Información y limitaciones del cálculo de rentabilidad" title="Estimación para operaciones gravadas. No determina el impuesto a declarar ni verifica el crédito fiscal. No incluye descuentos ni otros gastos. Las cotizaciones provienen del servicio de tipos de cambio y pueden corresponder a la última fecha disponible."><mat-icon>info_outline</mat-icon></button>
+              <button type="button" class="finance-info-button"
+                aria-label="Información y limitaciones del cálculo de rentabilidad"
+                matTooltip="Estimación para operaciones gravadas. No determina el impuesto a declarar ni verifica el crédito fiscal. No incluye descuentos ni otros gastos. Las cotizaciones provienen del servicio de tipos de cambio y pueden corresponder a la última fecha disponible."
+                matTooltipPosition="above">
+                <mat-icon>info_outline</mat-icon>
+              </button>
             </div>
             
             <label class="igv-option">
@@ -544,6 +547,11 @@
       <p>Apunta la cámara al código. La detección es automática.</p>
     </div>
   </div>
+
+  <div class="edit-loading-overlay" *ngIf="isEditLoading" role="status" aria-label="Cargando datos del artículo">
+    <div class="edit-spinner"></div>
+    <span>Cargando configuración del artículo...</span>
+  </div>
 </div>
 
 <!-- Visor ampliado. El elemento nativo dialog evita que el modal de artículo recorte su contenido. -->
@@ -589,7 +597,7 @@
 </dialog>
 
 <!-- Sub-Modal de Lista de Entries y Escaneo de Series -->
-<dialog #multiScannerModal class="media-lightbox multi-scanner-modal" (close)="closeMultiScannerModal()">
+<dialog #multiScannerModal class="media-lightbox multi-scanner-modal" [class.is-closing]="isClosingMultiScanner" (close)="onMultiScannerNativeClose()">
   <div class="media-lightbox-shell" *ngIf="isMultiScanning">
     
     <div class="media-lightbox-header">
@@ -597,32 +605,34 @@
         <mat-icon>qr_code_scanner</mat-icon>
         <div>
           <h3>Ingreso Masivo de Series ({{ totalExpectedSerials }} unidades)</h3>
-          <p>Faltan <strong>{{ pendingSerialsCount }}</strong> series por registrar</p>
+          <!-- Contador 100% dinámico -->
+          <p *ngIf="draftPendingSerialsCount > 0">Faltan <strong>{{ draftPendingSerialsCount }}</strong> series por registrar</p>
+          <p *ngIf="draftPendingSerialsCount === 0" style="color: var(--inv-company-accent, #A2D149);"><strong>Todas las series están completas</strong></p>
         </div>
       </div>
       <div class="media-lightbox-actions">
-        <!-- Botón para alternar entre vista de lista y modo cámara continua -->
-        <button type="button" class="media-button primary" (click)="toggleCameraMode()">
+        <button type="button" class="media-button primary multi-action-btn" (click)="toggleCameraMode()">
           <mat-icon>{{ isCameraActive ? 'list' : 'photo_camera' }}</mat-icon> 
-          {{ isCameraActive ? 'Ver Lista' : 'Escanear con Cámara' }}
+          {{ isCameraActive ? 'Ver Lista' : 'Escanear todo' }}
         </button>
-        <button type="button" class="media-viewer-control close-viewer" (click)="closeMultiScannerModal()" title="Cerrar">
+        <!-- Botón X: Cierra SIN guardar -->
+        <button type="button" class="media-viewer-control close-viewer" (click)="closeMultiScannerModal(false)" title="Cerrar sin guardar">
           <mat-icon>close</mat-icon>
         </button>
       </div>
     </div>
     
-    <!-- CUERPO DEL MODAL: Dos modos (Lista de Entries vs Vista de Cámara) -->
-    <div class="media-lightbox-body multi-scanner-body" style="background: #071019; padding: 20px; overflow-y: auto;">
+    <div class="media-lightbox-body multi-scanner-body">
       
-      <!-- VISTA A: LISTA DE ENTRIES (Todas las series que se deben llenar) -->
-      <div *ngIf="!isCameraActive" class="entries-list-container" style="display: flex; flex-direction: column; gap: 10px;">
-        <div class="entry-row" *ngFor="let idx of additionalSerialIndexes; let i = index" style="display: flex; align-items: center; gap: 12px; background: #121b25; padding: 10px 14px; border: 1px solid #33485e; border-radius: 8px;">
-          <span style="font-weight: 700; color: #a2d149; min-width: 100px;">Serie / IMEI {{ i + 2 }}</span>
+      <!-- VISTA A: LISTA DE ENTRIES -->
+      <div *ngIf="!isCameraActive" class="entries-list-container multi-view-fade">
+        <div class="entry-row" *ngFor="let idx of additionalSerialIndexes; let i = index; trackBy: trackBySerialIndex">
+          <span class="entry-label">Serie / IMEI {{ i + 2 }}</span>
           
           <input type="text" class="custom-input" style="flex: 1;" 
-                 [value]="extraSerialNumbers[idx] || ''" 
-                 (input)="setExtraSerial(idx, $event)" 
+                 [class.invalid]="isDraftSerialDuplicate(idx)"
+                 [value]="draftExtraSerialNumbers[idx] || ''" 
+                 (input)="setDraftSerial(idx, $event)" 
                  placeholder="Número de serie único o escanea..." />
                  
           <button type="button" class="media-button" (click)="openSingleEntryCamera(idx)" title="Escanear esta serie específica">
@@ -631,25 +641,26 @@
         </div>
       </div>
 
-      <!-- VISTA B: CÁMARA ACTIVA PARA UN ENTRY ESPECÍFICO O CONTINUO -->
-      <div *ngIf="isCameraActive" style="position: relative; width: 100%; height: 100%; display: flex; flex-direction: column; align-items: center; justify-content: center;">
-        <div class="scan-status-overlay" style="margin-bottom: 12px;">
+      <!-- VISTA B: CÁMARA ACTIVA -->
+      <div *ngIf="isCameraActive" class="camera-view-container multi-view-fade">
+        <div class="scan-status-overlay">
           <span>Escaneando para: <strong>{{ activeTargetEntryLabel }}</strong></span>
         </div>
-        <div class="scanner-video-wrapper" style="width: 100%; max-height: 350px; position: relative;">
-          <video #multiScannerVideo id="multi-video" width="100%" height="100%" style="object-fit: cover; border-radius: 8px;"></video>
+        <div class="scanner-video-wrapper">
+          <video #multiScannerVideo id="multi-video" width="100%" height="100%"></video>
           <div class="scanner-target-box"></div>
         </div>
-        <button type="button" class="media-button" style="margin-top: 15px;" (click)="isCameraActive = false">
+        <button type="button" class="media-button" style="margin-top: 15px;" (click)="toggleCameraMode()">
           <mat-icon>arrow_back</mat-icon> Volver a la lista
         </button>
       </div>
 
     </div>
     
-    <footer class="media-lightbox-help" style="display: flex; justify-content: space-between; align-items: center;">
+    <footer class="media-lightbox-help multi-scanner-footer">
       <span>Puedes escribir manualmente en cada casilla o usar el botón de escaneo.</span>
-      <button type="button" class="media-button primary" (click)="closeMultiScannerModal()">Guardar y Cerrar</button>
+      <!-- Botón Guardar y Cerrar: Valida duplicados, guarda y notifica -->
+      <button type="button" class="media-button primary multi-action-btn" (click)="saveAndCloseMultiScannerModal()">Guardar y Cerrar</button>
     </footer>
   </div>
-</dialog>s
+</dialog>

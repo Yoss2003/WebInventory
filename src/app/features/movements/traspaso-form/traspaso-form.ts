@@ -1,7 +1,7 @@
 import { CleanArticleNamePipe } from '../../../shared/clean-article-name.pipe';
 import { ToastService } from '../../../shared/toast/toast.service';
 import { InventoryContextService } from '../../../core/services/inventory-context';
-import { InventoryDialogMotionDirective } from '../../../shared/ui/inv-dialog-motion.directive';
+import { InventoryDialogMotionDirective } from '../../../shared/ui/directives/inv-dialog-motion.directive';
 import { Component, OnInit, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
@@ -15,7 +15,7 @@ import { MovementService } from '../../../core/services/movement';
 import { AssignmentService, AssignmentRecipient } from '../../../core/services/assignments';
 import { Article } from '../../../core/models/article.model';
 import { SerialUnitsService, SerialUnit } from '../../../core/services/serial-units';
-import { UiButtonDirective } from '../../../shared/ui/v2/ui-button.directive';
+import { UiButtonDirective } from '../../../shared/ui/directives/ui-button.directive';
 
 @Component({
   selector: 'app-traspaso-form',

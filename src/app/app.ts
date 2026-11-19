@@ -1,7 +1,7 @@
 import { Component, signal, inject } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
 import { ToastContainerComponent } from './shared/toast/toast-container';
-import { TableOverlayScrollbarService } from './shared/ui/table-overlay-scrollbar.service';
+import { TableOverlayScrollbarService } from './shared/ui/services/table-overlay-scrollbar.service';
 
 @Component({
   selector: 'app-root',

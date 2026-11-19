@@ -1,5 +1,6 @@
 import { Injectable, inject } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
+import { API_URL } from '../config/api.config';
 
 export interface ManagedUser {
   id: number;
@@ -50,7 +51,7 @@ export interface PermissionItem { id: number; name: string; systemCode: string; 
 @Injectable({ providedIn: 'root' })
 export class UserManagementService {
   private readonly http = inject(HttpClient);
-  private readonly root = 'https://localhost:7295/api';
+  private readonly root = `${API_URL}`;
 
   users() { return this.http.get<ManagedUser[]>(`${this.root}/UserManagement/users`); }
   roles() { return this.http.get<ManagedRole[]>(`${this.root}/UserManagement/roles`); }

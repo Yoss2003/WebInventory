@@ -1,10 +1,10 @@
 import { MatDialog, MatDialogModule } from '@angular/material/dialog';
 import { WorkerPickerDialogComponent } from '../inventory-management/worker-picker-dialog/worker-picker-dialog.component';
 import { Employee } from '../../core/models/employee.model';
-import { UiControlDirective } from '../../shared/ui/v2/ui-control.directive';
-import { UiPageHeadingComponent } from '../../shared/ui/v2/ui-page-heading.component';
-import { UiButtonDirective } from '../../shared/ui/v2/ui-button.directive';
-import { UiTableActionDirective } from '../../shared/ui/v2/ui-table-action.directive';
+import { UiControlDirective } from '../../shared/ui/directives/ui-control.directive';
+import { UiPageHeadingComponent } from '../../shared/ui/components/ui-page-heading.component';
+import { UiButtonDirective } from '../../shared/ui/directives/ui-button.directive';
+import { UiTableActionDirective } from '../../shared/ui/directives/ui-table-action.directive';
 import { ChangeDetectorRef, Component, OnInit, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';

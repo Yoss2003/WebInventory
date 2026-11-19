@@ -1,6 +1,6 @@
 :host {
   display: block;
-  color: #e8f3fa;
+  color: var(--inv-text);
   min-width: 0;
 }
 
@@ -15,7 +15,7 @@
   padding: 17px;
   border: 1px solid #526d80;
   background: #172630;
-  border-radius: 15px;
+  border-radius: var(--inv-radius-card);
 }
 
 .inv-manage-loading {
@@ -63,7 +63,7 @@
 
   h2 {
     margin: 0;
-    color: #eaf4fa;
+    color: var(--inv-text);
     font-size: 17px;
     font-weight: 750;
   }
@@ -105,7 +105,7 @@
   padding: 6px 11px;
   border: 1px solid #688397;
   background: #274050;
-  color: #e9f4fb;
+  color: var(--inv-text);
   text-decoration: none;
   font-size: 12px;
   font-weight: 700;
@@ -117,7 +117,7 @@
   }
 
   &:hover {
-    border-color: var(--inv-company-accent, #a2d149);
+    border-color: var(--inv-brand);
     background: #2e4b5f;
   }
 }
@@ -150,7 +150,8 @@
     border-bottom: 1px solid #3e5567;
     vertical-align: middle;
 
-    strong, small {
+    strong,
+    small {
       display: block;
     }
 
@@ -162,7 +163,7 @@
   }
 
   tbody tr:hover td {
-    background: rgba(162, 209, 73, 0.04);
+    background: color-mix(in srgb, var(--inv-brand) 6%, transparent);
   }
 }
 
@@ -195,7 +196,7 @@
     color: #cbd9e4;
 
     .required {
-      color: var(--inv-company-accent, #a2d149);
+      color: var(--inv-brand);
     }
 
     .optional {
@@ -203,33 +204,6 @@
       font-weight: 400;
       font-size: 11px;
     }
-  }
-}
-
-:host ::ng-deep .inventory-select {
-  width: 100%;
-  --mdc-outlined-text-field-outline-color: #628095;
-  --mdc-outlined-text-field-focus-outline-color: var(--inv-company-accent, #a2d149);
-
-  .mat-mdc-text-field-wrapper {
-    height: 40px;
-    background: #111f29;
-    border-radius: 9px;
-  }
-
-  .mat-mdc-form-field-infix {
-    padding-top: 8px;
-    padding-bottom: 8px;
-    min-height: 40px;
-  }
-
-  .mat-mdc-form-field-subscript-wrapper {
-    display: none;
-  }
-
-  .mat-mdc-select-value {
-    color: #edf5fc;
-    font-size: 13px;
   }
 }
 

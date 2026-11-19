@@ -1,4 +1,4 @@
-import { UiButtonDirective } from '../../../shared/ui/v2/ui-button.directive';
+import { UiButtonDirective } from '../../../shared/ui/directives/ui-button.directive';
 import { ChangeDetectorRef, Component, OnInit, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
@@ -9,7 +9,7 @@ import { CompanySelectorComponent } from '../../../shared/company-selector/compa
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { AuthService } from '../../../core/services/auth.service';
 import { CompanyPublicService } from '../../../core/services/companies';
-import { CompanyThemeService } from '../../../shared/ui/v3/company-theme.service';
+import { CompanyThemeService } from '../../../shared/ui/services/company-theme.service';
 import { CompanyPublic } from '../../../core/models/company-public.model';
 import { LoginRequest } from '../../../core/models/auth.model';
 import { LoadingIndicatorComponent } from '../../../shared/loading/loading-indicator';

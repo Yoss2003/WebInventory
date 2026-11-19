@@ -1,91 +1,272 @@
-<div class="record-dialog ui-v2-dialog ui-v2-dialog--simple">
-  <header><span class="inv-seven-title-icon"><mat-icon>inventory_2</mat-icon></span><div><h2>Ficha completa del artículo</h2><small>ID #{{ data.id }}</small></div><button type="button" appUiButton="close" (click)="dialogRef.close()" aria-label="Cerrar"><mat-icon>close</mat-icon></button></header>
+<div class="record-dialog ui-v2-dialog">
+  <header>
+    <span class="inv-seven-title-icon"><mat-icon>inventory_2</mat-icon></span>
+    <div class="record-header-title">
+      <h2>Ficha completa del artículo</h2>
+      <small>{{ article?.name || data.articleName || ('ID #' + data.id) }}</small>
+    </div>
+    <button type="button" appUiButton="close" class="detail-close-btn" (click)="dialogRef.close(hasChanges)" aria-label="Cerrar">
+      <mat-icon>close</mat-icon>
+    </button>
+  </header>
+
   <main>
-    <div class="record-loading" *ngIf="loading" role="status" aria-label="Cargando ficha del artículo"><app-loading-indicator message="Consultando artículo y sus detalles..." /><div class="record-skeleton" aria-hidden="true"><span></span><span></span><span></span><span></span><span></span><span></span></div></div><p *ngIf="error" role="alert">{{error}}</p>
+    <div class="record-loading" *ngIf="loading" role="status" aria-label="Cargando ficha del artículo">
+      <app-loading-indicator message="Consultando artículo y sus detalles..." />
+      <div class="record-skeleton" aria-hidden="true"><span></span><span></span><span></span><span></span><span></span><span></span></div>
+    </div>
+    <p *ngIf="error" role="alert">{{ error }}</p>
+
     <ng-container *ngIf="article as a">
-      <section><h3>Identificación</h3><div class="record-grid">
-        <div><span>Nombre</span><strong>{{a.name}}</strong></div>
-        <div><span>Código</span><strong>{{a.code}}</strong></div>
-        <div><span>Código de barras</span><strong>{{a.barcode || 'No registrado'}}</strong></div>
-        <div><span>Modelo</span><strong>{{a.model}}</strong></div>
-        <div><span>Presentación</span><strong>{{a.presentation || '—'}}</strong></div>
-        <div><span>Serie</span><strong>{{a.serialNumber || '—'}}</strong></div>
-        <div><span>Categoría / Marca</span><strong>#{{a.categoryId}} / #{{a.brandId}}</strong></div>
-        <div><span>Inventario</span><strong>#{{a.inventoryId}}</strong></div>
-        <div><span>Tracking</span><strong>{{a.tracking === 1 ? 'Serializado' : a.tracking === 2 ? 'A granel' : 'Estándar'}}</strong></div>
-        <div><span>Estado</span><strong>{{a.isActive ? 'Activo' : 'Inactivo'}}</strong></div>
-      </div></section>
-      <section><h3>Logística y finanzas</h3><div class="record-grid">
-        <div><span>Stock actual</span><strong>{{a.stock | number:'1.0-2'}}</strong></div>
-        <div><span>Unidad</span><strong>{{a.measurementUnit}}</strong></div>
-        <div><span>Compra / Venta</span><strong>{{a.acquisitionUnit || '—'}} / {{a.saleUnit || '—'}}</strong></div>
-        <div><span>Conversión</span><strong>{{a.conversionFactor ?? '—'}}</strong></div>
-        <div><span>Costo</span><strong>{{a.acquisitionPrice | money:a.acquisitionCurrency}}</strong></div>
-        <div><span>Precio</span><strong>{{a.salePrice | money:a.saleCurrency}}</strong></div>
-      </div></section>
-      <section *ngIf="characteristics.length || a.details?.length || a.articleDetails?.length"><h3>Atributos y unidades serializadas</h3>
-        <div class="record-grid"><div *ngFor="let row of characteristics"><span>{{row.name}}</span><strong>{{row.value}}</strong></div></div>
-        <div *ngFor="let d of (a.details || a.articleDetails || [])" class="record-series">
-          <div class="record-series-data">
-            <strong>SN: {{d.serialNumber}}</strong>
-            <span>{{d.attr1 || ''}} {{d.attr2 || ''}} {{d.attr3 || ''}} {{d.attr4 || ''}} {{d.attr5 || ''}} {{d.attr6 || ''}}</span>
-            <small [class.record-series-retired]="d.isActive === false">{{d.isActive === false ? 'Retirada' : 'Disponible'}}</small>
+      <!-- FILA 1: Identificación y Logística lado a lado -->
+      <div class="record-two-cols">
+        <section>
+          <h3>Identificación</h3>
+          <div class="record-grid">
+            <div><span>Id</span><strong>{{ a.id }}</strong></div>
+            <div><span>Código</span><strong>{{ a.code }}</strong></div>
+            <div><span>Código de barras</span><strong>{{ a.barcode || 'No registrado' }}</strong></div>
+            <div><span>Modelo</span><strong>{{ a.model }}</strong></div>
+            <div><span>Presentación</span><strong>{{ a.presentation || '—' }}</strong></div>
+            <div><span>Serie</span><strong>{{ a.serialNumber || '—' }}</strong></div>
+            <div><span>Categoría / Marca</span><strong>{{ categoryLabel }} / {{ brandLabel }}</strong></div>
+            <div><span>Inventario</span><strong>{{ inventoryLabel }}</strong></div>
+            <div><span>Tracking</span><strong>{{ a.tracking === 1 ? 'Serializado' : a.tracking === 2 ? 'A granel' : 'Estándar' }}</strong></div>
+            <div><span>Estado</span><strong>{{ a.isActive ? 'Activo' : 'Inactivo' }}</strong></div>
           </div>
-          <button *ngIf="d.isActive !== false && a.isActive" type="button" appUiTableAction="danger" class="record-series-retire"
-            [disabled]="decommissioningId !== null" (click)="decommission(d)"
-            [title]="'Retirar serie ' + d.serialNumber">
-            <app-loading-indicator *ngIf="decommissioningId === d.id; else retireLabel" [compact]="true" message="Procesando..." />
-            <ng-template #retireLabel><mat-icon>remove_circle</mat-icon>Dar de baja</ng-template>
-          </button>
-        </div>
-        <div class="serial-decommission" *ngIf="a.tracking === 1 && a.isActive">
-          <label for="serial-decommission-reason">Motivo de baja definitiva</label>
-          <textarea id="serial-decommission-reason" [(ngModel)]="decommissionReason" maxlength="500"
-            rows="2" placeholder="Describe por qué se retira la unidad (mínimo 5 caracteres)."></textarea>
-          <small>Solo se pueden retirar unidades sin ventas ni asignaciones vigentes. La serie y su historial se conservan.</small>
-        </div>
-      </section>
-      <section *ngIf="a.tracking === 1 && a.isActive">
-        <div class="serial-batch-title">
-          <div><h3>Registrar unidades serializadas</h3>
-            <p class="record-hint">Agrega una o varias series. Cada unidad generará su detalle y un movimiento de entrada dentro de una sola operación.</p></div>
-          <button type="button" appUiButton="secondary" class="serial-add-row" (click)="addBatchRow()" [disabled]="registeringBatch || batchRows.length >= 1000">
-            <mat-icon>add</mat-icon> Añadir unidad
-          </button>
-        </div>
-        <div class="serial-batch-scroll">
-          <div class="serial-batch-header">
-            <strong>Número de serie / IMEI *</strong>
-            <strong *ngFor="let field of batchAttributes">{{field.label}}{{field.required ? ' *' : ''}}</strong>
-            <span></span>
+        </section>
+
+        <section>
+          <h3>Logística y finanzas</h3>
+          <div class="record-grid">
+            <div><span>Stock actual</span><strong>{{ a.stock | number:'1.0-2' }}</strong></div>
+            <div><span>Unidad</span><strong>{{ a.measurementUnit }}</strong></div>
+            <div><span>Compra / Venta</span><strong>{{ a.acquisitionUnit || '—' }} / {{ a.saleUnit || '—' }}</strong></div>
+            <div><span>Conversión</span><strong>{{ a.conversionFactor ?? '—' }}</strong></div>
+            <div><span>Costo</span><strong>{{ a.acquisitionPrice | money:a.acquisitionCurrency }}</strong></div>
+            <div><span>Precio</span><strong>{{ a.salePrice | money:a.saleCurrency }}</strong></div>
           </div>
-          <div *ngFor="let row of batchRows; let i = index" class="serial-batch-row">
-            <input [(ngModel)]="row.serialNumber" [name]="'serial-' + i" maxlength="150"
-              placeholder="Serie / IMEI" [attr.aria-label]="'Serie ' + (i + 1)" />
-            <input *ngFor="let field of batchAttributes" [(ngModel)]="row[field.key]"
-              [name]="field.key + '-' + i" [placeholder]="field.label"
-              [attr.aria-label]="field.label + ' de la serie ' + (i + 1)" />
-            <button type="button" appUiTableAction="danger" class="serial-remove-row" (click)="removeBatchRow(i)"
-              [disabled]="registeringBatch || batchRows.length <= 1" [attr.aria-label]="'Quitar unidad ' + (i + 1)">
-              <mat-icon>close</mat-icon>
+        </section>
+      </div>
+
+      <!-- FILA 2: Atributos/Unidades serializadas y Registrar unidades lado a lado -->
+      <div class="record-two-cols" *ngIf="characteristics.length || a.details?.length || a.articleDetails?.length || (a.tracking === 1 && a.isActive)">
+        <section *ngIf="characteristics.length || a.details?.length || a.articleDetails?.length" class="serial-list-section">
+          <div class="section-title-row">
+            <div>
+              <h3>Atributos y unidades serializadas</h3>
+              <small *ngIf="a.tracking === 1 && a.isActive" class="selected-counter">
+                Artículos seleccionados: <strong>{{ selectedDecommissionIds.size }}</strong>
+              </small>
+            </div>
+
+            <!-- Botón único de baja definitiva -->
+            <button *ngIf="a.tracking === 1 && a.isActive" type="button" class="record-series-retire"
+              [disabled]="decommissioning || selectedDecommissionIds.size === 0"
+              (click)="decommissionSelected()">
+              <app-loading-indicator *ngIf="decommissioning; else retireLabel" [compact]="true" message="Procesando..." />
+              <ng-template #retireLabel><mat-icon>remove_circle</mat-icon> Dar de baja</ng-template>
             </button>
           </div>
-        </div>
-        <div class="serial-batch-footer">
-          <small>{{batchRows.length}} de 1000 unidades preparadas.</small>
-          <button type="button" class="serial-register-batch" appUiButton="primary" [disabled]="!canRegisterBatch"
-            (click)="registerBatch()">
-            <app-loading-indicator *ngIf="registeringBatch; else batchLabel" [compact]="true" message="Registrando lote..." />
-            <ng-template #batchLabel><mat-icon>save</mat-icon>Registrar lote</ng-template>
+
+          <div class="record-grid" *ngIf="characteristics.length">
+            <div *ngFor="let row of characteristics"><span>{{ row.name }}</span><strong>{{ row.value }}</strong></div>
+          </div>
+
+          <div class="serial-items-scroll">
+            <div *ngFor="let d of (a.details || a.articleDetails || [])" class="record-series">
+              <div class="record-series-data">
+                <div class="record-series-headline">
+                  <strong>SN: {{ d.serialNumber }}</strong>
+                  <small [class.record-series-retired]="d.isActive === false">
+                    ({{ d.isActive === false ? 'Retirada' : 'Disponible' }})
+                  </small>
+                </div>
+                <span *ngIf="d.attr1 || d.attr2 || d.attr3 || d.attr4 || d.attr5 || d.attr6">
+                  {{ d.attr1 || '' }} {{ d.attr2 || '' }} {{ d.attr3 || '' }} {{ d.attr4 || '' }} {{ d.attr5 || '' }} {{ d.attr6 || '' }}
+                </span>
+              </div>
+
+              <!-- Checkbox de selección para baja -->
+              <label *ngIf="d.isActive !== false && a.isActive && d.id != null" class="series-checkbox" [title]="'Seleccionar serie ' + d.serialNumber">
+                <input type="checkbox"
+                  [checked]="selectedDecommissionIds.has(d.id)"
+                  [disabled]="decommissioning"
+                  (change)="toggleDecommissionSelection(d.id, $event)" />
+              </label>
+            </div>
+          </div>
+
+          <div class="serial-decommission" *ngIf="a.tracking === 1 && a.isActive">
+            <div class="decommission-label-row">
+              <label for="serial-decommission-reason">Motivo de baja definitiva</label>
+              <button type="button" class="info-tooltip-btn"
+                matTooltip="Solo se pueden retirar unidades sin ventas ni asignaciones vigentes. La serie y su historial se conservan."
+                matTooltipPosition="above"
+                aria-label="Información sobre baja definitiva">
+                <mat-icon>info_outline</mat-icon>
+              </button>
+            </div>
+            <textarea id="serial-decommission-reason"
+              [(ngModel)]="decommissionReason"
+              [disabled]="selectedDecommissionIds.size === 0 || decommissioning"
+              maxlength="500"
+              rows="2"
+              placeholder="Selecciona al menos una serie para ingresar el motivo (mínimo 5 caracteres)."></textarea>
+          </div>
+        </section>
+
+        <!-- Registrar unidades serializadas (manual o con escáner) -->
+        <section *ngIf="a.tracking === 1 && a.isActive" class="serial-batch-section">
+          <div class="serial-batch-title">
+            <div class="serial-batch-heading">
+              <h3>Registrar unidades serializadas</h3>
+              <button type="button" class="info-tooltip-btn"
+                matTooltip="Agrega una o varias series. Los atributos del artículo se reutilizarán automáticamente."
+                matTooltipPosition="above"
+                aria-label="Información sobre registro de unidades serializadas">
+                <mat-icon>info_outline</mat-icon>
+              </button>
+            </div>
+            <div class="serial-batch-actions">
+              <button type="button" appUiButton="primary" class="serial-scan-all"
+                (click)="openBatchScanner(-1)" [disabled]="registeringBatch || isScanningBatch || batchRows.length >= 1000">
+                <mat-icon>qr_code_scanner</mat-icon> Escanear todo
+              </button>
+              <button type="button" appUiButton="secondary" class="serial-add-row"
+                (click)="addBatchRow()" [disabled]="registeringBatch || batchRows.length >= 1000">
+                <mat-icon>add</mat-icon> Añadir unidad
+              </button>
+            </div>
+          </div>
+
+          <div class="serial-batch-scroll">
+            <div class="serial-batch-header">
+              <strong>Número de serie / IMEI *</strong>
+              <span></span>
+              <span></span>
+            </div>
+            <div class="serial-batch-rows">
+              <div *ngFor="let row of batchRows; let i = index" class="serial-batch-row">
+                <input [(ngModel)]="row.serialNumber" [name]="'serial-' + i" maxlength="150"
+                  placeholder="Serie / IMEI" [attr.aria-label]="'Serie ' + (i + 1)" />
+                <button type="button" class="serial-scan-row" (click)="openBatchScanner(i)"
+                  [disabled]="registeringBatch || isScanningBatch" [title]="'Escanear serie ' + (i + 1)"
+                  [attr.aria-label]="'Escanear serie ' + (i + 1)">
+                  <mat-icon>qr_code_scanner</mat-icon>
+                </button>
+                <button type="button" appUiTableAction="danger" class="serial-remove-row" (click)="removeBatchRow(i)"
+                  [disabled]="registeringBatch || batchRows.length <= 1" [attr.aria-label]="'Quitar unidad ' + (i + 1)">
+                  <mat-icon>close</mat-icon>
+                </button>
+              </div>
+            </div>
+          </div>
+
+          <div class="serial-batch-footer">
+            <small>{{ batchRows.length }} de 1000 unidades preparadas.</small>
+            <button type="button" class="serial-register-batch" appUiButton="primary" [disabled]="!canRegisterBatch"
+              (click)="registerBatch()">
+              <app-loading-indicator *ngIf="registeringBatch; else batchLabel" [compact]="true" message="Registrando lote..." />
+              <ng-template #batchLabel><mat-icon>save</mat-icon> Registrar lote</ng-template>
+            </button>
+          </div>
+        </section>
+      </div>
+
+      <section *ngIf="photo || voucher">
+        <h3>Archivos asociados</h3>
+        <div class="record-media">
+          <button *ngIf="photo" type="button" class="media-card" (click)="openMediaPreview('photo')">
+            <img *ngIf="!photoIsPdf" [src]="photo" alt="Foto del artículo" />
+            <div *ngIf="photoIsPdf" class="media-pdf-thumb">
+              <mat-icon>picture_as_pdf</mat-icon>
+              <span>Documento PDF</span>
+            </div>
+            <span class="media-card-label"><mat-icon>zoom_in</mat-icon> Ver foto</span>
+          </button>
+
+          <button *ngIf="voucher" type="button" class="media-card" (click)="openMediaPreview('voucher')">
+            <img *ngIf="!voucherIsPdf" [src]="voucher" alt="Comprobante" />
+            <div *ngIf="voucherIsPdf" class="media-pdf-thumb">
+              <mat-icon>picture_as_pdf</mat-icon>
+              <span>Comprobante PDF</span>
+            </div>
+            <span class="media-card-label"><mat-icon>visibility</mat-icon> Ver comprobante</span>
           </button>
         </div>
-        <small *ngIf="serialNotice" class="serial-notice" role="status">{{serialNotice}}</small>
       </section>
-      <section *ngIf="photo || voucher"><h3>Archivos asociados</h3><div class="record-media">
-        <a *ngIf="photo" [href]="photo" target="_blank" rel="noopener"><img [src]="photo" alt="Foto del artículo" />Ver foto</a>
-        <a *ngIf="voucher" [href]="voucher" target="_blank" rel="noopener"><span *ngIf="voucherIsPdf">Abrir PDF del comprobante</span><img *ngIf="!voucherIsPdf" [src]="voucher" alt="Comprobante" /></a>
-      </div></section>
     </ng-container>
   </main>
-  <footer><button type="button" appUiButton="secondary" (click)="dialogRef.close(hasChanges)">Cerrar</button></footer>
+  <!-- Visor de cámara para escaneo de series -->
+  <div class="batch-scanner-overlay" *ngIf="isScanningBatch">
+    <div class="batch-scanner-box">
+      <div class="batch-scanner-header">
+        <div>
+          <h4>{{ scanTargetIndex === -1 ? 'Escaneo continuo de series' : 'Escanear Serie #' + (scanTargetIndex + 1) }}</h4>
+          <small>{{ scanTargetIndex === -1 ? 'Escanea varias unidades seguidas; se irán agregando al lote.' : 'Apunta al código de barras o QR de esta unidad.' }}</small>
+        </div>
+        <button type="button" appUiButton="close" (click)="stopBatchScanner()" aria-label="Cerrar escáner">
+          <mat-icon>close</mat-icon>
+        </button>
+      </div>
+      <div class="batch-scanner-video-wrap">
+        <video id="detail-batch-video" playsinline muted></video>
+        <div class="batch-scanner-target"></div>
+      </div>
+      <div class="batch-scanner-footer">
+        <button type="button" appUiButton="secondary" (click)="stopBatchScanner()">Listo / Cerrar cámara</button>
+      </div>
+    </div>
+  </div>
+  <!-- Visor avanzado (Lightbox) -->
+  <dialog #mediaLightbox class="detail-media-lightbox" (close)="onLightboxNativeClose()">
+    <div class="lightbox-shell" *ngIf="previewMedia">
+      <div class="lightbox-header">
+        <div class="lightbox-title">
+          <mat-icon>{{ previewMedia.isPdf ? 'picture_as_pdf' : 'image' }}</mat-icon>
+          <span>{{ previewMedia.title }}</span>
+        </div>
+
+        <div class="lightbox-controls">
+          <ng-container *ngIf="!previewMedia.isPdf">
+            <button type="button" class="lb-btn" (click)="zoomPreview(-0.25)" [disabled]="previewZoom <= 0.5" title="Alejar">
+              <mat-icon>zoom_out</mat-icon>
+            </button>
+            <span class="lb-zoom-readout">{{ (previewZoom * 100) | number:'1.0-0' }}%</span>
+            <button type="button" class="lb-btn" (click)="zoomPreview(0.25)" [disabled]="previewZoom >= 4" title="Acercar">
+              <mat-icon>zoom_in</mat-icon>
+            </button>
+            <button type="button" class="lb-btn" (click)="resetPreviewTransform()" title="Restablecer zoom">
+              <mat-icon>fit_screen</mat-icon>
+            </button>
+          </ng-container>
+
+          <a class="lb-btn" [href]="previewMedia.url" target="_blank" rel="noopener" title="Abrir en pestaña nueva">
+            <mat-icon>open_in_new</mat-icon>
+          </a>
+          <button type="button" class="lb-btn lb-close" (click)="closeMediaPreview()" title="Cerrar visor">
+            <mat-icon>close</mat-icon>
+          </button>
+        </div>
+      </div>
+
+      <div class="lightbox-stage"
+        [class.is-dragging]="isDraggingPreview"
+        (wheel)="onPreviewWheel($event)"
+        (pointerdown)="onPreviewPointerDown($event)"
+        (pointermove)="onPreviewPointerMove($event)"
+        (pointerup)="onPreviewPointerUp()"
+        (pointercancel)="onPreviewPointerUp()">
+        <img *ngIf="!previewMedia.isPdf"
+          [src]="previewMedia.url"
+          [alt]="previewMedia.title"
+          draggable="false"
+          [style.transform]="'translate(' + previewPanX + 'px, ' + previewPanY + 'px) scale(' + previewZoom + ')'" />
+        <iframe *ngIf="previewMedia.isPdf && previewSafeUrl"
+          [src]="previewSafeUrl"
+          [title]="previewMedia.title"></iframe>
+      </div>
+    </div>
+  </dialog>
 </div>

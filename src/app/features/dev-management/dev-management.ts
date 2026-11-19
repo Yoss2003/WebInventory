@@ -1,7 +1,7 @@
-import { UiControlDirective } from '../../shared/ui/v2/ui-control.directive';
-import { UiButtonDirective } from '../../shared/ui/v2/ui-button.directive';
-import { UiTableActionDirective } from '../../shared/ui/v2/ui-table-action.directive';
-import { UiPageHeadingComponent } from '../../shared/ui/v2/ui-page-heading.component';
+import { UiControlDirective } from '../../shared/ui/directives/ui-control.directive';
+import { UiButtonDirective } from '../../shared/ui/directives/ui-button.directive';
+import { UiTableActionDirective } from '../../shared/ui/directives/ui-table-action.directive';
+import { UiPageHeadingComponent } from '../../shared/ui/components/ui-page-heading.component';
 import { CommonModule, isPlatformBrowser } from '@angular/common';
 import { ChangeDetectorRef, Component, OnDestroy, OnInit, PLATFORM_ID, inject } from '@angular/core';
 import { FormsModule } from '@angular/forms';
@@ -20,7 +20,7 @@ import { CompanyPublicService } from '../../core/services/companies';
 import { LoadingIndicatorComponent } from '../../shared/loading/loading-indicator';
 import { ToastService } from '../../shared/toast/toast.service';
 
-import { UiSearchComponent } from '../../shared/ui/ui-search.component';
+import { UiSearchComponent } from '../../shared/ui/components/ui-search.component';
 
 @Component({
   selector: 'app-dev-management',

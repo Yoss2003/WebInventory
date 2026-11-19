@@ -1,10 +1,10 @@
-import { UiButtonDirective } from '../../../shared/ui/v2/ui-button.directive';
-import { Component, inject, OnInit } from '@angular/core';
+import { UiButtonDirective } from '../../../shared/ui/directives/ui-button.directive';
+import { ChangeDetectorRef, Component, ElementRef, inject, OnInit, ViewChild } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
 import { MatInputModule } from '@angular/material/input';
 import { MatSelectModule } from '@angular/material/select';
-import { MatStepperModule } from '@angular/material/stepper';
+import { MatStepper, MatStepperModule } from '@angular/material/stepper';
 import { MatSlideToggleModule } from '@angular/material/slide-toggle';
 import { MatCheckboxModule } from '@angular/material/checkbox';
 import { MatIconModule } from '@angular/material/icon';
@@ -16,7 +16,7 @@ import { HttpErrorResponse } from '@angular/common/http';
 import { ToastService } from '../../../shared/toast/toast.service';
 import { CatalogSimilarDialogComponent, CatalogSimilarChoice } from '../../../shared/catalog-similar-dialog/catalog-similar-dialog';
 import { CommonModule } from '@angular/common';
-import { InventoryDialogMotionDirective } from '../../../shared/ui/inv-dialog-motion.directive';
+import { InventoryDialogMotionDirective } from '../../../shared/ui/directives/inv-dialog-motion.directive';
 import { CategoryService } from '../services/category';
 import { Category } from '../../../core/models/category.model';
 import { FormControl } from '@angular/forms';
@@ -44,13 +44,16 @@ export class CategoryChildFormComponent implements OnInit {
     private readonly toast = inject(ToastService);
     private readonly dialogs = inject(MatDialog);
     public dialogRef = inject(MatDialogRef<CategoryChildFormComponent>);
+    private readonly cdr = inject(ChangeDetectorRef);
     public data: { categoriaEdit?: Category, padres: Category[] } = inject(MAT_DIALOG_DATA);
     private readonly measurementUnitsService = inject(MeasurementUnitsService);
     unidadesDisponibles: MeasurementUnit[] = [];
     cargandoUnidades = false;
-    showPreviewInputs = false;
     previewControls: { [key: string]: FormControl } = {};
 
+    isTransitioningStep = false;
+    isPreviewModalOpen = false;
+    isClosingPreviewModal = false;
     isEdit = false;
     padres: Category[] = [];
 
@@ -68,6 +71,10 @@ export class CategoryChildFormComponent implements OnInit {
     // Control de respaldo para la auto-corrección de fórmulas (similar a MAUI)
     private formulaBackup = '';
     private previousAttributeNames: string[] = Array(6).fill('');
+    private stepTransitionTimer: ReturnType<typeof setTimeout> | null = null;
+
+    @ViewChild('stepper') stepper?: MatStepper;
+    @ViewChild('previewModal') previewModal?: ElementRef<HTMLDialogElement>;
 
     constructor() {
         this.identityForm = this.fb.group({
@@ -98,21 +105,16 @@ export class CategoryChildFormComponent implements OnInit {
 
     readonly formulaTagEnabled: boolean[] = Array(6).fill(false);
 
-    // La primera apertura no anima desde el ancho inicial de la ventana.
-    private categoryWidthAnimationReady = false;
-
     categoryMotionStep = 0;
 
     setDialogWidth(step: number): void {
         this.categoryMotionStep = step;
-        const width = step === 2 && this.showAttributesStep
-            ? 'min(1100px, calc(100vw - 32px))'
-            : 'min(700px, calc(100vw - 32px))';
-        this.dialogRef.updateSize(width);
-        if (!this.categoryWidthAnimationReady) {
-            this.dialogRef.addPanelClass('inv-category-width-transition');
-            this.categoryWidthAnimationReady = true;
-        }
+        this.isTransitioningStep = true;
+        if (this.stepTransitionTimer) clearTimeout(this.stepTransitionTimer);
+        this.stepTransitionTimer = setTimeout(() => {
+            this.isTransitioningStep = false;
+            this.cdr.markForCheck();
+        }, 280);
     }
 
     cargarUnidades(): void {
@@ -162,6 +164,10 @@ export class CategoryChildFormComponent implements OnInit {
         if (this.cargandoUnidades || !this.unidadesDisponibles.length) return;
         const selectedIds = (this.rulesForm.get('selectedUnitIds')?.value ?? []) as number[];
         this.dialogs.open(CategoryUnitPickerDialogComponent, {
+            panelClass: 'inv-seven-modal',
+            backdropClass: 'inv-submodal-backdrop',
+            enterAnimationDuration: 260,
+            exitAnimationDuration: 220,
             width: 'min(590px, calc(100vw - 24px))',
             maxWidth: 'calc(100vw - 24px)',
             maxHeight: 'calc(100dvh - 24px)',
@@ -584,9 +590,48 @@ export class CategoryChildFormComponent implements OnInit {
             }
         });
     }
+
+    goToStep(index: number): void {
+        if (!this.stepper || index === this.stepper.selectedIndex) return;
+        if (index >= 1 && this.identityForm.invalid) return;
+        if (index >= 2 && (this.rulesForm.invalid || !this.showAttributesStep || !this.rulesForm.get('isNamingLibre')?.value)) return;
+        this.stepper.selectedIndex = index;
+    }
+
+    openPreviewModal(): void {
+        this.isPreviewModalOpen = true;
+        this.isClosingPreviewModal = false;
+        this.cdr.detectChanges();
+
+        setTimeout(() => {
+            const dialog = this.previewModal?.nativeElement;
+            if (dialog && typeof dialog.showModal === 'function' && !dialog.open) {
+                dialog.showModal();
+            }
+        }, 0);
+    }
+
+    closePreviewModal(): void {
+        if (this.isClosingPreviewModal) return;
+        const dialog = this.previewModal?.nativeElement;
+        if (dialog && dialog.open) {
+            this.isClosingPreviewModal = true;
+            this.cdr.markForCheck();
+            setTimeout(() => {
+                dialog.close();
+                this.isClosingPreviewModal = false;
+                this.isPreviewModalOpen = false;
+                this.cdr.markForCheck();
+            }, 190);
+        } else {
+            this.isPreviewModalOpen = false;
+            this.cdr.markForCheck();
+        }
+    }
+
+    onPreviewModalNativeClose(): void {
+        this.isClosingPreviewModal = false;
+        this.isPreviewModalOpen = false;
+        this.cdr.markForCheck();
+    }
 }
-
-/* WEBINVENTORY_UNIDADES_INGRESOS_2026_V1: categoryTs */
-
-/* WEBINVENTORY_UNIDADES_UX_V1 */
-/* WEBINV_CATEGORIA_VISUAL_2026_V1 */

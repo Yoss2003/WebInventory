@@ -3,7 +3,7 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { MAT_DIALOG_DATA, MatDialogModule, MatDialogRef } from '@angular/material/dialog';
 import { MatIconModule } from '@angular/material/icon';
-import { UiButtonDirective } from '../ui/v2/ui-button.directive';
+import { UiButtonDirective } from '../ui/directives/ui-button.directive';
 
 export interface DevConfirmDialogData {
   title: string;

@@ -1,17 +1,19 @@
-import { UiEmptyStateComponent } from '../../../shared/ui/v2/ui-empty-state.component';
-import { UiTableActionDirective } from '../../../shared/ui/v2/ui-table-action.directive';
-import { UiButtonDirective } from '../../../shared/ui/v2/ui-button.directive';
-import { UiPageHeadingComponent } from '../../../shared/ui/v2/ui-page-heading.component';
+import { UiEmptyStateComponent } from '../../../shared/ui/components/ui-empty-state.component';
+import { UiTableActionDirective } from '../../../shared/ui/directives/ui-table-action.directive';
+import { UiButtonDirective } from '../../../shared/ui/directives/ui-button.directive';
+import { UiPageHeadingComponent } from '../../../shared/ui/components/ui-page-heading.component';
 import { cleanArticleDisplayName } from '../../../shared/clean-article-name.pipe';
 import { ChangeDetectorRef, Component, OnInit, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { MoneyPipe } from '../../../shared/money.pipe';
 import { MatIconModule } from '@angular/material/icon';
 import { MatTabsModule } from '@angular/material/tabs';
-import { TabViewTransitionDirective } from '../../../shared/ui/tab-view-transition.directive';
+import { TabViewTransitionDirective } from '../../../shared/ui/directives/tab-view-transition.directive';
 import { MatDialog } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
-import { forkJoin, filter, take } from 'rxjs';
+import { forkJoin, filter, take, catchError, of } from 'rxjs';
+import { CategoryService } from '../../categories/services/category';
+import { BrandService } from '../../../core/services/brands';
 import { ConfirmationDialogService } from '../../../shared/confirm-dialog/confirmation-dialog.service';
 import { ArticleService } from '../../../core/services/articles';
 import { InventoryContextService } from '../../../core/services/inventory-context';
@@ -24,7 +26,7 @@ import { MovementForm } from '../movement-form/movement-form';
 import { MovementDetailDialogComponent } from '../movement-detail-dialog/movement-detail-dialog';
 import { LoadingIndicatorComponent } from '../../../shared/loading/loading-indicator';
 
-import { UiSearchComponent } from '../../../shared/ui/ui-search.component';
+import { UiSearchComponent } from '../../../shared/ui/components/ui-search.component';
 
 @Component({selector:'app-entradas',standalone:true,imports:[MoneyPipe, UiEmptyStateComponent, UiTableActionDirective, UiButtonDirective, UiPageHeadingComponent, CommonModule,MatIconModule,MatTabsModule,TabViewTransitionDirective,LoadingIndicatorComponent,UiSearchComponent],templateUrl:'./entradas.html',styleUrl:'./entradas.scss'})
 export class EntradasComponent implements OnInit {
@@ -35,13 +37,18 @@ export class EntradasComponent implements OnInit {
   private readonly movementsApi=inject(MovementService);
   private readonly snackbar=inject(MatSnackBar);
   private readonly cdr=inject(ChangeDetectorRef);
-  /* FASE 4.1 */
+  private readonly categories = inject(CategoryService);
+  private readonly brands = inject(BrandService);
+
   selectedEntryTab=0;
   standard:Article[]=[];bulk:Article[]=[];serialized:Article[]=[];
   movements:Movement[]=[];
   private articleMap=new Map<number,Article>();
+  private categoryMap = new Map<number, string>();
+  private brandMap = new Map<number, string>();
   loading=false;hasLoaded=false;error='';
   search='';
+
   private matchesQuery(values: unknown[]): boolean {
     const q = this.search.trim().toLocaleLowerCase('es');
     return !q || values.some(v => String(v ?? '').toLocaleLowerCase('es').includes(q));
@@ -61,9 +68,17 @@ export class EntradasComponent implements OnInit {
   loadRealData():void{
     if(this.loading)return;
     this.loading=true;this.error='';this.cdr.markForCheck();
-    forkJoin({articles:this.articles.getArticles(),movements:this.movementsApi.getMovements()}).subscribe({
-      next:({articles,movements})=>{
-        const inventoryArticles=articles.filter(a=>a.inventoryId===this.inventoryContext.activeInventoryId);
+    forkJoin({
+      articles: this.articles.getArticles(),
+      movements: this.movementsApi.getMovements(),
+      categories: this.categories.getCategories().pipe(catchError(() => of([]))),
+      brands: this.brands.getBrands().pipe(catchError(() => of([])))
+    }).subscribe({
+      next: ({ articles, movements, categories, brands }) => {
+        this.categoryMap = new Map(categories.map(c => [Number(c.id), c.name]));
+        this.brandMap = new Map(brands.map(b => [Number(b.id), b.name]));
+
+        const inventoryArticles = articles.filter(a => a.inventoryId === this.inventoryContext.activeInventoryId);
         const active=inventoryArticles.filter(a=>a.isActive);
         const ids=new Set(inventoryArticles.map(a=>a.id));
         const type=(a:Article):number=>{
@@ -99,7 +114,34 @@ export class EntradasComponent implements OnInit {
     const ref=this.dialog.open(MovementForm,{width:'min(600px,calc(100vw - 24px))',data:{actionId:1}});
     ref.afterClosed().subscribe(ok=>{if(ok)this.loadRealData();});
   }
-  showArticle(id:number):void{this.dialog.open(ArticleDetailDialogComponent,{panelClass:'inv-seven-modal',enterAnimationDuration:260,exitAnimationDuration:220,data:{id},width:'min(780px,calc(100vw - 24px))'});}
+  showArticle(id: number): void {
+    const article = this.articleMap.get(id);
+    const inv = this.inventoryContext.options.find(
+      i => Number(i.id) === Number(article?.inventoryId ?? this.inventoryContext.activeInventoryId)
+    ) as { name?: string; inventoryName?: string } | undefined;
+
+    const ref = this.dialog.open(ArticleDetailDialogComponent, {
+      panelClass: ['inv-seven-modal', 'article-detail-wide-modal'],
+      enterAnimationDuration: 260,
+      exitAnimationDuration: 220,
+      data: {
+        id,
+        articleName: article ? cleanArticleDisplayName(article.name) : undefined,
+        categoryName: article ? (this.categoryMap.get(Number(article.categoryId)) || `#${article.categoryId}`) : undefined,
+        brandName: article?.brandId ? (this.brandMap.get(Number(article.brandId)) || `#${article.brandId}`) : '—',
+        inventoryName: inv?.name || inv?.inventoryName || undefined
+      },
+      width: 'min(1380px, calc(100vw - 24px))',
+      maxWidth: 'calc(100vw - 24px)',
+      maxHeight: 'calc(100dvh - 24px)'
+    });
+
+    ref.afterClosed().subscribe(changed => {
+      if (changed || ref.componentInstance?.hasChanges) {
+        this.loadRealData();
+      }
+    });
+  }
   showMovement(m:Movement):void{
     this.dialog.open(MovementDetailDialogComponent,{panelClass:'inv-seven-modal',enterAnimationDuration:260,exitAnimationDuration:220,data:{movement:m,articleName:this.articleName(m.articleId),articleCode:this.articleCode(m.articleId)},width:'min(650px,calc(100vw - 24px))'});
   }

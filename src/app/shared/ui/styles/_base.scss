@@ -1,0 +1,77 @@
+.mat-mdc-select-panel.inventory-select-options {
+  background: #21313f !important;
+  border: 1px solid #8ba2b8;
+  border-radius: 9px !important;
+  box-shadow: 0 18px 40px rgba(0, 0, 0, 0.62) !important;
+  padding: 6px !important;
+  max-height: 310px !important;
+  --mat-option-label-text-color: #eff5fa;
+  --mat-option-selected-state-label-text-color: var(--inv-brand);
+  --mat-option-hover-state-layer-color: color-mix(in srgb, var(--inv-brand) 14%, transparent);
+  --mat-option-focus-state-layer-color: color-mix(in srgb, var(--inv-brand) 14%, transparent);
+  --mat-option-selected-state-layer-color: color-mix(in srgb, var(--inv-brand) 20%, transparent);
+
+  .mat-mdc-option {
+    color: #eff5fa !important;
+    min-height: 45px;
+    border-radius: 6px;
+    margin: 2px 0;
+    border-bottom: 1px solid rgba(185, 204, 223, 0.1);
+
+    &:hover,
+    &.mdc-list-item--selected {
+      background: var(--inv-brand-soft) !important;
+      color: var(--inv-brand) !important;
+    }
+  }
+
+  .mdc-list-item__primary-text {
+    color: inherit !important;
+  }
+}
+
+select:not([multiple]) {
+  color-scheme: dark;
+  accent-color: var(--inv-brand);
+
+  option {
+    background: #21313f;
+    color: #eaf3fa;
+  }
+
+  &:focus-visible {
+    outline: 2px solid var(--inv-brand);
+    outline-offset: 2px;
+  }
+}
+
+:is(
+  .inv-core-table-wrap,
+  .parameter-table-viewport,
+  .supplier-table-viewport,
+  .table-wrapper,
+  .companies-table,
+  .recovery-table,
+  .history-rates-scroll
+) {
+  scrollbar-width: thin;
+  scrollbar-color: var(--inv-brand) transparent;
+
+  &::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+  }
+
+  &::-webkit-scrollbar-track {
+    background: transparent;
+  }
+
+  &::-webkit-scrollbar-thumb {
+    background: var(--inv-brand);
+    border-radius: 10px;
+
+    &:hover {
+      background: color-mix(in srgb, var(--inv-brand) 80%, white);
+    }
+  }
+}

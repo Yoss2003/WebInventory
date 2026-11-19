@@ -52,7 +52,7 @@
   flex: 0 0 40px;
   width: 40px;
   height: 40px;
-  background: #263c25;
+  background: var(--inv-brand-soft);
   color: var(--inv-company-accent, #A2D149);
   border-radius: 11px;
 }
@@ -179,8 +179,8 @@ p {
   padding: 8px;
   border: none;
   border-radius: 8px;
-  background: #91b930;
-  color: #17240d;
+  background: var(--inv-brand); 
+  color: var(--inv-company-on-accent);
   font: inherit;
   font-size: 12px;
   font-weight: 750;
@@ -459,9 +459,9 @@ p {
 }
 
 .edit-button {
-  border: 1px solid #597085;
-  background: #283c4b;
-  color: #e3f0fd;
+  border: 0; 
+  background: transparent;
+  color: var(--inv-brand);
 }
 
 .edit-button:hover:not(:disabled) {
@@ -470,9 +470,9 @@ p {
 }
 
 .delete-button {
-  border: 1px solid #89505a;
-  background: #37262c;
-  color: #ff9a9a;
+  border: 0; 
+  background: transparent;
+  color: var(--inv-danger);
 }
 
 .delete-button:hover:not(:disabled) {

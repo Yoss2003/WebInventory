@@ -18,7 +18,7 @@ function snackBarAsToast(toasts: ToastService): MatSnackBar {
       const text = String(message ?? '');
       const type: ToastType = /error|fall[oó]|no se pud|rechazad|inv[aá]lid|no se encontr[oó]|sin permiso|no tienes permiso|insuficiente/i.test(text)
         ? 'error'
-        : /revisa|selecciona|completa|primero|debes|atenci[oó]n|no se detect[oó]|necesita/i.test(text)
+        : /revisa|selecciona|completa|primero|debes|atenci[oó]n|advertencia|faltan|repetid|duplicad|no se detect[oó]|necesita/i.test(text)
           ? 'warning' : 'success';
       const title = type === 'error' ? 'No se pudo completar' : type === 'warning' ? 'Atención' : 'Operación realizada';
       const id = toasts.show(text, type, title, options?.duration ?? (type === 'error' ? 8000 : 4500));

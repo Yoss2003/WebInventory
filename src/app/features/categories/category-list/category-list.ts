@@ -1,8 +1,8 @@
-import { UiEmptyStateComponent } from '../../../shared/ui/v2/ui-empty-state.component';
-import { UiStatusComponent } from '../../../shared/ui/v2/ui-status.component';
-import { UiTableActionDirective } from '../../../shared/ui/v2/ui-table-action.directive';
-import { UiButtonDirective } from '../../../shared/ui/v2/ui-button.directive';
-import { UiPageHeadingComponent } from '../../../shared/ui/v2/ui-page-heading.component';
+import { UiEmptyStateComponent } from '../../../shared/ui/components/ui-empty-state.component';
+import { UiStatusComponent } from '../../../shared/ui/components/ui-status.component';
+import { UiTableActionDirective } from '../../../shared/ui/directives/ui-table-action.directive';
+import { UiButtonDirective } from '../../../shared/ui/directives/ui-button.directive';
+import { UiPageHeadingComponent } from '../../../shared/ui/components/ui-page-heading.component';
 import { Component, OnInit, inject, ChangeDetectorRef, PLATFORM_ID } from '@angular/core';
 import { isPlatformBrowser } from '@angular/common';
 import { animate, state, style, transition, trigger } from '@angular/animations';
@@ -23,7 +23,7 @@ import { CategoryParentFormComponent } from '../category-parent-form/category-pa
 import { CategoryChildFormComponent } from '../category-child-form/category-child-form';
 import { LoadingIndicatorComponent } from '../../../shared/loading/loading-indicator';
 
-import { UiSearchComponent } from '../../../shared/ui/ui-search.component';
+import { UiSearchComponent } from '../../../shared/ui/components/ui-search.component';
 
 @Component({
   selector:'app-category-list',standalone:true,

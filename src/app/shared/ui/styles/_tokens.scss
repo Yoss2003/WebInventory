@@ -1,0 +1,39 @@
+:root {
+  --inv-company-accent: #A2D149;
+  --inv-company-on-accent: #12202B;
+  --inv-brand: var(--inv-company-accent);
+  --inv-brand-soft: color-mix(in srgb, var(--inv-company-accent) 17%, #14212b);
+  --inv-brand-border: color-mix(in srgb, var(--inv-company-accent) 55%, #455a6d);
+
+  --inv-bg: #11161d;
+  --inv-surface: #14212b;
+  --inv-panel: #172531;
+  --inv-panel-head: #203342;
+  --inv-input-bg: #111922;
+  --inv-border: #51697c;
+  --inv-line: #344556;
+
+  --inv-text: #edf5fc;
+  --inv-muted: #a9bac8;
+  --inv-danger: #ffaeb7;
+  --inv-danger-bg: #422a31;
+
+  --inv-radius-control: 9px;
+  --inv-radius-button: 11px;
+  --inv-radius-card: 15px;
+  --inv-radius-modal: 18px;
+
+  --inv-control-height: 43px;
+  --inv-button-height: 36px;
+  --inv-action-size: 28px;
+  --inv-search-width: 360px;
+  --inv-search-height: 42px;
+  --inv-table-heading-height: 36px;
+
+  --inv-card-padding: 16px;
+  --inv-section-gap: 12px;
+  --inv-header-icon-size: 44px;
+  --inv-title-size: 21px;
+  --inv-header-separator-gap: 19px;
+  --inv-modal-general-width: 650px;
+}

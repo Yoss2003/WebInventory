@@ -6,9 +6,7 @@
 .worker-picker-dialog {
   width: min(780px, 96vw);
   background: #141f29;
-  border-radius: 16px;
   overflow: hidden;
-  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
   display: flex;
   flex-direction: column;
   max-height: 85vh;
@@ -38,8 +36,8 @@
   width: 40px;
   height: 40px;
   border-radius: 10px;
-  background: rgba(162, 209, 73, 0.12);
-  color: var(--inv-company-accent, #a2d149);
+  background: color-mix(in srgb, var(--inv-brand) 14%, transparent);
+  color: var(--inv-brand);
   flex: none;
 
   mat-icon {
@@ -55,7 +53,7 @@
   h2 {
     font-size: 16px;
     font-weight: 700;
-    color: #edf5fb;
+    color: var(--inv-text);
     margin: 0;
   }
 
@@ -86,10 +84,10 @@
   padding: 0 10px;
   flex: 1;
   min-width: 0;
-  transition: border-color .15s ease;
+  transition: border-color 0.15s ease;
 
   &:focus-within {
-    border-color: var(--inv-company-accent, #a2d149);
+    border-color: var(--inv-brand);
   }
 
   mat-icon {
@@ -181,7 +179,7 @@
   }
 
   tbody tr:hover td {
-    background: rgba(162, 209, 73, 0.05);
+    background: color-mix(in srgb, var(--inv-brand) 6%, transparent);
   }
 }
 
@@ -257,9 +255,9 @@
   }
 
   &.has-user {
-    background: rgba(162, 209, 73, 0.1);
-    color: var(--inv-company-accent, #a2d149);
-    border: 1px solid rgba(162, 209, 73, 0.25);
+    background: color-mix(in srgb, var(--inv-brand) 12%, transparent);
+    color: var(--inv-brand);
+    border: 1px solid color-mix(in srgb, var(--inv-brand) 28%, transparent);
   }
 }
 
@@ -307,7 +305,7 @@
 
   strong {
     font-size: 13px;
-    color: #edf5fb;
+    color: var(--inv-text);
   }
 
   p {

@@ -8,7 +8,7 @@ import {
   ArticleReferenceDataService, ArticleSupplierReference
 } from '../../../core/services/article-reference-data';
 import { LoadingIndicatorComponent } from '../../../shared/loading/loading-indicator';
-import { UiButtonDirective } from '../../../shared/ui/v2/ui-button.directive';
+import { UiButtonDirective } from '../../../shared/ui/directives/ui-button.directive';
 
 export interface ArticleSupplierDialogData {
   masterInventoryId: number;

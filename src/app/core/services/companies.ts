@@ -2,11 +2,12 @@ import { Injectable, inject } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable, map } from 'rxjs';
 import { CompanyPublic } from '../models/company-public.model';
+import { API_ORIGIN } from '../config/api.config';
 
 @Injectable({ providedIn: 'root' })
 export class CompanyPublicService {
   private readonly http = inject(HttpClient);
-  private readonly apiBaseUrl = 'https://localhost:7295';
+  private readonly apiBaseUrl = `${API_ORIGIN}`;
 
   /** Endpoint público que filtra las empresas activas en la API. */
   getActiveCompanies(): Observable<CompanyPublic[]> {

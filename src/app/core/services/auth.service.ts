@@ -3,6 +3,7 @@ import { isPlatformBrowser } from '@angular/common';
 import { HttpClient } from '@angular/common/http';
 import { LoginRequest, AuthResponse } from '../models/auth.model';
 import { tap } from 'rxjs';
+import { API_URL } from '../config/api.config';
 
 /** La API puede pedir cambio inicial de contraseña en lugar de emitir un token. */
 export type LoginApiResult = AuthResponse | {
@@ -15,14 +16,13 @@ export type LoginApiResult = AuthResponse | {
 export class AuthService {
   private readonly http = inject(HttpClient);
   private readonly platformId = inject(PLATFORM_ID);
-  private readonly apiUrl = 'https://localhost:7295/api/Users';
+  private readonly apiUrl = `${API_URL}/Users`;
   private readonly companyPreference = 'inventory-last-company-id';
 
   login(credentials: LoginRequest) {
     return this.http.post<LoginApiResult>(`${this.apiUrl}/Login`, credentials).pipe(
       tap(result => {
         if (!('token' in result) || !result.token) return;
-        // El token siempre debe pertenecer a la empresa que eligió el usuario.
         if (Number(result.companyId) !== Number(credentials.companyId)) {
           throw new Error('La empresa de la sesión no coincide con la seleccionada. Acceso rechazado.');
         }
@@ -36,10 +36,17 @@ export class AuthService {
   }
 
   /** Completa el cambio inicial con el reto temporal emitido tras verificar la clave de bienvenida. */
-  completeInitialPassword(resetToken: string, newPassword: string) {
+  requestPasswordRecovery(companyId: number, usernameOrEmail: string) {
     return this.http.post<{ message: string }>(
-      'https://localhost:7295/api/password-recovery/complete',
-      { token: resetToken, newPassword }
+      `${API_URL}/password-recovery/request`,
+      { companyId, usernameOrEmail }
+    );
+  }
+
+  completeInitialPassword(token: string, newPassword: string) {
+    return this.http.post<{ message: string }>(
+      `${API_URL}/password-recovery/complete`,
+      { token, newPassword }
     );
   }
 
@@ -58,6 +65,5 @@ export class AuthService {
     if (!isPlatformBrowser(this.platformId)) return;
     localStorage.removeItem('token');
     localStorage.removeItem('userSession');
-    // Se conserva solo la preferencia de empresa; nunca la contraseña.
   }
 }

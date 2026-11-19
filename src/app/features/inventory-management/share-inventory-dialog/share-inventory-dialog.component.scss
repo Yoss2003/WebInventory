@@ -39,7 +39,7 @@
   width: 40px;
   height: 40px;
   border-radius: 10px;
-  background: rgba(162, 209, 73, 0.12);
+  background: var(--inv-brand-soft);
   color: var(--inv-company-accent, #a2d149);
   flex: none;
 
@@ -153,7 +153,7 @@
     &.completed .step-num-circle {
       border-color: var(--inv-company-accent, #a2d149);
       color: var(--inv-company-accent, #a2d149);
-      background: rgba(162, 209, 73, 0.14);
+      background: var(--inv-brand-soft);
     }
 
     &:disabled {
@@ -271,42 +271,6 @@
   }
 }
 
-/* Material Select estilizado para el selector de inventario */
-:host ::ng-deep .inventory-select.mat-mdc-form-field {
-  width: 100%;
-  --mdc-outlined-text-field-outline-color: #5c768a;
-  --mdc-outlined-text-field-hover-outline-color: #8fb0c8;
-  --mdc-outlined-text-field-focus-outline-color: var(--inv-company-accent, #a2d149);
-  --mdc-outlined-text-field-container-shape: 9px;
-  --mat-select-enabled-trigger-text-color: #edf5fb;
-  --mat-select-placeholder-text-color: #8da4b7;
-  --mat-select-enabled-arrow-color: #c0d3e2;
-  --mat-select-focused-arrow-color: var(--inv-company-accent, #a2d149);
-}
-
-:host ::ng-deep .inventory-select .mat-mdc-text-field-wrapper {
-  background: #101c26;
-  height: 42px;
-  min-height: 42px;
-  border-radius: 9px;
-}
-
-:host ::ng-deep .inventory-select .mat-mdc-form-field-infix {
-  height: 42px;
-  min-height: 42px;
-  padding: 8px 0;
-  box-sizing: border-box;
-}
-
-:host ::ng-deep .inventory-select .mat-mdc-select-value {
-  font-size: 12px;
-  color: #edf5fb;
-}
-
-:host ::ng-deep .inventory-select .mat-mdc-form-field-subscript-wrapper {
-  display: none;
-}
-
 /* Tarjeta informativa del inventario elegido (por debajo del selector) */
 .inventory-preview-card {
   background: #172633;
@@ -366,9 +330,9 @@
     letter-spacing: .4px;
     padding: 3px 8px;
     border-radius: 6px;
-    background: rgba(162, 209, 73, 0.14);
+    background: var(--inv-brand-soft);
     color: var(--inv-company-accent, #a2d149);
-    border: 1px solid rgba(162, 209, 73, 0.35);
+    border: 1px solid var(--inv-brand-border);
     flex: none;
   }
 }
@@ -617,9 +581,9 @@
     border: 1px solid rgba(56, 189, 248, 0.3);
 
     &.editor {
-      background: rgba(162, 209, 73, 0.14);
+      background: var(--inv-brand-soft);
       color: var(--inv-company-accent, #a2d149);
-      border-color: rgba(162, 209, 73, 0.35);
+      border-color: var(--inv-brand-border);
     }
 
     mat-icon {
@@ -680,9 +644,9 @@
   border: 1px solid rgba(56, 189, 248, 0.3);
 
   &.editor {
-    background: rgba(162, 209, 73, 0.14);
+    background: var(--inv-brand-soft);
     color: var(--inv-company-accent, #a2d149);
-    border-color: rgba(162, 209, 73, 0.35);
+    border-color: var(--inv-brand-border);
   }
 
   mat-icon {

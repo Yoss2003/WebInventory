@@ -1,40 +1,56 @@
 import { CommonModule } from '@angular/common';
 import { ChangeDetectorRef, Component, OnInit, inject } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { HttpClient } from '@angular/common/http';
+import { InventoryService } from '../../core/services/inventories';
 import { MatIconModule } from '@angular/material/icon';
 import { RouterLink } from '@angular/router';
 import { LoadingIndicatorComponent } from '../../shared/loading/loading-indicator';
-import { UiPageHeadingComponent } from '../../shared/ui/v2/ui-page-heading.component';
-import { UiButtonDirective } from '../../shared/ui/v2/ui-button.directive';
-import { UiTableActionDirective } from '../../shared/ui/v2/ui-table-action.directive';
+import { UiPageHeadingComponent } from '../../shared/ui/components/ui-page-heading.component';
+import { UiButtonDirective } from '../../shared/ui/directives/ui-button.directive';
+import { UiTableActionDirective } from '../../shared/ui/directives/ui-table-action.directive';
 import { ToastService } from '../../shared/toast/toast.service';
 import { AccessService } from '../../core/services/access';
 
 interface MasterInventory {
-  id: number; companyId: number; companyName: string;
-  inventoryName: string; alias?: string; isActive: boolean;
+  id: number;
+  companyId: number;
+  companyName: string;
+  inventoryName: string;
+  alias?: string;
+  isActive: boolean;
 }
+
 interface CatalogPreview {
-  id: number; companyId: number; inventoryName: string;
+  id: number;
+  companyId: number;
+  inventoryName: string;
   categories: { id: number; name: string; parentCategoryId?: number | null }[];
   brands: { id: number; name: string; categoryId: number }[];
   suppliers: { id: number; ruc: string; businessName: string }[];
 }
+
 @Component({
   selector: 'app-master-inventories',
   standalone: true,
-  imports: [CommonModule, FormsModule, MatIconModule, RouterLink, LoadingIndicatorComponent,
-    UiPageHeadingComponent, UiButtonDirective, UiTableActionDirective],
+  imports: [
+    CommonModule,
+    FormsModule,
+    MatIconModule,
+    RouterLink,
+    LoadingIndicatorComponent,
+    UiPageHeadingComponent,
+    UiButtonDirective,
+    UiTableActionDirective
+  ],
   templateUrl: './master-inventories.html',
   styleUrl: './master-inventories.scss'
 })
 export class MasterInventoriesComponent implements OnInit {
-  private readonly http = inject(HttpClient);
+  private readonly inventoryService = inject(InventoryService);
   private readonly cdr = inject(ChangeDetectorRef);
   private readonly toast = inject(ToastService);
   private readonly access = inject(AccessService);
-  private readonly api = 'https://localhost:7295/api/Inventories';
+
   loading = false;
   hasLoaded = false;
   loadingCatalog = false;
@@ -48,10 +64,13 @@ export class MasterInventoriesComponent implements OnInit {
 
   get filtered(): MasterInventory[] {
     const q = this.query.trim().toLocaleLowerCase('es');
-    return this.masters.filter(m => !q ||
+    return this.masters.filter(m =>
+      !q ||
       [m.companyName, m.inventoryName, String(m.companyId)]
-        .some(v => v.toLocaleLowerCase('es').includes(q)));
+        .some(v => v.toLocaleLowerCase('es').includes(q))
+    );
   }
+
   get sameCompany(): boolean {
     return this.selected !== null && this.selected.companyId === this.companyId;
   }
@@ -77,10 +96,9 @@ export class MasterInventoriesComponent implements OnInit {
     this.loading = true;
     this.error = '';
     this.cdr.markForCheck();
-    this.http.get<MasterInventory[]>(`${this.api}/masters`).subscribe({
+    this.inventoryService.getMasters().subscribe({
       next: items => {
-        // La API devuelve un arreglo. No interpretar errores o wrappers como lista vacía.
-        this.masters = Array.isArray(items) ? items : [];
+        this.masters = Array.isArray(items) ? (items as MasterInventory[]) : [];
         if (!Array.isArray(items)) this.error = 'La API devolvió un listado con formato inesperado.';
         this.loading = false;
         this.hasLoaded = true;
@@ -100,15 +118,22 @@ export class MasterInventoriesComponent implements OnInit {
       }
     });
   }
-  trackByMasterId(_index: number, master: MasterInventory): number { return master.id; }
+
+  trackByMasterId(_index: number, master: MasterInventory): number {
+    return master.id;
+  }
 
   inspect(master: MasterInventory): void {
     this.selected = master;
     this.catalog = null;
     this.loadingCatalog = true;
     this.cdr.markForCheck();
-    this.http.get<CatalogPreview>(`${this.api}/masters/${master.id}/catalogs`).subscribe({
-      next: value => { this.catalog = value; this.loadingCatalog = false; this.cdr.markForCheck(); },
+    this.inventoryService.getMasterCatalogs(master.id).subscribe({
+      next: value => {
+        this.catalog = value as CatalogPreview;
+        this.loadingCatalog = false;
+        this.cdr.markForCheck();
+      },
       error: e => {
         this.loadingCatalog = false;
         this.toast.error(String(e?.error?.error || 'No se pudo consultar el catálogo.'));

@@ -1,90 +1,233 @@
-:host {display:block;min-width:0;color:#e5f0f7}
-.master-page {display:grid;gap:17px;min-width:0}
-.master-section {min-width:0;background:#172631;border:1px solid #526a7a;border-radius:15px;padding:18px}
-.master-section__heading {display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px;margin-bottom:13px}
-.master-section h2 {font-size:18px;margin:0;color:#ebf5fa;font-weight:750}
-.master-section__heading p {margin:4px 0 0;color:#b2c6d3;font-size:12px}
-.master-count {border:1px solid #546a7b;background:#263c48;border-radius:25px;padding:6px 10px;font-size:11px}
-.master-filter {display:flex;align-items:center;gap:9px;width:min(100%,410px);border:1px solid #597488;border-radius:9px;padding:0 11px;margin-bottom:12px;background:#111f29}
-.master-filter mat-icon{color:#aac1d2;font-size:19px;width:19px;height:19px}
-.master-filter input {border:0;outline:0;background:transparent;color:#f1f8fc;min-height:40px;flex:1;min-width:0;font:inherit;font-size:12px}
-.master-table {max-height:290px;overflow:auto;scrollbar-width:thin}
-.master-table table{width:100%;border-collapse:collapse;min-width:600px}
-.master-table th {position:sticky;top:0;background:#243947;text-align:left;font-size:12px;padding:11px;border-bottom:1px solid #536c7d}
-.master-table td{font-size:12px;padding:11px;border-bottom:1px solid #3e5465}
-.master-table td strong,.master-table td small{display:block}
-.master-table td small{color:#aac1d0;margin-top:3px;font-size:11px}
-.master-table tr.master-row-selected{background:#263a45}
-.master-active{display:inline-flex;gap:5px;align-items:center;color:#a8e7bb;font-size:11px}
-.master-active mat-icon{width:17px;height:17px;font-size:17px}
-.master-active.master-inactive{color:#ffce91}
-.master-message{color:#b3c8d6;font-size:12px;padding:8px 0;line-height:1.5}
-.master-error{color:#ffacb4;font-size:12px}
-.master-link{display:inline-flex;align-items:center;gap:6px;padding:7px 11px;border:1px solid #628195;border-radius:9px;text-decoration:none;color:#d8ebf8;background:#263e4e;font-size:12px;font-weight:700}
-.master-link mat-icon{width:17px;height:17px;font-size:17px}
-.master-link:hover{border-color:var(--inv-company-accent,#a2d149)}
-.master-catalog-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px}
-.master-catalog-group{min-width:0;border:1px solid #476274;border-radius:11px;background:#111f29;padding:12px}
-.master-catalog-group h3{display:flex;justify-content:space-between;gap:7px;margin:0 0 10px;font-size:13px}
-.master-catalog-group h3 span{color:#b2cbd9}
-.master-catalog-scroll{max-height:170px;overflow-y:auto;scrollbar-width:thin}
-.master-catalog-scroll p{margin:0;padding:8px 0;border-bottom:1px solid #2c4453;font-size:12px;overflow-wrap:anywhere}
-.master-catalog-scroll small{display:block;color:#a4c2d2;margin-top:2px}
-@media(max-width:750px){.master-catalog-grid{grid-template-columns:1fr}.master-section{padding:13px}}
+:host {
+  display: block;
+  min-width: 0;
+  color: var(--inv-text);
+}
 
-/* Botón secundario: comparte paleta con los botones de Gestión de usuarios.
-   El selector incluye la clase real del HTML y no depende del estilo nativo del navegador. */
-:host .master-page > .inv-core-header > button.master-refresh.ui-v2-button {
-  appearance: none;
-  -webkit-appearance: none;
+.master-page {
+  display: grid;
+  gap: 17px;
+  min-width: 0;
+}
+
+.master-section {
+  min-width: 0;
+  background: #172631;
+  border: 1px solid #526a7a;
+  border-radius: var(--inv-radius-card);
+  padding: 18px;
+
+  h2 {
+    font-size: 18px;
+    margin: 0;
+    color: var(--inv-text);
+    font-weight: 750;
+  }
+}
+
+.master-section__heading {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin-bottom: 13px;
+
+  p {
+    margin: 4px 0 0;
+    color: #b2c6d3;
+    font-size: 12px;
+  }
+}
+
+.master-count {
+  border: 1px solid #546a7b;
+  background: #263c48;
+  border-radius: 25px;
+  padding: 6px 10px;
+  font-size: 11px;
+}
+
+.master-filter {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  width: min(100%, 410px);
+  border: 1px solid #597488;
+  border-radius: 9px;
+  padding: 0 11px;
+  margin-bottom: 12px;
+  background: #111f29;
+
+  mat-icon {
+    color: #aac1d2;
+    font-size: 19px;
+    width: 19px;
+    height: 19px;
+  }
+
+  input {
+    border: 0;
+    outline: 0;
+    background: transparent;
+    color: #f1f8fc;
+    min-height: 40px;
+    flex: 1;
+    min-width: 0;
+    font: inherit;
+    font-size: 12px;
+  }
+}
+
+.master-table {
+  max-height: 290px;
+  overflow: auto;
+  scrollbar-width: thin;
+
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    min-width: 600px;
+  }
+
+  th {
+    position: sticky;
+    top: 0;
+    background: #243947;
+    text-align: left;
+    font-size: 12px;
+    padding: 11px;
+    border-bottom: 1px solid #536c7d;
+  }
+
+  td {
+    font-size: 12px;
+    padding: 11px;
+    border-bottom: 1px solid #3e5465;
+
+    strong,
+    small {
+      display: block;
+    }
+
+    small {
+      color: #aac1d0;
+      margin-top: 3px;
+      font-size: 11px;
+    }
+  }
+
+  tr.master-row-selected {
+    background: #263a45;
+  }
+}
+
+.master-active {
+  display: inline-flex;
+  gap: 5px;
+  align-items: center;
+  color: #a8e7bb;
+  font-size: 11px;
+
+  mat-icon {
+    width: 17px;
+    height: 17px;
+    font-size: 17px;
+  }
+
+  &.master-inactive {
+    color: #ffce91;
+  }
+}
+
+.master-message {
+  color: #b3c8d6;
+  font-size: 12px;
+  padding: 8px 0;
+  line-height: 1.5;
+}
+
+.master-error {
+  color: #ffacb4;
+  font-size: 12px;
+}
+
+.master-link {
   display: inline-flex;
   align-items: center;
-  justify-content: center;
-  flex: 0 0 auto;
-  gap: 8px;
-  box-sizing: border-box;
-  min-height: 40px;
-  padding: 8px 14px;
-  border: 1px solid #617b8b;
-  border-radius: 10px;
-  background: #263d4c;
-  color: #ebf5fb;
-  box-shadow: none;
-  font-family: inherit;
+  gap: 6px;
+  padding: 7px 11px;
+  border: 1px solid #628195;
+  border-radius: 9px;
+  text-decoration: none;
+  color: #d8ebf8;
+  background: #263e4e;
   font-size: 12px;
-  font-weight: 730;
-  line-height: 1.2;
-  text-transform: none;
-  white-space: nowrap;
-  cursor: pointer;
-  transition: background-color .18s ease, border-color .18s ease,
-              box-shadow .18s ease, transform .18s ease;
+  font-weight: 700;
+
+  mat-icon {
+    width: 17px;
+    height: 17px;
+    font-size: 17px;
+  }
+
+  &:hover {
+    border-color: var(--inv-brand);
+  }
 }
-:host .master-page > .inv-core-header > button.master-refresh.ui-v2-button:hover:not(:disabled) {
-  background: #314b5e;
-  border-color: var(--inv-company-accent, #a2d149);
-  box-shadow: 0 3px 12px rgba(0, 0, 0, .14);
-  transform: translateY(-1px);
+
+.master-catalog-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 12px;
 }
-:host .master-page > .inv-core-header > button.master-refresh.ui-v2-button:active:not(:disabled) {
-  transform: translateY(0);
-  box-shadow: none;
+
+.master-catalog-group {
+  min-width: 0;
+  border: 1px solid #476274;
+  border-radius: 11px;
+  background: #111f29;
+  padding: 12px;
+
+  h3 {
+    display: flex;
+    justify-content: space-between;
+    gap: 7px;
+    margin: 0 0 10px;
+    font-size: 13px;
+
+    span {
+      color: #b2cbd9;
+    }
+  }
 }
-:host .master-page > .inv-core-header > button.master-refresh.ui-v2-button:focus-visible {
-  outline: 2px solid var(--inv-company-accent, #a2d149);
-  outline-offset: 2px;
+
+.master-catalog-scroll {
+  max-height: 170px;
+  overflow-y: auto;
+  scrollbar-width: thin;
+
+  p {
+    margin: 0;
+    padding: 8px 0;
+    border-bottom: 1px solid #2c4453;
+    font-size: 12px;
+    overflow-wrap: anywhere;
+  }
+
+  small {
+    display: block;
+    color: #a4c2d2;
+    margin-top: 2px;
+  }
 }
-:host .master-page > .inv-core-header > button.master-refresh.ui-v2-button:disabled {
-  opacity: .7;
-  cursor: wait;
-}
-:host .master-page > .inv-core-header > button.master-refresh mat-icon {
-  display: inline-block;
-  width: 18px;
-  height: 18px;
-  font-size: 18px;
-  line-height: 18px;
-}
-@media (prefers-reduced-motion: reduce) {
-  :host .master-page > .inv-core-header > button.master-refresh.ui-v2-button { transition: none; }
+
+@media (max-width: 750px) {
+  .master-catalog-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .master-section {
+    padding: 13px;
+  }
 }

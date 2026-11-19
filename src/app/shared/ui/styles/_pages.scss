@@ -1,0 +1,227 @@
+.ui-v2-screen {
+  box-sizing: border-box;
+  width: 100%;
+  max-width: none;
+  min-width: 0;
+  padding: var(--inv-card-padding);
+  border: 1px solid var(--inv-border);
+  border-radius: var(--inv-radius-card);
+  background: var(--inv-surface);
+  color: var(--inv-text);
+
+  > header.ui-v2-page-header {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px 18px;
+    padding: 0 0 var(--inv-header-separator-gap);
+    margin: 0 0 16px;
+    min-height: 63px;
+    border-bottom: 1px solid var(--inv-border);
+
+    app-ui-page-heading {
+      min-width: 0;
+      flex: 1 1 360px;
+    }
+  }
+
+  .ui-v2-header-actions {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    gap: 8px;
+    flex-wrap: wrap;
+
+    .reload {
+      order: -1;
+    }
+  }
+
+  :is(.ui-table-toolbar, .ui-v2-table-toolbar) {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 12px;
+    margin: var(--inv-section-gap) 0;
+
+    > app-ui-search {
+      flex: 0 1 var(--inv-search-width);
+      width: min(100%, var(--inv-search-width));
+    }
+
+    > label:has(input[type=checkbox]) {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      margin-left: auto;
+      color: #cedbe7;
+      font-size: 12px;
+    }
+  }
+
+  :is(.entries-tabs, .outputs-tabs) {
+    width: 100%;
+    min-width: 0;
+
+    .mat-mdc-tab-label-container,
+    .mat-mdc-tab-labels {
+      width: 100%;
+    }
+
+    .mat-mdc-tab {
+      flex: 1 1 0;
+      min-width: 0;
+    }
+  }
+
+  .assignment-tabs {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    width: 100%;
+    gap: 8px;
+
+    button {
+      width: 100%;
+      justify-content: center;
+
+      &.active {
+        background: var(--inv-brand-soft);
+        border-color: var(--inv-brand-border);
+        color: var(--inv-brand);
+      }
+    }
+  }
+
+  .assignment-stat strong {
+    color: var(--inv-brand);
+  }
+}
+
+.ui-v2-screen.dev-page {
+  border: 0 !important;
+  background: transparent !important;
+  padding: 0 !important;
+  gap: 16px;
+}
+
+.ui-v2-screen.lookup-page {
+  width: 100% !important;
+  max-width: none !important;
+  margin: 0 !important;
+  grid-template-columns: minmax(0, 1fr);
+}
+
+.ui-v2-screen.assignment-page {
+  padding: 18px 20px 20px !important;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+app-main-layout {
+  .logo-mark {
+    color: var(--inv-brand);
+    background: var(--inv-brand-soft);
+  }
+
+  .sidenav {
+    &,
+    .mat-drawer-inner-container,
+    mat-nav-list {
+      overflow-x: hidden !important;
+    }
+
+    .mat-drawer-inner-container {
+      overflow-y: auto;
+      scrollbar-width: none;
+
+      &::-webkit-scrollbar {
+        display: none;
+      }
+    }
+
+    .mat-mdc-list-item.active-link {
+      background: var(--inv-brand-soft) !important;
+      color: var(--inv-brand) !important;
+
+      mat-icon {
+        color: var(--inv-brand) !important;
+      }
+    }
+  }
+
+  .top-toolbar .active-inventory-field {
+    box-sizing: border-box;
+    flex: 0 1 245px;
+    width: min(245px, 36vw);
+    min-width: 115px;
+    margin: 0;
+    --mdc-outlined-text-field-outline-color: #657887;
+    --mdc-outlined-text-field-hover-outline-color: #91acbd;
+    --mdc-outlined-text-field-focus-outline-color: var(--inv-brand);
+    --mat-select-enabled-trigger-text-color: #f1f8fd;
+    --mat-select-enabled-arrow-color: #c6d6e4;
+    --mat-select-focused-arrow-color: var(--inv-brand);
+
+    .mat-mdc-text-field-wrapper {
+      box-sizing: border-box;
+      min-height: 39px;
+      height: 39px;
+      background: #1d2e3b;
+      border-radius: 9px;
+    }
+
+    .mat-mdc-form-field-infix {
+      box-sizing: border-box;
+      min-height: 39px;
+      height: 39px;
+      padding-top: 8px;
+      padding-bottom: 8px;
+      display: flex;
+      align-items: center;
+    }
+
+    .mat-mdc-select {
+      font-size: 12px;
+    }
+
+    .mat-mdc-select-value {
+      color: #edf5fa;
+    }
+
+    .mat-mdc-form-field-subscript-wrapper {
+      display: none;
+    }
+  }
+}
+
+@media (max-width: 768px) {
+  .ui-v2-screen > header.ui-v2-page-header {
+    align-items: flex-start;
+  }
+
+  .ui-v2-screen .ui-v2-header-actions {
+    width: 100%;
+    justify-content: flex-start;
+  }
+
+  app-main-layout .top-toolbar .active-inventory-field {
+    flex: 0 1 185px;
+    width: min(185px, 43vw);
+    min-width: 90px;
+  }
+}
+
+@media (max-width: 480px) {
+  .ui-v2-screen {
+    padding: 12px !important;
+  }
+
+  .ui-v2-screen :is(.ui-table-toolbar, .ui-v2-table-toolbar) > app-ui-search {
+    width: 100%;
+    max-width: 100%;
+    flex: 1 1 100%;
+  }
+}

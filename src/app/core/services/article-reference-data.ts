@@ -1,6 +1,7 @@
 import { Injectable, inject } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
+import { API_URL } from '../config/api.config';
 
 export interface ArticleSupplierReference {
   id: number;
@@ -53,35 +54,34 @@ export interface ExchangeRateReference {
 @Injectable({ providedIn: 'root' })
 export class ArticleReferenceDataService {
   private readonly http = inject(HttpClient);
-  private readonly api = 'https://localhost:7295/api';
 
   suppliers(): Observable<ArticleSupplierReference[]> {
-    return this.http.get<ArticleSupplierReference[]>(`${this.api}/Suppliers`);
+    return this.http.get<ArticleSupplierReference[]>(`${API_URL}/Suppliers`);
   }
 
   lookupSupplierRuc(ruc: string): Observable<Partial<ArticleSupplierReference>> {
     return this.http.get<Partial<ArticleSupplierReference>>(
-      `${this.api}/Suppliers/ruc/${encodeURIComponent(ruc)}`
+      `${API_URL}/Suppliers/ruc/${encodeURIComponent(ruc)}`
     );
   }
 
   createSupplier(input: Partial<ArticleSupplierReference> & { inventoryId: number }): Observable<ArticleSupplierReference> {
-    return this.http.post<ArticleSupplierReference>(`${this.api}/Suppliers`, input);
+    return this.http.post<ArticleSupplierReference>(`${API_URL}/Suppliers`, input);
   }
 
   updateSupplier(id: number, input: Partial<ArticleSupplierReference>): Observable<void> {
-    return this.http.put<void>(`${this.api}/Suppliers/${id}`, input);
+    return this.http.put<void>(`${API_URL}/Suppliers/${id}`, input);
   }
 
   parameters(): Observable<ArticleParameterReference[]> {
-    return this.http.get<ArticleParameterReference[]>(`${this.api}/Parameters`);
+    return this.http.get<ArticleParameterReference[]>(`${API_URL}/Parameters`);
   }
 
   currencies(): Observable<CurrencyReference[]> {
-    return this.http.get<CurrencyReference[]>(`${this.api}/Currencies`);
+    return this.http.get<CurrencyReference[]>(`${API_URL}/Currencies`);
   }
 
   todayExchangeRate(currency: 'USD' | 'EUR'): Observable<ExchangeRateReference> {
-    return this.http.get<ExchangeRateReference>(`${this.api}/ExchangeRates/today/${currency}`);
+    return this.http.get<ExchangeRateReference>(`${API_URL}/ExchangeRates/today/${currency}`);
   }
 }

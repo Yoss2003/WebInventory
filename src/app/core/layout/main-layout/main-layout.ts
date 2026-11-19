@@ -11,7 +11,7 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { filter } from 'rxjs';
 import { AuthService } from '../../services/auth.service';
 import { CompanyPublicService } from '../../services/companies';
-import { CompanyThemeService } from '../../../shared/ui/v3/company-theme.service';
+import { CompanyThemeService } from '../../../shared/ui/services/company-theme.service';
 import { InventoryService, InventorySummary } from '../../services/inventories';
 import { InventoryContextService } from '../../services/inventory-context';
 import { AccessService } from '../../services/access';

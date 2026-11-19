@@ -7,7 +7,7 @@ import { MatDialogModule, MatDialogRef, MAT_DIALOG_DATA } from '@angular/materia
 import { MatIconModule } from '@angular/material/icon';
 import { AssignmentService, AssignedArticle, AssignmentEvent } from '../../core/services/assignments';
 import { SerialUnitsService, SerialUnit } from '../../core/services/serial-units';
-import { UiButtonDirective } from '../../shared/ui/v2/ui-button.directive';
+import { UiButtonDirective } from '../../shared/ui/directives/ui-button.directive';
 
 @Component({
   selector: 'app-assignment-history-dialog', standalone: true,

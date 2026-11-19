@@ -1,4 +1,4 @@
-import { UiButtonDirective } from '../../../shared/ui/v2/ui-button.directive';
+import { UiButtonDirective } from '../../../shared/ui/directives/ui-button.directive';
 import { ChangeDetectorRef, Component, inject, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';

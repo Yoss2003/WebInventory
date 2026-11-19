@@ -1,18 +1,50 @@
-<div class="category-modal ui-v2-dialog ui-v2-dialog--special" [invDialogMotion]="categoryMotionStep + '-' + showPreviewInputs">
+<div class="category-modal ui-v2-dialog ui-v2-dialog--special" [invDialogMotion]="categoryMotionStep" [invDialogMotionWidth]="categoryMotionStep === 2 && showAttributesStep ? 'min(1060px, calc(100vw - 32px))' : 'min(900px, calc(100vw - 32px))'">
   <header class="category-header">
     <div class="heading-group">
       <div class="heading-icon"><mat-icon>category</mat-icon></div>
-      <div>
-        <h2>{{ isEdit ? 'EDITAR CATEGORÍA HIJA' : 'NUEVA CATEGORÍA HIJA' }}</h2>
-        <p>Configura la identidad, las reglas y los atributos del inventario</p>
-      </div>
+      <h2>{{ isEdit ? 'EDITAR CATEGORÍA HIJA' : 'NUEVA CATEGORÍA HIJA' }}</h2>
     </div>
-    <button type="button" appUiButton="close" class="header-close" aria-label="Cerrar formulario" (click)="dialogRef.close()">
-      <mat-icon>close</mat-icon>
-    </button>
+
+    <nav class="steps-nav" aria-label="Etapas de la categoría">
+      <button type="button" class="step"
+        [class.active]="categoryMotionStep === 0"
+        [class.completed]="categoryMotionStep > 0"
+        (click)="goToStep(0)">
+        <span class="step-num">
+          <mat-icon *ngIf="categoryMotionStep > 0">check</mat-icon>
+          <span *ngIf="categoryMotionStep === 0">1</span>
+        </span>
+        <span class="step-text">Identidad</span>
+      </button>
+
+      <span class="step-divider"></span>
+
+      <button type="button" class="step"
+        [class.active]="categoryMotionStep === 1"
+        [class.completed]="categoryMotionStep > 1"
+        [disabled]="identityForm.invalid"
+        (click)="goToStep(1)">
+        <span class="step-num">
+          <mat-icon *ngIf="categoryMotionStep > 1">check</mat-icon>
+          <span *ngIf="categoryMotionStep <= 1">2</span>
+        </span>
+        <span class="step-text">Reglas</span>
+      </button>
+
+      <ng-container *ngIf="showAttributesStep && rulesForm.get('isNamingLibre')?.value">
+        <span class="step-divider"></span>
+        <button type="button" class="step"
+          [class.active]="categoryMotionStep === 2"
+          [disabled]="identityForm.invalid || rulesForm.invalid"
+          (click)="goToStep(2)">
+          <span class="step-num">3</span>
+          <span class="step-text">Atributos</span>
+        </button>
+      </ng-container>
+    </nav>
   </header>
 
-  <mat-dialog-content class="category-content">
+  <mat-dialog-content class="category-content" [class.is-transitioning]="isTransitioningStep">
     <mat-stepper animationDuration="0ms" linear #stepper class="category-stepper" (selectionChange)="setDialogWidth($event.selectedIndex)">
       <ng-template matStepperIcon="edit"><mat-icon>check</mat-icon></ng-template>
       <ng-template matStepperIcon="done"><mat-icon>check</mat-icon></ng-template>
@@ -224,21 +256,11 @@
                 </div>
               </div>
 
-              <div class="preview-box">
-                <div class="preview-header">
-                  <span>Vista previa del nombre</span>
-                  <button type="button" class="preview-toggle" (click)="showPreviewInputs = !showPreviewInputs"
-                    [attr.aria-expanded]="showPreviewInputs" aria-label="Mostrar valores de prueba">
-                    <mat-icon>{{ showPreviewInputs ? 'expand_less' : 'expand_more' }}</mat-icon>
-                  </button>
-                </div>
-                <div *ngIf="showPreviewInputs" class="preview-inputs">
-                  <div class="preview-input-group" *ngFor="let tag of getActiveTags()">
-                    <label>{{ tag.replace('[','').replace(']','') }}</label>
-                    <input type="text" class="preview-input" [formControl]="getPreviewControl(tag)" />
-                  </div>
-                </div>
-                <div class="preview-text">{{ formulaPreview }}</div>
+              <div class="preview-trigger-bar">
+                <span class="preview-trigger-hint">¿Quieres comprobar cómo se verá el nombre final?</span>
+                <button type="button" appUiButton="secondary" class="preview-open-btn" (click)="openPreviewModal()">
+                  <mat-icon>visibility</mat-icon> Probar vista previa
+                </button>
               </div>
             </section>
 
@@ -326,4 +348,44 @@
   </footer>
 
 </div>
-<!-- WEBINV_CATEGORIA_VISUAL_2026_V1 -->
+
+<!-- Sub-Modal independiente: Vista previa del nombre -->
+<dialog #previewModal class="inv-submodal-dialog name-preview-modal" [class.is-closing]="isClosingPreviewModal" (close)="onPreviewModalNativeClose()">
+  <div class="name-preview-shell" *ngIf="isPreviewModalOpen">
+    <header class="name-preview-header">
+      <div class="name-preview-heading">
+        <div class="name-preview-icon"><mat-icon>visibility</mat-icon></div>
+        <div>
+          <h3>Vista previa del nombre</h3>
+          <p>Ingresa valores de prueba para comprobar el resultado de tu fórmula</p>
+        </div>
+      </div>
+      <button type="button" appUiButton="close" (click)="closePreviewModal()" aria-label="Cerrar vista previa">
+        <mat-icon>close</mat-icon>
+      </button>
+    </header>
+
+    <div class="name-preview-body">
+      <div class="preview-inputs" *ngIf="getActiveTags().length > 0; else emptyFormulaMsg">
+        <div class="preview-input-group" *ngFor="let tag of getActiveTags()">
+          <label>{{ tag.replace('[', '').replace(']', '') }}</label>
+          <input type="text" class="preview-input" [formControl]="getPreviewControl(tag)"
+            [placeholder]="'Ej. valor para ' + tag.replace('[', '').replace(']', '')" />
+        </div>
+      </div>
+      <ng-template #emptyFormulaMsg>
+        <p class="preview-empty-note">Aún no has agregado etiquetas a la fórmula personalizada.</p>
+      </ng-template>
+
+      <div class="preview-result-card">
+        <span class="preview-result-label">Resultado estimado</span>
+        <div class="preview-text">{{ formulaPreview }}</div>
+      </div>
+    </div>
+
+    <footer class="name-preview-footer">
+      <span>Los valores ingresados aquí son solo de prueba y no se guardan.</span>
+      <button type="button" appUiButton="primary" (click)="closePreviewModal()">Listo</button>
+    </footer>
+  </div>
+</dialog>

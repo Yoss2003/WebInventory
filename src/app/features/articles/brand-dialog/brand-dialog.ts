@@ -13,8 +13,8 @@ import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatIconModule } from '@angular/material/icon';
 import { Brand } from '../../../core/models/brand.model';
 import { BrandService } from '../../../core/services/brands';
-import { UiButtonDirective } from '../../../shared/ui/v2/ui-button.directive';
-import { UiTableActionDirective } from '../../../shared/ui/v2/ui-table-action.directive';
+import { UiButtonDirective } from '../../../shared/ui/directives/ui-button.directive';
+import { UiTableActionDirective } from '../../../shared/ui/directives/ui-table-action.directive';
 
 export interface BrandDialogData {
   categoryId: number;

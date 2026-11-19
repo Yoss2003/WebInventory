@@ -1,5 +1,6 @@
 import { Injectable, inject } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
+import { API_URL } from '../config/api.config';
 
 export interface AccessSnapshot {
   userId: number;
@@ -14,7 +15,7 @@ export interface AccessSnapshot {
 @Injectable({ providedIn: 'root' })
 export class AccessService {
   private readonly http = inject(HttpClient);
-  private readonly url = 'https://localhost:7295/api/Access/me';
+  private readonly url = `${API_URL}/Access/me`;
 
   me() { return this.http.get<AccessSnapshot>(this.url); }
 }

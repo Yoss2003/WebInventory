@@ -1,6 +1,7 @@
 import { Injectable, inject } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
+import { API_URL } from '../config/api.config';
 
 export interface InventorySummary {
   id: number;
@@ -22,9 +23,15 @@ export interface InventoryShare {
 @Injectable({ providedIn: 'root' })
 export class InventoryService {
   private readonly http = inject(HttpClient);
-  private readonly url = 'https://localhost:7295/api/Inventories';
+  private readonly url = `${API_URL}/Inventories`;
   getInventories(): Observable<InventorySummary[]> {
     return this.http.get<InventorySummary[]>(this.url);
+  }
+  getMasters(): Observable<unknown[]> {
+    return this.http.get<unknown[]>(`${API_URL}/masters`);
+  }
+  getMasterCatalogs(masterId: number): Observable<unknown> {
+    return this.http.get<unknown>(`${API_URL}/masters/${masterId}/catalogs`);
   }
   companyInventories(): Observable<InventorySummary[]> {
     return this.http.get<InventorySummary[]>(`${this.url}/company-operational`);

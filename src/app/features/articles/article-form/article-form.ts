@@ -1,7 +1,7 @@
-import { UiButtonDirective } from '../../../shared/ui/v2/ui-button.directive';
+import { UiButtonDirective } from '../../../shared/ui/directives/ui-button.directive';
 import { ChangeDetectorRef, Component, ElementRef, OnDestroy, OnInit, ViewChild, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { InventoryDialogMotionDirective } from '../../../shared/ui/inv-dialog-motion.directive';
+import { InventoryDialogMotionDirective } from '../../../shared/ui/directives/inv-dialog-motion.directive';
 import { FormBuilder, FormGroup, Validators, ReactiveFormsModule, FormArray } from '@angular/forms';
 import { MatDialog, MatDialogRef, MatDialogModule, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { HttpErrorResponse } from '@angular/common/http';
@@ -30,6 +30,7 @@ import {
   CurrencyReference, ExchangeRateReference
 } from '../../../core/services/article-reference-data';
 import { DecodeHintType } from '@zxing/library';
+import { MatTooltipModule } from '@angular/material/tooltip';
 
 interface AttributeField {
   control: string;
@@ -39,7 +40,11 @@ interface AttributeField {
 @Component({
   selector: 'app-article-form',
   standalone: true,
-  imports: [UiButtonDirective, CommonModule, ReactiveFormsModule, MatDialogModule, MatIconModule, MatSelectModule, MatFormFieldModule, InventoryDialogMotionDirective],
+  imports: [
+    UiButtonDirective, CommonModule, ReactiveFormsModule, MatDialogModule,
+    MatIconModule, MatSelectModule, MatFormFieldModule, MatTooltipModule,
+    InventoryDialogMotionDirective
+  ],
   templateUrl: './article-form.html',
   styleUrls: ['./article-form.scss']
 })
@@ -72,7 +77,10 @@ export class ArticleFormComponent implements OnInit, OnDestroy {
   isLoadingBrands = false;
   isScanningLive = false;
   isCameraActive = false;
+  isTransitioningStep = false;
   isContinuousScanMode = false;
+  isClosingMultiScanner = false;
+  private stepTransitionTimer: ReturnType<typeof setTimeout> | null = null;
   private currentScanTarget: string = '';
   private scanControls: any = null;
   categoriesError = '';
@@ -114,6 +122,7 @@ export class ArticleFormComponent implements OnInit, OnDestroy {
   voucherFile: File | null = null;
   voucherPdfPreview: SafeResourceUrl | null = null;
   isVoucherPdf = false;
+  isEditLoading = Boolean(this.data?.id);
 
   @ViewChild('mediaViewer') mediaViewer?: ElementRef<HTMLDialogElement>;
   mediaPreviewKind: 'photo' | 'voucher' | null = null;
@@ -158,6 +167,7 @@ export class ArticleFormComponent implements OnInit, OnDestroy {
   private existingArticle: Article | null = null;
   /* FASE 4.1 */
   extraSerialNumbers: string[] = [];
+  draftExtraSerialNumbers: string[] = [];
 
   get additionalSerialIndexes(): number[] {
     if (this.currentTrackingMode !== 'Serializado' || this.isEditMode) return [];
@@ -314,6 +324,7 @@ export class ArticleFormComponent implements OnInit, OnDestroy {
 
   ngOnInit(): void {
     this.isEditMode = !!this.data?.id;
+    this.isEditLoading = this.isEditMode;
     this.initForms();
     this.setupSubscriptions();
     this.access.me().subscribe({
@@ -334,12 +345,17 @@ export class ArticleFormComponent implements OnInit, OnDestroy {
           this.existingArticle = article;
           this.applyExistingArticle();
         },
-        error: () => this.snackBar.open('No se pudieron cargar los datos del artículo para editar.', 'Cerrar', { duration: 5000 })
+        error: () => {
+          this.isEditLoading = false;
+          this.cdr.markForCheck();
+          this.snackBar.open('No se pudieron cargar los datos del artículo para editar.', 'Cerrar', { duration: 5000 });
+        }
       });
     }
   }
 
   ngOnDestroy(): void {
+    if (this.stepTransitionTimer) clearTimeout(this.stepTransitionTimer);
     this.closeMediaPreview();
     this.stopCamera();
     this.stopBarcodeScanner();
@@ -561,6 +577,7 @@ export class ArticleFormComponent implements OnInit, OnDestroy {
         this.cdr.markForCheck();
       },
       error: (error: HttpErrorResponse) => {
+        this.isEditLoading = false;
         this.isLoadingCategories = false;
         this.categoriasHijas = [];
         this.categoriesError = error.status === 0
@@ -590,6 +607,7 @@ export class ArticleFormComponent implements OnInit, OnDestroy {
         this.cdr.markForCheck();
       },
       error: (error: HttpErrorResponse) => {
+        this.isEditLoading = false;
         this.isLoadingBrands = false;
         this.brandsError = error.status === 0
           ? 'No se pudo conectar con la API de marcas.'
@@ -605,6 +623,8 @@ export class ArticleFormComponent implements OnInit, OnDestroy {
         this.isLoadingCategories || !this.categoriasHijas.length || !this.marcasGlobales.length) return;
     const a = this.existingArticle;
     if (!this.categoriasHijas.some(c => Number(c.id) === Number(a.categoryId))) {
+      this.isEditLoading = false;
+      this.cdr.markForCheck();
       this.snackBar.open('La categoría del artículo no está disponible para edición.', 'Cerrar', { duration: 4500 });
       return;
     }
@@ -650,6 +670,7 @@ export class ArticleFormComponent implements OnInit, OnDestroy {
     this.identityForm.get('name')?.setValue(a.name, { emitEvent: false });
     if (a.mainPhotoPath) this.loadExistingMedia(a.id, 'photo');
     if (a.mainVoucherPath) this.loadExistingMedia(a.id, 'voucher');
+    this.isEditLoading = false;
     this.cdr.markForCheck();
   }
 
@@ -783,16 +804,6 @@ export class ArticleFormComponent implements OnInit, OnDestroy {
   /** Si la cantidad sigue inválida al salir, devuelve el foco al campo. */
   onUnitQuantityBlur(field: 'stock' | 'initialQuantity' | 'conversionFactor', event: FocusEvent): void {
     this.onUnitQuantityInput(field);
-    const control = this.logisticsForm.get(field);
-    const input = event.target as HTMLInputElement;
-    if (!control?.invalid || control.disabled || input.readOnly) return;
-    setTimeout(() => {
-      if (input.isConnected && !input.disabled && !input.readOnly &&
-          this.currentStep === 2 && control.invalid) {
-        input.focus({ preventScroll: true });
-        input.select();
-      }
-    }, 0);
   }
 
   setStep(step: number): void {
@@ -806,6 +817,7 @@ export class ArticleFormComponent implements OnInit, OnDestroy {
       return;
     }
     if (step !== 1) this.stopCamera();
+    this.triggerStepTransition();
     this.currentStep = step;
     this.attemptedNext = false;
   }
@@ -831,6 +843,7 @@ export class ArticleFormComponent implements OnInit, OnDestroy {
       return;
     }
     this.stopCamera();
+    this.triggerStepTransition();
     this.currentStep = 2;
   }
 
@@ -842,6 +855,7 @@ export class ArticleFormComponent implements OnInit, OnDestroy {
       this.snackBar.open('Revisa los datos de Logística.', 'Cerrar', { duration: 3200 });
       return;
     }
+    this.triggerStepTransition();
     this.currentStep = 3;
   }
 
@@ -1588,21 +1602,23 @@ export class ArticleFormComponent implements OnInit, OnDestroy {
   openMultiScannerModal(): void {
     const totalStock = Number(this.logisticsForm.get('stock')?.value) || 0;
     this.totalExpectedSerials = totalStock;
-    
+
     if (totalStock <= 1) {
       this.snackBar.open('El stock total debe ser mayor a 1 para usar el ingreso masivo.', 'Cerrar', { duration: 3000 });
       return;
     }
 
     const expectedAdditionalCount = Math.max(0, totalStock - 1);
-    if (this.extraSerialNumbers.length !== expectedAdditionalCount) {
-      this.extraSerialNumbers = Array.from({ length: expectedAdditionalCount }, (_, i) => this.extraSerialNumbers[i] || '');
-    }
+    // Clonamos extraSerialNumbers al borrador para no alterar los datos reales hasta guardar
+    this.draftExtraSerialNumbers = Array.from(
+      { length: expectedAdditionalCount },
+      (_, i) => this.extraSerialNumbers[i] || ''
+    );
 
-    this.pendingSerialsCount = this.missingSerialsCount;
-    this.isCameraActive = false; // Arranca mostrando la lista de entries
+    this.isCameraActive = false;
+    this.isContinuousScanMode = false;
     this.isMultiScanning = true;
-    this.cdr.detectChanges(); 
+    this.cdr.detectChanges();
 
     setTimeout(() => {
       const dialogElement = this.multiScannerModal?.nativeElement;
@@ -1615,7 +1631,7 @@ export class ArticleFormComponent implements OnInit, OnDestroy {
   openSingleEntryCamera(idx: number): void {
     this.activeTargetEntryIdx = idx;
     this.activeTargetEntryLabel = `Serie / IMEI ${idx + 2}`;
-    this.isContinuousScanMode = false; // MODO DE UN SOLO GOLPE
+    this.isContinuousScanMode = false;
     this.isCameraActive = true;
     this.cdr.detectChanges();
     this.startContinuousScanner();
@@ -1623,11 +1639,10 @@ export class ArticleFormComponent implements OnInit, OnDestroy {
 
   toggleCameraMode(): void {
     this.isCameraActive = !this.isCameraActive;
-    this.isContinuousScanMode = this.isCameraActive; // Activamos el modo continuo
+    this.isContinuousScanMode = this.isCameraActive;
 
     if (this.isCameraActive) {
-      // Apuntamos al primer entry vacío disponible
-      const firstEmpty = this.extraSerialNumbers.findIndex(val => !val || val.trim() === '');
+      const firstEmpty = this.draftExtraSerialNumbers.findIndex(val => !val || val.trim() === '');
       this.activeTargetEntryIdx = firstEmpty !== -1 ? firstEmpty : 0;
       this.activeTargetEntryLabel = `Serie / IMEI ${this.activeTargetEntryIdx + 2}`;
       this.startContinuousScanner();
@@ -1665,17 +1680,32 @@ export class ArticleFormComponent implements OnInit, OnDestroy {
           if (result && this.isMultiScanning && this.isCameraActive) {
             const text = result.getText().trim();
             if (!text || text === lastScannedCode) return;
+
+            // Validar duplicado antes de insertar (incluyendo la serie 1)
+            const normalized = text.toLocaleUpperCase('es-PE');
+            const firstSerial = String(this.identityForm.get('serialNumber')?.value ?? '').trim().toLocaleUpperCase('es-PE');
+            const isDuplicate =
+              (firstSerial && firstSerial === normalized) ||
+              this.draftExtraSerialNumbers.some((val, i) =>
+                (!this.isContinuousScanMode ? i !== this.activeTargetEntryIdx : true) &&
+                String(val ?? '').trim().toLocaleUpperCase('es-PE') === normalized
+              );
+
+            if (isDuplicate) {
+              lastScannedCode = text;
+              this.snackBar.open(`Atención: la serie ${text} ya está registrada.`, 'Cerrar', { duration: 2200 });
+              return;
+            }
+
             lastScannedCode = text;
 
-            // CASO A: BOTÓN DE FILA (Escaneo único para este entry y se cierra)
+            // CASO A: Escaneo individual
             if (!this.isContinuousScanMode) {
               if (this.activeTargetEntryIdx !== -1) {
-                this.extraSerialNumbers[this.activeTargetEntryIdx] = text;
+                this.draftExtraSerialNumbers[this.activeTargetEntryIdx] = text;
                 this.cdr.detectChanges();
 
                 this.snackBar.open(`¡${this.activeTargetEntryLabel} registrada: ${text}!`, '', { duration: 1500 });
-                
-                // Cerramos la cámara de inmediato
                 this.isCameraActive = false;
                 if (this.multiScanControls) {
                   try { this.multiScanControls.stop(); } catch {}
@@ -1684,28 +1714,26 @@ export class ArticleFormComponent implements OnInit, OnDestroy {
                 this.cdr.markForCheck();
                 return;
               }
-            } 
-            
-            // CASO B: BOTÓN SUPERIOR (Escaneo masivo continuo, avanza al siguiente casillero vacío)
+            }
+            // CASO B: Escaneo masivo continuo
             else {
-              const targetIdx = this.extraSerialNumbers.findIndex(val => !val || val.trim() === '');
+              const targetIdx = this.draftExtraSerialNumbers.findIndex(val => !val || val.trim() === '');
               if (targetIdx !== -1) {
-                this.extraSerialNumbers[targetIdx] = text;
+                this.draftExtraSerialNumbers[targetIdx] = text;
                 this.cdr.detectChanges();
 
                 this.snackBar.open(`¡Serie ${targetIdx + 2} agregada: ${text}!`, '', { duration: 1500 });
-                
-                this.pendingSerialsCount = this.missingSerialsCount;
-                const filledCount = this.extraSerialNumbers.filter(val => val && val.trim().length > 0).length;
-                this.currentScanIndex = filledCount + 1;
 
-                // Si ya se llenaron todos, cerramos todo automáticamente
-                if (this.pendingSerialsCount <= 0) {
-                  this.snackBar.open('✅ Todas las series completadas con éxito.', 'Cerrar', { duration: 3000 });
-                  this.closeMultiScannerModal();
+                if (this.draftPendingSerialsCount <= 0) {
+                  this.snackBar.open('Todas las series escaneadas. Pulsa "Guardar y Cerrar" para confirmar.', 'Cerrar', { duration: 3500 });
+                  this.isCameraActive = false;
+                  if (this.multiScanControls) {
+                    try { this.multiScanControls.stop(); } catch {}
+                    this.multiScanControls = null;
+                  }
+                  this.cdr.markForCheck();
                 } else {
-                  // Actualizamos el label del siguiente a escanear
-                  const nextEmpty = this.extraSerialNumbers.findIndex(val => !val || val.trim() === '');
+                  const nextEmpty = this.draftExtraSerialNumbers.findIndex(val => !val || val.trim() === '');
                   if (nextEmpty !== -1) {
                     this.activeTargetEntryIdx = nextEmpty;
                     this.activeTargetEntryLabel = `Serie / IMEI ${nextEmpty + 2}`;
@@ -1715,7 +1743,6 @@ export class ArticleFormComponent implements OnInit, OnDestroy {
             }
           }
 
-          // Filtrar excepciones continuas de búsqueda
           if (err) {
             const errName = err.name || '';
             const isIgnorable = errName === 'NotFoundException' || errName === 'FormatException' || errName === 'ChecksumException';
@@ -1729,20 +1756,125 @@ export class ArticleFormComponent implements OnInit, OnDestroy {
     }, 50);
   }
 
-  closeMultiScannerModal(): void {
+  closeMultiScannerModal(saved = false): void {
+    if (this.isClosingMultiScanner) return;
+
+    if (!saved) {
+      this.draftExtraSerialNumbers = [];
+    }
+
     if (this.multiScanControls) {
       try { this.multiScanControls.stop(); } catch {}
       this.multiScanControls = null;
     }
     try { (this.codeReader as any).reset(); } catch {}
 
-    this.isMultiScanning = false;
-    this.isCameraActive = false;
-    
     const dialogElement = this.multiScannerModal?.nativeElement;
     if (dialogElement && dialogElement.open) {
-      dialogElement.close();
+      this.isClosingMultiScanner = true;
+      this.cdr.markForCheck();
+
+      setTimeout(() => {
+        dialogElement.close();
+        this.isClosingMultiScanner = false;
+        this.isMultiScanning = false;
+        this.isCameraActive = false;
+        this.cdr.markForCheck();
+      }, 190);
+    } else {
+      this.isMultiScanning = false;
+      this.isCameraActive = false;
+      this.cdr.markForCheck();
     }
+  }
+
+  onMultiScannerNativeClose(): void {
+    if (this.multiScanControls) {
+      try { this.multiScanControls.stop(); } catch {}
+      this.multiScanControls = null;
+    }
+    try { (this.codeReader as any).reset(); } catch {}
+    this.isClosingMultiScanner = false;
+    this.isMultiScanning = false;
+    this.isCameraActive = false;
     this.cdr.markForCheck();
+  }
+
+  get draftPendingSerialsCount(): number {
+    const totalStock = Number(this.logisticsForm.get('stock')?.value) || 0;
+    const expectedAdditionalCount = Math.max(0, totalStock - 1);
+    const filledCount = this.draftExtraSerialNumbers
+      .slice(0, expectedAdditionalCount)
+      .filter(val => val && val.trim().length > 0).length;
+    return Math.max(0, expectedAdditionalCount - filledCount);
+  }
+
+  // Actualiza el borrador al escribir manualmente
+  setDraftSerial(index: number, event: Event): void {
+    this.draftExtraSerialNumbers[index] = (event.target as HTMLInputElement).value;
+    this.cdr.markForCheck();
+  }
+
+  isDraftSerialDuplicate(index: number): boolean {
+    const current = String(this.draftExtraSerialNumbers[index] ?? '').trim().toLocaleUpperCase('es-PE');
+    if (!current) return false;
+
+    const firstSerial = String(this.identityForm.get('serialNumber')?.value ?? '').trim().toLocaleUpperCase('es-PE');
+    if (firstSerial && current === firstSerial) return true;
+
+    return this.draftExtraSerialNumbers.some((val, i) =>
+      i !== index && String(val ?? '').trim().toLocaleUpperCase('es-PE') === current
+    );
+  }
+
+  private hasDraftDuplicates(): boolean {
+    const seen = new Set<string>();
+    const firstSerial = String(this.identityForm.get('serialNumber')?.value ?? '').trim().toLocaleUpperCase('es-PE');
+    if (firstSerial) seen.add(firstSerial);
+
+    for (const val of this.draftExtraSerialNumbers) {
+      const normalized = String(val ?? '').trim().toLocaleUpperCase('es-PE');
+      if (!normalized) continue;
+      if (seen.has(normalized)) return true;
+      seen.add(normalized);
+    }
+    return false;
+  }
+
+  private triggerStepTransition(): void {
+    this.isTransitioningStep = true;
+    if (this.stepTransitionTimer) clearTimeout(this.stepTransitionTimer);
+    this.stepTransitionTimer = setTimeout(() => {
+      this.isTransitioningStep = false;
+      this.cdr.markForCheck();
+    }, 300);
+  }
+
+  saveAndCloseMultiScannerModal(): void {
+    if (this.hasDraftDuplicates()) {
+      this.snackBar.open(
+        'Atención: hay series repetidas (marcadas en rojo). Revisa y corrígelas antes de guardar.',
+        'Cerrar',
+        { duration: 4000 }
+      );
+      return;
+    }
+
+    // Confirmamos el borrador en el arreglo real
+    this.extraSerialNumbers = this.draftExtraSerialNumbers.map(v => String(v ?? '').trim());
+
+    const pending = this.draftPendingSerialsCount;
+    if (pending === 0) {
+      this.snackBar.open('Se guardaron todas las series correctamente.', 'Cerrar', { duration: 3500 });
+    } else {
+      const savedCount = this.extraSerialNumbers.filter(v => v.length > 0).length;
+      this.snackBar.open(
+        `Atención: se guardaron ${savedCount} ${savedCount === 1 ? 'serie' : 'series'}, pero debes completar ${pending} más.`,
+        'Cerrar',
+        { duration: 4500 }
+      );
+    }
+
+    this.closeMultiScannerModal(true);
   }
 }

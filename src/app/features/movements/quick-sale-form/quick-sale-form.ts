@@ -31,8 +31,8 @@ import {
 } from '../../../core/services/external-consultas';
 import {
   InventoryDialogMotionDirective
-} from '../../../shared/ui/inv-dialog-motion.directive';
-import { UiButtonDirective } from '../../../shared/ui/v2/ui-button.directive';
+} from '../../../shared/ui/directives/inv-dialog-motion.directive';
+import { UiButtonDirective } from '../../../shared/ui/directives/ui-button.directive';
 
 @Component({
   selector: 'app-quick-sale-form',

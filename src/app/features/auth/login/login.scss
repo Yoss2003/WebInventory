@@ -118,7 +118,7 @@
 }
 @media (prefers-reduced-motion: reduce) { .spinning { animation: none; } .login-submit { transition: none; } }
 
-.forgot-link{text-align:center;margin:12px 0}.forgot-link a{color:#b5de76;text-decoration:underline;text-underline-offset:3px}
+.forgot-link{text-align:center;margin:12px 0}.forgot-link a{color: var(--company-accent);text-decoration:underline;text-underline-offset:3px}
 
 /* ESTANDAR_V3_2: selector y foto de empresa juntos en la columna izquierda. */
 :host .login-side {justify-content:space-between;gap:14px;}

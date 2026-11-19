@@ -6,9 +6,7 @@
 .inventory-edit-dialog {
   width: min(520px, 94vw);
   background: #141f29;
-  border-radius: 16px;
   overflow: hidden;
-  box-shadow: 0 16px 45px rgba(0, 0, 0, 0.45);
 }
 
 .edit-dialog-header {
@@ -34,8 +32,8 @@
   width: 40px;
   height: 40px;
   border-radius: 10px;
-  background: rgba(162, 209, 73, 0.12);
-  color: var(--inv-company-accent, #a2d149);
+  background: color-mix(in srgb, var(--inv-brand) 14%, transparent);
+  color: var(--inv-brand);
   flex: none;
 
   mat-icon {
@@ -51,7 +49,7 @@
   h2 {
     font-size: 16px;
     font-weight: 700;
-    color: #edf5fb;
+    color: var(--inv-text);
     margin: 0;
   }
 
@@ -86,7 +84,7 @@
     color: #d1e2ee;
 
     .required {
-      color: var(--inv-company-accent, #a2d149);
+      color: var(--inv-brand);
     }
 
     .optional {

@@ -1,6 +1,7 @@
 import { Injectable, inject } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
+import { API_URL } from '../config/api.config';
 
 export interface AssignedArticle {
   id: number;
@@ -42,7 +43,7 @@ export interface AssignArticleRequest {
 @Injectable({ providedIn: 'root' })
 export class AssignmentService {
   private readonly http = inject(HttpClient);
-  private readonly base = 'https://localhost:7295/api/Assignments';
+  private readonly base = `${API_URL}/Assignments`;
 
   outgoing(): Observable<AssignedArticle[]> { return this.http.get<AssignedArticle[]>(`${this.base}/outgoing`); }
   received(): Observable<AssignedArticle[]> { return this.http.get<AssignedArticle[]>(`${this.base}/received`); }
@@ -50,8 +51,8 @@ export class AssignmentService {
   recipients(query = ''): Observable<AssignmentRecipient[]> {
     return this.http.get<AssignmentRecipient[]>(`${this.base}/recipients`, { params: { query } });
   }
-  assign(value: AssignArticleRequest): Observable<{id: number}> {
-    return this.http.post<{id: number}>(this.base, value);
+  assign(value: AssignArticleRequest): Observable<{ id: number }> {
+    return this.http.post<{ id: number }>(this.base, value);
   }
   uploadEvidence(id: number, file: File): Observable<unknown> {
     const form = new FormData(); form.append('file', file, file.name);

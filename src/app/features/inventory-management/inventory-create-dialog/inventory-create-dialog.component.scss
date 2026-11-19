@@ -6,9 +6,7 @@
 .inventory-create-dialog {
   width: min(520px, 94vw);
   background: #141f29;
-  border-radius: 16px;
   overflow: hidden;
-  box-shadow: 0 16px 45px rgba(0, 0, 0, 0.45);
 }
 
 .create-dialog-header {
@@ -34,8 +32,8 @@
   width: 40px;
   height: 40px;
   border-radius: 10px;
-  background: rgba(162, 209, 73, 0.12);
-  color: var(--inv-company-accent, #a2d149);
+  background: color-mix(in srgb, var(--inv-brand) 14%, transparent);
+  color: var(--inv-brand);
   flex: none;
 
   mat-icon {
@@ -51,7 +49,7 @@
   h2 {
     font-size: 16px;
     font-weight: 700;
-    color: #edf5fb;
+    color: var(--inv-text);
     margin: 0;
   }
 
@@ -82,7 +80,7 @@
   background: #1b2834;
   color: #a4bed2;
   cursor: pointer;
-  transition: all .15s ease;
+  transition: color 0.15s ease, border-color 0.15s ease;
 
   mat-icon {
     font-size: 18px;
@@ -91,8 +89,8 @@
   }
 
   &:hover {
-    color: var(--inv-company-accent, #a2d149);
-    border-color: var(--inv-company-accent, #a2d149);
+    color: var(--inv-brand);
+    border-color: var(--inv-brand);
   }
 }
 
@@ -117,7 +115,7 @@
     color: #d1e2ee;
 
     .required {
-      color: var(--inv-company-accent, #a2d149);
+      color: var(--inv-brand);
     }
 
     .optional {
@@ -131,42 +129,6 @@
     font-size: 11px;
     color: #849cae;
   }
-}
-
-/* Selector Material acorde al tema oscuro */
-:host ::ng-deep .inventory-select.mat-mdc-form-field {
-  width: 100%;
-  --mdc-outlined-text-field-outline-color: #5c768a;
-  --mdc-outlined-text-field-hover-outline-color: #8fb0c8;
-  --mdc-outlined-text-field-focus-outline-color: var(--inv-company-accent, #a2d149);
-  --mdc-outlined-text-field-container-shape: 9px;
-  --mat-select-enabled-trigger-text-color: #edf5fb;
-  --mat-select-placeholder-text-color: #8da4b7;
-  --mat-select-enabled-arrow-color: #c0d3e2;
-  --mat-select-focused-arrow-color: var(--inv-company-accent, #a2d149);
-}
-
-:host ::ng-deep .inventory-select .mat-mdc-text-field-wrapper {
-  background: #101c26;
-  height: 42px;
-  min-height: 42px;
-  border-radius: 9px;
-}
-
-:host ::ng-deep .inventory-select .mat-mdc-form-field-infix {
-  height: 42px;
-  min-height: 42px;
-  padding: 8px 0;
-  box-sizing: border-box;
-}
-
-:host ::ng-deep .inventory-select .mat-mdc-select-value {
-  font-size: 12px;
-  color: #edf5fb;
-}
-
-:host ::ng-deep .inventory-select .mat-mdc-form-field-subscript-wrapper {
-  display: none;
 }
 
 .warning-notice,

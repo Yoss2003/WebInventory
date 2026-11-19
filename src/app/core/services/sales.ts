@@ -1,6 +1,7 @@
 import { Injectable, inject } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
+import { API_URL } from '../config/api.config';
 
 export interface QuickSaleRequest {
   articleId: number;
@@ -22,7 +23,7 @@ export interface SaleInstallmentsSummary { saleId: number; totalAmount: number; 
 @Injectable({providedIn:'root'})
 export class SalesService {
   private readonly http=inject(HttpClient);
-  private readonly url='https://localhost:7295/api/Sales';
+  private readonly url=`${API_URL}/Sales`;
   quickSale(body:QuickSaleRequest):Observable<{saleId:number;total:number}>{return this.http.post<{saleId:number;total:number}>(`${this.url}/quick`,body);}
   getInstallments(saleId: number): Observable<SaleInstallmentsSummary> { return this.http.get<SaleInstallmentsSummary>(`${this.url}/${saleId}/installments`); }
   getCancellations():Observable<Array<{saleId:number}>>{return this.http.get<Array<{saleId:number}>>(`${this.url}/cancellations`);}

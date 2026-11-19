@@ -1,5 +1,6 @@
 import { inject, Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
+import { API_URL } from '../config/api.config';
 
 export type LicensePlan = 'Básico' | 'Pro' | 'Plus' | 'Max';
 
@@ -72,11 +73,14 @@ export interface ResetPending {
 @Injectable({ providedIn: 'root' })
 export class DevManagementService {
   private readonly http = inject(HttpClient);
-  private readonly base = 'https://localhost:7295/api';
+  private readonly base = `${API_URL}`;
 
   list() { return this.http.get<DevCompany[]>(`${this.base}/dev/companies`); }
   lookupRuc(ruc: string) {
     return this.http.get<RucLookupResult>(`${this.base}/dev/companies/lookup-ruc/${encodeURIComponent(ruc)}`);
+  }
+  createFirstAdmin(companyId: number, payload: unknown) {
+    return this.http.post<unknown>(`${this.base}/dev/companies/${companyId}/first-admin`, payload);
   }
   uploadLogo(companyId: number, image: File) {
     const body = new FormData();

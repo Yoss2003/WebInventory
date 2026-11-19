@@ -6,9 +6,9 @@ import { MatDialog } from '@angular/material/dialog';
 import { forkJoin } from 'rxjs';
 
 import { LoadingIndicatorComponent } from '../../shared/loading/loading-indicator';
-import { UiPageHeadingComponent } from '../../shared/ui/v2/ui-page-heading.component';
-import { UiButtonDirective } from '../../shared/ui/v2/ui-button.directive';
-import { UiTableActionDirective } from '../../shared/ui/v2/ui-table-action.directive';
+import { UiPageHeadingComponent } from '../../shared/ui/components/ui-page-heading.component';
+import { UiButtonDirective } from '../../shared/ui/directives/ui-button.directive';
+import { UiTableActionDirective } from '../../shared/ui/directives/ui-table-action.directive';
 import { ToastService } from '../../shared/toast/toast.service';
 import { ConfirmationDialogService } from '../../shared/confirm-dialog/confirmation-dialog.service';
 import { AccessService } from '../../core/services/access';
