@@ -19,8 +19,8 @@
 .confirm-heading { display: flex; align-items: center; gap: 12px; min-width: 0; }
 .confirm-icon {
   display: grid; place-items: center; flex: 0 0 43px; width: 43px; height: 43px;
-  border: 1px solid color-mix(in srgb, var(--inv-company-accent, #a2d149) 35%, #526578);
-  border-radius: 12px; background: #263342; color: var(--inv-company-accent, #a2d149);
+  border: 1px solid color-mix(in srgb, var(--inv-brand) 35%, #526578);
+  border-radius: 12px; background: #263342; color: var(--inv-brand);
 }
 .confirm-icon--danger { color: #ffb6b6; background: #3a2b35; border-color: #785563; }
 .confirm-icon mat-icon { width: 23px; height: 23px; font-size: 23px; }
@@ -39,7 +39,7 @@
   border: 1px solid #60788a; border-radius: 9px;
   background: #101d27; color: #eef5fb; font: inherit; line-height: 1.5;
 }
-.confirm-reason textarea:focus-visible { outline: 2px solid var(--inv-company-accent, #a2d149); outline-offset: 1px; }
+.confirm-reason textarea:focus-visible { outline: 2px solid var(--inv-brand); outline-offset: 1px; }
 .confirm-counter { text-align: right; font-size: 11px; color: #a6bccb; }
 .confirm-actions {
   display: flex; flex-wrap: wrap; align-items: center; justify-content: flex-end;

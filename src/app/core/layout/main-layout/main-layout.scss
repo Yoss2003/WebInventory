@@ -7,15 +7,15 @@
 .sidenav-container.sidebar-expanded > mat-sidenav-content {margin-left:234px!important;}
 .sidenav-container > mat-sidenav-content {transition:margin-left .18s ease;min-width:0;}
 .logo-container{display:flex;align-items:center;gap:10px;white-space:nowrap;min-height:70px;padding:12px 14px;border-bottom:1px solid #394c5c;box-sizing:border-box;}
-.logo-mark{flex:none;width:36px;height:36px;display:grid;place-items:center;background:var(--inv-v3-brand-soft);border-radius:9px;color:var(--inv-company-accent, #A2D149);}
+.logo-mark{flex:none;width:36px;height:36px;display:grid;place-items:center;background:var(--inv-brand-soft);border-radius:9px;color:var(--inv-brand);}
 .logo-label{font-size:15px;font-weight:750;color:#eaf3fa;white-space:nowrap;opacity:0;transition:opacity .15s;}
 .sidenav.expanded .logo-label{opacity:1;}
 :host ::ng-deep .sidenav .mat-mdc-list-item{height:49px;margin:5px 7px;width:calc(100% - 14px);border-radius:9px!important;color:#aebfd0!important;transition:background .15s;overflow:hidden;}
 :host ::ng-deep .sidenav .mat-mdc-list-item .mdc-list-item__content{white-space:nowrap;}
 :host ::ng-deep .sidenav .mat-mdc-list-item mat-icon{color:#b1c4d5!important;}
 :host ::ng-deep .sidenav .mat-mdc-list-item .mdc-list-item__primary-text{color:inherit;}
-:host ::ng-deep .sidenav .mat-mdc-list-item.active-link{background:var(--inv-v3-brand-soft)!important;color:#eaffcc!important;}
-:host ::ng-deep .sidenav .mat-mdc-list-item.active-link mat-icon{color:var(--inv-company-accent, #A2D149)!important;}
+:host ::ng-deep .sidenav .mat-mdc-list-item.active-link{background:var(--inv-brand-soft)!important;color:#eaffcc!important;}
+:host ::ng-deep .sidenav .mat-mdc-list-item.active-link mat-icon{color:var(--inv-brand)!important;}
 .sidebar-label{display:block;opacity:0;transition:opacity .1s;white-space:nowrap;font-size:12px;}
 .sidenav.expanded .sidebar-label{opacity:1;transition-delay:.08s;}
 :host ::ng-deep .sidenav.collapsed .mat-mdc-list-item .mdc-list-item__content{display:none;}
@@ -50,7 +50,7 @@
 /* Fase 3.5: selector operativo de inventario; el maestro no figura aquí */
 .active-inventory-label{font-size:12px;color:#c5d6e3;white-space:nowrap}
 .active-inventory-select{max-width:min(245px,36vw);min-width:115px;background:#1d2e3b;color:#f1f8fd;border:1px solid #657887;border-radius:8px;padding:9px;font-size:12px;outline:none}
-.active-inventory-select:focus{border-color:#99bd42}
+.active-inventory-select:focus{border-color:var(--inv-brand)}
 .active-inventory-select:disabled{opacity:.6}
 @media(max-width:700px){.active-inventory-label{display:none}.active-inventory-select{max-width:42vw;min-width:90px}}
 
@@ -61,7 +61,7 @@
 :host ::ng-deep .sidenav.collapsed .mat-mdc-list-item .mdc-list-item__content{display:none!important}
 .top-toolbar{padding-left:22px!important;gap:17px}
 .top-toolbar .menu-trigger{margin-right:4px;border:1px solid #657d8f;background:#20323e;box-shadow:0 0 0 3px #14212b}
-.top-toolbar .menu-trigger:hover{border-color:var(--inv-company-accent, #A2D149);background:#293d49}
+.top-toolbar .menu-trigger:hover{border-color:var(--inv-brand);background:#293d49}
 @media(max-width:700px){:host ::ng-deep .sidenav.collapsed .mat-mdc-list-item{width:44px!important;min-width:44px}.top-toolbar{padding-left:14px!important;gap:10px}}
 
 
@@ -74,7 +74,7 @@
   overflow-x: hidden;
 
   scrollbar-width: thin;
-  scrollbar-color: var(--inv-company-accent, #9226e8) transparent;
+  scrollbar-color: var(--inv-brand) transparent;
 }
 
 .sidebar-group {
@@ -102,8 +102,8 @@
 }
 
 .sidebar-group-trigger.group-active {
-  color: var(--inv-company-accent, #A2D149);
-  background: var(--inv-v3-brand-soft);
+  color: var(--inv-brand);
+  background: var(--inv-brand-soft);
 }
 
 .sidebar-group-trigger > mat-icon:first-child {
@@ -210,7 +210,7 @@
 }
 .inventory-setup-notice > mat-icon {
   flex: none; width: 19px; height: 19px; font-size: 19px;
-  color: var(--inv-company-accent, #a2d149);
+  color: var(--inv-brand);
 }
 .inventory-setup-notice > div { flex: 1 1 290px; min-width: 0; }
 .inventory-setup-notice strong { display: block; font-size: 13px; }
@@ -222,7 +222,7 @@
   color: #f1f9ff; text-decoration: none; font-weight: 700;
   background: #2c4556;
 }
-.inventory-setup-notice a:hover { border-color: var(--inv-company-accent, #a2d149); }
+.inventory-setup-notice a:hover { border-color: var(--inv-brand); }
 .inventory-setup-notice a:focus-visible {
-  outline: 2px solid var(--inv-company-accent, #a2d149); outline-offset: 2px;
+  outline: 2px solid var(--inv-brand); outline-offset: 2px;
 }

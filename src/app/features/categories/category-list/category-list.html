@@ -2,12 +2,12 @@
   <header class="inv-core-header">
     <app-ui-page-heading icon="category" title="Maestro de categorías" subtitle="Grupos, subcategorías, reglas de seguimiento y nombramiento."></app-ui-page-heading>
     <div class="inv-core-header-actions">
-      <button type="button" class="secondary-action ui-button ui-button--secondary" (click)="loadData()" [disabled]="loading" appUiButton="secondary">
+      <button type="button" (click)="loadData()" [disabled]="loading" appUiButton="secondary">
         <app-loading-indicator *ngIf="loading; else categoryRefresh" [compact]="true" message="Cargando..." />
         <ng-template #categoryRefresh><mat-icon>refresh</mat-icon>Actualizar</ng-template>
       </button>
-      <button type="button" class="primary-action ui-button ui-button--primary" (click)="nuevaCategoriaHija()" appUiButton="primary"><mat-icon>add</mat-icon>Categoría hija</button>
-      <button type="button" class="secondary-action ui-button ui-button--secondary" (click)="nuevaCategoriaPadre()" appUiButton="secondary"><mat-icon>create_new_folder</mat-icon>Categoría padre</button>
+      <button type="button" (click)="nuevaCategoriaHija()" appUiButton="primary"><mat-icon>add</mat-icon>Categoría hija</button>
+      <button type="button" (click)="nuevaCategoriaPadre()" appUiButton="secondary"><mat-icon>create_new_folder</mat-icon>Categoría padre</button>
     </div>
   </header>
   <div class="inv-core-toolbar">

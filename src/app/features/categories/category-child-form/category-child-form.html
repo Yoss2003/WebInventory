@@ -283,12 +283,10 @@
   </mat-dialog-content>
   
   <footer class="category-footer">
-
     <button
       *ngIf="stepper.selectedIndex > 0"
       type="button"
       appUiButton="secondary"
-      class="btn-text back"
       (click)="stepper.previous()">
       <mat-icon>arrow_back</mat-icon>
       Atrás
@@ -299,52 +297,39 @@
     <button
       type="button"
       appUiButton="secondary"
-      class="btn-text"
       (click)="dialogRef.close()">
       Cancelar
     </button>
 
-    <!-- Identidad -> Reglas -->
     <button
       *ngIf="stepper.selectedIndex === 0"
       type="button"
       appUiButton="primary"
-      class="btn-pill-green"
       [disabled]="identityForm.invalid"
       (click)="stepper.next()">
       Siguiente: Reglas
       <mat-icon>arrow_forward</mat-icon>
     </button>
 
-    <!-- Reglas -> Atributos -->
     <button
-      *ngIf="stepper.selectedIndex === 1 &&
-            showAttributesStep &&
-            rulesForm.get('isNamingLibre')?.value"
+      *ngIf="stepper.selectedIndex === 1 && showAttributesStep && rulesForm.get('isNamingLibre')?.value"
       type="button"
       appUiButton="primary"
-      class="btn-pill-green"
       [disabled]="rulesForm.invalid"
       (click)="stepper.next()">
       Siguiente: Atributos
       <mat-icon>arrow_forward</mat-icon>
     </button>
 
-    <!-- Guardar en el último paso -->
     <button
-      *ngIf="stepper.selectedIndex === 2 ||
-            (stepper.selectedIndex === 1 &&
-              !(showAttributesStep &&
-                rulesForm.get('isNamingLibre')?.value))"
+      *ngIf="stepper.selectedIndex === 2 || (stepper.selectedIndex === 1 && !(showAttributesStep && rulesForm.get('isNamingLibre')?.value))"
       type="button"
       appUiButton="primary"
-      class="btn-pill-green"
       [disabled]="!isFormComplete || (isEdit && !hasEditChanges)"
       (click)="onSubmit()">
       <mat-icon>save</mat-icon>
       {{ isEdit ? 'Actualizar categoría' : 'Guardar categoría' }}
     </button>
-
   </footer>
 
 </div>

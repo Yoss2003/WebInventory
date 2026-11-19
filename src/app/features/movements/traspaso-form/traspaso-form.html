@@ -67,9 +67,14 @@
       <div class="evidence-card" *ngIf="operationType==='Asignar'">
         <div class="card-heading"><mat-icon>photo_camera</mat-icon><div><strong>Evidencia fotográfica (opcional)</strong><small>JPG/PNG/WEBP, máximo 8 MB.</small></div></div>
         <input type="file" #fileInput accept="image/jpeg,image/png,image/webp" hidden (change)="onPhotoSelected($event)" />
-        <div class="evidence-row"><img *ngIf="evidencePreview" [src]="evidencePreview" alt="Evidencia seleccionada" />
-          <button type="button" class="outline-btn" (click)="fileInput.click()"><mat-icon>image</mat-icon>{{evidencePreview?'Cambiar':'Seleccionar imagen'}}</button>
-          <button *ngIf="evidencePreview" type="button" class="outline-btn danger" (click)="removePhoto()"><mat-icon>delete_outline</mat-icon>Quitar</button>
+        <div class="evidence-row">
+          <img *ngIf="evidencePreview" [src]="evidencePreview" alt="Evidencia seleccionada" />
+          <button type="button" appUiButton="secondary" (click)="fileInput.click()">
+            <mat-icon>image</mat-icon>{{evidencePreview ? 'Cambiar' : 'Seleccionar imagen'}}
+          </button>
+          <button *ngIf="evidencePreview" type="button" appUiButton="danger" (click)="removePhoto()">
+            <mat-icon>delete_outline</mat-icon>Quitar
+          </button>
         </div>
       </div>
     </section>

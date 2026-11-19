@@ -309,19 +309,19 @@
     <!-- PASO 2: cuadrícula recomendada -->
     <section class="step-content centered-card" *ngIf="currentStep === 2" aria-label="Logística del artículo">
       <div class="card-section">
-        <div class="section-header" style="display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 12px; margin-bottom: 16px;">
-          <div style="display: flex; align-items: center; gap: 12px; min-width: 0;">
+        <div class="section-header section-header--logistics">
+          <div class="section-header__lead">
             <div class="section-icon lime"><mat-icon>assignment</mat-icon></div>
             <div class="section-heading">
               <h3>Configuración logística</h3>
               <p>Define cómo se compra, vende y contabiliza el producto.</p>
             </div>
           </div>
-          
-          <!-- Botón de Escaneo Rápido de Series -->
-          <button *ngIf="currentTrackingMode === 'Serializado' && (+logisticsForm.get('stock')?.value || 0) > 1" 
-                  type="button" 
-                  class="media-button primary" 
+
+          <button *ngIf="currentTrackingMode === 'Serializado' && (+logisticsForm.get('stock')?.value || 0) > 1"
+                  type="button"
+                  appUiButton="primary"
+                  class="media-button primary"
                   (click)="openMultiScannerModal()">
             <mat-icon>qr_code_scanner</mat-icon> Escaneo Rápido de Series
           </button>
@@ -521,24 +521,25 @@
   </main>
 
   <footer class="modal-footer">
-    <button *ngIf="currentStep > 1" type="button" class="btn-text back" (click)="setStep(currentStep - 1)">
+    <button *ngIf="currentStep > 1" type="button" appUiButton="secondary" (click)="setStep(currentStep - 1)">
       <mat-icon>arrow_back</mat-icon> Atrás
     </button>
-    
-    <!-- Este espaciador empuja lo que esté a la derecha hacia el borde -->
+
     <span class="footer-spacer"></span>
-    
-    <button type="button" class="btn-text" mat-dialog-close>Cancelar</button>
-    <button *ngIf="currentStep === 1" type="button" class="btn-pill-green" (click)="goNextFromIdentity()">Siguiente: Logística <mat-icon>arrow_forward</mat-icon></button>
-    <button *ngIf="currentStep === 2" type="button" class="btn-pill-green" (click)="goNextFromLogistics()">Siguiente: Finanzas <mat-icon>arrow_forward</mat-icon></button>
-    <button *ngIf="currentStep === 3" type="button" class="btn-pill-green" [disabled]="isSaving" (click)="onSubmit()"><mat-icon>save</mat-icon> {{ isSaving ? 'Guardando...' : isEditMode ? 'Actualizar artículo' : 'Guardar artículo' }}</button>
+
+    <button type="button" appUiButton="secondary" mat-dialog-close>Cancelar</button>
+    <button *ngIf="currentStep === 1" type="button" appUiButton="primary" (click)="goNextFromIdentity()">Siguiente: Logística <mat-icon>arrow_forward</mat-icon></button>
+    <button *ngIf="currentStep === 2" type="button" appUiButton="primary" (click)="goNextFromLogistics()">Siguiente: Finanzas <mat-icon>arrow_forward</mat-icon></button>
+    <button *ngIf="currentStep === 3" type="button" appUiButton="primary" [disabled]="isSaving" (click)="onSubmit()"><mat-icon>save</mat-icon> {{ isSaving ? 'Guardando...' : isEditMode ? 'Actualizar artículo' : 'Guardar artículo' }}</button>
   </footer>
 
   <div class="scanner-overlay" *ngIf="isScanningLive">
     <div class="scanner-container">
       <div class="scanner-header">
         <h4>Escaneando Código</h4>
-        <button type="button" class="btn-close" (click)="stopBarcodeScanner()"><mat-icon>close</mat-icon></button>
+        <button type="button" appUiButton="close" (click)="stopBarcodeScanner()" aria-label="Cerrar escáner">
+          <mat-icon>close</mat-icon>
+        </button>
       </div>
       <div class="scanner-video-wrapper">
         <video #scannerVideo id="video" width="100%" height="100%"></video>
@@ -607,7 +608,7 @@
           <h3>Ingreso Masivo de Series ({{ totalExpectedSerials }} unidades)</h3>
           <!-- Contador 100% dinámico -->
           <p *ngIf="draftPendingSerialsCount > 0">Faltan <strong>{{ draftPendingSerialsCount }}</strong> series por registrar</p>
-          <p *ngIf="draftPendingSerialsCount === 0" style="color: var(--inv-company-accent, #A2D149);"><strong>Todas las series están completas</strong></p>
+          <p *ngIf="draftPendingSerialsCount === 0" class="multi-status-complete"><strong>Todas las series están completas</strong></p>
         </div>
       </div>
       <div class="media-lightbox-actions">
@@ -616,7 +617,7 @@
           {{ isCameraActive ? 'Ver Lista' : 'Escanear todo' }}
         </button>
         <!-- Botón X: Cierra SIN guardar -->
-        <button type="button" class="media-viewer-control close-viewer" (click)="closeMultiScannerModal(false)" title="Cerrar sin guardar">
+        <button type="button" appUiButton="close" (click)="closeMultiScannerModal(false)" title="Cerrar sin guardar" aria-label="Cerrar sin guardar">
           <mat-icon>close</mat-icon>
         </button>
       </div>
@@ -629,7 +630,7 @@
         <div class="entry-row" *ngFor="let idx of additionalSerialIndexes; let i = index; trackBy: trackBySerialIndex">
           <span class="entry-label">Serie / IMEI {{ i + 2 }}</span>
           
-          <input type="text" class="custom-input" style="flex: 1;" 
+          <input type="text" class="custom-input" 
                  [class.invalid]="isDraftSerialDuplicate(idx)"
                  [value]="draftExtraSerialNumbers[idx] || ''" 
                  (input)="setDraftSerial(idx, $event)" 
@@ -650,7 +651,7 @@
           <video #multiScannerVideo id="multi-video" width="100%" height="100%"></video>
           <div class="scanner-target-box"></div>
         </div>
-        <button type="button" class="media-button" style="margin-top: 15px;" (click)="toggleCameraMode()">
+        <button type="button" appUiButton="secondary" class="media-button camera-back-btn" (click)="toggleCameraMode()">
           <mat-icon>arrow_back</mat-icon> Volver a la lista
         </button>
       </div>

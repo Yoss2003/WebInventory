@@ -61,7 +61,7 @@
             </div>
 
             <!-- Botón único de baja definitiva -->
-            <button *ngIf="a.tracking === 1 && a.isActive" type="button" class="record-series-retire"
+            <button *ngIf="a.tracking === 1 && a.isActive" type="button" appUiButton="danger" class="record-series-retire"
               [disabled]="decommissioning || selectedDecommissionIds.size === 0"
               (click)="decommissionSelected()">
               <app-loading-indicator *ngIf="decommissioning; else retireLabel" [compact]="true" message="Procesando..." />
@@ -245,7 +245,7 @@
           <a class="lb-btn" [href]="previewMedia.url" target="_blank" rel="noopener" title="Abrir en pestaña nueva">
             <mat-icon>open_in_new</mat-icon>
           </a>
-          <button type="button" class="lb-btn lb-close" (click)="closeMediaPreview()" title="Cerrar visor">
+          <button type="button" appUiButton="close" class="lb-btn lb-close" (click)="closeMediaPreview()" title="Cerrar visor" aria-label="Cerrar visor">
             <mat-icon>close</mat-icon>
           </button>
         </div>

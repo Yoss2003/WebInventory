@@ -446,3 +446,31 @@ $bg: #11161d; $panel: #19232e; $panel-light: #202d39; $line: #334353; $text: #ed
 @keyframes edit-spin {
   to { transform: rotate(360deg); }
 }
+
+.section-header--logistics {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin-bottom: 16px;
+}
+
+.section-header__lead {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  min-width: 0;
+}
+
+.multi-status-complete {
+  color: var(--inv-brand);
+}
+
+.entry-row .entry-input {
+  flex: 1;
+}
+
+.camera-back-btn {
+  margin-top: 15px;
+}
