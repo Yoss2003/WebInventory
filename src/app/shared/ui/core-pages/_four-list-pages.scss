@@ -1,9 +1,3 @@
-/*
- * WebInventory - unico contrato visual de Articulos, Categorias, Entradas y Salidas.
- * No depende de las reglas V2/V3 por pantalla. Todos los valores comunes viven aqui.
- * Cambiar una medida aqui actualiza las cuatro vistas.
- * El HTML conserva sus eventos, rutas, filtros y estructura de datos.
- */
 .inv-core-page {
   --core-bg: #14212b;
   --core-table-bg: #15232f;
@@ -33,7 +27,6 @@
   color: #eaf3fb;
 }
 
-/* Cabecera unica; actualizar a la izquierda de las demas acciones. */
 .inv-core-page > .inv-core-header {
   display: flex;
   align-items: center;
@@ -71,7 +64,8 @@
   gap: 8px;
   min-width: 0;
 }
-.inv-core-page .inv-core-header-actions button[appUiButton] {
+.inv-core-page .inv-core-header-actions button[appUiButton],
+.inv-core-page > .inv-core-header > button[appUiButton] {
   display: inline-flex;
   align-items: center;
   justify-content: center;
@@ -99,7 +93,8 @@
   color: var(--core-accent-text);
 }
 .inv-core-page .inv-core-header-actions .reload { order: -1; }
-.inv-core-page .inv-core-header-actions button[appUiButton] mat-icon {
+.inv-core-page .inv-core-header-actions button[appUiButton] mat-icon,
+.inv-core-page > .inv-core-header > button[appUiButton] mat-icon {
   flex: 0 0 18px;
   width: 18px;
   height: 18px;
@@ -115,7 +110,6 @@
   outline-offset: 2px;
 }
 
-/* Filtro: sin margenes heredados de V1/V2/V3. */
 .inv-core-page .inv-core-toolbar {
   display: flex;
   align-items: center;
@@ -150,7 +144,6 @@
   accent-color: var(--core-accent);
 }
 
-/* Tablas: contenedor con borde, esquinas redondeadas y scroll, sin clases V1. */
 .inv-core-page .inv-core-table-wrap {
   box-sizing: border-box;
   width: 100%;
@@ -170,7 +163,6 @@
   background: var(--core-table-bg);
   font-size: 12px;
 }
-/* Cada modulo conserva solo el minimo necesario para sus columnas. */
 .inv-core-page.catalog-page .inv-core-table-wrap > table { min-width: 1040px; }
 .inv-core-page.entries-page .inv-core-table-wrap > table { min-width: 820px; }
 .inv-core-page.outputs-page .inv-core-table-wrap > table { min-width: 1030px; }
@@ -211,10 +203,9 @@
 .inv-core-page :is(.catalog-table-wrap,.entries-table,.outputs-table) tbody tr[tabindex],
 .inv-core-page .category-table .parent-row { cursor: pointer; }
 
-/* Angular Material: misma altura/espaciado, sin alterar las filas expandibles. */
 .inv-core-page .category-table .mat-mdc-header-row { height: 36px; }
 .inv-core-page .category-table .mat-mdc-header-cell {
-  background: var(--core-table-head) !important; /* src/styles.scss define Material global con !important. */
+  background: var(--core-table-head) !important;
   color: #bfd1df !important;
   border-color: var(--core-border) !important;
   padding: 7px 12px;
@@ -241,7 +232,6 @@
   padding: 0;
 }
 
-/* Acciones centradas en todas las tablas, incluidas las de categorias hijas. */
 .inv-core-page .inv-core-table-wrap table :is(th.inv-core-action-cell,td.inv-core-action-cell) {
   width: 108px;
   min-width: 108px;
@@ -281,10 +271,8 @@
   line-height: 19px;
   margin: 0;
 }
-/* El primer control de Categorias (expandir) no es la columna Acciones. */
 .inv-core-page .category-table .expand-col { width: 42px; max-width: 42px; padding-inline: 9px 2px; }
 
-/* Estados tienen colores semanticos propios; no se convierten en morado/verde de empresa. */
 .inv-core-page app-ui-status .ui-v2-status {
   background: #243e34;
   border: 1px solid #477b56;
@@ -306,7 +294,6 @@
   color: #d6e5ef;
 }
 
-/* Tabs de Entradas y Salidas: iguales y a todo lo ancho. */
 .inv-core-page .inv-core-tabs { min-width: 0; width: 100%; }
 .inv-core-page .inv-core-tabs .mat-mdc-tab-label-container,
 .inv-core-page .inv-core-tabs .mat-mdc-tab-labels { width: 100%; }
@@ -321,7 +308,6 @@
   border-color: var(--core-accent);
 }
 .inv-core-page .inv-core-tabs .inv-core-table-wrap { margin-top: 12px; }
-/* FADE_COMPARTIDO_ENTRADAS_SALIDAS_V1: transición nativa del contenido, sin overlays ni copias de tablas. */
 .inv-core-page .entries-tabs .mat-mdc-tab-body-wrapper {
   view-transition-name: inv-entries-tab-content;
 }
@@ -347,7 +333,6 @@
   animation: inv-movement-tab-in 150ms ease-out 130ms both;
 }
 
-/* No hay motivo para animar también el resto del dashboard. */
 html.inv-movement-tab-transition::view-transition-old(root),
 html.inv-movement-tab-transition::view-transition-new(root) {
   animation: none;
@@ -360,7 +345,6 @@ html.inv-movement-tab-transition::view-transition-new(root) {
   ::view-transition-new(inv-outputs-tab-content) { animation: none; }
 }
 
-/* Utilidades puntuales de contenido. */
 .inv-core-page .catalog-state,
 .inv-core-page .entries-loading,
 .inv-core-page .outputs-empty { padding: 14px; text-align: center; color: var(--core-muted); }
@@ -391,8 +375,6 @@ html.inv-movement-tab-transition::view-transition-new(root) {
   .inv-core-page .inv-core-toolbar > app-ui-search { width: 100%; flex: 1 1 100%; }
 }
 
-
-/* Indicador deslizante de Entradas y Salidas */
 .inv-core-page .entries-tabs {
   --tab-count: 4;
 }
@@ -432,4 +414,3 @@ html.inv-movement-tab-transition::view-transition-new(root) {
     --tab-index: #{$i - 1};
   }
 }
-

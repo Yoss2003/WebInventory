@@ -1,9 +1,3 @@
-/* WebInventory: Articulos asignados, Compartir inventario, Consultas SUNAT y Catalogo general.
-   Usa inv-core-page del primer paquete validado; NO crea tokens ni capas V4.
-   Este archivo es la unica fuente de estilos para estas cuatro vistas.
-   Los colores de estados de error/alerta mantienen su significado semantico. */
-
-/* Controles y superficies comunes de estas cuatro vistas. */
 .inv-secondary-page {
   --secondary-panel: #182936;
   --secondary-panel-border: #455d6f;
@@ -31,33 +25,12 @@
 }
 .inv-secondary-page button { font:inherit; cursor:pointer; }
 .inv-secondary-page button:disabled { opacity:.48; cursor:not-allowed; }
-.inv-secondary-page .inv-core-header > button[appUiButton] {
-  display:inline-flex;
-  align-items:center;
-  justify-content:center;
-  gap:7px;
-  height:34px;
-  min-height:34px;
-  padding:0 12px;
-  box-sizing:border-box;
-  border:1px solid #62798b;
-  border-radius:11px;
-  background:#263947;
-  color:#e7f0f8;
-  font-size:12px;
-  font-weight:700;
-  line-height:1.15;
-  white-space:nowrap;
-}
-.inv-secondary-page .inv-core-header > button[appUiButton] mat-icon {
-  width:18px;height:18px;font-size:18px;line-height:18px;
-}
 .inv-secondary-page.sharing-page .inv-core-header .sharing-info {
   margin-left: auto;
   align-self: center;
 }
 .inv-secondary-page :is(.sharing-card-heading button,.lookup-inline button,.fx-history-controls button),
-.inv-secondary-page.catalog-page button:not([appUiTableAction]):not(.ui-v3-1-parameter-action):not([role="tab"]) {
+.inv-secondary-page.catalog-page button:not([appUiTableAction]):not([role="tab"]) {
   display:inline-flex;align-items:center;justify-content:center;gap:7px;
   box-sizing:border-box;border:1px solid #647c8b;border-radius:9px;
   min-height:34px;padding:6px 12px;background:#263947;color:#e5eff8;
@@ -81,7 +54,6 @@
   font-size:12px;line-height:1.5;color:var(--secondary-text-muted);
 }
 
-/* Navegacion estilo Entradas/Salidas, tanto Angular nativo como botones ARIA. */
 .inv-secondary-page .inv-secondary-tabs {
   display:flex;width:100%;min-width:0;gap:0;
   margin:0; padding:0;
@@ -101,7 +73,6 @@
 }
 .inv-secondary-page .inv-secondary-tabs > button mat-icon {width:19px;height:19px;font-size:19px;}
 
-/* 1. ARTICULOS ASIGNADOS: tarjetas de resumen, busqueda, tabs y tabla de custodias. */
 .inv-secondary-page.assignment-page {display:flex;flex-direction:column;}
 .inv-secondary-page.assignment-page .assignment-stats {
   display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px;min-width:0;
@@ -118,7 +89,7 @@
 .inv-secondary-page.assignment-page .assignment-section {overflow:hidden;}
 .inv-secondary-page.assignment-page .assignment-search-row {margin:0;padding:14px 16px;}
 .inv-secondary-page.assignment-page .assignment-tabs {padding-inline:16px;}
-.inv-secondary-page.assignment-page .assignment-table-wrap {margin:12px 16px 16px;width:auto;min-width:0;;max-height:440px;}
+.inv-secondary-page.assignment-page .assignment-table-wrap {margin:12px 16px 16px;width:auto;min-width:0;max-height:440px;}
 .inv-secondary-page.assignment-page .assignment-table-wrap > table {min-width:900px;}
 .inv-secondary-page.assignment-page .assignment-table-wrap tr[role=button] {cursor:pointer;}
 .inv-secondary-page.assignment-page .assignment-table-wrap tr[role=button]:focus-visible td {
@@ -142,7 +113,6 @@
 .inv-secondary-page.assignment-page .assignment-state--error {color:#ffb4b8;min-height:52px;}
 .inv-secondary-page.assignment-page .assignment-state strong {color:#e9f4fc;}
 
-/* 2. COMPARTIR INVENTARIO: paneles adaptables y tabla de colaboradores. */
 .inv-secondary-page.sharing-page {display:flex;flex-direction:column;}
 .inv-secondary-page.sharing-page .sharing-info {align-self:flex-start;position:relative;min-width:0;max-width:100%;z-index:3;}
 .inv-secondary-page.sharing-page .sharing-info-trigger {
@@ -218,7 +188,6 @@
 }
 .inv-secondary-page.sharing-page .sharing-table-wrap td button.danger:hover {background:#513039;}
 
-/* 3. CONSULTAS SUNAT Y TIPO DE CAMBIO: dos columnas con historico intacto. */
 .inv-secondary-page.lookup-page {display:flex;flex-direction:column;}
 .inv-secondary-page.lookup-page .lookup-grid {
   display:grid;grid-template-columns:minmax(0,.92fr) minmax(0,1.08fr);
@@ -284,7 +253,6 @@
 .fx-history-modal .history-rates-scroll > table {min-width:380px;}
 .inv-secondary-page.lookup-page .fx-disclaimer {margin:12px 0 0;color:#9cb2c2;font-size:11px;}
 
-/* 4. CATALOGO GENERAL: pestañas, formulario fiscal, proveedores y parametros. */
 .inv-secondary-page.catalog-page {display:flex;flex-direction:column;}
 .inv-secondary-page.catalog-page .panel {display:grid;grid-template-columns:minmax(0,.98fr) minmax(0,1.25fr);gap:14px;align-items:start;min-width:0;}
 .inv-secondary-page.catalog-page .panel.supplier-panel {grid-template-columns:minmax(0,1.08fr) minmax(0,.92fr);}
@@ -351,27 +319,14 @@
 .inv-secondary-page.catalog-page .supplier-ruc {white-space:nowrap;font-variant-numeric:tabular-nums;color:#c2e0f1;}
 .inv-secondary-page.catalog-page .supplier-name {display:block;color:#eff7fc;font-size:12px;overflow-wrap:anywhere;}
 .inv-secondary-page.catalog-page .supplier-status-group {display:flex;justify-content:flex-start;}
-.inv-secondary-page.catalog-page .supplier-status-pill {
-  display:inline-flex;align-items:center;gap:6px;padding:4px 9px;border:1px solid transparent;
-  border-radius:100px;font-size:11px;font-weight:700;white-space:nowrap;
-}
-.inv-secondary-page.catalog-page .supplier-status-pill::before {content:'';display:inline-block;width:6px;height:6px;border-radius:50%;background:currentColor;}
-.inv-secondary-page.catalog-page .supplier-status--active {background:#233e2e;border-color:#4c8156;color:#b7e8be;}
-.inv-secondary-page.catalog-page .supplier-status--inactive {background:#482e35;border-color:#8c5360;color:#ffb4bb;}
 .inv-secondary-page.catalog-page .supplier-action-group {display:flex;align-items:center;justify-content:center;gap:5px;}
-.inv-secondary-page.catalog-page .supplier-empty {display:grid;place-items:center;gap:5px;padding:24px;text-align:center;color:#afc2cf;font-size:12px;}
-.inv-secondary-page.catalog-page .supplier-empty mat-icon {color:var(--core-accent);}
-.inv-secondary-page.catalog-page .supplier-list button[appUiTableAction],
-.inv-secondary-page.catalog-page .parameter-table-viewport button.ui-v3-1-parameter-action {
+.inv-secondary-page.catalog-page .supplier-list button[appUiTableAction] {
   width:28px;height:28px;min-width:28px;min-height:28px;padding:0;margin:0 2px;
   display:inline-flex;align-items:center;justify-content:center;
   border:1px solid transparent;border-radius:7px;background:transparent;color:var(--core-accent);
 }
-.inv-secondary-page.catalog-page .parameter-table-viewport button.ui-v3-1-parameter-action--danger {color:#ffabb4;}
 .inv-secondary-page.catalog-page .supplier-list button[appUiTableAction='danger'] {color:#ffabb4;}
-.inv-secondary-page.catalog-page .parameter-table-viewport button.ui-v3-1-parameter-action mat-icon {width:19px;height:19px;font-size:19px;}
-.inv-secondary-page.catalog-page .supplier-list button[appUiTableAction]:hover,
-.inv-secondary-page.catalog-page .parameter-table-viewport button.ui-v3-1-parameter-action:hover {background:var(--core-accent-soft);}
+.inv-secondary-page.catalog-page .supplier-list button[appUiTableAction]:hover {background:var(--core-accent-soft);}
 .inv-secondary-page.catalog-page .parameter-table-viewport {max-height:282px;overflow-y:auto;}
 .inv-secondary-page.catalog-page .parameter-table-viewport > table > tbody > tr {height:60px;}
 .inv-secondary-page.catalog-page .parameter-table-viewport > table > thead > tr > th {height:42px;position:sticky;top:0;z-index:2;}
@@ -415,7 +370,6 @@
   .inv-secondary-page .inv-secondary-tabs > button {flex-wrap:wrap;}
 }
 
-/* Fase 2: el historial de cotizaciones vive en MatDialog, no dentro de la tarjeta. */
 .fx-history-modal .mat-mdc-dialog-surface {
   background:#172734;color:#edf5fc;border:1px solid #556e80;border-radius:14px;
 }
@@ -438,8 +392,6 @@
 .inv-secondary-page.lookup-page .fx-advanced-trigger mat-icon {font-size:19px;width:19px;height:19px;}
 @media(max-width:650px) {.fx-history-modal .fx-history-controls {grid-template-columns:1fr;} .inv-secondary-page.lookup-page .fx-heading {flex-wrap:wrap;}}
 
-
-/* Indicador deslizante de pestañas */
 .inv-secondary-page .inv-secondary-tabs {
   --tab-index: 0;
   --tab-padding: 0px;
@@ -473,8 +425,6 @@
   pointer-events: none;
 }
 
-
-/* Contenido de las pestañas */
 .inv-secondary-page.assignment-page .assignment-tab-content {
   view-transition-name: assignment-tab;
 }
@@ -483,7 +433,6 @@
   view-transition-name: catalog-tab;
 }
 
-/* Salida: desplazamiento y desvanecimiento */
 @keyframes tab-fade-out {
   from {
     opacity: 1;
@@ -495,7 +444,6 @@
   }
 }
 
-/* Entrada: aparece suavemente */
 @keyframes tab-fade-in {
   from {
     opacity: 0;

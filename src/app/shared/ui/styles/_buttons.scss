@@ -113,48 +113,6 @@ button[appUiButton],
   }
 }
 
-.btn-icon {
-  border: 0;
-  flex: 0 0 42px;
-  width: 42px;
-  height: 42px;
-  display: grid;
-  place-items: center;
-  border-radius: 8px;
-  cursor: pointer;
-
-  &:disabled {
-    opacity: 0.55;
-    cursor: progress;
-  }
-
-  mat-icon {
-    width: 20px;
-    height: 20px;
-    font-size: 20px;
-  }
-
-  &.btn-green {
-    color: var(--inv-company-on-accent);
-    background: var(--inv-brand);
-    border: 1px solid color-mix(in srgb, var(--inv-brand) 80%, white);
-  }
-
-  &.btn-blue {
-    color: #ffffff;
-    background: #135da8;
-  }
-
-  &.btn-dark {
-    color: #e8eff7;
-    background: #364351;
-  }
-
-  &:hover:not(:disabled) {
-    filter: brightness(1.14);
-  }
-}
-
 .inv-info-button {
   display: inline-flex;
   align-items: center;

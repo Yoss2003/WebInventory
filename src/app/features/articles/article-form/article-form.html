@@ -111,7 +111,7 @@
                       <mat-option *ngFor="let marca of marcasFiltradas" [value]="marca.id">{{ marca.name }}</mat-option>
                     </mat-select>
                   </mat-form-field>
-                  <button type="button" class="btn-icon btn-green" (click)="agregarNuevaMarca()" [disabled]="!selectedCategory" title="Ver y registrar marcas de esta categoría" aria-label="Gestionar marcas">
+                  <button type="button" appUiButton="primary" class="article-icon-btn" (click)="agregarNuevaMarca()" [disabled]="!selectedCategory" title="Ver y registrar marcas de esta categoría" aria-label="Gestionar marcas">
                     <mat-icon>add</mat-icon>
                   </button>
                 </div>
@@ -133,12 +133,12 @@
                       </mat-option>
                     </mat-select>
                   </mat-form-field>
-                  <button *ngIf="canManageSuppliers" type="button" class="btn-icon btn-green"
+                  <button *ngIf="canManageSuppliers" type="button" appUiButton="primary" class="article-icon-btn"
                     (click)="manageSupplier(false)" [disabled]="masterInventoryId <= 0 || isLoadingReferences"
                     title="Registrar proveedor" aria-label="Registrar proveedor">
                     <mat-icon>add</mat-icon>
                   </button>
-                  <button *ngIf="canManageSuppliers" type="button" class="btn-icon btn-dark"
+                  <button *ngIf="canManageSuppliers" type="button" appUiButton="secondary" class="article-icon-btn"
                     (click)="manageSupplier(true)" [disabled]="masterInventoryId <= 0 || !identityForm.get('supplierId')?.value"
                     title="Editar proveedor seleccionado" aria-label="Editar proveedor seleccionado">
                     <mat-icon>edit</mat-icon>
@@ -152,13 +152,13 @@
                   <input id="article-barcode" type="text" formControlName="barcode" (focus)="resetFieldMessage('identity','barcode')" appUiControl class="custom-input" [class.invalid]="isInvalid('identity', 'barcode')" placeholder="Ingresa o escanea un código" />
                   
                   <!-- NUEVO: Botón para abrir el lector en vivo -->
-                  <button type="button" class="btn-icon btn-blue" (click)="openBarcodeScanner('barcode')" [disabled]="isScanningLive" title="Escanear con cámara" aria-label="Escanear código con cámara">
+                  <button type="button" appUiButton="secondary" class="article-icon-btn" (click)="openBarcodeScanner('barcode')" [disabled]="isScanningLive" title="Escanear con cámara" aria-label="Escanear código con cámara">
                     <mat-icon>qr_code_scanner</mat-icon>
                   </button>
                   
                   <!-- Mantenemos la opción de galería como respaldo -->
                   <input type="file" #galScanInput accept="image/*" (change)="scanBarcodeFromImage($event, 'barcode')" hidden>
-                  <button type="button" class="btn-icon btn-dark" (click)="galScanInput.click()" [disabled]="isScanningLive" title="Escanear desde imagen" aria-label="Escanear desde galería"><mat-icon>image</mat-icon></button>
+                  <button type="button" appUiButton="secondary" class="article-icon-btn" (click)="galScanInput.click()" [disabled]="isScanningLive" title="Escanear desde imagen" aria-label="Escanear desde galería"><mat-icon>image</mat-icon></button>
                 </div>                
               </div>
 
@@ -177,7 +177,7 @@
                   <input id="article-serial" type="text" formControlName="serialNumber" (focus)="resetFieldMessage('identity','serialNumber')" appUiControl class="custom-input" [class.invalid]="isInvalid('identity', 'serialNumber')" [readonly]="hasSeveralExistingSerials" placeholder="Ingresa o escanea la primera serie" />
                   
                   <!-- NUEVO: Botón para abrir el lector en vivo -->
-                  <button type="button" class="btn-icon btn-blue" (click)="openBarcodeScanner('serialNumber')" [disabled]="isScanningLive" title="Escanear número de serie" aria-label="Escanear serie">
+                  <button type="button" appUiButton="secondary" class="article-icon-btn" (click)="openBarcodeScanner('serialNumber')" [disabled]="isScanningLive" title="Escanear número de serie" aria-label="Escanear serie">
                     <mat-icon>qr_code_scanner</mat-icon>
                   </button>
                 </div>

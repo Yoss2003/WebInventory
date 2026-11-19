@@ -474,3 +474,12 @@ $bg: #11161d; $panel: #19232e; $panel-light: #202d39; $line: #334353; $text: #ed
 .camera-back-btn {
   margin-top: 15px;
 }
+
+button[appUiButton].article-icon-btn {
+  flex: 0 0 42px;
+  width: 42px;
+  height: 42px;
+  min-width: 42px;
+  min-height: 42px;
+  padding: 0;
+}
