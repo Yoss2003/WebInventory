@@ -262,23 +262,29 @@
 .inv-secondary-page.catalog-page .panel .list {min-width:0;}
 .inv-secondary-page.catalog-page .panel .fields {display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px;}
 .inv-secondary-page.catalog-page .panel .fields > label {display:flex;flex-direction:column;gap:5px;min-width:0;color:#c8d9e8;font-size:12px;}
-.inv-secondary-page.catalog-page .panel .fields :is(input,textarea) {
+.inv-secondary-page.catalog-page .panel .fields :is(input,textarea,select) {
   display:block;width:100%;padding:9px 11px;
   border:1px solid #5b7588;background:var(--secondary-input);color:#eff6fb;
   font-size:12px;
 }
 .inv-secondary-page.catalog-page .panel .fields input {height:39px;}
 .inv-secondary-page.catalog-page .panel .fields textarea {min-height:100px;resize:vertical;line-height:1.5;}
+.inv-secondary-page.catalog-page .panel .fields select {height:39px;min-height:39px;padding:7px 11px;border:1px solid #5b7588;border-radius:9px;background:var(--secondary-input);color:#eff6fb;font-size:12px;}
 .inv-secondary-page.catalog-page .panel .fields > label:last-child:has(textarea) {grid-column:1/-1;}
 .inv-secondary-page.catalog-page .panel .fields > label:last-child:has(textarea) textarea {min-height:112px;}
+.inv-secondary-page.catalog-page .panel .fields > label.parameter-description-field textarea {height:68px;min-height:68px;max-height:68px;resize:none;overflow:auto;}
 .inv-secondary-page.catalog-page .panel .actions {display:flex;flex-wrap:wrap;gap:8px;align-items:center;justify-content:flex-end;margin-top:14px;}
 .inv-secondary-page.catalog-page .panel .actions button.primary {background:var(--core-accent);border-color:var(--core-accent);color:var(--core-accent-text);}
 .inv-secondary-page.catalog-page .panel .hint {margin:12px 0 0;}
 .inv-secondary-page.catalog-page .supplier-panel .fields {grid-template-columns:repeat(3,minmax(0,1fr));}
 .inv-secondary-page.catalog-page .supplier-panel .supplier-ruc-control {
-  display:grid;grid-column: 1 / -1;max-width: 590px;grid-template-columns:minmax(0,1fr) auto;gap:10px;align-items:end;min-width:0;
+  display:grid;grid-column: 1 / -1;max-width: 700px;grid-template-columns:minmax(0,1fr) auto auto;gap:10px;align-items:end;min-width:0;
 }
 .inv-secondary-page.catalog-page .supplier-ruc-control label {display:grid;gap:5px;min-width:0;font-size:12px;}
+.inv-secondary-page.catalog-page .supplier-ruc-control .supplier-ruc-label > span {display:flex;align-items:center;gap:5px;min-height:18px;}
+.inv-secondary-page.catalog-page .supplier-ruc-control .supplier-ruc-label .inv-info-button {display:inline-grid;place-items:center;width:20px;height:20px;min-width:20px;min-height:20px;padding:0;border:0;background:transparent;color:var(--core-accent);}
+.inv-secondary-page.catalog-page .supplier-ruc-control .supplier-ruc-label .inv-info-button mat-icon {width:17px;height:17px;font-size:17px;}
+.inv-secondary-page.catalog-page .supplier-ruc-control .supplier-communication-trigger {height:39px;min-height:39px;white-space:nowrap;padding-inline:10px;}
 .inv-secondary-page.catalog-page .supplier-ruc-control input {width:100%;height:39px;padding:8px 11px;border:1px solid #5b7588;background:var(--secondary-input);color:#eff6fb;}
 .inv-secondary-page.catalog-page .supplier-ruc-control .ruc-lookup {height:39px;min-height:39px;white-space:nowrap;}
 .inv-secondary-page.catalog-page .supplier-panel .supplier-relationship-field {grid-column:1/-1;}
@@ -304,8 +310,11 @@
 .inv-secondary-page.catalog-page .supplier-heading-icon mat-icon {width:20px;height:20px;font-size:20px;}
 .inv-secondary-page.catalog-page .supplier-list > .inv-core-toolbar {padding:12px 16px;margin:0;}
 .inv-secondary-page.catalog-page .supplier-list > .supplier-table-viewport {
-  margin:0 12px 12px;max-height:420px;max-width:calc(100% - 24px);
-  overflow:auto;box-sizing:border-box;
+  margin:0 12px 12px;max-height:none;max-width:calc(100% - 24px);
+  overflow-x:auto;overflow-y:visible;box-sizing:border-box;
+}
+.inv-secondary-page.catalog-page .supplier-list > .supplier-table-viewport--scroll {
+  max-height:420px;overflow-y:auto;
 }
 .inv-secondary-page.catalog-page .supplier-table-viewport > table {min-width:0;width:100%;table-layout:fixed;}
 .inv-secondary-page.catalog-page .supplier-table > thead > tr > th:first-child {width:116px;}
@@ -334,6 +343,9 @@
 .inv-secondary-page.catalog-page .parameter-table-viewport :is(th:last-child,td:last-child) {width:100px;text-align:center;white-space:nowrap;}
 .inv-secondary-page.catalog-page .parameter-table-viewport td:nth-child(3) {max-width:420px;overflow-wrap:anywhere;}
 .inv-secondary-page.catalog-page .list > .inv-core-toolbar {margin:0 0 12px;}
+.inv-secondary-page.catalog-page .parameter-toolbar {display:flex;align-items:end;gap:12px;flex-wrap:wrap;}
+.inv-secondary-page.catalog-page .parameter-type-filter {display:grid;gap:5px;min-width:min(190px,100%);color:#c8d9e8;font-size:12px;}
+.inv-secondary-page.catalog-page .parameter-type-filter select {height:39px;min-height:39px;padding:7px 11px;border:1px solid #5b7588;border-radius:9px;background:var(--secondary-input);color:#eff6fb;font-size:12px;}
 
 @media(max-width:1250px) {
   .inv-secondary-page.lookup-page .lookup-grid {grid-template-columns:1fr;}
