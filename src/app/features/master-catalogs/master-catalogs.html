@@ -13,7 +13,7 @@
       <div class="fields">
         <!-- FASE 4.1.2: botón compacto al lado del RUC -->
         <div class="supplier-ruc-control">
-          <label class="supplier-ruc-label"><span>RUC <button type="button" class="inv-info-button" (click)="showFiscalInfo()" [disabled]="!advancedInfo" aria-label="Ver información fiscal adicional" title="Información fiscal adicional"><mat-icon aria-hidden="true">info</mat-icon></button></span><input [(ngModel)]="supplier.ruc" name="ruc" maxlength="11" inputmode="numeric" required appUiControl /></label>
+          <div class="supplier-ruc-label"><div class="supplier-ruc-heading"><label for="supplier-ruc">RUC</label><button type="button" class="inv-info-button" (click)="showFiscalInfo()" [disabled]="!hasFiscalInfo" aria-label="Ver información fiscal adicional" title="Información fiscal adicional"><mat-icon aria-hidden="true">info</mat-icon></button></div><input id="supplier-ruc" [(ngModel)]="supplier.ruc" name="ruc" maxlength="11" inputmode="numeric" required appUiControl /></div>
           <button type="button" appUiButton="secondary" class="ruc-lookup supplier-lookup-compact" (click)="lookupRuc()"
                   [disabled]="lookupRucLoading || saving || supplier.ruc.length !== 11"
                   title="Consultar datos ante SUNAT" aria-label="Consultar RUC ante SUNAT">
@@ -49,7 +49,7 @@
         </div>
       </header>
       <div class="inv-core-toolbar"><app-ui-search [(value)]="supplierSearch" placeholder="Buscar proveedor, RUC o contacto" label="Buscar proveedores" /></div>
-      <div class="supplier-table-viewport inv-core-table-wrap" [class.supplier-table-viewport--scroll]="filteredSuppliers.length > 2"><table class="supplier-table" [class.supplier-table-readonly]="!canManage">
+      <div class="supplier-table-viewport inv-core-table-wrap" [class.supplier-table-viewport--scroll]="suppliers.length > 2"><table class="supplier-table" [class.supplier-table-readonly]="!canManage">
         <thead><tr>
           <th scope="col">RUC</th>
           <th scope="col">Razón social</th>
