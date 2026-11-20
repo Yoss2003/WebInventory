@@ -1101,8 +1101,6 @@ export class ArticleFormComponent implements OnInit, OnDestroy {
     this.isOpeningCamera = false;
   }
 
-  // Native <dialog> usa la capa superior del navegador, fuera del recorte
-  // del modal de artículo. Es válido para fotos y PDF locales.
   openMediaPreview(kind: 'photo' | 'voucher'): void {
     const available = kind === 'photo' ? !!this.mainPhotoPreview : !!this.voucherPreview;
     if (!available) return;

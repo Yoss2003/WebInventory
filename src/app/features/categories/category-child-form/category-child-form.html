@@ -335,13 +335,13 @@
 </div>
 
 <!-- Sub-Modal independiente: Vista previa del nombre -->
-<dialog #previewModal class="inv-submodal-dialog name-preview-modal" [class.is-closing]="isClosingPreviewModal" (close)="onPreviewModalNativeClose()">
+<dialog #previewModal class="inv-submodal-dialog name-preview-modal" aria-labelledby="preview-modal-title" [class.is-closing]="isClosingPreviewModal" (close)="onPreviewModalNativeClose()">
   <div class="name-preview-shell" *ngIf="isPreviewModalOpen">
     <header class="name-preview-header">
       <div class="name-preview-heading">
         <div class="name-preview-icon"><mat-icon>visibility</mat-icon></div>
         <div>
-          <h3>Vista previa del nombre</h3>
+          <h3 id="preview-modal-title">Vista previa del nombre</h3>
           <p>Ingresa valores de prueba para comprobar el resultado de tu fórmula</p>
         </div>
       </div>

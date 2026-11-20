@@ -220,7 +220,7 @@
     </div>
   </div>
   <!-- Visor avanzado (Lightbox) -->
-  <dialog #mediaLightbox class="detail-media-lightbox" (close)="onLightboxNativeClose()">
+  <dialog #mediaLightbox class="detail-media-lightbox" aria-label="Visor de imagen" (close)="onLightboxNativeClose()">
     <div class="lightbox-shell" *ngIf="previewMedia">
       <div class="lightbox-header">
         <div class="lightbox-title">

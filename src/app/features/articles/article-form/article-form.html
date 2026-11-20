@@ -598,7 +598,7 @@
 </dialog>
 
 <!-- Sub-Modal de Lista de Entries y Escaneo de Series -->
-<dialog #multiScannerModal class="media-lightbox multi-scanner-modal" [class.is-closing]="isClosingMultiScanner" (close)="onMultiScannerNativeClose()">
+<dialog #multiScannerModal class="media-lightbox multi-scanner-modal" aria-label="Escáner múltiple" [class.is-closing]="isClosingMultiScanner" (close)="onMultiScannerNativeClose()">
   <div class="media-lightbox-shell" *ngIf="isMultiScanning">
     
     <div class="media-lightbox-header">
