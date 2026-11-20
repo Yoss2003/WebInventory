@@ -1,5 +1,6 @@
 import { Component, inject } from '@angular/core';
 import { FormsModule } from '@angular/forms';
+import { MatIconModule } from '@angular/material/icon';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { UiButtonDirective } from '../../shared/ui/directives/ui-button.directive';
 import { UiControlDirective } from '../../shared/ui/directives/ui-control.directive';
@@ -13,7 +14,7 @@ export interface SupplierCommunicationData {
 @Component({
   selector: 'app-supplier-communication-dialog',
   standalone: true,
-  imports: [FormsModule, UiButtonDirective, UiControlDirective],
+  imports: [FormsModule, MatIconModule, UiButtonDirective, UiControlDirective],
   templateUrl: './supplier-communication-dialog.html',
   styleUrl: './supplier-communication-dialog.scss'
 })
