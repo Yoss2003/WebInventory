@@ -110,7 +110,8 @@ export class MasterCatalogsComponent implements OnInit {
   get filteredParameters(): ParameterRecord[] {
     const q = this.parameterSearch.trim().toLocaleLowerCase('es');
     return this.parameters.filter(item => {
-      const matchesType = !this.parameterTypeFilter || item.parameterType === this.parameterTypeFilter;
+      const matchesType = !this.parameterTypeFilter ||
+        this.normalizeParameterType(item.parameterType) === this.normalizeParameterType(this.parameterTypeFilter);
       const matchesSearch = !q || [item.parameterType, item.name, item.description]
         .some(value => String(value ?? '').toLocaleLowerCase('es').includes(q));
       return matchesType && matchesSearch;
@@ -120,7 +121,7 @@ export class MasterCatalogsComponent implements OnInit {
   private readonly standardParameterTypes = ['Estado', 'Condicion', 'Ubicacion', 'MonedaBase'];
   parameterTypeFilter = '';
   get parameterTypeOptions(): string[] {
-    const values = [...this.standardParameterTypes, ...this.parameters.map(item => item.parameterType)];
+    const values = [this.parameter.parameterType, ...this.parameters.map(item => item.parameterType), ...this.standardParameterTypes];
     const unique = new Map<string, string>();
     for (const value of values) {
       const normalized = this.normalizeParameterType(value);
@@ -250,7 +251,7 @@ export class MasterCatalogsComponent implements OnInit {
           distrito: result.distrito ?? this.supplier.distrito,
           provincia: result.provincia ?? this.supplier.provincia,
           departamento: result.departamento ?? this.supplier.departamento,
-          fiscalDataJson: result.fiscalDataJson ?? this.supplier.fiscalDataJson
+          fiscalDataJson: result.fiscalDataJson ?? null
         };
         this.advancedInfo = result.advancedDataAvailable ? result : null;
         if (result.lookupFromCache)
