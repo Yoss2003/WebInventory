@@ -301,10 +301,15 @@ export class MasterCatalogsComponent implements OnInit {
     });
   }
 
+  get hasFiscalInfo(): boolean {
+    return Boolean(this.advancedInfo || this.supplier.fiscalDataJson);
+  }
+
   showFiscalInfo(): void {
-    if (!this.advancedInfo) return;
+    const info = this.advancedInfo ?? this.readStoredFiscalInfo();
+    if (!info) return;
     this.dialog.open(SupplierFiscalInfoDialogComponent, {
-      data: this.advancedInfo,
+      data: info,
       panelClass: 'inv-seven-modal',
       enterAnimationDuration: 260,
       exitAnimationDuration: 220,
@@ -314,6 +319,29 @@ export class MasterCatalogsComponent implements OnInit {
       autoFocus: false,
       restoreFocus: true
     });
+  }
+
+  private readStoredFiscalInfo(): Partial<SupplierRecord> | null {
+    try {
+      const parsed: unknown = JSON.parse(this.supplier.fiscalDataJson || '{}');
+      if (!parsed || typeof parsed !== 'object' || Array.isArray(parsed)) return null;
+      const values = parsed as Record<string, unknown>;
+      const read = (key: string): string | null => {
+        const value = values[key];
+        return value == null || value === '' ? null : String(value);
+      };
+      return {
+        tipoContribuyente: read('tipo'),
+        actividadEconomica: read('actividad_economica'),
+        ubigeo: read('ubigeo'),
+        numeroTrabajadores: read('numero_trabajadores'),
+        tipoFacturacion: read('tipo_facturacion'),
+        tipoContabilidad: read('tipo_contabilidad'),
+        comercioExterior: read('comercio_exterior')
+      };
+    } catch {
+      return null;
+    }
   }
 
   showSupplierDetail(item: SupplierRecord): void {
