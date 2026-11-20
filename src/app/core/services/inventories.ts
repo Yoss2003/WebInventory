@@ -28,10 +28,10 @@ export class InventoryService {
     return this.http.get<InventorySummary[]>(this.url);
   }
   getMasters(): Observable<unknown[]> {
-    return this.http.get<unknown[]>(`${API_URL}/masters`);
+    return this.http.get<unknown[]>(`${this.url}/masters`);
   }
   getMasterCatalogs(masterId: number): Observable<unknown> {
-    return this.http.get<unknown>(`${API_URL}/masters/${masterId}/catalogs`);
+    return this.http.get<unknown>(`${this.url}/masters/${masterId}/catalogs`);
   }
   companyInventories(): Observable<InventorySummary[]> {
     return this.http.get<InventorySummary[]>(`${this.url}/company-operational`);
