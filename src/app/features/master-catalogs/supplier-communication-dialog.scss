@@ -1,0 +1,11 @@
+:host { display:block; width:100%; color:var(--inv-text,#edf4fc); }
+.supplier-communication-dialog { display:flex; flex-direction:column; gap:0; max-height:calc(100dvh - 28px); overflow:hidden; }
+.dialog-head { display:flex; align-items:center; justify-content:space-between; gap:12px; padding:16px 20px; border-bottom:1px solid var(--inv-border,#455d6f); }
+.dialog-head h2 { margin:0; font-size:17px; }
+.dialog-head p { margin:4px 0 0; color:var(--inv-muted,#abc0d1); font-size:12px; }
+.dialog-content { display:grid; gap:13px; padding:18px 20px; overflow:auto; }
+.dialog-content label { display:grid; gap:6px; color:var(--inv-text,#edf4fc); font-size:12px; }
+.dialog-content input { width:100%; min-width:0; box-sizing:border-box; }
+.dialog-actions { display:flex; justify-content:flex-end; flex-wrap:wrap; gap:8px; padding-top:5px; }
+@media(max-width:480px) { .dialog-head,.dialog-content { padding-inline:13px; } }
+@media(prefers-reduced-motion:reduce) { .supplier-communication-dialog * { scroll-behavior:auto; } }

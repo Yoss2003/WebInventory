@@ -1,10 +1,10 @@
 <section class="catalog-page inv-core-page inv-secondary-page">
-  <header class="inv-core-header"><app-ui-page-heading icon="storefront" title="Catálogo general" subtitle="Todos los inventarios de la empresa utilizan estos registros. Las claves del sistema no se muestran aquí."></app-ui-page-heading><button type="button" (click)="refresh()" [disabled]="loading" appUiButton="secondary"><mat-icon aria-hidden="true">refresh</mat-icon>Actualizar</button></header>
+  <header class="inv-core-header"><app-ui-page-heading icon="storefront" title="Catálogo general" subtitle="Todos los inventarios de la empresa utilizan estos registros. Las claves del sistema no se muestran aquí."></app-ui-page-heading><button type="button" (click)="refresh()" [disabled]="refreshing" [attr.aria-busy]="refreshing" appUiButton="secondary"><app-loading-indicator *ngIf="refreshing; else refreshLabel" [compact]="true" message="Actualizando..." /><ng-template #refreshLabel><mat-icon aria-hidden="true">refresh</mat-icon>Actualizar</ng-template></button></header>
   <div class="tabs inv-secondary-tabs" role="tablist" aria-label="Catálogo general">
     <button type="button" role="tab" [attr.aria-selected]="tab==='suppliers'" [class.active]="tab==='suppliers'" (click)="switchCatalogTab('suppliers')">Proveedores</button>
     <button type="button" role="tab" [attr.aria-selected]="tab==='parameters'" [class.active]="tab==='parameters'" (click)="switchCatalogTab('parameters')">Parámetros generales</button>
   </div>
-  <app-loading-indicator *ngIf="loading" message="Consultando catálogos..." />
+  <app-loading-indicator *ngIf="initialLoading" message="Consultando catálogos..." />
   <!-- FASE 4.1.1: PROVEEDORES UI -->
   <div class="panel supplier-panel" *ngIf="tab==='suppliers'">
     <form (ngSubmit)="saveSupplier()">
@@ -13,44 +13,28 @@
       <div class="fields">
         <!-- FASE 4.1.2: botón compacto al lado del RUC -->
         <div class="supplier-ruc-control">
-          <label>RUC <input [(ngModel)]="supplier.ruc" name="ruc" maxlength="11" inputmode="numeric" required  appUiControl /></label>
+          <div class="supplier-ruc-label"><div class="supplier-ruc-heading"><label for="supplier-ruc">RUC</label><button type="button" class="inv-info-button" (click)="showFiscalInfo()" [disabled]="!hasFiscalInfo" aria-label="Ver información fiscal adicional" title="Información fiscal adicional"><mat-icon aria-hidden="true">info</mat-icon></button></div><input id="supplier-ruc" [(ngModel)]="supplier.ruc" name="ruc" maxlength="11" inputmode="numeric" required appUiControl /></div>
           <button type="button" appUiButton="secondary" class="ruc-lookup supplier-lookup-compact" (click)="lookupRuc()"
                   [disabled]="lookupRucLoading || saving || supplier.ruc.length !== 11"
                   title="Consultar datos ante SUNAT" aria-label="Consultar RUC ante SUNAT">
             <mat-icon aria-hidden="true">search</mat-icon>
             <span>{{lookupRucLoading ? 'Consultando...' : 'Consultar'}}</span>
           </button>
+          <button type="button" appUiButton="secondary" class="supplier-communication-trigger" (click)="openSupplierCommunication()" [disabled]="saving">
+            <mat-icon aria-hidden="true">contact_mail</mat-icon><span>Agregar comunicación</span>
+          </button>
         </div>
         <label>Razón social
           <input [(ngModel)]="supplier.businessName" name="businessName" maxlength="250" required  appUiControl />
         </label>
-        <label>Contacto <input [(ngModel)]="supplier.contactName" name="contactName"  appUiControl /></label>
-        <label>Teléfono <input [(ngModel)]="supplier.phone" name="phone"  appUiControl /></label>
-        <label>Correo <input [(ngModel)]="supplier.email" name="email" type="email"  appUiControl /></label>
         <label>Dirección <input [(ngModel)]="supplier.address" name="address"  appUiControl /></label>
         <label>Estado SUNAT <input [(ngModel)]="supplier.estado" name="estado" readonly  appUiControl /></label>
-        <label>Distrito <input [(ngModel)]="supplier.distrito" name="distrito"  appUiControl /></label>
-        <label>Provincia <input [(ngModel)]="supplier.provincia" name="provincia"  appUiControl /></label>
-        <label>Departamento <input [(ngModel)]="supplier.departamento" name="departamento"  appUiControl /></label>
         <!-- FASE 4.1.2: nota comercial opcional, guardada con el proveedor -->
         <label class="supplier-relationship-field">Relación con el proveedor
           <textarea [(ngModel)]="supplier.relationshipDescription" name="relationshipDescription"
                     maxlength="700" rows="1"
                     placeholder="Ej.: distribuidor habitual de equipos y accesorios" appUiControl></textarea>
         </label>
-      </div>
-      <div class="fiscal-summary" *ngIf="advancedInfo as info">
-        <h3>Información fiscal adicional <span>Solo consulta · no se guarda todavía</span></h3>
-        <dl>
-          <div><dt>Tipo de contribuyente</dt><dd>{{info.tipoContribuyente || '—'}}</dd></div>
-          <div><dt>Actividad económica</dt><dd>{{info.actividadEconomica || '—'}}</dd></div>
-          <div><dt>Ubigeo</dt><dd>{{info.ubigeo || '—'}}</dd></div>
-          <div><dt>Número de trabajadores</dt><dd>{{info.numeroTrabajadores || '—'}}</dd></div>
-          <div><dt>Tipo de facturación</dt><dd>{{info.tipoFacturacion || '—'}}</dd></div>
-          <div><dt>Tipo de contabilidad</dt><dd>{{info.tipoContabilidad || '—'}}</dd></div>
-          <div><dt>Comercio exterior</dt><dd>{{info.comercioExterior || '—'}}</dd></div>
-        </dl>
-        <p>El teléfono, correo y contacto no forman parte de esta respuesta; ingrésalos manualmente.</p>
       </div>
       <div class="actions"><button type="submit" appUiButton="primary" [disabled]="saving">{{saving?'Guardando...':editingSupplierId?'Guardar cambios':'Registrar proveedor'}}</button><button *ngIf="editingSupplierId" type="button" appUiButton="secondary" (click)="newSupplier()">Cancelar edición</button></div>
     </form>
@@ -65,7 +49,7 @@
         </div>
       </header>
       <div class="inv-core-toolbar"><app-ui-search [(value)]="supplierSearch" placeholder="Buscar proveedor, RUC o contacto" label="Buscar proveedores" /></div>
-      <div class="supplier-table-viewport inv-core-table-wrap"><table class="supplier-table" [class.supplier-table-readonly]="!canManage">
+      <div class="supplier-table-viewport inv-core-table-wrap" [class.supplier-table-viewport--scroll]="suppliers.length > 2"><table class="supplier-table" [class.supplier-table-readonly]="!canManage">
         <thead><tr>
           <th scope="col">RUC</th>
           <th scope="col">Razón social</th>
@@ -114,20 +98,21 @@
     </div>
   </div>
   <div class="panel" *ngIf="tab==='parameters'">
-    <form (ngSubmit)="saveParameter()"><h2>{{editingParameterId?'Editar parámetro':'Nuevo parámetro general'}}</h2><div class="fields"><label>Tipo <input [(ngModel)]="parameter.parameterType" name="parameterType" maxlength="100" required placeholder="Ej. UnidadBase"  appUiControl /></label><label>Nombre <input [(ngModel)]="parameter.name" name="parameterName" maxlength="255" required  appUiControl /></label><label>Descripción / valor <textarea [(ngModel)]="parameter.description" name="description" rows="2" appUiControl></textarea></label></div><p class="hint">Para parámetros comunes. Las contraseñas, tokens y claves de API tienen una gestión separada.</p><div class="actions"><button type="submit" appUiButton="primary" [disabled]="saving">{{saving?'Guardando...':editingParameterId?'Guardar cambios':'Registrar parámetro'}}</button><button *ngIf="editingParameterId" type="button" appUiButton="secondary" (click)="newParameter()">Cancelar edición</button></div></form>
+    <form (ngSubmit)="saveParameter()"><h2>{{editingParameterId?'Editar parámetro':'Nuevo parámetro general'}}</h2><div class="fields"><label>Tipo <select [(ngModel)]="parameter.parameterType" name="parameterType" required appUiControl><option value="" disabled>Selecciona un tipo</option><option *ngFor="let type of parameterTypeOptions" [value]="type">{{parameterTypeLabel(type)}}</option></select></label><label>Nombre <input [(ngModel)]="parameter.name" name="parameterName" maxlength="255" required appUiControl /></label><label class="parameter-description-field">Descripción / valor <textarea [(ngModel)]="parameter.description" name="description" rows="2" appUiControl></textarea></label></div><p class="hint">Para parámetros comunes. Las contraseñas, tokens y claves de API tienen una gestión separada.</p><div class="actions"><button type="submit" appUiButton="primary" [disabled]="saving">{{saving?'Guardando...':editingParameterId?'Guardar cambios':'Registrar parámetro'}}</button><button *ngIf="editingParameterId" type="button" appUiButton="secondary" (click)="newParameter()">Cancelar edición</button></div></form>
     <div class="list">
       <h2>Parámetros visibles ({{parameters.length}})</h2>
-      <div class="inv-core-toolbar">
+      <div class="inv-core-toolbar parameter-toolbar">
         <app-ui-search [(value)]="parameterSearch" placeholder="Buscar parámetro" label="Buscar parámetros" />
+        <label class="parameter-type-filter">Tipo <select [(ngModel)]="parameterTypeFilter" name="parameterTypeFilter" appUiControl><option value="">Todos los tipos</option><option *ngFor="let type of parameterTypeOptions" [value]="type">{{parameterTypeLabel(type)}}</option></select></label>
       </div>
       <div class="parameter-table-viewport inv-core-table-wrap">
         <table>
           <thead>
             <tr>
-              <th>Tipo</th>
-              <th>Nombre</th>
-              <th>Valor / descripción</th>
-              <th *ngIf="canManage">Acciones</th>
+              <th scope="col">Tipo</th>
+              <th scope="col">Nombre</th>
+              <th scope="col">Valor / descripción</th>
+              <th scope="col" *ngIf="canManage">Acciones</th>
             </tr>
           </thead>
           <tbody>
