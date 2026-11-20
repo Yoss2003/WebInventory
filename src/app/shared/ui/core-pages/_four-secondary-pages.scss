@@ -283,7 +283,6 @@
 .inv-secondary-page.catalog-page .supplier-ruc-control label {display:grid;gap:5px;min-width:0;font-size:12px;}
 .inv-secondary-page.catalog-page .supplier-ruc-control .supplier-ruc-label {display:grid;gap:5px;min-width:0;}
 .inv-secondary-page.catalog-page .supplier-ruc-control .supplier-ruc-heading {display:flex;align-items:center;gap:5px;min-height:20px;color:#c8d9e8;font-size:12px;}
-.inv-secondary-page.catalog-page .supplier-ruc-control .supplier-ruc-label > span {display:flex;align-items:center;gap:5px;min-height:18px;}
 .inv-secondary-page.catalog-page .supplier-ruc-control .supplier-ruc-label .inv-info-button {display:inline-grid;place-items:center;width:20px;height:20px;min-width:20px;min-height:20px;padding:0;border:0;background:transparent;color:var(--core-accent);}
 .inv-secondary-page.catalog-page .supplier-ruc-control .supplier-ruc-label .inv-info-button mat-icon {width:17px;height:17px;font-size:17px;}
 .inv-secondary-page.catalog-page .supplier-ruc-control .supplier-communication-trigger {height:39px;min-height:39px;white-space:nowrap;padding-inline:10px;}
@@ -293,13 +292,6 @@
 .inv-secondary-page.catalog-page .supplier-panel .fields > label.supplier-relationship-field:last-child:has(textarea) textarea {
   box-sizing:border-box;min-height:39px;height:39px;max-height:39px;resize:none;overflow:auto;
 }
-.inv-secondary-page.catalog-page .fiscal-summary {margin-top:14px;padding:14px;border:1px solid #526b7a;border-radius:10px;background:#13222e;}
-.inv-secondary-page.catalog-page .fiscal-summary h3 {margin:0 0 12px;font-size:13px;}
-.inv-secondary-page.catalog-page .fiscal-summary h3 span {display:block;margin-top:3px;color:#a9bfca;font-size:11px;font-weight:400;}
-.inv-secondary-page.catalog-page .fiscal-summary dl {display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px;margin:0;}
-.inv-secondary-page.catalog-page .fiscal-summary dl > div {min-width:0;border-bottom:1px solid #3b5261;padding-bottom:8px;}
-.inv-secondary-page.catalog-page .fiscal-summary dt {font-size:11px;color:#adbfcd;}
-.inv-secondary-page.catalog-page .fiscal-summary dd {margin:3px 0 0;overflow-wrap:anywhere;font-size:12px;color:#eff6fb;}
 .inv-secondary-page.catalog-page .supplier-list {padding:0;overflow:hidden;min-width:0;max-width:100%;}
 .inv-secondary-page.catalog-page .supplier-list-heading {padding:16px;border-bottom:1px solid #41596b;}
 .inv-secondary-page.catalog-page .supplier-heading-title {display:flex;align-items:center;gap:10px;}
@@ -316,7 +308,7 @@
   overflow-x:auto;overflow-y:visible;box-sizing:border-box;
 }
 .inv-secondary-page.catalog-page .supplier-list > .supplier-table-viewport--scroll {
-  max-height:420px;overflow-y:auto;
+  max-height:190px;overflow-y:auto;
 }
 .inv-secondary-page.catalog-page .supplier-table-viewport > table {min-width:0;width:100%;table-layout:fixed;}
 .inv-secondary-page.catalog-page .supplier-table > thead > tr > th:first-child {width:116px;}
