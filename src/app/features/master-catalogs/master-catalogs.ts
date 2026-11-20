@@ -286,6 +286,7 @@ export class MasterCatalogsComponent implements OnInit {
           email: this.supplier.email ?? ''
         },
         panelClass: 'inv-seven-modal',
+        ariaLabelledBy: 'supplier-communication-title',
         enterAnimationDuration: 260,
         exitAnimationDuration: 220,
         width: 'min(520px, calc(100vw - 24px))',
@@ -312,6 +313,7 @@ export class MasterCatalogsComponent implements OnInit {
     this.dialog.open(SupplierFiscalInfoDialogComponent, {
       data: info,
       panelClass: 'inv-seven-modal',
+      ariaLabelledBy: 'supplier-fiscal-title',
       enterAnimationDuration: 260,
       exitAnimationDuration: 220,
       width: 'min(680px, calc(100vw - 24px))',
