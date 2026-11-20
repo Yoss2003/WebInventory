@@ -4,6 +4,7 @@ import { UiButtonDirective } from '../../shared/ui/directives/ui-button.directiv
 import { UiPageHeadingComponent } from '../../shared/ui/components/ui-page-heading.component';
 import { CommonModule, isPlatformBrowser } from '@angular/common';
 import { ChangeDetectorRef, Component, OnInit, PLATFORM_ID, inject } from '@angular/core';
+import { catchError, finalize, forkJoin, of } from 'rxjs';
 import { FormsModule } from '@angular/forms';
 import { MatIconModule } from '@angular/material/icon';
 import { MatDialog } from '@angular/material/dialog';
@@ -16,6 +17,8 @@ import { UiSearchComponent } from '../../shared/ui/components/ui-search.componen
 import { UiEmptyStateComponent } from '../../shared/ui/components/ui-empty-state.component';
 import { UiStatusComponent } from '../../shared/ui/components/ui-status.component';
 import { LoadingIndicatorComponent } from '../../shared/loading/loading-indicator';
+import { SupplierCommunicationDialogComponent, SupplierCommunicationData } from './supplier-communication-dialog';
+import { SupplierFiscalInfoDialogComponent } from './supplier-fiscal-info-dialog';
 
 export interface SupplierRecord {
   id: number;
@@ -72,7 +75,9 @@ interface ParameterRecord {
     CommonModule,
     FormsModule,
     MatIconModule,
-    UiSearchComponent
+    UiSearchComponent,
+    SupplierCommunicationDialogComponent,
+    SupplierFiscalInfoDialogComponent
   ],
   templateUrl: './master-catalogs.html',
   styleUrl: './master-catalogs.scss'
@@ -104,15 +109,42 @@ export class MasterCatalogsComponent implements OnInit {
 
   get filteredParameters(): ParameterRecord[] {
     const q = this.parameterSearch.trim().toLocaleLowerCase('es');
-    return !q
-      ? this.parameters
-      : this.parameters.filter(x =>
-          [x.parameterType, x.name, x.description]
-            .some(value => String(value ?? '').toLocaleLowerCase('es').includes(q))
-        );
+    return this.parameters.filter(item => {
+      const matchesType = !this.parameterTypeFilter || item.parameterType === this.parameterTypeFilter;
+      const matchesSearch = !q || [item.parameterType, item.name, item.description]
+        .some(value => String(value ?? '').toLocaleLowerCase('es').includes(q));
+      return matchesType && matchesSearch;
+    });
   }
 
-  loading = false;
+  private readonly standardParameterTypes = ['Estado', 'Condicion', 'Ubicacion', 'MonedaBase'];
+  parameterTypeFilter = '';
+  get parameterTypeOptions(): string[] {
+    const values = [...this.standardParameterTypes, ...this.parameters.map(item => item.parameterType)];
+    const unique = new Map<string, string>();
+    for (const value of values) {
+      const normalized = this.normalizeParameterType(value);
+      if (normalized && !unique.has(normalized)) unique.set(normalized, value.trim());
+    }
+    return [...unique.values()].sort((a, b) => this.parameterTypeLabel(a).localeCompare(this.parameterTypeLabel(b), 'es'));
+  }
+
+  parameterTypeLabel(value: string): string {
+    const normalized = this.normalizeParameterType(value);
+    if (normalized === 'condicion') return 'Condición';
+    if (normalized === 'ubicacion') return 'Ubicación';
+    if (normalized === 'monedabase') return 'Moneda base';
+    return value;
+  }
+
+  private normalizeParameterType(value: string): string {
+    return String(value ?? '').trim().toLocaleLowerCase('es')
+      .normalize('NFD').replace(/[\u0300-\u036f]/g, '');
+  }
+
+  initialLoading = false;
+  refreshing = false;
+  private hasLoadedOnce = false;
   saving = false;
   lookupRucLoading = false;
   advancedInfo: Partial<SupplierRecord> | null = null;
@@ -157,26 +189,37 @@ export class MasterCatalogsComponent implements OnInit {
   }
 
   refresh(): void {
-    if (this.loading) return;
-    this.loading = true;
-    this.masterCatalogsApi.getSuppliers<SupplierRecord>().subscribe({
-      next: list => {
-        this.suppliers = list || [];
-        this.loading = false;
-        this.cdr.markForCheck();
-      },
-      error: () => {
-        this.loading = false;
-        this.toast.error('No se pudieron consultar los proveedores.');
-        this.cdr.markForCheck();
-      }
-    });
-    this.masterCatalogsApi.getParameters<ParameterRecord>().subscribe({
-      next: list => {
-        this.parameters = list || [];
-        this.cdr.markForCheck();
-      },
-      error: () => this.toast.error('No se pudieron consultar los parámetros generales.')
+    if (this.refreshing) return;
+    this.refreshing = true;
+    this.initialLoading = !this.hasLoadedOnce;
+
+    let suppliersFailed = false;
+    let parametersFailed = false;
+
+    forkJoin({
+      suppliers: this.masterCatalogsApi.getSuppliers<SupplierRecord>().pipe(
+        catchError(() => {
+          suppliersFailed = true;
+          return of(null as SupplierRecord[] | null);
+        })
+      ),
+      parameters: this.masterCatalogsApi.getParameters<ParameterRecord>().pipe(
+        catchError(() => {
+          parametersFailed = true;
+          return of(null as ParameterRecord[] | null);
+        })
+      )
+    }).pipe(finalize(() => {
+      this.refreshing = false;
+      this.initialLoading = false;
+      this.hasLoadedOnce = true;
+      this.cdr.markForCheck();
+    })).subscribe(({ suppliers, parameters }) => {
+      if (suppliers) this.suppliers = suppliers;
+      if (parameters) this.parameters = parameters;
+      if (suppliersFailed) this.toast.error('No se pudieron consultar los proveedores.');
+      if (parametersFailed) this.toast.error('No se pudieron consultar los parámetros generales.');
+      this.cdr.markForCheck();
     });
   }
 
@@ -230,6 +273,47 @@ export class MasterCatalogsComponent implements OnInit {
     this.supplier = this.emptySupplier();
     this.editingSupplierId = null;
     this.advancedInfo = null;
+  }
+
+  openSupplierCommunication(): void {
+    const ref = this.dialog.open<SupplierCommunicationDialogComponent, SupplierCommunicationData, SupplierCommunicationData>(
+      SupplierCommunicationDialogComponent,
+      {
+        data: {
+          contactName: this.supplier.contactName ?? '',
+          phone: this.supplier.phone ?? '',
+          email: this.supplier.email ?? ''
+        },
+        panelClass: 'inv-seven-modal',
+        enterAnimationDuration: 260,
+        exitAnimationDuration: 220,
+        width: 'min(520px, calc(100vw - 24px))',
+        maxWidth: 'calc(100vw - 24px)',
+        maxHeight: 'calc(100dvh - 24px)',
+        autoFocus: false,
+        restoreFocus: true
+      }
+    );
+    ref.afterClosed().subscribe(result => {
+      if (!result) return;
+      this.supplier = { ...this.supplier, ...result };
+      this.cdr.markForCheck();
+    });
+  }
+
+  showFiscalInfo(): void {
+    if (!this.advancedInfo) return;
+    this.dialog.open(SupplierFiscalInfoDialogComponent, {
+      data: this.advancedInfo,
+      panelClass: 'inv-seven-modal',
+      enterAnimationDuration: 260,
+      exitAnimationDuration: 220,
+      width: 'min(680px, calc(100vw - 24px))',
+      maxWidth: 'calc(100vw - 24px)',
+      maxHeight: 'calc(100dvh - 24px)',
+      autoFocus: false,
+      restoreFocus: true
+    });
   }
 
   showSupplierDetail(item: SupplierRecord): void {
