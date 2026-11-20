@@ -17,7 +17,8 @@ import { UiSearchComponent } from '../../shared/ui/components/ui-search.componen
 import { UiEmptyStateComponent } from '../../shared/ui/components/ui-empty-state.component';
 import { UiStatusComponent } from '../../shared/ui/components/ui-status.component';
 import { LoadingIndicatorComponent } from '../../shared/loading/loading-indicator';
-import { SupplierCommunicationDialogComponent, SupplierCommunicationData } from './supplier-communication-dialog';
+import { SupplierCommunicationDialogComponent } from './supplier-communication-dialog';
+import type { SupplierCommunicationData } from './supplier-communication-dialog';
 import { SupplierFiscalInfoDialogComponent } from './supplier-fiscal-info-dialog';
 
 export interface SupplierRecord {
