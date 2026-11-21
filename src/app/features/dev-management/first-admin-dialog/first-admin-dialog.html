@@ -22,29 +22,29 @@
     </p>
     <div class="first-admin-fields">
       <label><span>Nombre <b>*</b></span>
-        <input [(ngModel)]="firstName" (ngModelChange)="onNamesChanged()"
+        <input appUiControl [(ngModel)]="firstName" (ngModelChange)="onNamesChanged()"
           maxlength="100" autocomplete="off" placeholder="Nombre(s)" />
       </label>
       <label><span>Apellidos <b>*</b></span>
-        <input [(ngModel)]="lastName" (ngModelChange)="onNamesChanged()"
+        <input appUiControl [(ngModel)]="lastName" (ngModelChange)="onNamesChanged()"
           maxlength="100" autocomplete="off" placeholder="Apellidos" />
       </label>
 
       <label><span>Nombre de usuario <b>*</b></span>
         <div class="first-admin-readonly">
-          <input [value]="username" readonly tabindex="-1"
+          <input appUiControl [value]="username" readonly tabindex="-1"
             placeholder="Se genera con el nombre y apellidos"/>
           <mat-icon aria-hidden="true">lock_outline</mat-icon>
         </div>
       </label>
       <label><span>Correo electrónico <b>*</b></span>
-        <input [(ngModel)]="email" type="email" maxlength="254"
+        <input appUiControl [(ngModel)]="email" type="email" maxlength="254"
           autocomplete="off" placeholder="correo@ejemplo.com" />
       </label>
 
       <label class="first-admin-dni-field"><span>DNI (opcional)</span>
         <div class="first-admin-dni-control">
-          <input [(ngModel)]="dni" maxlength="8" inputmode="numeric"
+          <input appUiControl [(ngModel)]="dni" maxlength="8" inputmode="numeric"
             autocomplete="off" placeholder="8 dígitos" />
           <button type="button" appUiButton="secondary" (click)="consultDni()"
             [disabled]="saving || lookingUpDni || dni.length !== 8 || !isFirstAdmin && !dni"
