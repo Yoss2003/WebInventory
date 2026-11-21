@@ -60,14 +60,14 @@
   --mat-select-focused-arrow-color: var(--core-accent);
 }
 .inv-admin-page.master-history .filters :is(.history-mat-select,.history-date) .mat-mdc-text-field-wrapper {
-  box-sizing: border-box; height: 39px; min-height: 39px; background: var(--admin-field-bg); border-radius: 9px;
+  box-sizing: border-box; height: var(--inv-control-height); min-height: var(--inv-control-height); background: var(--inv-input-bg); border-radius: var(--inv-radius-control);
 }
 .inv-admin-page.master-history .filters :is(.history-mat-select,.history-date) .mat-mdc-form-field-infix {
-  box-sizing: border-box; min-height: 39px; height: 39px; padding: 7px 0; align-items: center;
+  box-sizing: border-box; min-height: var(--inv-control-height); height: var(--inv-control-height); padding: 10px 0 9px; align-items: center;
 }
 .inv-admin-page.master-history .filters :is(.history-mat-select,.history-date) .mat-mdc-form-field-subscript-wrapper { display: none; }
 .inv-admin-page.master-history .filters .mat-mdc-select-value,
-.inv-admin-page.master-history .filters .history-date input { color: #eff6fc; font-size: 12px; }
+.inv-admin-page.master-history .filters .history-date input { color: #eff6fc; font-size: 13px; }
 .inv-admin-page.master-history .filters .history-date .mat-datepicker-toggle { color: #bdcfdb; }
 .inv-admin-page.master-history .filters > button[type='submit'] {
   height: 39px;
@@ -286,11 +286,7 @@
 .inv-admin-page.dev-page .visual-controls input[type='file']::file-selector-button { margin-right: 8px; padding: 6px 9px; border: 1px solid #657d8c; border-radius: 7px; background: #253847; color: #eaf4fc; }
 .inv-admin-page.dev-page .check { display: inline-flex; align-items: center; gap: 8px; min-height: 39px; font-size: 12px; color: #c5d7e2; }
 .inv-admin-page.dev-page .check input { width: 18px; height: 18px; accent-color: var(--core-accent); }
-.inv-admin-page.dev-page .dev-select { width: 100%; min-width: 0; margin: 0; --mdc-outlined-text-field-outline-color: #637b8e; --mdc-outlined-text-field-focus-outline-color: var(--core-accent); }
-.inv-admin-page.dev-page .dev-select .mat-mdc-text-field-wrapper { height: 39px; min-height: 39px; background: var(--admin-field-bg); border-radius: 9px; }
-.inv-admin-page.dev-page .dev-select .mat-mdc-form-field-infix { height: 39px; min-height: 39px; padding: 7px 0; }
-.inv-admin-page.dev-page .dev-select .mat-mdc-form-field-subscript-wrapper { display: none; }
-.inv-admin-page.dev-page .dev-select .mat-mdc-select-value { color: #eaf4fa; font-size: 12px; }
+.inv-admin-page.dev-page .dev-select { width: 100%; min-width: 0; margin: 0; }
 .inv-admin-page.dev-page .renew-box {
   display: flex; align-items: center; justify-content: space-between;
   flex-wrap: wrap; gap: 15px; min-width: 0; padding: 16px;
