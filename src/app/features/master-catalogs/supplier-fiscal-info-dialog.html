@@ -1,9 +1,17 @@
 <section class="supplier-fiscal-dialog ui-v2-dialog ui-v2-dialog--simple">
   <header class="dialog-head">
     <div class="dialog-title">
-      <span class="dialog-symbol"><mat-icon aria-hidden="true">info</mat-icon></span>
-      <div>
-        <h2>Información fiscal adicional</h2>
+      <span class="dialog-symbol"><mat-icon aria-hidden="true">receipt_long</mat-icon></span>
+      <div class="dialog-title-copy">
+        <div class="dialog-title-line">
+          <h2 id="supplier-fiscal-title">Información fiscal adicional</h2>
+          <button type="button" class="fiscal-info-button"
+                  matTooltip="Información de solo consulta. Los datos pueden variar en los registros de SUNAT; los campos no disponibles se muestran con un guion."
+                  matTooltipPosition="above"
+                  aria-label="Información sobre los datos fiscales">
+            <mat-icon aria-hidden="true">info_outline</mat-icon>
+          </button>
+        </div>
         <p>Datos disponibles después de consultar el RUC</p>
       </div>
     </div>
@@ -18,7 +26,6 @@
         <dd>{{row.value}}</dd>
       </div>
     </dl>
-    <p class="dialog-note">Información de solo consulta. Los datos pueden variar en los registros de SUNAT; los campos no disponibles se muestran con un guion.</p>
   </div>
   <footer class="dialog-actions">
     <button type="button" appUiButton="secondary" (click)="close()">Cerrar</button>
