@@ -109,36 +109,7 @@ $bg: #11161d; $panel: #19232e; $panel-light: #202d39; $line: #334353; $text: #ed
 .awaiting-values { display: flex; justify-content: center; align-items: center; gap: 8px; padding: 25px; text-align: center; color: #d3dec7; font-size: 12px; mat-icon { font-size: 18px; width: 18px; height: 18px; } }
 .igv-option { display: flex; align-items: center; gap: 8px; margin: 7px 12px 0; font-size: 11px; color: #d0e0ef; cursor: pointer; input { accent-color: var(--inv-company-accent, #A2D149); width: 15px; height: 15px; } }
 .igv-details { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 6px 12px; margin: 0 11px 10px; padding-top: 8px; border-top: 1px solid #496052; >div { display: flex; flex-wrap: wrap; align-items: baseline; justify-content: space-between; gap: 5px 9px; min-width: 0; font-size: 10px; } span { color: #b8c9bc; } strong { color: #eff8e9; white-space: nowrap; } .igv-total { grid-column: 1/-1; border-top: 1px solid #496052; padding-top: 7px; } }
-.finance-info-button {
-  margin-left: auto;
-  flex: none;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  width: 24px;
-  height: 24px;
-  padding: 0;
-  border: 0;
-  border-radius: 50%;
-  background: transparent;
-  color: #8fa3b8;
-  cursor: help;
-  transition: color 150ms ease, background-color 150ms ease;
-
-  mat-icon {
-    width: 18px;
-    height: 18px;
-    font-size: 18px;
-  }
-
-  &:hover,
-  &:focus-visible {
-    color: var(--inv-company-accent, #A2D149);
-    background: color-mix(in srgb, var(--inv-company-accent, #A2D149) 14%, transparent);
-    outline: none;
-  }
-}
-
+.finance-info-button { margin-left: auto; }
 .article-parameter-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 12px; margin-top: 16px; .field-tile { min-width: 0; } .field-tile > label { display: block; margin: 0 0 6px; color: $muted; font-size: 12px; font-weight: 650; } }
 .exchange-rate-note { margin: 10px 0 0; color: #a9c3d0; font-size: 11px; line-height: 1.5; }
 .exchange-rate-warning { margin: 8px 0 0; color: #f0c47c; font-size: 11px; line-height: 1.5; }
