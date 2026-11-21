@@ -328,10 +328,10 @@
 .inv-secondary-page.catalog-page .parameter-type-field {display:flex;flex-direction:column;align-items:stretch;gap:5px;min-width:0;color:#c8d9e8;font-size:12px;}
 .inv-secondary-page.catalog-page .parameter-type-field > label {display:block;margin:0;color:#c8d9e8;font-size:12px;line-height:1.2;}
 .inv-secondary-page.catalog-page .parameter-type-field .inventory-select {display:block;width:100%;margin:0;}
-.inv-secondary-page.catalog-page .parameter-type-field .inventory-select .mat-mdc-text-field-wrapper {box-sizing:border-box;height:39px;min-height:39px;background:var(--secondary-input);border-radius:9px;}
-.inv-secondary-page.catalog-page .parameter-type-field .inventory-select .mat-mdc-form-field-infix {box-sizing:border-box;height:39px;min-height:39px;padding-block:8px;}
+.inv-secondary-page.catalog-page .parameter-type-field .inventory-select .mat-mdc-text-field-wrapper {box-sizing:border-box;height:var(--inv-control-height);min-height:var(--inv-control-height);background:var(--inv-input-bg);border-radius:var(--inv-radius-control);}
+.inv-secondary-page.catalog-page .parameter-type-field .inventory-select .mat-mdc-form-field-infix {box-sizing:border-box;height:var(--inv-control-height);min-height:var(--inv-control-height);padding-block:10px 9px;}
 .inv-secondary-page.catalog-page .parameter-type-field .inventory-select .mat-mdc-form-field-subscript-wrapper {display:none;}
-.inv-secondary-page.catalog-page .parameter-type-field .inventory-select .mat-mdc-select-value {font-size:12px;color:#eff6fb;}
+.inv-secondary-page.catalog-page .parameter-type-field .inventory-select .mat-mdc-select-value {font-size:13px;color:var(--inv-text);}
 .inv-secondary-page.catalog-page .parameter-type-locked {display:grid;align-content:start;gap:5px;min-width:0;color:#c8d9e8;font-size:12px;}
 .inv-secondary-page.catalog-page .parameter-type-locked strong {display:flex;align-items:center;box-sizing:border-box;min-height:var(--inv-control-height,39px);padding:9px 12px;border:1px solid var(--inv-border,#455d6f);border-radius:var(--inv-radius-control,9px);background:var(--inv-input-bg,#101c26);color:var(--inv-muted,#abc0d1);font-size:12px;font-weight:600;}
 .inv-secondary-page.catalog-page .parameter-type-filter {flex:0 1 240px;width:min(240px,100%);min-width:0;margin:0;}
