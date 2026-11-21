@@ -225,7 +225,7 @@
   color: var(--inv-brand);
 }
 
-.compact-input {
+.legacy-compact-input {
   width: 100%;
   height: var(--inv-control-height);
   font: inherit;
@@ -247,7 +247,7 @@
   height: 74px;
 }
 
-:host ::ng-deep .compact-select {
+:host ::ng-deep .legacy-compact-select {
   --mdc-outlined-text-field-outline-color: #697b8a;
   --mdc-outlined-text-field-focus-outline-color: var(--inv-brand);
   --mat-select-enabled-arrow-color: #dce6f0;
