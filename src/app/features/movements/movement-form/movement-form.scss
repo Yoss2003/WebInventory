@@ -70,8 +70,8 @@
     }
   }
 
-  input,
-  textarea {
+  input:not(.ui-v2-control),
+  textarea:not(.ui-v2-control) {
     width: 100%;
     padding: 11px 12px;
     min-height: var(--inv-control-height);

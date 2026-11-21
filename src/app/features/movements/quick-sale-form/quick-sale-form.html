@@ -103,7 +103,7 @@
             Artículo <span class="required">*</span>
           </label>
 
-          <mat-form-field appearance="outline">
+          <mat-form-field appearance="outline" class="inventory-select">
             <mat-select
               formControlName="articleId"
               placeholder="Seleccionar artículo"
@@ -142,7 +142,7 @@
           <label class="sale-field__label" for="pos-quantity">
             Cantidad <span class="required">*</span>
           </label>
-          <input
+          <input appUiControl
             id="pos-quantity"
             type="number"
             min="0.01"
@@ -155,7 +155,7 @@
           <label class="sale-field__label" for="pos-price">
             Precio unitario (S/) <span class="required">*</span>
           </label>
-          <input
+          <input appUiControl
             id="pos-price"
             type="number"
             min="0"
@@ -225,7 +225,7 @@
               {{ documentType }} <span class="optional">(opcional)</span>
             </label>
 
-            <input
+            <input appUiControl
               id="pos-document"
               type="text"
               inputmode="numeric"
@@ -302,7 +302,7 @@
             <span class="required">*</span>
           </label>
 
-          <input
+          <input appUiControl
             id="pos-customer"
             formControlName="customerName"
             type="text"
@@ -406,7 +406,7 @@
                 Número de cuotas <span class="required">*</span>
               </label>
 
-              <input
+              <input appUiControl
                 type="number"
                 formControlName="installmentCount"
                 min="2" max="120"
@@ -419,7 +419,7 @@
                 <span class="optional">(opcional)</span>
               </label>
 
-              <input
+              <input appUiControl
                 type="number"
                 formControlName="downPayment"
                 min="0"
@@ -509,7 +509,7 @@
             Observaciones <span class="optional">(opcional)</span>
           </label>
 
-          <textarea
+          <textarea appUiControl
             id="pos-notes"
             formControlName="notes"
             rows="2"

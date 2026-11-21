@@ -225,56 +225,6 @@
   color: var(--inv-brand);
 }
 
-.compact-input {
-  width: 100%;
-  height: var(--inv-control-height);
-  font: inherit;
-  font-size: 13px;
-  padding: 9px 12px;
-  background: var(--inv-input-bg);
-  color: #f2f6fa;
-  border: 1px solid #697b8a;
-  border-radius: 7px;
-  outline: none;
-
-  &:focus {
-    border-color: var(--inv-brand);
-  }
-}
-
-.compact-area {
-  resize: vertical;
-  height: 74px;
-}
-
-:host ::ng-deep .compact-select {
-  --mdc-outlined-text-field-outline-color: #697b8a;
-  --mdc-outlined-text-field-focus-outline-color: var(--inv-brand);
-  --mat-select-enabled-arrow-color: #dce6f0;
-  width: 100%;
-
-  .mat-mdc-text-field-wrapper {
-    height: var(--inv-control-height);
-    background: var(--inv-input-bg);
-    border-radius: 7px;
-  }
-
-  .mat-mdc-form-field-infix {
-    padding-top: 11px;
-    padding-bottom: 9px;
-    min-height: var(--inv-control-height);
-  }
-
-  .mat-mdc-form-field-subscript-wrapper {
-    display: none;
-  }
-
-  .mat-mdc-select-value {
-    color: #edf3f9;
-    font-size: 13px;
-  }
-}
-
 .info-block {
   border: 1px solid #42576b;
   min-height: 76px;

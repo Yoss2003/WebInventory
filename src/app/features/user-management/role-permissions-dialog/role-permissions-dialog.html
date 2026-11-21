@@ -18,7 +18,7 @@
     <div *ngIf="error" class="roles-modal__error" role="alert">{{error}}</div>
     <label *ngIf="!loading" class="roles-modal__selector">
       <span>Rol a configurar</span>
-      <mat-form-field appearance="outline" class="roles-modal__select">
+      <mat-form-field appearance="outline" class="inventory-select">
         <mat-select [(ngModel)]="roleId" (ngModelChange)="selectRole($event)"
           [ngModelOptions]="{standalone:true}" panelClass="inventory-select-options">
           <mat-option *ngFor="let role of roles" [value]="role.id">{{role.name}}</mat-option>

@@ -10,6 +10,7 @@ import { ExternalConsultasService } from '../../../core/services/external-consul
 import { ManagedRole, UserManagementService } from '../../../core/services/user-management';
 import { suggestedUsername } from '../../../shared/user-name';
 import { UiButtonDirective } from '../../../shared/ui/directives/ui-button.directive';
+import { UiControlDirective } from '../../../shared/ui/directives/ui-control.directive';
 import { Observable } from 'rxjs';
 
 export interface FirstAdminDialogData {
@@ -37,7 +38,8 @@ export interface FirstAdminCreated {
     MatIconModule,
     MatFormFieldModule,
     MatSelectModule,
-    UiButtonDirective
+    UiButtonDirective,
+    UiControlDirective
   ],
   templateUrl: './first-admin-dialog.html',
   styleUrl: './first-admin-dialog.scss'
