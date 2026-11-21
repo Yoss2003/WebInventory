@@ -837,37 +837,7 @@
   display: inline-flex;
   align-items: center;
   gap: 6px;
-}
-
-.info-tooltip-btn {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  width: 22px;
-  height: 22px;
-  padding: 0;
-  border: 0;
-  border-radius: 50%;
-  background: transparent;
-  color: #8fa3b8;
-  cursor: help;
-  transition: color 150ms ease, background-color 150ms ease;
-
-  mat-icon {
-    width: 16px;
-    height: 16px;
-    font-size: 16px;
-  }
-
-  &:hover,
-  &:focus-visible {
-    color: var(--inv-company-accent, #A2D149);
-    background: color-mix(in srgb, var(--inv-company-accent, #A2D149) 14%, transparent);
-    outline: none;
-  }
-}
-
-.record-dialog section:last-child,
+}.record-dialog section:last-child,
 .record-two-cols:last-child {
   margin-bottom: 0;
 }
