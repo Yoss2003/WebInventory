@@ -100,11 +100,11 @@
           <div class="serial-decommission" *ngIf="a.tracking === 1 && a.isActive">
             <div class="decommission-label-row">
               <label for="serial-decommission-reason">Motivo de baja definitiva</label>
-              <button type="button" class="info-tooltip-btn"
+              <button type="button" class="inv-info-button"
                 matTooltip="Solo se pueden retirar unidades sin ventas ni asignaciones vigentes. La serie y su historial se conservan."
                 matTooltipPosition="above"
                 aria-label="Información sobre baja definitiva">
-                <mat-icon>info_outline</mat-icon>
+                <mat-icon aria-hidden="true">info_outline</mat-icon>
               </button>
             </div>
             <textarea id="serial-decommission-reason"
@@ -121,11 +121,11 @@
           <div class="serial-batch-title">
             <div class="serial-batch-heading">
               <h3>Registrar unidades serializadas</h3>
-              <button type="button" class="info-tooltip-btn"
+              <button type="button" class="inv-info-button"
                 matTooltip="Agrega una o varias series. Los atributos del artículo se reutilizarán automáticamente."
                 matTooltipPosition="above"
                 aria-label="Información sobre registro de unidades serializadas">
-                <mat-icon>info_outline</mat-icon>
+                <mat-icon aria-hidden="true">info_outline</mat-icon>
               </button>
             </div>
             <div class="serial-batch-actions">
