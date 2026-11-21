@@ -56,7 +56,7 @@
         <small *ngIf="dniMessage" class="first-admin-dni-note">{{dniMessage}}</small>
       </label>
       <label *ngIf="!isFirstAdmin"><span>Rol del usuario <b>*</b></span>
-        <mat-form-field appearance="outline" class="first-admin-role-select">
+        <mat-form-field appearance="outline" class="inventory-select">
           <mat-select [(ngModel)]="roleId" [ngModelOptions]="{standalone:true}"
             panelClass="inventory-select-options"
             aria-label="Rol del usuario">
