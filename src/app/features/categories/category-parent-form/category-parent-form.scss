@@ -134,7 +134,7 @@
   font-weight: 400;
 }
 
-.parent-input {
+.legacy-parent-input {
   width: 100%;
   height: var(--inv-control-height);
   border: 1px solid #687587;
@@ -189,7 +189,7 @@
   border-top: 1px solid #3b4c5d;
 }
 
-:host ::ng-deep .parent-inventory-select {
+:host ::ng-deep .legacy-parent-inventory-select {
   width: 100%;
   --mdc-outlined-text-field-outline-color: #65788a;
   --mdc-outlined-text-field-focus-outline-color: var(--inv-brand);
