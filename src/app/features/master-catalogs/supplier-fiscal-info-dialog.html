@@ -4,7 +4,7 @@
       <span class="dialog-symbol"><mat-icon aria-hidden="true">info</mat-icon></span>
       <div>
         <h2>Información fiscal adicional</h2>
-        <p>Datos obtenidos en la consulta avanzada del RUC</p>
+        <p>Datos disponibles después de consultar el RUC</p>
       </div>
     </div>
     <button type="button" appUiButton="close" (click)="close()" aria-label="Cerrar información fiscal">
@@ -18,7 +18,7 @@
         <dd>{{row.value}}</dd>
       </div>
     </dl>
-    <p class="dialog-note">Información de solo consulta. Los datos pueden variar en los registros de SUNAT.</p>
+    <p class="dialog-note">Información de solo consulta. Los datos pueden variar en los registros de SUNAT; los campos no disponibles se muestran con un guion.</p>
   </div>
   <footer class="dialog-actions">
     <button type="button" appUiButton="secondary" (click)="close()">Cerrar</button>

@@ -19,6 +19,12 @@ export class SupplierFiscalInfoDialogComponent {
   private readonly dialogRef = inject<MatDialogRef<SupplierFiscalInfoDialogComponent>>(MatDialogRef);
 
   readonly rows: FiscalInfoRow[] = [
+    { label: 'Estado SUNAT', value: this.info.estado || '—' },
+    { label: 'Condición SUNAT', value: this.info.condicion || '—' },
+    { label: 'Dirección', value: this.info.address || '—' },
+    { label: 'Distrito', value: this.info.distrito || '—' },
+    { label: 'Provincia', value: this.info.provincia || '—' },
+    { label: 'Departamento', value: this.info.departamento || '—' },
     { label: 'Tipo de contribuyente', value: this.info.tipoContribuyente || '—' },
     { label: 'Actividad económica', value: this.info.actividadEconomica || '—' },
     { label: 'Ubigeo', value: this.info.ubigeo || '—' },

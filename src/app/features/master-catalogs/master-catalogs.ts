@@ -7,6 +7,8 @@ import { ChangeDetectorRef, Component, OnInit, PLATFORM_ID, inject } from '@angu
 import { catchError, finalize, forkJoin, of } from 'rxjs';
 import { FormsModule } from '@angular/forms';
 import { MatIconModule } from '@angular/material/icon';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatSelectModule } from '@angular/material/select';
 import { MatDialog } from '@angular/material/dialog';
 import { SupplierDetailDialogComponent } from './supplier-detail-dialog';
 import { ConfirmationDialogService } from '../../shared/confirm-dialog/confirmation-dialog.service';
@@ -76,6 +78,8 @@ interface ParameterRecord {
     CommonModule,
     FormsModule,
     MatIconModule,
+    MatFormFieldModule,
+    MatSelectModule,
     UiSearchComponent,
     SupplierCommunicationDialogComponent,
     SupplierFiscalInfoDialogComponent
@@ -119,29 +123,65 @@ export class MasterCatalogsComponent implements OnInit {
     });
   }
 
-  private readonly standardParameterTypes = ['Estado', 'Condicion', 'Ubicacion', 'MonedaBase'];
+  private readonly standardParameterTypes = ['Estado', 'Condicion', 'Ubicacion'];
   parameterTypeFilter = '';
+
   get parameterTypeOptions(): string[] {
-    const values = [this.parameter.parameterType, ...this.parameters.map(item => item.parameterType), ...this.standardParameterTypes];
+    const values = [...this.standardParameterTypes];
+    const currentType = String(this.parameter.parameterType ?? '').trim();
+    const currentKey = this.normalizeParameterType(currentType);
+    if (this.editingParameterId && currentType && !this.isSystemManagedType(currentType) &&
+        !values.some(value => this.normalizeParameterType(value) === currentKey)) {
+      values.push(currentType);
+    }
+    return values;
+  }
+
+  get parameterFilterOptions(): string[] {
+    const values = [...this.standardParameterTypes, ...this.parameters.map(item => item.parameterType)];
     const unique = new Map<string, string>();
     for (const value of values) {
       const normalized = this.normalizeParameterType(value);
-      if (normalized && !unique.has(normalized)) unique.set(normalized, value.trim());
+      if (normalized && !this.isSystemManagedType(value) && !unique.has(normalized)) unique.set(normalized, value.trim());
     }
     return [...unique.values()].sort((a, b) => this.parameterTypeLabel(a).localeCompare(this.parameterTypeLabel(b), 'es'));
+  }
+
+  get isSystemManagedParameter(): boolean {
+    return this.editingParameterId !== null && this.isSystemManagedType(this.parameter.parameterType);
   }
 
   parameterTypeLabel(value: string): string {
     const normalized = this.normalizeParameterType(value);
     if (normalized === 'condicion') return 'Condición';
     if (normalized === 'ubicacion') return 'Ubicación';
-    if (normalized === 'monedabase') return 'Moneda base';
     return value;
   }
 
   private normalizeParameterType(value: string): string {
     return String(value ?? '').trim().toLocaleLowerCase('es')
       .normalize('NFD').replace(/[\u0300-\u036f]/g, '');
+  }
+
+  private isSystemManagedType(value: string): boolean {
+    return this.normalizeParameterType(value).replace(/[\s_-]+/g, '') === 'monedabase';
+  }
+
+  private consultedRuc = '';
+
+  get hasCurrentRucConsultation(): boolean {
+    const currentRuc = String(this.supplier.ruc ?? '').trim();
+    return /^\d{11}$/.test(currentRuc) && this.consultedRuc === currentRuc;
+  }
+
+  get hasSupplierFormData(): boolean {
+    return Boolean(this.editingSupplierId ||
+      this.supplier.ruc.trim() || this.supplier.businessName.trim() ||
+      this.supplier.contactName?.trim() || this.supplier.phone?.trim() ||
+      this.supplier.email?.trim() || this.supplier.address?.trim() ||
+      this.supplier.relationshipDescription?.trim() || this.supplier.estado?.trim() ||
+      this.supplier.distrito?.trim() || this.supplier.provincia?.trim() ||
+      this.supplier.departamento?.trim() || this.supplier.fiscalDataJson);
   }
 
   initialLoading = false;
@@ -233,6 +273,7 @@ export class MasterCatalogsComponent implements OnInit {
     }
     if (this.lookupRucLoading || this.saving) return;
     this.lookupRucLoading = true;
+    this.consultedRuc = '';
     this.advancedInfo = null;
     this.cdr.markForCheck();
     this.masterCatalogsApi.lookupSupplierByRuc<Partial<SupplierRecord>>(ruc).subscribe({
@@ -242,16 +283,17 @@ export class MasterCatalogsComponent implements OnInit {
           this.cdr.markForCheck();
           return;
         }
+        this.consultedRuc = ruc;
         this.supplier = {
           ...this.supplier,
           businessName: result.businessName || this.supplier.businessName,
           address: result.address?.trim() || this.supplier.address,
-          statusId: result.statusId || this.supplier.statusId,
-          estado: result.estado ?? this.supplier.estado,
-          condicion: result.condicion ?? this.supplier.condicion,
-          distrito: result.distrito ?? this.supplier.distrito,
-          provincia: result.provincia ?? this.supplier.provincia,
-          departamento: result.departamento ?? this.supplier.departamento,
+          statusId: result.statusId ?? this.supplier.statusId,
+          estado: result.estado ?? null,
+          condicion: result.condicion ?? null,
+          distrito: result.distrito ?? null,
+          provincia: result.provincia ?? null,
+          departamento: result.departamento ?? null,
           fiscalDataJson: result.fiscalDataJson ?? null
         };
         this.advancedInfo = result.advancedDataAvailable ? result : null;
@@ -275,6 +317,7 @@ export class MasterCatalogsComponent implements OnInit {
     this.supplier = this.emptySupplier();
     this.editingSupplierId = null;
     this.advancedInfo = null;
+    this.consultedRuc = '';
   }
 
   openSupplierCommunication(): void {
@@ -304,13 +347,18 @@ export class MasterCatalogsComponent implements OnInit {
     });
   }
 
-  get hasFiscalInfo(): boolean {
-    return Boolean(this.advancedInfo || this.supplier.fiscalDataJson);
-  }
-
   showFiscalInfo(): void {
-    const info = this.advancedInfo ?? this.readStoredFiscalInfo();
-    if (!info) return;
+    if (!this.hasCurrentRucConsultation) return;
+    const info: Partial<SupplierRecord> = {
+      estado: this.supplier.estado,
+      condicion: this.supplier.condicion,
+      address: this.supplier.address,
+      distrito: this.supplier.distrito,
+      provincia: this.supplier.provincia,
+      departamento: this.supplier.departamento,
+      ...(this.readStoredFiscalInfo() ?? {}),
+      ...(this.advancedInfo ?? {})
+    };
     this.dialog.open(SupplierFiscalInfoDialogComponent, {
       data: info,
       panelClass: 'inv-seven-modal',
@@ -365,6 +413,7 @@ export class MasterCatalogsComponent implements OnInit {
   editSupplier(item: SupplierRecord): void {
     if (!this.canManage) return;
     this.advancedInfo = null;
+    this.consultedRuc = '';
     this.supplier = { ...item };
     this.editingSupplierId = item.id;
     this.tab = 'suppliers';

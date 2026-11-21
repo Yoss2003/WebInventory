@@ -13,14 +13,14 @@
       <div class="fields">
         <!-- FASE 4.1.2: botón compacto al lado del RUC -->
         <div class="supplier-ruc-control">
-          <div class="supplier-ruc-label"><div class="supplier-ruc-heading"><label for="supplier-ruc">RUC</label><button type="button" class="inv-info-button" (click)="showFiscalInfo()" [disabled]="!hasFiscalInfo" aria-label="Ver información fiscal adicional" title="Información fiscal adicional"><mat-icon aria-hidden="true">info</mat-icon></button></div><input id="supplier-ruc" [(ngModel)]="supplier.ruc" name="ruc" maxlength="11" inputmode="numeric" required appUiControl /></div>
+          <div class="supplier-ruc-label"><div class="supplier-ruc-heading"><label for="supplier-ruc">RUC</label><button type="button" class="inv-info-button" (click)="showFiscalInfo()" [disabled]="!hasCurrentRucConsultation" [attr.title]="hasCurrentRucConsultation ? 'Ver información fiscal adicional' : 'Primero consulta el RUC'" aria-label="Ver información fiscal adicional"><mat-icon aria-hidden="true">info</mat-icon></button></div><input id="supplier-ruc" [(ngModel)]="supplier.ruc" name="ruc" maxlength="11" inputmode="numeric" required appUiControl /></div>
           <button type="button" appUiButton="secondary" class="ruc-lookup supplier-lookup-compact" (click)="lookupRuc()"
                   [disabled]="lookupRucLoading || saving || supplier.ruc.length !== 11"
                   title="Consultar datos ante SUNAT" aria-label="Consultar RUC ante SUNAT">
             <mat-icon aria-hidden="true">search</mat-icon>
             <span>{{lookupRucLoading ? 'Consultando...' : 'Consultar'}}</span>
           </button>
-          <button type="button" appUiButton="secondary" class="supplier-communication-trigger" (click)="openSupplierCommunication()" [disabled]="saving">
+          <button type="button" appUiButton="secondary" class="supplier-communication-trigger" (click)="openSupplierCommunication()" [disabled]="saving || !hasCurrentRucConsultation" [attr.title]="hasCurrentRucConsultation ? 'Agregar datos de comunicación' : 'Primero consulta el RUC'">
             <mat-icon aria-hidden="true">contact_mail</mat-icon><span>Agregar comunicación</span>
           </button>
         </div>
@@ -36,7 +36,7 @@
                     placeholder="Ej.: distribuidor habitual de equipos y accesorios" appUiControl></textarea>
         </label>
       </div>
-      <div class="actions"><button type="submit" appUiButton="primary" [disabled]="saving">{{saving?'Guardando...':editingSupplierId?'Guardar cambios':'Registrar proveedor'}}</button><button *ngIf="editingSupplierId" type="button" appUiButton="secondary" (click)="newSupplier()">Cancelar edición</button></div>
+      <div class="actions"><button type="submit" appUiButton="primary" [disabled]="saving">{{saving?'Guardando...':editingSupplierId?'Guardar cambios':'Registrar proveedor'}}</button><button type="button" appUiButton="secondary" (click)="newSupplier()" [disabled]="saving || !hasSupplierFormData"><mat-icon aria-hidden="true">cleaning_services</mat-icon>Limpiar campos</button><button *ngIf="editingSupplierId" type="button" appUiButton="secondary" (click)="newSupplier()">Cancelar edición</button></div>
     </form>
     <div class="list supplier-list" aria-label="Proveedores de la empresa">
       <header class="supplier-list-heading">
@@ -98,12 +98,12 @@
     </div>
   </div>
   <div class="panel" *ngIf="tab==='parameters'">
-    <form (ngSubmit)="saveParameter()"><h2>{{editingParameterId?'Editar parámetro':'Nuevo parámetro general'}}</h2><div class="fields"><label>Tipo <select [(ngModel)]="parameter.parameterType" name="parameterType" required appUiControl><option value="" disabled>Selecciona un tipo</option><option *ngFor="let type of parameterTypeOptions" [value]="type">{{parameterTypeLabel(type)}}</option></select></label><label>Nombre <input [(ngModel)]="parameter.name" name="parameterName" maxlength="255" required appUiControl /></label><label class="parameter-description-field">Descripción / valor <textarea [(ngModel)]="parameter.description" name="description" rows="2" appUiControl></textarea></label></div><p class="hint">Para parámetros comunes. Las contraseñas, tokens y claves de API tienen una gestión separada.</p><div class="actions"><button type="submit" appUiButton="primary" [disabled]="saving">{{saving?'Guardando...':editingParameterId?'Guardar cambios':'Registrar parámetro'}}</button><button *ngIf="editingParameterId" type="button" appUiButton="secondary" (click)="newParameter()">Cancelar edición</button></div></form>
+    <form (ngSubmit)="saveParameter()"><h2>{{editingParameterId?'Editar parámetro':'Nuevo parámetro general'}}</h2><div class="fields"><div class="parameter-type-field" *ngIf="!isSystemManagedParameter; else systemParameterType"><mat-form-field appearance="outline" class="inventory-select"><mat-label>Tipo</mat-label><mat-select id="parameter-type" [(ngModel)]="parameter.parameterType" name="parameterType" required placeholder="Selecciona un tipo" panelClass="inventory-select-options"><mat-option *ngFor="let type of parameterTypeOptions" [value]="type">{{parameterTypeLabel(type)}}</mat-option></mat-select></mat-form-field></div><ng-template #systemParameterType><div class="parameter-type-locked"><span>Tipo</span><strong>Moneda base · configuración del sistema</strong></div></ng-template><label>Nombre <input [(ngModel)]="parameter.name" name="parameterName" maxlength="255" required appUiControl /></label><label class="parameter-description-field">Descripción / valor <textarea [(ngModel)]="parameter.description" name="description" rows="2" appUiControl></textarea></label></div><p class="hint">Para parámetros comunes. Las contraseñas, tokens y claves de API tienen una gestión separada.</p><div class="actions"><button type="submit" appUiButton="primary" [disabled]="saving">{{saving?'Guardando...':editingParameterId?'Guardar cambios':'Registrar parámetro'}}</button><button *ngIf="editingParameterId" type="button" appUiButton="secondary" (click)="newParameter()">Cancelar edición</button></div></form>
     <div class="list">
       <h2>Parámetros visibles ({{parameters.length}})</h2>
       <div class="inv-core-toolbar parameter-toolbar">
         <app-ui-search [(value)]="parameterSearch" placeholder="Buscar parámetro" label="Buscar parámetros" />
-        <label class="parameter-type-filter">Tipo <select [(ngModel)]="parameterTypeFilter" name="parameterTypeFilter" appUiControl><option value="">Todos los tipos</option><option *ngFor="let type of parameterTypeOptions" [value]="type">{{parameterTypeLabel(type)}}</option></select></label>
+        <mat-form-field appearance="outline" class="inventory-select parameter-type-filter"><mat-label>Filtrar por tipo</mat-label><mat-select id="parameter-type-filter" [(ngModel)]="parameterTypeFilter" name="parameterTypeFilter" panelClass="inventory-select-options"><mat-option value="">Todos los tipos</mat-option><mat-option *ngFor="let type of parameterFilterOptions" [value]="type">{{parameterTypeLabel(type)}}</mat-option></mat-select></mat-form-field>
       </div>
       <div class="parameter-table-viewport inv-core-table-wrap">
         <table>
