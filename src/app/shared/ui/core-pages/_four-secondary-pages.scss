@@ -150,10 +150,10 @@
 }
 .inv-secondary-page.sharing-page .sharing-select .mat-mdc-text-field-wrapper,
 .inv-secondary-page.sharing-page .sharing-select .mat-mdc-form-field-infix {
-  box-sizing:border-box;height:39px;min-height:39px;
+  box-sizing:border-box;height:var(--inv-control-height);min-height:var(--inv-control-height);
 }
-.inv-secondary-page.sharing-page .sharing-select .mat-mdc-text-field-wrapper {background:var(--secondary-input);border-radius:9px;}
-.inv-secondary-page.sharing-page .sharing-select .mat-mdc-form-field-infix {padding-block:8px;}
+.inv-secondary-page.sharing-page .sharing-select .mat-mdc-text-field-wrapper {background:var(--inv-input-bg);border-radius:var(--inv-radius-control);}
+.inv-secondary-page.sharing-page .sharing-select .mat-mdc-form-field-infix {padding-block:10px 9px;}
 .inv-secondary-page.sharing-page .sharing-select .mat-mdc-form-field-subscript-wrapper {display:none;}
 .inv-secondary-page.sharing-page .sharing-select .mat-mdc-select-value {color:#f1f6fb;}
 .inv-secondary-page.sharing-page .sharing-hint {color:#9fb5c6;font-size:11px;}
