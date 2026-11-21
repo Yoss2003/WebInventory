@@ -1,58 +1,111 @@
-.ui-v2-screen :is(input.ui-v2-control, select.ui-v2-control, textarea.ui-v2-control),
-.ui-v2-auth :is(input.ui-v2-control, textarea.ui-v2-control, select.ui-v2-control),
-.ui-v2-dialog--simple :is(input:not([type=checkbox]):not([type=file]):not([type=color]), select) {
+/* Base única para controles nativos. La directiva appUiControl añade ui-v2-control. */
+:where(input.ui-v2-control, textarea.ui-v2-control, select.ui-v2-control) {
   box-sizing: border-box;
+  display: block;
   width: 100%;
   min-width: 0;
-  border: 1px solid #61798b;
+  border: 1px solid var(--inv-border);
   border-radius: var(--inv-radius-control);
   background: var(--inv-input-bg);
   color: var(--inv-text);
   font: inherit;
   font-size: 13px;
-  padding: 9px 12px;
+  padding: 10px 12px;
+  transition: border-color 160ms ease, box-shadow 160ms ease, background-color 160ms ease;
 }
 
-.ui-v2-screen :is(input.ui-v2-control, select.ui-v2-control):not([type=checkbox]):not([type=color]):not([type=file]),
-.ui-v2-auth :is(input.ui-v2-control, select.ui-v2-control):not([type=checkbox]),
-.ui-v2-dialog--simple :is(input:not([type=checkbox]):not([type=file]):not([type=color]), select) {
-  min-height: var(--inv-control-height);
+:where(input.ui-v2-control, select.ui-v2-control):not([type=checkbox]):not([type=radio]):not([type=file]):not([type=color]) {
   height: var(--inv-control-height);
+  min-height: var(--inv-control-height);
 }
 
-.ui-v2-screen textarea.ui-v2-control {
+:where(textarea.ui-v2-control) {
   min-height: 78px;
+  line-height: 1.45;
   resize: vertical;
 }
 
-.ui-v2-screen .ui-v2-control:focus-visible,
-.ui-v2-dialog .ui-v2-control:focus-visible {
-  outline: 2px solid var(--inv-brand);
-  outline-offset: 2px;
+:where(input.ui-v2-control, textarea.ui-v2-control, select.ui-v2-control)::placeholder {
+  color: var(--inv-muted);
+  opacity: 1;
+}
+
+:where(input.ui-v2-control, textarea.ui-v2-control, select.ui-v2-control):focus-visible {
+  outline: none;
+  border-color: var(--inv-brand);
+  box-shadow: 0 0 0 2px color-mix(in srgb, var(--inv-brand) 20%, transparent);
+}
+
+:where(input.ui-v2-control, textarea.ui-v2-control, select.ui-v2-control).invalid,
+:where(input.ui-v2-control, textarea.ui-v2-control, select.ui-v2-control).ng-invalid.ng-touched {
+  border-color: var(--inv-danger);
+}
+
+:where(input.ui-v2-control, textarea.ui-v2-control, select.ui-v2-control):disabled {
+  background: color-mix(in srgb, var(--inv-input-bg) 72%, var(--inv-surface));
+  color: var(--inv-muted);
+  opacity: 1;
+  cursor: not-allowed;
+}
+
+:where(input.ui-v2-control, textarea.ui-v2-control, select.ui-v2-control)[readonly] {
+  background: color-mix(in srgb, var(--inv-input-bg) 78%, var(--inv-surface));
+  cursor: default;
 }
 
 .ui-v2-screen :is(input[type=checkbox], input[type=radio]) {
   accent-color: var(--inv-brand);
 }
 
-.ui-v2-screen .mat-mdc-form-field:has(mat-select) .mat-mdc-text-field-wrapper {
+/* ComboBox Angular Material: una única clase y dimensiones compartidas. */
+.inventory-select.mat-mdc-form-field {
+  display: block;
+  width: 100%;
+  min-width: 0;
+  margin: 0;
+  --mdc-outlined-text-field-outline-color: var(--inv-border);
+  --mdc-outlined-text-field-hover-outline-color: color-mix(in srgb, var(--inv-text) 55%, var(--inv-border));
+  --mdc-outlined-text-field-focus-outline-color: var(--inv-brand);
+  --mdc-outlined-text-field-container-shape: var(--inv-radius-control);
+  --mat-select-enabled-trigger-text-color: var(--inv-text);
+  --mat-select-placeholder-text-color: var(--inv-muted);
+  --mat-select-enabled-arrow-color: var(--inv-text);
+  --mat-select-focused-arrow-color: var(--inv-brand);
+}
+
+.inventory-select .mat-mdc-text-field-wrapper {
   box-sizing: border-box;
   height: var(--inv-control-height);
+  min-height: var(--inv-control-height);
   background: var(--inv-input-bg);
   border-radius: var(--inv-radius-control);
 }
 
-.ui-v2-screen .mat-mdc-form-field:has(mat-select) .mat-mdc-form-field-flex,
-.ui-v2-screen .mat-mdc-form-field:has(mat-select) .mat-mdc-form-field-infix {
-  min-height: var(--inv-control-height);
-  height: var(--inv-control-height);
+.inventory-select .mat-mdc-form-field-flex,
+.inventory-select .mat-mdc-form-field-infix {
   box-sizing: border-box;
-  padding-top: 9px;
+  height: var(--inv-control-height);
+  min-height: var(--inv-control-height);
+}
+
+.inventory-select .mat-mdc-form-field-infix {
+  padding-top: 10px;
   padding-bottom: 9px;
 }
 
-.ui-v2-screen .mat-mdc-form-field:has(mat-select) .mat-mdc-form-field-subscript-wrapper {
+.inventory-select .mat-mdc-select-value,
+.inventory-select .mat-mdc-select-placeholder {
+  color: var(--inv-text);
+  font-size: 13px;
+}
+
+.inventory-select .mat-mdc-form-field-subscript-wrapper {
   display: none;
+}
+
+.inventory-select.invalid :is(.mdc-notched-outline__leading, .mdc-notched-outline__notch, .mdc-notched-outline__trailing),
+.inventory-select.ng-invalid.ng-touched :is(.mdc-notched-outline__leading, .mdc-notched-outline__notch, .mdc-notched-outline__trailing) {
+  border-color: var(--inv-danger) !important;
 }
 
 .ui-v2-dialog--simple .fields,
