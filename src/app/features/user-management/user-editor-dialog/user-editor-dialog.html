@@ -84,7 +84,7 @@
       </div>
       <div class="user-dialog__grid">
         <label *ngIf="canChangeRole"><span class="user-dialog__label">Rol del usuario <span class="required">*</span></span>
-          <mat-form-field appearance="outline" class="user-dialog__select">
+          <mat-form-field appearance="outline" class="inventory-select">
             <mat-select [(ngModel)]="selectedRole" [ngModelOptions]="{standalone:true}"
               panelClass="inventory-select-options" aria-label="Rol del usuario">
               <mat-option *ngFor="let role of availableRoles" [value]="role.id">{{role.name}}</mat-option>
