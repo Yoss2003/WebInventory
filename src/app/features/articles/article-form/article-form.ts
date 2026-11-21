@@ -24,7 +24,7 @@ import { BrandDialogComponent, BrandDialogData } from '../brand-dialog/brand-dia
 import { isMeasuredUnit, isPackUnit, isUnitName, isUnitConversion, fixedUnitFactor, validPieces, validQuantity, quantityStep, quantityLabel } from '../../../shared/inventory/inventory-units';
 import {MeasurementUnitsService, MeasurementUnit} from '../../../core/services/measurement-units';
 import { AccessService } from '../../../core/services/access';
-import { ArticleSupplierDialogComponent } from '../supplier-dialog/article-supplier-dialog';
+import { ArticleSupplierDialogComponent } from '../article-supplier-dialog/article-supplier-dialog';
 import {
   ArticleReferenceDataService, ArticleSupplierReference, ArticleParameterReference,
   CurrencyReference, ExchangeRateReference

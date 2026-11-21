@@ -1,15 +1,15 @@
 import { CommonModule } from '@angular/common';
 import { ChangeDetectorRef, Component, inject } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { DevManagementService } from '../../core/services/dev-management';
+import { DevManagementService } from '../../../core/services/dev-management';
 import { MAT_DIALOG_DATA, MatDialogModule, MatDialogRef } from '@angular/material/dialog';
 import { MatIconModule } from '@angular/material/icon';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatSelectModule } from '@angular/material/select';
-import { ExternalConsultasService } from '../../core/services/external-consultas';
-import { ManagedRole, UserManagementService } from '../../core/services/user-management';
-import { suggestedUsername } from '../../shared/user-name';
-import { UiButtonDirective } from '../../shared/ui/directives/ui-button.directive';
+import { ExternalConsultasService } from '../../../core/services/external-consultas';
+import { ManagedRole, UserManagementService } from '../../../core/services/user-management';
+import { suggestedUsername } from '../../../shared/user-name';
+import { UiButtonDirective } from '../../../shared/ui/directives/ui-button.directive';
 import { Observable } from 'rxjs';
 
 export interface FirstAdminDialogData {

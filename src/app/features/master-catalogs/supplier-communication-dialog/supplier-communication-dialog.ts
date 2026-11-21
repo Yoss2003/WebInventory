@@ -2,8 +2,8 @@ import { Component, inject } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { MatIconModule } from '@angular/material/icon';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
-import { UiButtonDirective } from '../../shared/ui/directives/ui-button.directive';
-import { UiControlDirective } from '../../shared/ui/directives/ui-control.directive';
+import { UiButtonDirective } from '../../../shared/ui/directives/ui-button.directive';
+import { UiControlDirective } from '../../../shared/ui/directives/ui-control.directive';
 
 export interface SupplierCommunicationData {
   contactName: string;

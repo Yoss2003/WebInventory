@@ -3,8 +3,8 @@ import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { MatIconModule } from '@angular/material/icon';
-import { UiButtonDirective } from '../../shared/ui/directives/ui-button.directive';
-import type { SupplierRecord } from './master-catalogs';
+import { UiButtonDirective } from '../../../shared/ui/directives/ui-button.directive'; 
+import type { SupplierRecord } from '../master-catalogs';
 
 interface FiscalRow { label: string; value: string; }
 

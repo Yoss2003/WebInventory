@@ -12,12 +12,10 @@ import { UiTableActionDirective } from '../../shared/ui/directives/ui-table-acti
 import { ToastService } from '../../shared/toast/toast.service';
 import { ConfirmationDialogService } from '../../shared/confirm-dialog/confirmation-dialog.service';
 import { AccessService } from '../../core/services/access';
-import {
-  ManagedUser, ManagedRole, UserManagementService
-} from '../../core/services/user-management';
-import { UserEditorDialogComponent, UserEditorDialogData, UserEditorDialogResult } from './user-editor-dialog';
-import { RolePermissionsDialogComponent } from './role-permissions-dialog';
-import { ResendCredentialsDialogComponent } from './resend-credentials-dialog';
+import { ManagedUser, ManagedRole, UserManagementService } from '../../core/services/user-management';
+import { UserEditorDialogComponent,  UserEditorDialogData, UserEditorDialogResult } from './user-editor-dialog/user-editor-dialog';
+import { RolePermissionsDialogComponent } from './role-permissions-dialog/role-permissions-dialog';
+import { ResendCredentialsDialogComponent } from './resend-credentials-dialog/resend-credentials-dialog';
 
 @Component({
   selector: 'app-user-management',

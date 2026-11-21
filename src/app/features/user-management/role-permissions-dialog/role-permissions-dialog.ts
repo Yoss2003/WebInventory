@@ -6,11 +6,9 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatSelectModule } from '@angular/material/select';
 import { forkJoin } from 'rxjs';
-import {
-  ManagedRole, PermissionItem, UserManagementService
-} from '../../core/services/user-management';
-import { ConfirmationDialogService } from '../../shared/confirm-dialog/confirmation-dialog.service';
-import { UiButtonDirective } from '../../shared/ui/directives/ui-button.directive';
+import {  ManagedRole, PermissionItem, UserManagementService } from '../../../core/services/user-management';
+import { ConfirmationDialogService } from '../../../shared/confirm-dialog/confirmation-dialog.service';
+import { UiButtonDirective } from '../../../shared/ui/directives/ui-button.directive';
 
 @Component({
   selector: 'app-role-permissions-dialog',

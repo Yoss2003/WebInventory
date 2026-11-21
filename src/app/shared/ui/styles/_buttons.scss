@@ -114,32 +114,43 @@ button[appUiButton],
 }
 
 .inv-info-button {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  width: 24px;
-  height: 24px;
-  min-width: 24px;
-  flex: none;
-  padding: 0;
-  border: 0;
-  border-radius: 50%;
-  background: transparent;
-  color: #8fa3b8;
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  width: 26px !important;
+  height: 26px !important;
+  min-width: 26px !important;
+  min-height: 26px !important;
+  flex: 0 0 26px !important;
+  padding: 0 !important;
+  margin: 0 !important;
+  border: 0 !important;
+  border-radius: 50% !important;
+  background: transparent !important;
+  color: var(--inv-company-accent, var(--inv-brand)) !important;
+  text-transform: none !important;
+  letter-spacing: normal !important;
   cursor: help;
   transition: color 150ms ease, background-color 150ms ease;
 
   mat-icon {
-    width: 18px;
-    height: 18px;
-    font-size: 18px;
-    color: inherit;
+    display: inline-block !important;
+    width: 19px !important;
+    height: 19px !important;
+    font-size: 19px !important;
+    line-height: 19px !important;
+    text-transform: none !important;
+    letter-spacing: normal !important;
+    font-style: normal !important;
+    font-feature-settings: 'liga' !important;
+    color: inherit !important;
   }
 
-  &:hover,
+  &:hover:not(:disabled),
   &:focus-visible {
-    color: var(--inv-brand);
-    background: color-mix(in srgb, var(--inv-brand) 14%, transparent);
-    outline: none;
+    color: var(--inv-company-accent, var(--inv-brand)) !important;
+    background: color-mix(in srgb, var(--inv-brand) 16%, transparent) !important;
+    outline: 2px solid var(--inv-brand);
+    outline-offset: 2px;
   }
 }

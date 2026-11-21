@@ -3,9 +3,9 @@ import { ChangeDetectorRef, Component, inject } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { MatDialogModule, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { MatIconModule } from '@angular/material/icon';
-import { ManagedUser, UserManagementService } from '../../core/services/user-management';
-import { ToastService } from '../../shared/toast/toast.service';
-import { UiButtonDirective } from '../../shared/ui/directives/ui-button.directive';
+import { ManagedUser, UserManagementService } from '../../../core/services/user-management';
+import { ToastService } from '../../../shared/toast/toast.service';
+import { UiButtonDirective } from '../../../shared/ui/directives/ui-button.directive';
 
 @Component({
   selector: 'app-resend-credentials-dialog',

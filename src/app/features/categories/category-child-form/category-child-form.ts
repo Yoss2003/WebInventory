@@ -20,7 +20,7 @@ import { CategoryService } from '../../../core/services/category';
 import { Category } from '../../../core/models/category.model';
 import { FormControl } from '@angular/forms';
 import type { Observable } from 'rxjs';
-import { CategoryUnitPickerDialogComponent } from './category-unit-picker-dialog';
+import { CategoryUnitPickerDialogComponent } from './category-unit-picker-dialog/category-unit-picker-dialog';
 import {MeasurementUnitsService, MeasurementUnit} from '../../../core/services/measurement-units';
 import { UiControlDirective } from '../../../shared/ui/directives/ui-control.directive';
 

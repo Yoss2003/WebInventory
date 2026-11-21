@@ -7,15 +7,13 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatSelectModule } from '@angular/material/select';
 import { Observable, concat } from 'rxjs';
 
-import { ExternalConsultasService } from '../../core/services/external-consultas';
-import {
-  ManagedRole, ManagedUser, ManagedUserDetails, UserPermissionFlags, UserManagementService
-} from '../../core/services/user-management';
-import { suggestedUsername } from '../../shared/user-name';
-import { ToastService } from '../../shared/toast/toast.service';
-import { InventoryDialogMotionDirective } from '../../shared/ui/directives/inv-dialog-motion.directive';
-import { UiButtonDirective } from '../../shared/ui/directives/ui-button.directive';
-import { UiControlDirective } from '../../shared/ui/directives/ui-control.directive';
+import { ExternalConsultasService } from '../../../core/services/external-consultas';
+import { ManagedRole, ManagedUser, ManagedUserDetails, UserPermissionFlags, UserManagementService } from '../../../core/services/user-management';
+import { suggestedUsername } from '../../../shared/user-name';
+import { ToastService } from '../../../shared/toast/toast.service';
+import { InventoryDialogMotionDirective } from '../../../shared/ui/directives/inv-dialog-motion.directive';
+import { UiButtonDirective } from '../../../shared/ui/directives/ui-button.directive';
+import { UiControlDirective } from '../../../shared/ui/directives/ui-control.directive';
 
 export interface UserEditorDialogData {
   user?: ManagedUser;

@@ -11,7 +11,7 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatSelectModule } from '@angular/material/select';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { MatDialog } from '@angular/material/dialog';
-import { SupplierDetailDialogComponent } from './supplier-detail-dialog';
+import { SupplierDetailDialogComponent } from './supplier-detail-dialog/supplier-detail-dialog';
 import { ConfirmationDialogService } from '../../shared/confirm-dialog/confirmation-dialog.service';
 import { InventoryContextService } from '../../core/services/inventory-context';
 import { MasterCatalogsService } from '../../core/services/master-catalogs';
@@ -20,9 +20,9 @@ import { UiSearchComponent } from '../../shared/ui/components/ui-search.componen
 import { UiEmptyStateComponent } from '../../shared/ui/components/ui-empty-state.component';
 import { UiStatusComponent } from '../../shared/ui/components/ui-status.component';
 import { LoadingIndicatorComponent } from '../../shared/loading/loading-indicator';
-import { SupplierCommunicationDialogComponent } from './supplier-communication-dialog';
-import type { SupplierCommunicationData } from './supplier-communication-dialog';
-import { SupplierFiscalInfoDialogComponent } from './supplier-fiscal-info-dialog';
+import { SupplierCommunicationDialogComponent } from './supplier-communication-dialog/supplier-communication-dialog';
+import type { SupplierCommunicationData } from './supplier-communication-dialog/supplier-communication-dialog';
+import { SupplierFiscalInfoDialogComponent } from './supplier-fiscal-info-dialog/supplier-fiscal-info-dialog';
 
 export interface SupplierRecord {
   id: number;
@@ -82,9 +82,7 @@ interface ParameterRecord {
     MatFormFieldModule,
     MatSelectModule,
     MatTooltipModule,
-    UiSearchComponent,
-    SupplierCommunicationDialogComponent,
-    SupplierFiscalInfoDialogComponent
+    UiSearchComponent
   ],
   templateUrl: './master-catalogs.html',
   styleUrl: './master-catalogs.scss'
@@ -366,11 +364,11 @@ export class MasterCatalogsComponent implements OnInit {
     };
     this.dialog.open(SupplierFiscalInfoDialogComponent, {
       data: info,
-      panelClass: 'inv-seven-modal',
+      panelClass: ['inv-seven-modal', 'inv-modal--wide'],
       ariaLabelledBy: 'supplier-fiscal-title',
       enterAnimationDuration: 260,
       exitAnimationDuration: 220,
-      width: 'min(920px, calc(100vw - 24px))',
+      width: 'min(1060px, calc(100vw - 24px))',
       maxWidth: 'calc(100vw - 24px)',
       maxHeight: 'calc(100dvh - 24px)',
       autoFocus: false,

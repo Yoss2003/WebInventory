@@ -114,7 +114,7 @@ dialog.inv-submodal-dialog {
   to { opacity: 1; transform: translateY(0); }
 }
 
-.cdk-overlay-pane:has(.ui-v2-dialog--simple) {
+.cdk-overlay-pane:has(.ui-v2-dialog--simple):not(.inv-modal--wide) {
   max-width: min(var(--inv-modal-general-width), calc(100vw - 24px)) !important;
 }
 

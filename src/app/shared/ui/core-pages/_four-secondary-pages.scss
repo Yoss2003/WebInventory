@@ -292,7 +292,12 @@
 .inv-secondary-page.catalog-page .supplier-panel .fields > label.supplier-relationship-field:last-child:has(textarea) textarea {
   box-sizing:border-box;min-height:39px;height:39px;max-height:39px;resize:none;overflow:auto;
 }
-.inv-secondary-page.catalog-page .supplier-list {padding:0;overflow:hidden;min-width:0;max-width:100%;}
+.inv-secondary-page.catalog-page .panel > .list.supplier-list {
+  padding: 0;
+  overflow: hidden;
+  min-width: 0;
+  max-width: 100%;
+}
 .inv-secondary-page.catalog-page .supplier-list-heading {padding:16px;border-bottom:1px solid #41596b;}
 .inv-secondary-page.catalog-page .supplier-heading-title {display:flex;align-items:center;gap:10px;}
 .inv-secondary-page.catalog-page .supplier-heading-title h2 {margin:0 0 4px;font-size:15px;}

@@ -11,7 +11,7 @@ import { MatSelectModule } from '@angular/material/select';
 import { MatIconModule } from '@angular/material/icon';
 import { MatDialog } from '@angular/material/dialog';
 import { DevConfirmDialogComponent, DevConfirmDialogData } from '../../shared/confirm-dialog/dev-confirm-dialog';
-import { FirstAdminDialogComponent, FirstAdminCreated } from './first-admin-dialog';
+import { FirstAdminDialogComponent, FirstAdminCreated } from './first-admin-dialog/first-admin-dialog';
 import { Observable } from 'rxjs';
 import {
   DevManagementService, DevCompany, CompanyEdit, ResetPending, LicensePlan, RucLookupResult
