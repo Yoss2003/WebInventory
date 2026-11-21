@@ -98,7 +98,51 @@
     </div>
   </div>
   <div class="panel" *ngIf="tab==='parameters'">
-    <form (ngSubmit)="saveParameter()"><h2>{{editingParameterId?'Editar parámetro':'Nuevo parámetro general'}}</h2><div class="fields"><div class="parameter-type-field" *ngIf="!isSystemManagedParameter; else systemParameterType"><mat-form-field appearance="outline" class="inventory-select"><mat-label>Tipo</mat-label><mat-select id="parameter-type" [(ngModel)]="parameter.parameterType" name="parameterType" required placeholder="Selecciona un tipo" panelClass="inventory-select-options"><mat-option *ngFor="let type of parameterTypeOptions" [value]="type">{{parameterTypeLabel(type)}}</mat-option></mat-select></mat-form-field></div><ng-template #systemParameterType><div class="parameter-type-locked"><span>Tipo</span><strong>Moneda base · configuración del sistema</strong></div></ng-template><label>Nombre <input [(ngModel)]="parameter.name" name="parameterName" maxlength="255" required appUiControl /></label><label class="parameter-description-field">Descripción / valor <textarea [(ngModel)]="parameter.description" name="description" rows="2" appUiControl></textarea></label></div><p class="hint">Para parámetros comunes. Las contraseñas, tokens y claves de API tienen una gestión separada.</p><div class="actions"><button type="submit" appUiButton="primary" [disabled]="saving">{{saving?'Guardando...':editingParameterId?'Guardar cambios':'Registrar parámetro'}}</button><button *ngIf="editingParameterId" type="button" appUiButton="secondary" (click)="newParameter()">Cancelar edición</button></div></form>
+    <form (ngSubmit)="saveParameter()">
+      <div class="parameter-form-heading">
+        <h2>{{editingParameterId ? 'Editar parámetro' : 'Nuevo parámetro general'}}</h2>
+        <button type="button" class="parameter-info-button"
+                matTooltip="Para parámetros comunes. Las contraseñas, tokens y claves de API tienen una gestión separada."
+                matTooltipPosition="above"
+                aria-label="Información sobre los parámetros generales">
+          <mat-icon aria-hidden="true">info_outline</mat-icon>
+        </button>
+      </div>
+      <div class="fields">
+        <div class="parameter-type-field" *ngIf="!isSystemManagedParameter; else systemParameterType">
+          <label for="parameter-type">Tipo</label>
+          <mat-form-field appearance="outline" class="inventory-select">
+            <mat-select id="parameter-type" aria-label="Tipo" [(ngModel)]="parameter.parameterType"
+                        name="parameterType" required placeholder="Selecciona un tipo"
+                        panelClass="inventory-select-options">
+              <mat-option *ngFor="let type of parameterTypeOptions" [value]="type">
+                {{parameterTypeLabel(type)}}
+              </mat-option>
+            </mat-select>
+          </mat-form-field>
+        </div>
+        <ng-template #systemParameterType>
+          <div class="parameter-type-locked">
+            <span>Tipo</span>
+            <strong>Moneda base · configuración del sistema</strong>
+          </div>
+        </ng-template>
+        <label>Nombre
+          <input [(ngModel)]="parameter.name" name="parameterName" maxlength="255" required appUiControl />
+        </label>
+        <label class="parameter-description-field">Descripción / valor
+          <textarea [(ngModel)]="parameter.description" name="description" rows="2" appUiControl></textarea>
+        </label>
+      </div>
+      <div class="actions">
+        <button type="submit" appUiButton="primary" [disabled]="saving">
+          {{saving ? 'Guardando...' : editingParameterId ? 'Guardar cambios' : 'Registrar parámetro'}}
+        </button>
+        <button *ngIf="editingParameterId" type="button" appUiButton="secondary" (click)="newParameter()">
+          Cancelar edición
+        </button>
+      </div>
+    </form>
     <div class="list">
       <h2>Parámetros visibles ({{parameters.length}})</h2>
       <div class="inv-core-toolbar parameter-toolbar">

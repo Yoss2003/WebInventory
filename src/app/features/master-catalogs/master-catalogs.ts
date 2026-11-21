@@ -9,6 +9,7 @@ import { FormsModule } from '@angular/forms';
 import { MatIconModule } from '@angular/material/icon';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatSelectModule } from '@angular/material/select';
+import { MatTooltipModule } from '@angular/material/tooltip';
 import { MatDialog } from '@angular/material/dialog';
 import { SupplierDetailDialogComponent } from './supplier-detail-dialog';
 import { ConfirmationDialogService } from '../../shared/confirm-dialog/confirmation-dialog.service';
@@ -80,6 +81,7 @@ interface ParameterRecord {
     MatIconModule,
     MatFormFieldModule,
     MatSelectModule,
+    MatTooltipModule,
     UiSearchComponent,
     SupplierCommunicationDialogComponent,
     SupplierFiscalInfoDialogComponent
@@ -123,7 +125,7 @@ export class MasterCatalogsComponent implements OnInit {
     });
   }
 
-  private readonly standardParameterTypes = ['Estado', 'Condicion', 'Ubicacion'];
+  private readonly standardParameterTypes = ['Estado', 'Condicion', 'Area', 'TipoContrato', 'PosicionTrabajo', 'Ubicacion'];
   parameterTypeFilter = '';
 
   get parameterTypeOptions(): string[] {
@@ -154,6 +156,9 @@ export class MasterCatalogsComponent implements OnInit {
   parameterTypeLabel(value: string): string {
     const normalized = this.normalizeParameterType(value);
     if (normalized === 'condicion') return 'Condición';
+    if (normalized === 'area') return 'Área';
+    if (normalized === 'tipocontrato') return 'Tipo de contrato';
+    if (normalized === 'posiciontrabajo') return 'Posición de trabajo';
     if (normalized === 'ubicacion') return 'Ubicación';
     return value;
   }
@@ -365,7 +370,7 @@ export class MasterCatalogsComponent implements OnInit {
       ariaLabelledBy: 'supplier-fiscal-title',
       enterAnimationDuration: 260,
       exitAnimationDuration: 220,
-      width: 'min(680px, calc(100vw - 24px))',
+      width: 'min(920px, calc(100vw - 24px))',
       maxWidth: 'calc(100vw - 24px)',
       maxHeight: 'calc(100dvh - 24px)',
       autoFocus: false,

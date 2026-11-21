@@ -338,8 +338,19 @@
 .inv-secondary-page.catalog-page .parameter-table-viewport td:nth-child(3) {max-width:420px;overflow-wrap:anywhere;}
 .inv-secondary-page.catalog-page .list > .inv-core-toolbar {margin:0 0 12px;}
 .inv-secondary-page.catalog-page .parameter-toolbar {display:flex;align-items:end;gap:12px;flex-wrap:wrap;}
-.inv-secondary-page.catalog-page .parameter-type-field {display:grid;gap:5px;min-width:0;color:#c8d9e8;font-size:12px;}
-.inv-secondary-page.catalog-page .parameter-type-field .inventory-select {width:100%;margin:0;}
+.inv-secondary-page.catalog-page .parameter-form-heading {display:flex;align-items:center;gap:7px;min-width:0;margin:0 0 12px;}
+.inv-secondary-page.catalog-page .parameter-form-heading h2 {margin:0;}
+.inv-secondary-page.catalog-page .parameter-info-button {display:inline-grid;place-items:center;width:24px;height:24px;min-width:24px;min-height:24px;padding:0;border:0;border-radius:7px;background:transparent;color:var(--core-accent);cursor:help;}
+.inv-secondary-page.catalog-page .parameter-info-button:hover {background:var(--core-accent-soft);}
+.inv-secondary-page.catalog-page .parameter-info-button:focus-visible {outline:2px solid var(--core-accent);outline-offset:2px;}
+.inv-secondary-page.catalog-page .parameter-info-button mat-icon {width:19px;height:19px;font-size:19px;}
+.inv-secondary-page.catalog-page .parameter-type-field {display:flex;flex-direction:column;align-items:stretch;gap:5px;min-width:0;color:#c8d9e8;font-size:12px;}
+.inv-secondary-page.catalog-page .parameter-type-field > label {display:block;margin:0;color:#c8d9e8;font-size:12px;line-height:1.2;}
+.inv-secondary-page.catalog-page .parameter-type-field .inventory-select {display:block;width:100%;margin:0;}
+.inv-secondary-page.catalog-page .parameter-type-field .inventory-select .mat-mdc-text-field-wrapper {box-sizing:border-box;height:39px;min-height:39px;background:var(--secondary-input);border-radius:9px;}
+.inv-secondary-page.catalog-page .parameter-type-field .inventory-select .mat-mdc-form-field-infix {box-sizing:border-box;height:39px;min-height:39px;padding-block:8px;}
+.inv-secondary-page.catalog-page .parameter-type-field .inventory-select .mat-mdc-form-field-subscript-wrapper {display:none;}
+.inv-secondary-page.catalog-page .parameter-type-field .inventory-select .mat-mdc-select-value {font-size:12px;color:#eff6fb;}
 .inv-secondary-page.catalog-page .parameter-type-locked {display:grid;align-content:start;gap:5px;min-width:0;color:#c8d9e8;font-size:12px;}
 .inv-secondary-page.catalog-page .parameter-type-locked strong {display:flex;align-items:center;box-sizing:border-box;min-height:var(--inv-control-height,39px);padding:9px 12px;border:1px solid var(--inv-border,#455d6f);border-radius:var(--inv-radius-control,9px);background:var(--inv-input-bg,#101c26);color:var(--inv-muted,#abc0d1);font-size:12px;font-weight:600;}
 .inv-secondary-page.catalog-page .parameter-type-filter {flex:0 1 240px;width:min(240px,100%);min-width:0;margin:0;}
