@@ -16,11 +16,12 @@ import { AssignmentService, AssignmentRecipient } from '../../../core/services/a
 import { Article } from '../../../core/models/article.model';
 import { SerialUnitsService, SerialUnit } from '../../../core/services/serial-units';
 import { UiButtonDirective } from '../../../shared/ui/directives/ui-button.directive';
+import { UiControlDirective } from '../../../shared/ui/directives/ui-control.directive';
 
 @Component({
   selector: 'app-traspaso-form',
   standalone: true,
-  imports: [InventoryDialogMotionDirective, CleanArticleNamePipe, CommonModule, ReactiveFormsModule, MatDialogModule, MatInputModule, MatSelectModule, MatIconModule, MatFormFieldModule, UiButtonDirective],
+  imports: [InventoryDialogMotionDirective, CleanArticleNamePipe, CommonModule, ReactiveFormsModule, MatDialogModule, MatInputModule, MatSelectModule, MatIconModule, MatFormFieldModule, UiButtonDirective, UiControlDirective],
   templateUrl: './traspaso-form.html',
   styleUrl: './traspaso-form.scss'
 })
