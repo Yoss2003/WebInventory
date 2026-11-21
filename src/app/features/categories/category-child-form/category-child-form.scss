@@ -318,34 +318,6 @@ $muted: #a8b5c2;
   }
 }
 
-.legacy-category-input {
-  width: 100%;
-  min-width: 0;
-  height: 43px;
-  border: 1px solid #687587;
-  border-radius: 7px;
-  padding: 10px 13px;
-  background: #111922;
-  color: #f3f6fa;
-  outline: 0;
-  font: inherit;
-  font-size: 13px;
-  transition: border-color 0.16s, box-shadow 0.16s;
-
-  &::placeholder {
-    color: #8592a4;
-  }
-
-  &:focus-visible {
-    border-color: $accent;
-    box-shadow: 0 0 0 2px color-mix(in srgb, $accent 22%, transparent);
-  }
-
-  &.invalid {
-    border-color: #fb8585;
-  }
-}
-
 .category-textarea {
   display: block;
   min-height: 76px;
@@ -365,29 +337,6 @@ $muted: #a8b5c2;
 }
 
 /* Selector Material (idéntico a article-form) */
-:host ::ng-deep .legacy-inventory-select.mat-mdc-form-field {
-  display: block;
-  width: 100%;
-  min-width: 0;
-  --mdc-outlined-text-field-outline-color: #6c8094;
-  --mdc-outlined-text-field-hover-outline-color: #b4c5d6;
-  --mdc-outlined-text-field-focus-outline-color: var(--inv-company-accent, #a2d149);
-  --mdc-outlined-text-field-container-shape: 7px;
-  --mat-select-enabled-arrow-color: #e7eef7;
-  --mat-select-focused-arrow-color: var(--inv-company-accent, #a2d149);
-}
-
-:host ::ng-deep .legacy-inventory-select .mat-mdc-text-field-wrapper {
-  height: 43px;
-  background: #111922;
-}
-
-:host ::ng-deep .legacy-inventory-select .mat-mdc-form-field-infix {
-  min-height: 43px;
-  padding-top: 10px;
-  padding-bottom: 9px;
-}
-
 :host ::ng-deep .inventory-select .mat-mdc-select-value {
   font-size: 13px;
   color: #f4f8fd;
