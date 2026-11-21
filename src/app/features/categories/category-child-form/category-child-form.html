@@ -129,9 +129,9 @@
               <div class="toggle-tile rules-returnable" *ngIf="isTrackingConfigurable">
                 <div class="rules-toggle-copy">
                   <span class="rules-inline-title"><strong>Artículo retornable</strong>
-                    <button type="button" class="category-info-button" aria-label="Información sobre artículos retornables"
+                    <button type="button" class="inv-info-button" aria-label="Información sobre artículos retornables"
                       matTooltip="Permite devolver el artículo después de una salida." matTooltipPosition="above">
-                      <mat-icon>info_outline</mat-icon>
+                      <mat-icon aria-hidden="true">info_outline</mat-icon>
                     </button>
                   </span>
                 </div>
@@ -142,9 +142,9 @@
                 *ngIf="isTrackingConfigurable" [class.enabled]="rulesForm.get('isNamingLibre')?.value">
                 <div class="rules-toggle-copy">
                   <span class="rules-inline-title"><strong>Fórmula personalizada</strong>
-                    <button type="button" class="category-info-button" aria-label="Información sobre la fórmula personalizada"
+                    <button type="button" class="inv-info-button" aria-label="Información sobre la fórmula personalizada"
                       matTooltip="Activa la combinación de atributos para generar nombres. La fórmula se configura en el siguiente paso." matTooltipPosition="above">
-                      <mat-icon>info_outline</mat-icon>
+                      <mat-icon aria-hidden="true">info_outline</mat-icon>
                     </button>
                   </span>
                 </div>
@@ -155,9 +155,9 @@
                 *ngIf="isTrackingConfigurable && !rulesForm.get('isNamingLibre')?.value">
                 <span class="rules-inline-title">
                   <label for="child-category-naming">Método de nombramiento</label>
-                  <button type="button" class="category-info-button" aria-label="Información sobre el método de nombramiento"
+                  <button type="button" class="inv-info-button" aria-label="Información sobre el método de nombramiento"
                     matTooltip="Define cómo se genera el nombre de los artículos registrados en esta categoría." matTooltipPosition="above">
-                    <mat-icon>info_outline</mat-icon>
+                    <mat-icon aria-hidden="true">info_outline</mat-icon>
                   </button>
                 </span>
                 <mat-form-field appearance="outline" class="inventory-select">
@@ -168,9 +168,9 @@
               </div>
               <div class="rules-bulk-note" *ngIf="!isTrackingConfigurable">
                 <span>A granel: nombre libre</span>
-                <button type="button" class="category-info-button" aria-label="Información de artículos a granel"
+                <button type="button" class="inv-info-button" aria-label="Información de artículos a granel"
                   matTooltip="Los artículos a granel utilizan un nombre libre y no requieren un constructor de fórmulas."
-                  matTooltipPosition="above"><mat-icon>info_outline</mat-icon></button>
+                  matTooltipPosition="above"><mat-icon aria-hidden="true">info_outline</mat-icon></button>
               </div>
             </div>
           </section>
@@ -188,10 +188,10 @@
                 <div>
                   <div class="attributes-title-row">
                     <h3>Atributos dinámicos</h3>
-                    <button type="button" class="category-info-button attributes-info-button"
+                    <button type="button" class="inv-info-button"
                       aria-label="Información sobre los atributos dinámicos"
                       matTooltip="La casilla habilita la etiqueta en la fórmula. Usa _ en nombres compuestos. No se permiten atributos repetidos."
-                      matTooltipPosition="above"><mat-icon>info_outline</mat-icon></button>
+                      matTooltipPosition="above"><mat-icon aria-hidden="true">info_outline</mat-icon></button>
                   </div>
                   <p>Hasta seis características de la categoría</p>
                 </div>
@@ -226,10 +226,10 @@
                   <h3>Constructor de nombre</h3>
                   <p>Combina atributos para generar el nombre final</p>
                 </div>
-                <button type="button" class="formula-info-button"
+                <button type="button" class="inv-info-button formula-info-button"
                   matTooltip="Separadores permitidos: + - | / , . ; : . Usa hasta un espacio junto a cada separador; nunca dentro de [etiqueta]. Usa _ para nombres compuestos."
                   matTooltipPosition="above" aria-label="Información sobre los símbolos permitidos en la fórmula">
-                  <mat-icon>info_outline</mat-icon>
+                  <mat-icon aria-hidden="true">info_outline</mat-icon>
                 </button>
               </div>
               <div class="category-field formula-input">

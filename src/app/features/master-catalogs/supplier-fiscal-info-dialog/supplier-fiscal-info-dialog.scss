@@ -43,39 +43,7 @@
   flex-wrap: wrap;
   gap: 7px;
   min-width: 0;
-}
-
-.fiscal-info-button {
-  display: inline-grid;
-  place-items: center;
-  width: 25px;
-  height: 25px;
-  min-width: 25px;
-  min-height: 25px;
-  padding: 0;
-  border: 0;
-  border-radius: 7px;
-  background: transparent;
-  color: var(--inv-company-accent, var(--inv-brand, #a2d149));
-  cursor: help;
-}
-
-.fiscal-info-button:hover {
-  background: var(--inv-brand-soft, #263947);
-}
-
-.fiscal-info-button:focus-visible {
-  outline: 2px solid var(--inv-company-accent, var(--inv-brand, #a2d149));
-  outline-offset: 2px;
-}
-
-.fiscal-info-button mat-icon {
-  width: 19px;
-  height: 19px;
-  font-size: 19px;
-}
-
-.dialog-symbol {
+}.dialog-symbol {
   display: grid;
   place-items: center;
   width: 38px;

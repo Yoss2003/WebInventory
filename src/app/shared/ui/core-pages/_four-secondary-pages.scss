@@ -114,24 +114,6 @@
 .inv-secondary-page.assignment-page .assignment-state strong {color:#e9f4fc;}
 
 .inv-secondary-page.sharing-page {display:flex;flex-direction:column;}
-.inv-secondary-page.sharing-page .sharing-info {align-self:flex-start;position:relative;min-width:0;max-width:100%;z-index:3;}
-.inv-secondary-page.sharing-page .sharing-info-trigger {
-  display:inline-grid;place-items:center;width:32px;height:32px;min-width:32px;min-height:32px;padding:0;
-  border:1px solid var(--core-accent);border-radius:9px;background:#1a2835;color:var(--core-accent);
-  cursor:help;
-}
-.inv-secondary-page.sharing-page .sharing-info-trigger mat-icon {font-size:20px;width:20px;height:20px;}
-.inv-secondary-page.sharing-page .sharing-info-content {
-  position:absolute;top:calc(100% + 7px);left:auto;right:0;z-index:12;
-  width:max-content;max-width:min(390px,calc(100vw - 48px));
-  padding:12px 13px;line-height:1.45;
-  border:1px solid #6a8293;border-radius:10px;background:#233340;
-  box-shadow:0 12px 28px rgba(0,0,0,.4);color:#e7f2fa;font-size:12px;
-  visibility:hidden;opacity:0;pointer-events:none;
-}
-.inv-secondary-page.sharing-page .sharing-info:hover .sharing-info-content,
-.inv-secondary-page.sharing-page .sharing-info:focus-within .sharing-info-content {visibility:visible;opacity:1;}
-.inv-secondary-page.sharing-page .sharing-info .sr-only {position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0;}
 .inv-secondary-page.sharing-page .sharing-workspace {
   display:grid;grid-template-columns:minmax(0,1.5fr) minmax(0,1fr);
   gap:14px;min-width:0;align-items:start;
@@ -283,8 +265,6 @@
 .inv-secondary-page.catalog-page .supplier-ruc-control label {display:grid;gap:5px;min-width:0;font-size:12px;}
 .inv-secondary-page.catalog-page .supplier-ruc-control .supplier-ruc-label {display:grid;gap:5px;min-width:0;}
 .inv-secondary-page.catalog-page .supplier-ruc-control .supplier-ruc-heading {display:flex;align-items:center;gap:5px;min-height:20px;color:#c8d9e8;font-size:12px;}
-.inv-secondary-page.catalog-page .supplier-ruc-control .supplier-ruc-label .inv-info-button {display:inline-grid;place-items:center;width:20px;height:20px;min-width:20px;min-height:20px;padding:0;border:0;background:transparent;color:var(--core-accent);}
-.inv-secondary-page.catalog-page .supplier-ruc-control .supplier-ruc-label .inv-info-button mat-icon {width:17px;height:17px;font-size:17px;}
 .inv-secondary-page.catalog-page .supplier-ruc-control .supplier-communication-trigger {height:39px;min-height:39px;white-space:nowrap;padding-inline:10px;}
 .inv-secondary-page.catalog-page .supplier-ruc-control input {width:100%;height:39px;padding:8px 11px;border:1px solid #5b7588;background:var(--secondary-input);color:#eff6fb;}
 .inv-secondary-page.catalog-page .supplier-ruc-control .ruc-lookup {height:39px;min-height:39px;white-space:nowrap;}
@@ -345,10 +325,6 @@
 .inv-secondary-page.catalog-page .parameter-toolbar {display:flex;align-items:end;gap:12px;flex-wrap:wrap;}
 .inv-secondary-page.catalog-page .parameter-form-heading {display:flex;align-items:center;gap:7px;min-width:0;margin:0 0 12px;}
 .inv-secondary-page.catalog-page .parameter-form-heading h2 {margin:0;}
-.inv-secondary-page.catalog-page .parameter-info-button {display:inline-grid;place-items:center;width:24px;height:24px;min-width:24px;min-height:24px;padding:0;border:0;border-radius:7px;background:transparent;color:var(--core-accent);cursor:help;}
-.inv-secondary-page.catalog-page .parameter-info-button:hover {background:var(--core-accent-soft);}
-.inv-secondary-page.catalog-page .parameter-info-button:focus-visible {outline:2px solid var(--core-accent);outline-offset:2px;}
-.inv-secondary-page.catalog-page .parameter-info-button mat-icon {width:19px;height:19px;font-size:19px;}
 .inv-secondary-page.catalog-page .parameter-type-field {display:flex;flex-direction:column;align-items:stretch;gap:5px;min-width:0;color:#c8d9e8;font-size:12px;}
 .inv-secondary-page.catalog-page .parameter-type-field > label {display:block;margin:0;color:#c8d9e8;font-size:12px;line-height:1.2;}
 .inv-secondary-page.catalog-page .parameter-type-field .inventory-select {display:block;width:100%;margin:0;}
