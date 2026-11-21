@@ -130,7 +130,7 @@ export class MasterCatalogsComponent implements OnInit {
     const values = [...this.standardParameterTypes];
     const currentType = String(this.parameter.parameterType ?? '').trim();
     const currentKey = this.normalizeParameterType(currentType);
-    if (this.editingParameterId && currentType && currentKey !== 'monedabase' &&
+    if (this.editingParameterId && currentType && !this.isSystemManagedType(currentType) &&
         !values.some(value => this.normalizeParameterType(value) === currentKey)) {
       values.push(currentType);
     }
@@ -142,13 +142,13 @@ export class MasterCatalogsComponent implements OnInit {
     const unique = new Map<string, string>();
     for (const value of values) {
       const normalized = this.normalizeParameterType(value);
-      if (normalized && normalized !== 'monedabase' && !unique.has(normalized)) unique.set(normalized, value.trim());
+      if (normalized && !this.isSystemManagedType(value) && !unique.has(normalized)) unique.set(normalized, value.trim());
     }
     return [...unique.values()].sort((a, b) => this.parameterTypeLabel(a).localeCompare(this.parameterTypeLabel(b), 'es'));
   }
 
   get isSystemManagedParameter(): boolean {
-    return this.editingParameterId !== null && this.normalizeParameterType(this.parameter.parameterType) === 'monedabase';
+    return this.editingParameterId !== null && this.isSystemManagedType(this.parameter.parameterType);
   }
 
   parameterTypeLabel(value: string): string {
@@ -161,6 +161,10 @@ export class MasterCatalogsComponent implements OnInit {
   private normalizeParameterType(value: string): string {
     return String(value ?? '').trim().toLocaleLowerCase('es')
       .normalize('NFD').replace(/[\u0300-\u036f]/g, '');
+  }
+
+  private isSystemManagedType(value: string): boolean {
+    return this.normalizeParameterType(value).replace(/[\s_-]+/g, '') === 'monedabase';
   }
 
   private consultedRuc = '';
@@ -341,10 +345,6 @@ export class MasterCatalogsComponent implements OnInit {
       this.supplier = { ...this.supplier, ...result };
       this.cdr.markForCheck();
     });
-  }
-
-  get hasFiscalInfo(): boolean {
-    return Boolean(this.advancedInfo || this.supplier.fiscalDataJson);
   }
 
   showFiscalInfo(): void {
