@@ -33,6 +33,7 @@ import {
   InventoryDialogMotionDirective
 } from '../../../shared/ui/directives/inv-dialog-motion.directive';
 import { UiButtonDirective } from '../../../shared/ui/directives/ui-button.directive';
+import { UiControlDirective } from '../../../shared/ui/directives/ui-control.directive';
 
 @Component({
   selector: 'app-quick-sale-form',
@@ -45,7 +46,8 @@ import { UiButtonDirective } from '../../../shared/ui/directives/ui-button.direc
     MatInputModule,
     MatFormFieldModule,
     InventoryDialogMotionDirective,
-    UiButtonDirective
+    UiButtonDirective,
+    UiControlDirective
   ],
   templateUrl: './quick-sale-form.html',
   styleUrl: './quick-sale-form.scss'

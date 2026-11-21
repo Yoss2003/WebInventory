@@ -59,19 +59,6 @@
 .inline-refresh:hover:not(:disabled) { color: var(--company-accent); }
 .inline-refresh:disabled { opacity: .5; cursor: not-allowed; }
 
-:host ::ng-deep .company-select { width: 100%; }
-:host ::ng-deep .company-select .mat-mdc-text-field-wrapper {
-  background: #0e171f; border-radius: 9px; min-height: 46px; height: 46px;
-}
-:host ::ng-deep .company-select .mat-mdc-form-field-flex { height: 46px; align-items: center; }
-:host ::ng-deep .company-select .mat-mdc-form-field-infix { min-height: 46px; padding: 11px 0; }
-:host ::ng-deep .company-select .mat-mdc-select-value,
-:host ::ng-deep .company-select .mat-mdc-select-placeholder { color: #e7eef4; font-size: 13px; }
-:host ::ng-deep .company-select .mat-mdc-select-arrow { color: #bdcfda; }
-:host ::ng-deep .company-select .mdc-notched-outline__leading,
-:host ::ng-deep .company-select .mdc-notched-outline__notch,
-:host ::ng-deep .company-select .mdc-notched-outline__trailing { border-color: #637587 !important; }
-:host ::ng-deep .company-select .mat-mdc-form-field-subscript-wrapper { display: none; }
 
 .selected-company {
   display: flex; align-items: center; gap: 11px;

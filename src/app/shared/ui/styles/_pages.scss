@@ -167,24 +167,24 @@ app-main-layout {
 
     .mat-mdc-text-field-wrapper {
       box-sizing: border-box;
-      min-height: 39px;
-      height: 39px;
-      background: #1d2e3b;
-      border-radius: 9px;
+      min-height: var(--inv-control-height);
+      height: var(--inv-control-height);
+      background: var(--inv-input-bg);
+      border-radius: var(--inv-radius-control);
     }
 
     .mat-mdc-form-field-infix {
       box-sizing: border-box;
-      min-height: 39px;
-      height: 39px;
-      padding-top: 8px;
-      padding-bottom: 8px;
+      min-height: var(--inv-control-height);
+      height: var(--inv-control-height);
+      padding-top: 10px;
+      padding-bottom: 9px;
       display: flex;
       align-items: center;
     }
 
     .mat-mdc-select {
-      font-size: 12px;
+      font-size: 13px;
     }
 
     .mat-mdc-select-value {

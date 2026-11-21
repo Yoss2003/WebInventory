@@ -74,8 +74,8 @@
   grid-column: 1/-1
 }
 
-.sale-grid input,
-.sale-grid textarea {
+.sale-grid input:not(.ui-v2-control),
+.sale-grid textarea:not(.ui-v2-control) {
   height: 43px;
   background: #0f1821;
   border: 1px solid #5f7588;
@@ -85,7 +85,7 @@
   font: inherit
 }
 
-.sale-grid textarea {
+.sale-grid textarea:not(.ui-v2-control) {
   height: 72px
 }
 
@@ -93,25 +93,6 @@
   width: 100%;
   --mdc-outlined-text-field-outline-color: #60798c;
   --mdc-outlined-text-field-focus-outline-color: var(--inv-company-accent, #A2D149)
-}
-
-:host ::ng-deep .sale-grid mat-form-field .mat-mdc-text-field-wrapper {
-  height: 43px;
-  background: #101923
-}
-
-:host ::ng-deep .sale-grid mat-form-field .mat-mdc-form-field-infix {
-  min-height: 43px;
-  padding-top: 11px;
-  padding-bottom: 9px
-}
-
-:host ::ng-deep .sale-grid mat-form-field .mat-mdc-form-field-subscript-wrapper {
-  display: none
-}
-
-:host ::ng-deep .sale-grid .mat-mdc-select-value {
-  color: #e9f1f8
 }
 
 .sale-total {

@@ -8,7 +8,7 @@ import { CompanyPublic } from '../../core/models/company-public.model';
   selector: 'app-company-selector', standalone: true,
   imports: [CommonModule, MatFormFieldModule, MatSelectModule],
   template: `
-    <mat-form-field appearance="outline" class="company-select" subscriptSizing="dynamic">
+    <mat-form-field appearance="outline" class="inventory-select" subscriptSizing="dynamic">
       <mat-select [id]="selectId()" aria-label="Empresa / sucursal" [value]="value()"
         [disabled]="disabled() || loading() || !companies().length"
         [placeholder]="loading() ? 'Consultando empresas…' : 'Seleccionar empresa'"
@@ -18,7 +18,7 @@ import { CompanyPublic } from '../../core/models/company-public.model';
         </mat-option>
       </mat-select>
     </mat-form-field>`,
-  styles: [':host { display: block; min-width: 0; } .company-select { width: 100%; }']
+  styles: [':host { display: block; min-width: 0; } .inventory-select { width: 100%; }']
 })
 export class CompanySelectorComponent {
   readonly companies = input<CompanyPublic[]>([]);
