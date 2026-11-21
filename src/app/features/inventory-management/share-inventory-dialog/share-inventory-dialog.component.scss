@@ -75,33 +75,7 @@
   align-items: center;
   gap: 8px;
   flex: none;
-}
-
-.share-header-info-btn {
-  display: grid;
-  place-items: center;
-  width: 32px;
-  height: 32px;
-  border: 1px solid #4a6376;
-  border-radius: 8px;
-  background: #1b2834;
-  color: #a4bed2;
-  cursor: pointer;
-  transition: all .15s ease;
-
-  mat-icon {
-    font-size: 18px;
-    width: 18px;
-    height: 18px;
-  }
-
-  &:hover {
-    color: var(--inv-company-accent, #a2d149);
-    border-color: var(--inv-company-accent, #a2d149);
-  }
-}
-
-/* Barra de navegación de pasos compacta en una sola línea */
+}/* Barra de navegación de pasos compacta en una sola línea */
 .share-subnav {
   display: flex;
   align-items: center;
