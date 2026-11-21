@@ -49,10 +49,10 @@
   border:1px solid #617b8e;background:#2a4556;color:#eff7fb;border-radius:9px;
   padding:7px 10px;cursor:pointer;font:inherit;font-weight:700}
 .user-dialog__lookup mat-icon{font-size:18px;width:18px;height:18px}
-.user-dialog__select{width:100%;min-width:0;margin:0;
+.legacy-user-dialog__select{width:100%;min-width:0;margin:0;
   --mdc-outlined-text-field-outline-color:#647f8d;
   --mdc-outlined-text-field-focus-outline-color:var(--inv-company-accent,#a2d149)}
-:host ::ng-deep .user-dialog__select .mat-mdc-text-field-wrapper{height:42px;min-height:42px;background:#10212d;border-radius:9px}
+:host ::ng-deep .legacy-user-dialog__select .mat-mdc-text-field-wrapper{height:42px;min-height:42px;background:#10212d;border-radius:9px}
 :host ::ng-deep .user-dialog__select .mat-mdc-form-field-infix{height:42px;min-height:42px;padding:8px 0}
 :host ::ng-deep .user-dialog__select .mat-mdc-select-value{color:#edf5fb;font-size:12px}
 :host ::ng-deep .user-dialog__select .mat-mdc-form-field-subscript-wrapper{display:none}
