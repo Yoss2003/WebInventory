@@ -17,7 +17,7 @@
       <div class="card-heading"><mat-icon>inventory_2</mat-icon><div><strong>Datos de la operación</strong><small>Elige un artículo y la cantidad que saldrá del almacén.</small></div></div>
       <div class="form-grid">
         <div class="field"><label>Operación <span class="required">*</span></label>
-          <mat-form-field appearance="outline" class="compact-select"><mat-select formControlName="operationType" panelClass="inventory-select-options"><mat-option value="Asignar">Asignación de custodia</mat-option><mat-option value="Baja">Baja / consumo definitivo</mat-option></mat-select></mat-form-field>
+          <mat-form-field appearance="outline" class="inventory-select"><mat-select formControlName="operationType" panelClass="inventory-select-options"><mat-option value="Asignar">Asignación de custodia</mat-option><mat-option value="Baja">Baja / consumo definitivo</mat-option></mat-select></mat-form-field>
         </div>
         <div class="field"><label>Tipo de retiro <span class="required">*</span></label>
           <mat-form-field appearance="outline" class="compact-select"><mat-select formControlName="retireType" panelClass="inventory-select-options"><mat-option value="Parcial">Cantidad parcial</mat-option><mat-option value="Total">Todo el stock disponible</mat-option></mat-select></mat-form-field>
@@ -26,7 +26,7 @@
           <mat-form-field appearance="outline" class="compact-select"><mat-select formControlName="articleId" placeholder="Seleccionar artículo" panelClass="inventory-select-options"><mat-option *ngFor="let a of articles" [value]="a.id">{{a.name | cleanArticleName}} — {{a.stock}} {{a.measurementUnit}}</mat-option></mat-select></mat-form-field>
         </div>
         <div class="field"><label>Cantidad a retirar <span class="required">*</span></label>
-          <input type="number" min="0.01" step="0.01" class="compact-input" formControlName="amount" />
+          <input type="number" min="0.01" step="0.01" appUiControl formControlName="amount" />
           <small *ngIf="selectedArticle">Disponible: {{selectedArticleStock|number:'1.0-2'}} {{selectedArticle.measurementUnit}}</small>
           <span class="transfer-error" *ngIf="selectedArticle && quantityExceedsStock">Cantidad superior al stock disponible.</span>
         </div>
