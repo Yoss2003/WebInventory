@@ -9,6 +9,7 @@ import { ChangeDetectorRef, Component, OnInit, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { MatIconModule } from '@angular/material/icon';
+import { MatTooltipModule } from '@angular/material/tooltip';
 import { ToastService } from '../../shared/toast/toast.service';
 import { ConfirmationDialogService } from '../../shared/confirm-dialog/confirmation-dialog.service';
 import { MatFormFieldModule } from '@angular/material/form-field';
@@ -19,7 +20,7 @@ import { LoadingIndicatorComponent } from '../../shared/loading/loading-indicato
 
 @Component({
   selector: 'app-inventory-sharing', standalone: true,
-  imports: [MatDialogModule, UiControlDirective, UiPageHeadingComponent, UiButtonDirective, UiTableActionDirective, CommonModule, FormsModule, MatIconModule, MatFormFieldModule, MatSelectModule, LoadingIndicatorComponent],
+  imports: [MatDialogModule, UiControlDirective, UiPageHeadingComponent, UiButtonDirective, UiTableActionDirective, CommonModule, FormsModule, MatIconModule, MatTooltipModule, MatFormFieldModule, MatSelectModule, LoadingIndicatorComponent],
   templateUrl: './inventory-sharing.html', styleUrl: './inventory-sharing.scss'
 })
 export class InventorySharingComponent implements OnInit {
