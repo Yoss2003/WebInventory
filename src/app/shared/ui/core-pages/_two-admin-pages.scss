@@ -53,20 +53,18 @@
   font-size: 12px;
   line-height: 1.3;
 }
-.inv-admin-page.master-history .filters :is(.history-mat-select,.history-date) {
+.inv-admin-page.master-history .filters .history-date {
   width: 100%; min-width: 0; margin: 0;
   --mdc-outlined-text-field-outline-color: #61798a;
   --mdc-outlined-text-field-focus-outline-color: var(--core-accent);
-  --mat-select-focused-arrow-color: var(--core-accent);
 }
-.inv-admin-page.master-history .filters :is(.history-mat-select,.history-date) .mat-mdc-text-field-wrapper {
+.inv-admin-page.master-history .filters .history-date .mat-mdc-text-field-wrapper {
   box-sizing: border-box; height: var(--inv-control-height); min-height: var(--inv-control-height); background: var(--inv-input-bg); border-radius: var(--inv-radius-control);
 }
-.inv-admin-page.master-history .filters :is(.history-mat-select,.history-date) .mat-mdc-form-field-infix {
+.inv-admin-page.master-history .filters .history-date .mat-mdc-form-field-infix {
   box-sizing: border-box; min-height: var(--inv-control-height); height: var(--inv-control-height); padding: 10px 0 9px; align-items: center;
 }
-.inv-admin-page.master-history .filters :is(.history-mat-select,.history-date) .mat-mdc-form-field-subscript-wrapper { display: none; }
-.inv-admin-page.master-history .filters .mat-mdc-select-value,
+.inv-admin-page.master-history .filters .history-date .mat-mdc-form-field-subscript-wrapper { display: none; }
 .inv-admin-page.master-history .filters .history-date input { color: #eff6fc; font-size: 13px; }
 .inv-admin-page.master-history .filters .history-date .mat-datepicker-toggle { color: #bdcfdb; }
 .inv-admin-page.master-history .filters > button[type='submit'] {
