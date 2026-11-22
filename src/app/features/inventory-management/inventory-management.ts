@@ -51,7 +51,8 @@ export class InventoryManagementComponent implements OnInit {
   canCreate = false;
   canManageAccess = false;
   selfId = 0;
-  loading = true; // Inicia inmediatamente en true para evitar pantalla vacía
+  loading = true; // Carga inicial
+  refreshing = false;
   error = '';
   rows: InventorySummary[] = [];
   users: ManagedUser[] = [];
@@ -66,7 +67,9 @@ export class InventoryManagementComponent implements OnInit {
   }
 
   load(): void {
-    this.loading = true;
+    const hasLoadedData = this.rows.length > 0;
+    this.loading = !hasLoadedData;
+    this.refreshing = hasLoadedData;
     this.error = '';
 
     this.access.me().subscribe({
@@ -86,10 +89,12 @@ export class InventoryManagementComponent implements OnInit {
             this.users = (users || []).filter(u => u.isActive && u.statusId === 1);
             this.employees = (employees || []).filter(e => e.isActive);
             this.loading = false;
+            this.refreshing = false;
             this.cdr.markForCheck();
           },
           error: e => {
             this.loading = false;
+            this.refreshing = false;
             this.error = String(e?.error?.error || 'No se pudieron cargar inventarios y usuarios.');
             this.cdr.markForCheck();
           }
@@ -97,6 +102,7 @@ export class InventoryManagementComponent implements OnInit {
       },
       error: () => {
         this.loading = false;
+        this.refreshing = false;
         this.error = 'No se pudieron verificar los permisos de la sesión.';
         this.cdr.markForCheck();
       }
