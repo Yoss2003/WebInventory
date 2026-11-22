@@ -1,0 +1,36 @@
+<div class="inventory-shares-dialog ui-v2-dialog" role="document">
+  <header class="shares-dialog-header">
+    <div class="shares-dialog-title">
+      <span class="shares-dialog-icon"><mat-icon aria-hidden="true">groups</mat-icon></span>
+      <div><h2 mat-dialog-title>Personas con acceso</h2><p>{{ data.inventory.alias || data.inventory.inventoryName }}</p></div>
+    </div>
+  </header>
+  <mat-dialog-content class="shares-dialog-content">
+    <div *ngIf="loading" class="shares-dialog-loading"><app-loading-indicator message="Consultando accesos..." /></div>
+    <p *ngIf="error && !loading" class="shares-dialog-error" role="alert"><mat-icon aria-hidden="true">error_outline</mat-icon>{{ error }}</p>
+    <div class="inv-core-table-wrap shares-dialog-table" *ngIf="!loading && !error && shares.length">
+      <table>
+        <thead><tr><th scope="col">Colaborador</th><th scope="col">Nivel de acceso</th><th scope="col">Fecha de autorización</th><th scope="col" class="inv-core-action-cell">Acciones</th></tr></thead>
+        <tbody>
+          <tr *ngFor="let share of shares">
+            <td><strong>{{ share.username || getOwnerName(share.userId) }}</strong><small *ngIf="getEmail(share.userId)">{{ getEmail(share.userId) }}</small></td>
+            <td><span class="share-access-chip" [class.editor]="share.accessLevel === 2"><mat-icon aria-hidden="true">{{ share.accessLevel === 2 ? 'edit' : 'visibility' }}</mat-icon>{{ share.accessLevel === 2 ? 'Editor' : 'Lector' }}</span></td>
+            <td>{{ share.sharedDate | date:'dd/MM/yyyy' }}</td>
+            <td class="inv-core-action-cell">
+              <button type="button" appUiTableAction="normal" (click)="changeAccess(share)" [disabled]="updatingShareId === share.id" [title]="share.accessLevel === 2 ? 'Cambiar a Solo Lector' : 'Cambiar a Editor'"><mat-icon aria-hidden="true">swap_horiz</mat-icon></button>
+              <button type="button" appUiTableAction="danger" (click)="revoke(share)" title="Revocar acceso"><mat-icon aria-hidden="true">person_remove</mat-icon></button>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="shares-dialog-empty" *ngIf="!loading && !error && !shares.length"><mat-icon aria-hidden="true">group_off</mat-icon><strong>No hay personas con acceso</strong><p>Este inventario todavía no tiene colaboradores autorizados.</p></div>
+  </mat-dialog-content>
+  <mat-dialog-actions class="shares-dialog-footer">
+    <button type="button" appUiButton="secondary" (click)="dialogRef.close()">Cerrar</button>
+    <button type="button" appUiButton="secondary" (click)="load()" [disabled]="loading || refreshing">
+      <app-loading-indicator *ngIf="refreshing; else refreshSharesLabel" [compact]="true" message="Cargando" />
+      <ng-template #refreshSharesLabel><mat-icon aria-hidden="true">refresh</mat-icon> Actualizar</ng-template>
+    </button>
+  </mat-dialog-actions>
+</div>
