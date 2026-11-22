@@ -7,15 +7,14 @@
       <div class="create-dialog-heading__text">
         <h2 mat-dialog-title>Crear inventario</h2>
         <p>Registra un nuevo almacén operativo para artículos y existencias</p>
+        <button type="button" class="inv-info-button"
+          matTooltip="Los inventarios operativos gestionan existencias directas. El inventario maestro se mantiene separado para catálogos globales."
+          matTooltipPosition="above" aria-label="Información sobre inventarios operativos">
+          <mat-icon aria-hidden="true">info_outline</mat-icon>
+        </button>
       </div>
     </div>
     <div class="create-dialog-actions">
-      <button type="button" class="inv-info-button"
-        matTooltip="Los inventarios operativos gestionan existencias directas. El inventario maestro se mantiene separado para catálogos globales."
-        matTooltipPosition="above"
-        aria-label="Información sobre inventarios operativos">
-        <mat-icon aria-hidden="true">info_outline</mat-icon>
-      </button>
       <button type="button" appUiButton="close" (click)="close()"
         [disabled]="saving" title="Cerrar" aria-label="Cerrar modal">
         <mat-icon aria-hidden="true">close</mat-icon>
@@ -67,9 +66,6 @@
   </mat-dialog-content>
 
   <mat-dialog-actions class="create-dialog-footer">
-    <button type="button" appUiButton="secondary" (click)="close()" [disabled]="saving">
-      Cancelar
-    </button>
     <button type="submit" form="create-inventory-form" appUiButton="primary" [disabled]="!isValid || saving">
       <app-loading-indicator *ngIf="saving; else createLabel" [compact]="true" message="Creando..." />
       <ng-template #createLabel>
