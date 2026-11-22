@@ -153,7 +153,6 @@ export class InventoryManagementComponent implements OnInit {
       panelClass: ['inv-v2-dialog-panel', 'inv-seven-modal'],
       data: {
         inventory: row,
-        allInventories: this.operational,
         isManager: this.isManager,
         users: this.users,
         employees: this.employees,
@@ -161,8 +160,8 @@ export class InventoryManagementComponent implements OnInit {
       }
     });
 
-    dialogRef.afterClosed().subscribe(() => {
-      this.load();
+    dialogRef.afterClosed().subscribe(result => {
+      if (result) this.load();
     });
   }
 
