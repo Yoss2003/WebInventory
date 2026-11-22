@@ -17,7 +17,7 @@
         <label for="share-employee-input" class="field-label">Empleado activo <span class="required">*</span></label>
         <div class="employee-autocomplete-row">
           <input id="share-employee-input" type="text" appUiControl [(ngModel)]="employeeInput" (ngModelChange)="onEmployeeInputChange($event)" [matAutocomplete]="employeeAuto" placeholder="Escribe el nombre del empleado..." autocomplete="off" aria-label="Buscar empleado activo" />
-          <mat-autocomplete #employeeAuto="matAutocomplete" [displayWith]="displayEmployee" (optionSelected)="selectEmployee($event.option.value)">
+          <mat-autocomplete #employeeAuto="matAutocomplete" [displayWith]="displayEmployee" autoActiveFirstOption (optionSelected)="selectEmployee($event.option.value)">
             <mat-option *ngFor="let employee of filteredEmployees" [value]="employee"><span class="employee-option-name">{{ displayEmployee(employee) }}</span><small>{{ employee.dni || 'Sin DNI' }} · {{ employee.user?.username || 'Sin usuario' }}</small></mat-option>
           </mat-autocomplete>
           <button type="button" appUiButton="secondary" class="employee-list-button" (click)="openWorkerPicker()" title="Ver empleados activos" aria-label="Ver lista de empleados activos"><mat-icon aria-hidden="true">groups</mat-icon></button>
