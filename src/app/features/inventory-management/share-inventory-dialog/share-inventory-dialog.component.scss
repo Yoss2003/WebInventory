@@ -700,3 +700,23 @@
     display: none;
   }
 }
+
+.share-dialog-heading { flex: 1; }
+.share-dialog-header { align-items: center; flex-wrap: wrap; }
+.share-dialog-header .wizard-steps-nav { margin-left: auto; }
+.share-dialog-content { min-height: 260px; }
+.wizard-step-panel { animation: inventory-share-section-in 190ms ease-out both; }
+@keyframes inventory-share-section-in { from { opacity: 0; transform: translateY(5px); } to { opacity: 1; transform: translateY(0); } }
+.employee-autocomplete-row { display: flex; align-items: center; gap: 8px; }
+.employee-autocomplete-row > input { flex: 1; min-width: 0; }
+.employee-list-button { width: 43px; min-width: 43px; height: 43px; padding: 0; }
+.employee-option-name { display: block; font-weight: 650; }
+.employee-option-name + small { display: block; color: #8fa5b6; font-size: 11px; }
+.selected-employee-summary { display: flex; align-items: center; flex-wrap: wrap; gap: 8px; margin-top: 8px; padding: 9px 11px; border: 1px solid #3b5669; border-radius: 9px; background: #172a37; color: #edf5fb; font-size: 12px; }
+.selected-employee-summary small { color: #91aabd; flex: 1 1 100%; }
+.summary-head { flex-wrap: wrap; }
+.summary-head > div { flex: 1; min-width: 180px; }
+.summary-access-button { margin-left: auto; }
+.share-dialog-footer .footer-spacer { flex: 1; }
+@media (max-width: 680px) { .share-dialog-header .wizard-steps-nav { order: 2; width: 100%; margin: 8px 0 0; } .summary-access-button { width: 100%; margin-left: 0; } }
+@media (prefers-reduced-motion: reduce) { .wizard-step-panel { animation: none; } }
