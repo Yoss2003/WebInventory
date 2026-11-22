@@ -1,101 +1,41 @@
 <div class="worker-picker-dialog ui-v2-dialog" role="document">
   <header class="worker-dialog-header">
     <div class="worker-dialog-heading">
-      <span class="worker-dialog-symbol">
-        <mat-icon aria-hidden="true">badge</mat-icon>
-      </span>
-      <div class="worker-dialog-heading__text">
-        <h2 mat-dialog-title>Seleccionar colaborador</h2>
-        <p>Trabajadores activos registrados en tu empresa</p>
-      </div>
+      <span class="worker-dialog-symbol"><mat-icon aria-hidden="true">badge</mat-icon></span>
+      <div class="worker-dialog-heading__text"><h2 mat-dialog-title>Seleccionar empleado</h2><p>Empleados activos registrados en tu empresa</p></div>
     </div>
-    <button type="button" appUiButton="close" (click)="dialogRef.close()"
-      aria-label="Cerrar selección de trabajador">
-      <mat-icon aria-hidden="true">close</mat-icon>
-    </button>
   </header>
-
   <div class="worker-dialog-search-bar">
     <div class="search-input-wrap">
       <mat-icon aria-hidden="true">search</mat-icon>
-      <input type="search" [(ngModel)]="search"
-        placeholder="Buscar por nombre, apellido, DNI o usuario..."
-        aria-label="Buscar colaborador" appUiControl />
-      <button *ngIf="search" type="button" class="clear-search" (click)="search = ''" aria-label="Limpiar búsqueda">
-        <mat-icon aria-hidden="true">close</mat-icon>
-      </button>
+      <input type="search" [(ngModel)]="search" placeholder="Buscar por DNI, nombre o nombre de usuario..." aria-label="Buscar por DNI, nombre o nombre de usuario" appUiControl />
+      <button *ngIf="search" type="button" class="clear-search" (click)="search = ''" aria-label="Limpiar búsqueda"><mat-icon aria-hidden="true">close</mat-icon></button>
     </div>
-    <div class="search-count" *ngIf="!loading">
-      {{ filteredEmployees.length }} {{ filteredEmployees.length === 1 ? 'colaborador' : 'colaboradores' }}
-    </div>
+    <div class="search-count" *ngIf="!loading">{{ filteredEmployees.length }} {{ filteredEmployees.length === 1 ? 'empleado' : 'empleados' }}</div>
   </div>
-
   <mat-dialog-content class="worker-dialog-content">
-    <app-loading-indicator *ngIf="loading" message="Cargando colaboradores de la empresa..." />
-
-    <p *ngIf="error && !loading" class="error-notice" role="alert">
-      <mat-icon aria-hidden="true">error_outline</mat-icon>
-      <span>{{ error }}</span>
-      <button type="button" appUiButton="secondary" (click)="load()">Reintentar</button>
-    </p>
-
-    <div class="inv-core-table-wrap worker-table-wrap" *ngIf="!loading && !error && filteredEmployees.length > 0">
+    <app-loading-indicator *ngIf="loading && !refreshing" message="Cargando empleados activos..." />
+    <p *ngIf="error && !loading" class="error-notice" role="alert"><mat-icon aria-hidden="true">error_outline</mat-icon><span>{{ error }}</span><button type="button" appUiButton="secondary" (click)="load()">Reintentar</button></p>
+    <div class="inv-core-table-wrap worker-table-wrap" *ngIf="!loading && !error && filteredEmployees.length">
       <table class="worker-table">
-        <thead>
-          <tr>
-            <th scope="col">Colaborador</th>
-            <th scope="col">DNI</th>
-            <th scope="col">Usuario / Cuenta</th>
-            <th scope="col">Estado</th>
-            <th scope="col" class="action-col">Acción</th>
-          </tr>
-        </thead>
+        <thead><tr><th scope="col">DNI</th><th scope="col">Nombre</th><th scope="col">Nombre de usuario</th><th scope="col" class="action-col">Acción</th></tr></thead>
         <tbody>
-          <tr *ngFor="let emp of filteredEmployees">
-            <td class="worker-name-cell">
-              <div class="worker-avatar">
-                <img *ngIf="emp.pictureUrl" [src]="emp.pictureUrl" [alt]="emp.firstName || ''" />
-                <span *ngIf="!emp.pictureUrl">{{ getInitial(emp) }}</span>
-              </div>
-              <div class="worker-name-info">
-                <strong>{{ (emp.firstName || '') + ' ' + (emp.lastName || '') | titlecase }}</strong>
-                <small *ngIf="emp.user?.email">{{ emp.user?.email }}</small>
-              </div>
-            </td>
-            <td>
-              <span class="dni-chip">{{ emp.dni || 'Sin DNI' }}</span>
-            </td>
-            <td>
-              <span class="user-chip" [class.has-user]="!!emp.user?.username">
-                <mat-icon aria-hidden="true">{{ emp.user?.username ? 'person' : 'no_accounts' }}</mat-icon>
-                {{ emp.user?.username || 'Sin cuenta de acceso' }}
-              </span>
-            </td>
-            <td>
-              <span class="status-badge status-active">Activo</span>
-            </td>
-            <td class="action-col">
-              <button type="button" appUiButton="primary" class="select-btn"
-                (click)="select(emp)" [attr.aria-label]="'Seleccionar a ' + emp.firstName">
-                <mat-icon aria-hidden="true">check</mat-icon>
-                Seleccionar
-              </button>
-            </td>
+          <tr *ngFor="let employee of filteredEmployees">
+            <td><span class="dni-chip">{{ employee.dni || 'Sin DNI' }}</span></td>
+            <td><strong>{{ (employee.firstName || '') + ' ' + (employee.lastName || '') | titlecase }}</strong></td>
+            <td><span class="user-chip">{{ employee.user?.username || 'Sin usuario' }}</span></td>
+            <td class="action-col"><button type="button" appUiButton="primary" class="select-btn" (click)="select(employee)" [attr.aria-label]="'Seleccionar a ' + employee.firstName"><mat-icon aria-hidden="true">check</mat-icon> Seleccionar</button></td>
           </tr>
         </tbody>
       </table>
     </div>
-
-    <div class="empty-results" *ngIf="!loading && !error && filteredEmployees.length === 0">
-      <mat-icon aria-hidden="true">person_search</mat-icon>
-      <strong>No se encontraron colaboradores</strong>
-      <p>{{ search ? 'No hay resultados que coincidan con tu búsqueda.' : 'No tienes colaboradores activos disponibles en tu empresa.' }}</p>
-    </div>
+    <div class="empty-results" *ngIf="!loading && !error && !filteredEmployees.length"><mat-icon aria-hidden="true">person_search</mat-icon><strong>No se encontraron empleados</strong><p>{{ search ? 'No hay resultados que coincidan con tu búsqueda.' : 'No tienes empleados activos disponibles en tu empresa.' }}</p></div>
   </mat-dialog-content>
-
   <mat-dialog-actions class="worker-dialog-footer">
-    <button type="button" appUiButton="secondary" (click)="dialogRef.close()">
-      Cancelar
+    <button type="button" appUiButton="secondary" (click)="dialogRef.close()">Cerrar</button>
+    <button type="button" appUiButton="secondary" (click)="refresh()" [disabled]="loading || refreshing">
+      <app-loading-indicator *ngIf="refreshing; else workerRefreshLabel" [compact]="true" message="Cargando" />
+      <ng-template #workerRefreshLabel><mat-icon aria-hidden="true">refresh</mat-icon> Actualizar</ng-template>
     </button>
   </mat-dialog-actions>
 </div>
