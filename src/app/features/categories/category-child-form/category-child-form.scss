@@ -336,16 +336,6 @@ $muted: #a8b5c2;
   line-height: 1.45;
 }
 
-/* Selector Material (idéntico a article-form) */
-:host ::ng-deep .inventory-select .mat-mdc-select-value {
-  font-size: 13px;
-  color: #f4f8fd;
-}
-
-:host ::ng-deep .inventory-select .mat-mdc-form-field-subscript-wrapper {
-  display: none;
-}
-
 .formula-info-button { margin-left: auto; }
 
 /* =========================================

@@ -158,42 +158,6 @@ app-main-layout {
     width: min(245px, 36vw);
     min-width: 115px;
     margin: 0;
-    --mdc-outlined-text-field-outline-color: #657887;
-    --mdc-outlined-text-field-hover-outline-color: #91acbd;
-    --mdc-outlined-text-field-focus-outline-color: var(--inv-brand);
-    --mat-select-enabled-trigger-text-color: #f1f8fd;
-    --mat-select-enabled-arrow-color: #c6d6e4;
-    --mat-select-focused-arrow-color: var(--inv-brand);
-
-    .mat-mdc-text-field-wrapper {
-      box-sizing: border-box;
-      min-height: var(--inv-control-height);
-      height: var(--inv-control-height);
-      background: var(--inv-input-bg);
-      border-radius: var(--inv-radius-control);
-    }
-
-    .mat-mdc-form-field-infix {
-      box-sizing: border-box;
-      min-height: var(--inv-control-height);
-      height: var(--inv-control-height);
-      padding-top: 10px;
-      padding-bottom: 9px;
-      display: flex;
-      align-items: center;
-    }
-
-    .mat-mdc-select {
-      font-size: 13px;
-    }
-
-    .mat-mdc-select-value {
-      color: #edf5fa;
-    }
-
-    .mat-mdc-form-field-subscript-wrapper {
-      display: none;
-    }
   }
 }
 

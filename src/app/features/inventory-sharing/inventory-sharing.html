@@ -20,7 +20,7 @@
         <app-loading-indicator *ngIf="loading && !hasLoaded" message="Cargando inventarios..." />
         <ng-container *ngIf="hasLoaded || !loading">
           <label for="sharing-inventory">Seleccionar inventario propio</label>
-          <mat-form-field appearance="outline" class="inventory-select sharing-select">
+          <mat-form-field appearance="outline" class="inventory-select">
             <mat-select id="sharing-inventory" [(ngModel)]="currentInventoryId" (selectionChange)="loadShares()" panelClass="inventory-select-options sharing-inventory-options" aria-label="Inventario propio">
               <mat-option *ngFor="let i of ownedInventories" [value]="i.id">{{ inventoryLabel(i) }}</mat-option>
             </mat-select>
@@ -43,7 +43,7 @@
             </div>
           </div>
           <div><label for="share-access">Permiso</label>
-            <mat-form-field appearance="outline" class="inventory-select sharing-select sharing-permission-select" subscriptSizing="dynamic">
+            <mat-form-field appearance="outline" class="inventory-select" subscriptSizing="dynamic">
               <mat-select id="share-access" name="permission" [(ngModel)]="accessLevel" panelClass="inventory-select-options" aria-label="Permiso de colaborador">
                 <mat-option [value]="1">Solo lectura</mat-option>
                 <mat-option [value]="2">Editar inventario</mat-option>

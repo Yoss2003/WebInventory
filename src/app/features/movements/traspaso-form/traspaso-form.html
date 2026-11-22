@@ -44,7 +44,7 @@
       <div class="card-heading"><mat-icon>person_pin</mat-icon><div><strong>Destinatario y propósito</strong><small>La custodia identifica a quién se entrega el artículo.</small></div></div>
       <div class="form-grid">
         <div class="field wide" *ngIf="operationType==='Asignar'"><label>Cuenta del destinatario (opcional)</label>
-          <mat-form-field appearance="outline" class="compact-select"><mat-select formControlName="recipientUserId" panelClass="inventory-select-options" placeholder="Entidad externa / Sin cuenta"><mat-option [value]="null">Entidad externa / Sin cuenta</mat-option><mat-option *ngFor="let person of recipients" [value]="person.id">{{person.name}}</mat-option></mat-select></mat-form-field>
+          <mat-form-field appearance="outline" class="inventory-select"><mat-select formControlName="recipientUserId" panelClass="inventory-select-options" placeholder="Entidad externa / Sin cuenta"><mat-option [value]="null">Entidad externa / Sin cuenta</mat-option><mat-option *ngFor="let person of recipients" [value]="person.id">{{person.name}}</mat-option></mat-select></mat-form-field>
           <small>Una cuenta vinculada podrá consultar sus propias asignaciones, sin abrir todo el almacén.</small>
         </div>
         <div class="field wide"><label>Persona o entidad {{operationType==='Asignar'?'*':'(opcional)'}}</label>

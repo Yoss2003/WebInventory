@@ -81,16 +81,20 @@
   border-radius: var(--inv-radius-control);
 }
 
-.inventory-select .mat-mdc-form-field-flex,
-.inventory-select .mat-mdc-form-field-infix {
+.inventory-select .mat-mdc-form-field-flex {
   box-sizing: border-box;
   height: var(--inv-control-height);
   min-height: var(--inv-control-height);
+  align-items: center;
 }
 
 .inventory-select .mat-mdc-form-field-infix {
-  padding-top: 10px;
-  padding-bottom: 9px;
+  display: flex;
+  box-sizing: border-box;
+  height: var(--inv-control-height);
+  min-height: var(--inv-control-height);
+  align-items: center;
+  padding-block: 0;
 }
 
 .inventory-select .mat-mdc-select-value,
