@@ -4,7 +4,7 @@
       subtitle="Inventarios operativos para artículos y existencias. Los maestros se mantienen separados."></app-ui-page-heading>
     <div class="inv-core-header-actions">
       <button type="button" appUiButton="secondary" class="reload" (click)="load()" [disabled]="loading || refreshing">
-        <app-loading-indicator *ngIf="loading || refreshing; else inventoryRefreshLabel" [compact]="true" message="Cargando" />
+        <app-loading-indicator *ngIf="refreshing; else inventoryRefreshLabel" [compact]="true" message="Cargando" />
         <ng-template #inventoryRefreshLabel><mat-icon aria-hidden="true">refresh</mat-icon> Actualizar</ng-template>
       </button>
       <button *ngIf="canCreate" type="button" appUiButton="primary" (click)="openCreateDialog()">
