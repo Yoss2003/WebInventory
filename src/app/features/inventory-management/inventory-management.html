@@ -3,7 +3,7 @@
     <app-ui-page-heading icon="warehouse" title="Gestión de inventarios"
       subtitle="Inventarios operativos para artículos y existencias. Los maestros se mantienen separados."></app-ui-page-heading>
     <div class="inv-core-header-actions">
-      <button type="button" appUiButton="secondary" class="reload" (click)="load()" [disabled]="loading || refreshing">
+      <button type="button" appUiButton="secondary" class="reload" (click)="load(true)" [disabled]="loading || refreshing">
         <app-loading-indicator *ngIf="refreshing; else inventoryRefreshLabel" [compact]="true" message="Cargando" />
         <ng-template #inventoryRefreshLabel><mat-icon aria-hidden="true">refresh</mat-icon> Actualizar</ng-template>
       </button>
@@ -26,7 +26,6 @@
 
     <!-- Estado de carga: visible solo durante la carga inicial o actualización -->
     <div *ngIf="loading && !refreshing" class="inv-manage-loading" role="status" aria-label="Cargando inventarios">
-      <app-loading-indicator message="Cargando inventarios y colaboradores..." />
       <div class="inv-manage-skeleton" aria-hidden="true">
         <span></span><span></span><span></span>
       </div>
