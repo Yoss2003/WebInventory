@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { MatDialogRef, MAT_DIALOG_DATA, MatDialogModule } from '@angular/material/dialog';
 import { MatIconModule } from '@angular/material/icon';
+import { MatTooltipModule } from '@angular/material/tooltip';
 import { UiButtonDirective } from '../../../shared/ui/directives/ui-button.directive';
 import { UiControlDirective } from '../../../shared/ui/directives/ui-control.directive';
 import { EmployeeService } from '../../../core/services/employees';
@@ -13,7 +14,7 @@ export interface WorkerPickerDialogData { excludeUserId?: number | null; employe
 
 @Component({
   selector: 'app-worker-picker-dialog', standalone: true,
-  imports: [CommonModule, FormsModule, MatDialogModule, MatIconModule, UiButtonDirective, UiControlDirective, LoadingIndicatorComponent],
+  imports: [CommonModule, FormsModule, MatDialogModule, MatIconModule, MatTooltipModule, UiButtonDirective, UiControlDirective, LoadingIndicatorComponent],
   templateUrl: './worker-picker-dialog.component.html',
   styleUrl: './worker-picker-dialog.component.scss'
 })
@@ -23,6 +24,7 @@ export class WorkerPickerDialogComponent implements OnInit {
   private readonly employeesApi = inject(EmployeeService);
   loading = false;
   refreshing = false;
+  private hasLoadedOnce = false;
   error = '';
   search = '';
   employees: Employee[] = [];
@@ -40,21 +42,34 @@ export class WorkerPickerDialogComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    if (this.data.employees?.length) this.employees = this.data.employees.filter(e => e.isActive);
-    else this.load();
+    if (this.data.employees?.length) {
+      this.employees = this.data.employees.filter(e => e.isActive);
+      this.hasLoadedOnce = true;
+    } else {
+      this.load();
+    }
   }
 
-  load(): void {
-    const hasLoaded = this.employees.length > 0;
-    this.loading = !hasLoaded;
-    this.refreshing = hasLoaded;
+  load(fromRefresh = false): void {
+    this.loading = !this.hasLoadedOnce && !fromRefresh;
+    this.refreshing = fromRefresh;
     this.error = '';
     this.employeesApi.getEmployees().subscribe({
-      next: rows => { this.employees = (rows || []).filter(e => e.isActive); this.loading = false; this.refreshing = false; },
-      error: () => { this.loading = false; this.refreshing = false; this.error = 'No se pudieron consultar los colaboradores de la empresa.'; }
+      next: rows => {
+        this.employees = (rows || []).filter(e => e.isActive);
+        this.loading = false;
+        this.refreshing = false;
+        this.hasLoadedOnce = true;
+      },
+      error: () => {
+        this.loading = false;
+        this.refreshing = false;
+        this.hasLoadedOnce = true;
+        this.error = 'No se pudieron consultar los colaboradores de la empresa.';
+      }
     });
   }
 
-  refresh(): void { this.load(); }
+  refresh(): void { this.load(true); }
   select(employee: Employee): void { this.dialogRef.close(employee); }
 }

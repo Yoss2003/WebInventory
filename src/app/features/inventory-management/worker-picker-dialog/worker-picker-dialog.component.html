@@ -2,7 +2,17 @@
   <header class="worker-dialog-header">
     <div class="worker-dialog-heading">
       <span class="worker-dialog-symbol"><mat-icon aria-hidden="true">badge</mat-icon></span>
-      <div class="worker-dialog-heading__text"><h2 mat-dialog-title>Seleccionar empleado</h2><p>Empleados activos registrados en tu empresa</p></div>
+      <div class="worker-dialog-heading__text">
+        <div class="worker-dialog-title-row">
+          <h2 mat-dialog-title>Seleccionar empleado</h2>
+          <button type="button" class="inv-info-button"
+            matTooltip="Solo se muestran empleados activos de la empresa. Puedes buscarlos por DNI, nombre o nombre de usuario."
+            matTooltipPosition="above" aria-label="Información sobre selección de empleados">
+            <mat-icon aria-hidden="true">info_outline</mat-icon>
+          </button>
+        </div>
+        <p>Empleados activos registrados en tu empresa</p>
+      </div>
     </div>
   </header>
   <div class="worker-dialog-search-bar">
@@ -14,8 +24,10 @@
     <div class="search-count" *ngIf="!loading">{{ filteredEmployees.length }} {{ filteredEmployees.length === 1 ? 'empleado' : 'empleados' }}</div>
   </div>
   <mat-dialog-content class="worker-dialog-content">
-    <app-loading-indicator *ngIf="loading && !refreshing" message="Cargando empleados activos..." />
-    <p *ngIf="error && !loading" class="error-notice" role="alert"><mat-icon aria-hidden="true">error_outline</mat-icon><span>{{ error }}</span><button type="button" appUiButton="secondary" (click)="load()">Reintentar</button></p>
+    <div *ngIf="loading && !refreshing" class="worker-picker-skeleton" role="status" aria-label="Cargando empleados activos" aria-hidden="true">
+      <span></span><span></span><span></span><span></span>
+    </div>
+    <p *ngIf="error && !loading" class="error-notice" role="alert"><mat-icon aria-hidden="true">error_outline</mat-icon><span>{{ error }}</span><button type="button" appUiButton="secondary" (click)="refresh()">Reintentar</button></p>
     <div class="inv-core-table-wrap worker-table-wrap" *ngIf="!loading && !error && filteredEmployees.length">
       <table class="worker-table">
         <thead><tr><th scope="col">DNI</th><th scope="col">Nombre</th><th scope="col">Nombre de usuario</th><th scope="col" class="action-col">Acción</th></tr></thead>
@@ -34,7 +46,7 @@
   <mat-dialog-actions class="worker-dialog-footer">
     <button type="button" appUiButton="secondary" (click)="dialogRef.close()">Cerrar</button>
     <button type="button" appUiButton="secondary" (click)="refresh()" [disabled]="loading || refreshing">
-      <app-loading-indicator *ngIf="loading || refreshing; else workerRefreshLabel" [compact]="true" message="Cargando" />
+      <app-loading-indicator *ngIf="refreshing; else workerRefreshLabel" [compact]="true" message="Cargando" />
       <ng-template #workerRefreshLabel><mat-icon aria-hidden="true">refresh</mat-icon> Actualizar</ng-template>
     </button>
   </mat-dialog-actions>
