@@ -720,3 +720,10 @@
 .share-dialog-footer .footer-spacer { flex: 1; }
 @media (max-width: 680px) { .share-dialog-header .wizard-steps-nav { order: 2; width: 100%; margin: 8px 0 0; } .summary-access-button { width: 100%; margin-left: 0; } }
 @media (prefers-reduced-motion: reduce) { .wizard-step-panel { animation: none; } }
+
+/* Mantener el icono informativo junto al título, no al extremo del bloque. */
+.share-dialog-heading { gap: 10px; }
+.share-dialog-heading__text { display: grid; flex: 0 1 auto; width: fit-content; min-width: 0; gap: 2px; }
+.share-dialog-title-row { display: inline-flex; align-items: center; justify-content: flex-start; gap: 8px; width: fit-content; max-width: 100%; }
+.share-dialog-title-row h2 { margin: 0; white-space: nowrap; }
+.share-dialog-title-row .inv-info-button { flex: none; margin: 0; }
