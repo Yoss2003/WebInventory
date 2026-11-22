@@ -46,7 +46,7 @@
   <mat-dialog-actions class="worker-dialog-footer">
     <button type="button" appUiButton="secondary" (click)="dialogRef.close()">Cerrar</button>
     <button type="button" appUiButton="secondary" (click)="refresh()" [disabled]="loading || refreshing">
-      <app-loading-indicator *ngIf="loading || refreshing; else workerRefreshLabel" [compact]="true" message="Cargando" />
+      <app-loading-indicator *ngIf="refreshing; else workerRefreshLabel" [compact]="true" message="Cargando" />
       <ng-template #workerRefreshLabel><mat-icon aria-hidden="true">refresh</mat-icon> Actualizar</ng-template>
     </button>
   </mat-dialog-actions>
