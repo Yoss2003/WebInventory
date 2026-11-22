@@ -2,8 +2,13 @@
   <header class="share-dialog-header">
     <div class="share-dialog-heading">
       <span class="share-dialog-symbol"><mat-icon aria-hidden="true">group_add</mat-icon></span>
-      <div class="share-dialog-heading__text"><h2 mat-dialog-title>Compartir inventario</h2><p>{{ currentInventory.alias || currentInventory.inventoryName }}</p></div>
-      <button type="button" class="inv-info-button" matTooltip="Concede acceso a un colaborador activo de tu empresa. El nivel de permiso determina si podrá consultar o modificar el inventario." matTooltipPosition="above" aria-label="Información sobre compartir inventario"><mat-icon aria-hidden="true">info_outline</mat-icon></button>
+      <div class="share-dialog-heading__text">
+        <div class="share-dialog-title-row">
+          <h2 mat-dialog-title>Compartir inventario</h2>
+          <button type="button" class="inv-info-button" matTooltip="Concede acceso a un colaborador activo de tu empresa. El nivel de permiso determina si podrá consultar o modificar el inventario." matTooltipPosition="above" aria-label="Información sobre compartir inventario"><mat-icon aria-hidden="true">info_outline</mat-icon></button>
+        </div>
+        <p>{{ currentInventory.alias || currentInventory.inventoryName }}</p>
+      </div>
     </div>
     <nav class="wizard-steps-nav" aria-label="Secciones para compartir inventario">
       <button type="button" class="step-nav-btn" [class.active]="currentStep === 1" [class.completed]="currentStep > 1" (click)="setStep(1)"><span class="step-num-circle"><mat-icon *ngIf="currentStep > 1">check</mat-icon><span *ngIf="currentStep === 1">1</span></span><span class="step-name">Acceso y permisos</span></button>
