@@ -10,7 +10,8 @@ describe('TableOverlayScrollbarService', () => {
     service = TestBed.inject(TableOverlayScrollbarService);
     target = document.createElement('div');
     target.className = 'inv-core-table-wrap';
-    target.style.overflow = 'auto';
+    target.style.overflowX = 'auto';
+    target.style.overflowY = 'auto';
     target.appendChild(document.createElement('table'));
     document.body.appendChild(target);
   });
@@ -29,7 +30,8 @@ describe('TableOverlayScrollbarService', () => {
 
   it('retira los indicadores y restaura el scroll nativo cuando deja de ser desplazable', () => {
     (service as any).scan();
-    target.style.overflow = 'hidden';
+    target.style.overflowX = 'hidden';
+    target.style.overflowY = 'hidden';
 
     (service as any).scan();
 
