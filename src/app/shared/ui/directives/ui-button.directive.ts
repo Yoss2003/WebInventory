@@ -12,11 +12,17 @@ export type UiButtonTone = 'primary' | 'secondary' | 'danger' | 'ghost' | 'close
     '[class.ui-v2-button--secondary]': 'effectiveTone() === "secondary"',
     '[class.ui-v2-button--danger]': 'effectiveTone() === "danger"',
     '[class.ui-v2-button--ghost]': 'effectiveTone() === "ghost"',
-    '[class.ui-v2-button--close]': 'effectiveTone() === "close"'
+    '[class.ui-v2-button--close]': 'effectiveTone() === "close"',
+    '[class.ui-v2-button--loading]': 'loading()',
+    '[attr.aria-busy]': 'loading() ? "true" : null',
+    '[attr.data-loading-label]': 'loading() ? loadingText() : null'
   }
 })
 export class UiButtonDirective {
   readonly tone = input<UiButtonTone | '' | undefined>('secondary', { alias: 'appUiButton' });
+
+  readonly loading = input(false, { alias: 'uiButtonLoading' });
+  readonly loadingText = input('Cargando', { alias: 'uiButtonLoadingText' });
 
   readonly effectiveTone = computed<UiButtonTone>(() => {
     const t = this.tone();
