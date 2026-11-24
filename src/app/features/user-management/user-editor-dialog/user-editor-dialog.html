@@ -4,7 +4,7 @@
   [title]="isEdit ? 'Editar usuario' : 'Nuevo usuario'"
   [subtitleVisible]="false"
   [infoVisible]="true"
-  [infoTooltip]="Actualiza los datos y accesos de esta cuenta. Registra un usuario y configura su acceso."
+  [infoTooltip]="isEdit ? 'Actualiza los datos y accesos de esta cuenta.' : 'Registra un usuario y configura su acceso.'"
   [icon]="isEdit ? 'manage_accounts' : 'person_add'"
   [sections]="modalSections"
   [activeSection]="step - 1"
