@@ -51,6 +51,7 @@ function createDefinition(
     allowedActions: readonly ModalActionId[];
     actions: ModalFooterAction[];
     selectors?: boolean;
+    selectorMotionEnabled?: boolean;
     selectorTypes?: readonly ('combo' | 'autocomplete' | 'date' | 'multi')[];
   }
 ): ModalStandardDefinition {
@@ -91,8 +92,8 @@ function createDefinition(
     selectors: {
       presentByDefault: options.selectors ?? false,
       allowedTypes: options.selectorTypes ?? SHARED_SELECTOR_TYPES,
-      dropdown: { ...DROPDOWN_MOTION },
-      autocomplete: { ...DROPDOWN_MOTION }
+      dropdown: { ...DROPDOWN_MOTION, enabled: options.selectorMotionEnabled ?? true },
+      autocomplete: { ...DROPDOWN_MOTION, enabled: options.selectorMotionEnabled ?? true }
     }
   };
 }
@@ -105,7 +106,7 @@ export const MODAL_STANDARDS: Readonly<Record<ModalStandardType, ModalStandardDe
     {
       icon: '', subtitle: 'Registro y configuración del artículo', info: true,
       sections: ['Identificación', 'Logística', 'Finanzas'], footer: true,
-      allowedActions: ['previous', 'cancel', 'primary', 'next', 'close'],
+      allowedActions: ['previous', 'cancel', 'primary', 'next'],
       actions: [
         action('previous', 'Anterior', 'secondary', 0),
         action('cancel', 'Cancelar', 'secondary', 1),
@@ -118,7 +119,7 @@ export const MODAL_STANDARDS: Readonly<Record<ModalStandardType, ModalStandardDe
     {
       icon: '', iconEnabled: false, subtitle: 'Completa cada paso para continuar', info: true,
       sections: ['Información', 'Configuración', 'Revisión'], footer: true,
-      allowedActions: ['previous', 'cancel', 'next', 'primary', 'close'],
+      allowedActions: ['previous', 'cancel', 'next', 'primary'],
       actions: [
         action('previous', 'Anterior', 'secondary', 0),
         action('cancel', 'Cancelar', 'secondary', 1),
@@ -130,15 +131,16 @@ export const MODAL_STANDARDS: Readonly<Record<ModalStandardType, ModalStandardDe
     'detail', 'Detalle / consulta', 'Consultar información sin modificar el registro.',
     {
       icon: '', subtitle: 'Consulta de información', info: true, close: true,
-      footer: false, allowedActions: ['close', 'cancel', 'primary'],
-      actions: [action('close', 'Cerrar', 'secondary', 0)], selectors: false
+      footer: false, allowedActions: ['close'],
+      actions: [action('close', 'Cerrar', 'secondary', 0)], selectors: false,
+      selectorTypes: ['autocomplete'], selectorMotionEnabled: false
     }
   ),
   selector: createDefinition(
     'selector', 'Selector de registros', 'Buscar y elegir uno o varios registros.',
     {
-      icon: '', subtitle: 'Busca y elige un elemento', info: false,
-      footer: true, allowedActions: ['cancel', 'primary', 'close'],
+      icon: '', subtitle: 'Busca y elige un elemento', info: true,
+      footer: true, allowedActions: ['cancel', 'primary'],
       actions: [
         action('cancel', 'Cancelar', 'secondary', 0),
         action('primary', 'Seleccionar', 'primary', 1)
@@ -149,34 +151,36 @@ export const MODAL_STANDARDS: Readonly<Record<ModalStandardType, ModalStandardDe
     'confirmation', 'Confirmación', 'Solicitar confirmación antes de ejecutar una acción importante.',
     {
       icon: '', subtitle: 'Revisa la acción antes de continuar', info: false,
-      footer: true, allowedActions: ['cancel', 'primary', 'close'],
+      footer: true, allowedActions: ['cancel', 'primary'],
       actions: [
         action('cancel', 'Cancelar', 'secondary', 0),
         action('primary', 'Confirmar', 'primary', 1)
-      ], selectors: false
+      ], selectors: false, selectorTypes: ['combo', 'autocomplete']
     }
   ),
   informative: createDefinition(
     'informative', 'Informativo', 'Comunicar información, instrucciones o resultados.',
     {
       icon: 'info', subtitle: 'Información adicional', info: false, close: true,
-      footer: false, allowedActions: ['close', 'primary'],
-      actions: [action('close', 'Entendido', 'secondary', 0)], selectors: false
+      footer: false, allowedActions: ['close'],
+      actions: [action('close', 'Entendido', 'secondary', 0)], selectors: false,
+      selectorTypes: ['combo', 'autocomplete']
     }
   ),
   subInfo: createDefinition(
     'subInfo', 'Submodal informativo', 'Mostrar una aclaración contextual dentro de un modal principal.',
     {
       icon: 'info', subtitle: 'Detalle complementario', info: false, close: true,
-      footer: false, allowedActions: ['close', 'primary'],
-      actions: [action('close', 'Cerrar', 'secondary', 0)], selectors: false
+      footer: false, allowedActions: ['close'],
+      actions: [action('close', 'Cerrar', 'secondary', 0)], selectors: false,
+      selectorTypes: ['combo', 'autocomplete']
     }
   ),
   subTask: createDefinition(
     'subTask', 'Submodal complementario', 'Completar una acción secundaria dentro del flujo principal.',
     {
       icon: 'edit', subtitle: 'Completa los datos necesarios', info: true,
-      footer: true, allowedActions: ['cancel', 'primary', 'previous', 'next', 'close'],
+      footer: true, allowedActions: ['cancel', 'primary'],
       actions: [
         action('cancel', 'Cancelar', 'secondary', 0),
         action('primary', 'Guardar', 'primary', 1)
@@ -187,12 +191,12 @@ export const MODAL_STANDARDS: Readonly<Record<ModalStandardType, ModalStandardDe
     'filters', 'Filtros avanzados', 'Definir criterios de búsqueda para filtrar información.',
     {
       icon: '', subtitle: 'Define los criterios de búsqueda', info: true,
-      footer: true, allowedActions: ['cancel', 'primary', 'close'],
+      footer: true, allowedActions: ['cancel', 'primary'],
       // Limpiar pertenece al contenido propio de cada vista, no al footer común.
       actions: [
         action('cancel', 'Cancelar', 'secondary', 0),
         action('primary', 'Aplicar filtros', 'primary', 1)
-      ], selectors: true
+      ], selectors: true, selectorTypes: ['combo', 'autocomplete', 'date', 'multi']
     }
   )
 };

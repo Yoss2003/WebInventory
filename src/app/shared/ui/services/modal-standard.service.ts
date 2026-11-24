@@ -37,7 +37,13 @@ export class ModalStandardService {
         position: action.id === 'previous' ? 'left' as const : 'right' as const,
         order: Number.isFinite(action.order) ? action.order as number : index
       }))
-      .sort((a, b) => a.order - b.order);
+      .sort((a, b) => {
+        if (a.position !== b.position) return a.position === 'left' ? -1 : 1;
+        const aIsPrimary = a.tone === 'primary' || a.tone === 'danger';
+        const bIsPrimary = b.tone === 'primary' || b.tone === 'danger';
+        if (aIsPrimary !== bIsPrimary) return aIsPrimary ? 1 : -1;
+        return a.order - b.order;
+      });
   }
 
   shouldShowFooter(

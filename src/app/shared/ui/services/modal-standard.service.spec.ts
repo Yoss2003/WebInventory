@@ -40,6 +40,23 @@ describe('ModalStandardService', () => {
     ]);
   });
 
+  it('mantiene la acción secundaria antes de la primaria aunque la vista invierta su orden', () => {
+    const actions: ModalFooterAction[] = [
+      { id: 'primary', label: 'Guardar', tone: 'primary', order: 0 },
+      { id: 'cancel', label: 'Cancelar', tone: 'secondary', order: 1 }
+    ];
+    expect(service.resolveFooterActions('mainForm', actions).map(action => action.id))
+      .toEqual(['cancel', 'primary']);
+  });
+
+  it('conserva la configuración particular de selectores del tipo detalle', () => {
+    const detail = service.get('detail');
+    expect(detail.selectors.presentByDefault).toBe(false);
+    expect(detail.selectors.dropdown.enabled).toBe(false);
+    expect(detail.selectors.autocomplete.enabled).toBe(false);
+    expect(service.get('selector').header.infoEnabledByDefault).toBe(true);
+  });
+
   it('no permite colocar Limpiar como acción estructural del footer', () => {
     const actions = [
       { id: 'reset', label: 'Limpiar', tone: 'secondary' },
