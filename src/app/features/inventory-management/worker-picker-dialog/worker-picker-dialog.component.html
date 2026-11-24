@@ -33,13 +33,13 @@
             <tr *ngFor="let employee of filteredEmployees">
               <td><span class="dni-chip">{{ employee.dni || 'Sin DNI' }}</span></td>
               <td><strong>{{ (employee.firstName || '') + ' ' + (employee.lastName || '') | titlecase }}</strong></td>
-              <td><span class="user-chip">{{ employee.user?.username || 'Sin usuario' }}</span></td>
+              <td><span class="user-chip">{{ employee.username || 'Usuario vinculado' }}</span></td>
               <td class="action-col"><button type="button" appUiButton="primary" class="select-btn" (click)="select(employee)" [attr.aria-label]="'Seleccionar a ' + employee.firstName"><mat-icon aria-hidden="true">check</mat-icon> Seleccionar</button></td>
             </tr>
           </tbody>
         </table>
       </div>
-      <div class="empty-results" *ngIf="!loading && !error && !filteredEmployees.length"><mat-icon aria-hidden="true">person_search</mat-icon><strong>No se encontraron empleados</strong><p>{{ search ? 'No hay resultados que coincidan con tu búsqueda.' : 'No tienes empleados activos disponibles en tu empresa.' }}</p></div>
+      <div class="empty-results" *ngIf="!loading && !error && !filteredEmployees.length"><mat-icon aria-hidden="true">person_search</mat-icon><strong>No se encontraron destinatarios</strong><p>{{ search ? 'No hay resultados que coincidan con tu búsqueda.' : 'No tienes empleados activos vinculados a cuentas disponibles para este inventario.' }}</p></div>
     </div>
   </div>
 </app-modal-shell>

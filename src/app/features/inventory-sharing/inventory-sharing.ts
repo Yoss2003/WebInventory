@@ -1,7 +1,7 @@
 import { MatDialog, MatDialogModule } from '@angular/material/dialog';
 import { ModalStandardService } from '../../shared/ui/services/modal-standard.service';
 import { WorkerPickerDialogComponent } from '../inventory-management/worker-picker-dialog/worker-picker-dialog.component';
-import { Employee } from '../../core/models/employee.model';
+import { InventoryShareRecipient } from '../../core/services/inventories';
 import { UiControlDirective } from '../../shared/ui/directives/ui-control.directive';
 import { UiPageHeadingComponent } from '../../shared/ui/components/ui-page-heading.component';
 import { UiButtonDirective } from '../../shared/ui/directives/ui-button.directive';
@@ -38,6 +38,7 @@ export class InventorySharingComponent implements OnInit {
   currentInventoryId: number | null = null;
   shares: InventoryShare[] = [];
   identifier = '';
+  recipientUserId: number | null = null;
   accessLevel: 1 | 2 = 1;
   loading = false;
   hasLoaded = false;
@@ -146,26 +147,33 @@ export class InventorySharingComponent implements OnInit {
       maxWidth: '96vw',
       panelClass: 'inv-v2-dialog-panel',
       data: {
+        inventoryId: this.currentInventoryId || 0,
         excludeUserId: this.myUserId
       }
     });
 
-    dialogRef.afterClosed().subscribe((emp: Employee | undefined) => {
-      if (emp) {
-        this.identifier = emp.dni || emp.user?.username || emp.user?.email || emp.firstName || '';
+    dialogRef.afterClosed().subscribe((recipient: InventoryShareRecipient | undefined) => {
+      if (recipient) {
+        this.recipientUserId = recipient.userId;
+        this.identifier = `${recipient.firstName || ''} ${recipient.lastName || ''}`.trim() || recipient.username;
         this.cdr.markForCheck();
       }
     });
   }
 
+  onIdentifierInput(_value: string): void {
+    this.recipientUserId = null;
+  }
+
   share(): void {
-    if (!this.canManageAccess || !this.currentInventoryId || !this.identifier.trim() || this.saving) return;
+    if (!this.canManageAccess || !this.currentInventoryId || (!this.recipientUserId && !this.identifier.trim()) || this.saving) return;
     this.saving = true;
     this.cdr.markForCheck();
-    this.api.share(this.currentInventoryId, this.identifier.trim(), this.accessLevel).subscribe({
+    this.api.share(this.currentInventoryId, this.recipientUserId ? '' : this.identifier.trim(), this.accessLevel, this.recipientUserId).subscribe({
       next: () => {
         this.saving = false;
         this.identifier = '';
+        this.recipientUserId = null;
         this.toast.success('Acceso otorgado al inventario.');
         this.loadShares();
         this.cdr.markForCheck();

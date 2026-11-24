@@ -2,11 +2,9 @@
   class="inv-modal-adaptive-height share-inventory-modal"
   type="wizard"
   title="Compartir inventario"
-  [subtitle]="currentInventory.alias || currentInventory.inventoryName"
-  [subtitleVisible]="false"
   icon="group_add"
   [infoVisible]="true"
-  infoTooltip="Concede acceso a un colaborador activo de tu empresa. El nivel de permiso determina si podrá consultar o modificar el inventario."
+  infoTooltip="Concede acceso a un colaborador activo vinculado a una cuenta de usuario de tu empresa. El nivel de permiso determina si podrá consultar o modificar el inventario."
   [sections]="modalSections"
   [activeSection]="currentStep - 1"
   [footerActions]="modalFooterActions"
@@ -20,30 +18,39 @@
   <div class="share-dialog-content">
     <section class="wizard-step-panel" *ngIf="currentStep === 1">
       <div class="field-wrap collaborator-picker-block">
-        <label for="share-employee-input" class="field-label">Empleado activo <span class="required">*</span></label>
-        <div class="employee-autocomplete-row">
-          <input id="share-employee-input" type="text" appUiControl [(ngModel)]="employeeInput"
-            (ngModelChange)="onEmployeeInputChange($event)" [matAutocomplete]="employeeAuto"
-            placeholder="Escribe el nombre del empleado..." autocomplete="off"
+        <label for="share-employee-input" class="field-label">Empleado activo vinculado a un usuario <span class="required">*</span></label>
+        <div class="employee-search-row">
+          <input id="share-employee-input" type="search" appUiControl [(ngModel)]="employeeSearch"
+            (ngModelChange)="onEmployeeSearchChange($event)"
+            placeholder="Buscar por nombre, DNI, usuario o correo..." autocomplete="off"
             aria-label="Buscar empleado activo" />
-          <mat-autocomplete #employeeAuto="matAutocomplete" [displayWith]="displayEmployee"
-            autoActiveFirstOption (optionSelected)="selectEmployee($event.option.value)">
-            <mat-option *ngFor="let employee of filteredEmployees" [value]="employee">
-              <span class="employee-option-name">{{ displayEmployee(employee) }}</span>
-              <small>{{ employee.dni || 'Sin DNI' }} · {{ employee.user?.username || 'Sin usuario' }}</small>
-            </mat-option>
-          </mat-autocomplete>
-          <button type="button" appUiButton="secondary" class="employee-list-button"
-            (click)="openWorkerPicker()" title="Ver empleados activos" aria-label="Ver lista de empleados activos">
-            <mat-icon aria-hidden="true">groups</mat-icon>
+          <span class="employee-count" *ngIf="!loadingRecipients">{{ filteredEmployees.length }}</span>
+        </div>
+
+        <div class="employee-load-state" *ngIf="loadingRecipients">
+          <app-loading-indicator [compact]="true" message="Cargando empleados..." />
+        </div>
+        <p *ngIf="recipientError && !loadingRecipients" class="error-notice" role="alert">
+          <mat-icon aria-hidden="true">error_outline</mat-icon>
+          <span>{{ recipientError }}</span>
+          <button type="button" appUiButton="secondary" (click)="loadRecipients()">Reintentar</button>
+        </p>
+
+        <div class="employee-results" *ngIf="!loadingRecipients && !recipientError && filteredEmployees.length">
+          <button type="button" class="employee-option" *ngFor="let employee of filteredEmployees"
+            [class.is-selected]="selectedEmployee?.userId === employee.userId"
+            (click)="selectEmployee(employee)">
+            <span class="employee-option-text">
+              <strong>{{ displayEmployee(employee) }}</strong>
+              <small>{{ employee.dni || 'Sin DNI' }} · {{ employee.username || employee.email || 'Cuenta vinculada' }}</small>
+            </span>
+            <mat-icon aria-hidden="true">{{ selectedEmployee?.userId === employee.userId ? 'check_circle' : 'radio_button_unchecked' }}</mat-icon>
           </button>
         </div>
-        <div class="selected-employee-summary" *ngIf="selectedEmployee">
-          <span>{{ collaboratorDisplay }}</span>
-          <small>{{ collaboratorExtra }}</small>
-          <button type="button" appUiButton="secondary" (click)="clearSelectedEmployee()" aria-label="Cambiar empleado">
-            <mat-icon aria-hidden="true">edit</mat-icon> Cambiar
-          </button>
+        <div class="employee-empty" *ngIf="!loadingRecipients && !recipientError && !filteredEmployees.length">
+          <mat-icon aria-hidden="true">person_search</mat-icon>
+          <strong>{{ employees.length ? 'No hay coincidencias' : 'No hay empleados disponibles' }}</strong>
+          <p>{{ employees.length ? 'Prueba con otro nombre, DNI o usuario.' : 'Solo aparecen empleados activos que tienen una cuenta de usuario vinculada en esta empresa.' }}</p>
         </div>
       </div>
 
@@ -87,18 +94,10 @@
           <div class="summary-row"><span class="summary-label">Inventario:</span><strong class="summary-value">{{ currentInventory.alias || currentInventory.inventoryName }}</strong></div>
           <div class="summary-row"><span class="summary-label">Titular responsable:</span><span class="summary-value">{{ getOwnerName(currentInventory.userId) }}</span></div>
           <div class="summary-row"><span class="summary-label">Empleado autorizado:</span><strong class="summary-value highlight">{{ collaboratorDisplay }}</strong></div>
-          <div class="summary-row">
-            <span class="summary-label">Nivel de permiso:</span>
-            <span class="summary-pill" [class.editor]="accessLevel === 2">
-              <mat-icon aria-hidden="true">{{ accessLevel === 2 ? 'edit' : 'visibility' }}</mat-icon>
-              {{ accessLevel === 2 ? 'Editor (Lectura y Escritura)' : 'Lector (Solo Consulta)' }}
-            </span>
-          </div>
+          <div class="summary-row"><span class="summary-label">Nivel de permiso:</span><span class="summary-pill" [class.editor]="accessLevel === 2"><mat-icon aria-hidden="true">{{ accessLevel === 2 ? 'edit' : 'visibility' }}</mat-icon>{{ accessLevel === 2 ? 'Editor (Lectura y Escritura)' : 'Lector (Solo Consulta)' }}</span></div>
         </div>
       </div>
-      <p *ngIf="error" class="error-notice" role="alert">
-        <mat-icon aria-hidden="true">error_outline</mat-icon>{{ error }}
-      </p>
+      <p *ngIf="error" class="error-notice" role="alert"><mat-icon aria-hidden="true">error_outline</mat-icon>{{ error }}</p>
     </section>
   </div>
 </app-modal-shell>
