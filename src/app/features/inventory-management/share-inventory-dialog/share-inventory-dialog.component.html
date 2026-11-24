@@ -70,9 +70,6 @@
             <h3>Resumen de la autorización</h3>
             <p>Revisa la configuración antes de conceder el acceso.</p>
           </div>
-          <button type="button" appUiButton="secondary" class="summary-access-button" (click)="openSharesDialog()">
-            <mat-icon aria-hidden="true">groups</mat-icon> Personas con acceso
-          </button>
         </div>
         <div class="summary-details">
           <div class="summary-row"><span class="summary-label">Inventario:</span><strong class="summary-value">{{ currentInventory.alias || currentInventory.inventoryName }}</strong></div>
@@ -81,7 +78,81 @@
           <div class="summary-row"><span class="summary-label">Nivel de permiso:</span><span class="summary-pill" [class.editor]="accessLevel === 2"><mat-icon aria-hidden="true">{{ accessLevel === 2 ? 'edit' : 'visibility' }}</mat-icon>{{ accessLevel === 2 ? 'Editor (Lectura y Escritura)' : 'Lector (Solo Consulta)' }}</span></div>
         </div>
       </div>
-      <p *ngIf="error" class="error-notice" role="alert"><mat-icon aria-hidden="true">error_outline</mat-icon>{{ error }}</p>
+      <p *ngIf="error" class="error-notice" role="alert">
+        <mat-icon aria-hidden="true">error_outline</mat-icon>{{ error }}
+      </p>
+    </section>
+
+    <section class="current-access-section" aria-label="Personas con acceso al inventario">
+      <div class="current-access-heading">
+        <div class="current-access-title">
+          <div class="current-access-title-line">
+            <h3>Personas con acceso</h3>
+            <span class="current-access-count">{{ totalAccessCount }}</span>
+          </div>
+          <p>Titular y colaboradores autorizados, con su nivel de permiso actual.</p>
+        </div>
+        <div class="current-access-actions">
+          <button type="button" appUiButton="secondary" class="access-refresh-button"
+            (click)="loadShares(true)" [disabled]="loadingShares || refreshingShares">
+            <app-loading-indicator *ngIf="refreshingShares; else accessRefreshLabel"
+              [compact]="true" message="Cargando" />
+            <ng-template #accessRefreshLabel><mat-icon aria-hidden="true">refresh</mat-icon> Actualizar</ng-template>
+          </button>
+          <button type="button" appUiButton="secondary" class="access-manage-button"
+            (click)="openSharesDialog()" [disabled]="loadingShares">
+            <mat-icon aria-hidden="true">manage_accounts</mat-icon> Administrar
+          </button>
+        </div>
+      </div>
+
+      <div *ngIf="loadingShares" class="current-access-loading" role="status" aria-live="polite">
+        <app-loading-indicator [compact]="true" message="Consultando accesos..." />
+      </div>
+
+      <p *ngIf="sharesError" class="current-access-error" role="alert">
+        <mat-icon aria-hidden="true">error_outline</mat-icon>
+        <span>{{ sharesError }}</span>
+        <button type="button" appUiButton="secondary" (click)="loadShares()" [disabled]="loadingShares || refreshingShares">
+          Reintentar
+        </button>
+      </p>
+
+      <ng-container *ngIf="!loadingShares && !sharesError">
+        <div class="current-access-table-wrap">
+          <table class="current-access-table">
+            <thead>
+              <tr><th scope="col">Usuario</th><th scope="col">Rol de acceso</th><th scope="col">Fecha</th></tr>
+            </thead>
+            <tbody>
+              <tr class="owner-access-row">
+                <td>
+                  <strong>{{ getOwnerName(currentInventory.userId) }}</strong>
+                  <small>Titular del inventario</small>
+                </td>
+                <td><span class="current-access-role owner">Propietario</span></td>
+                <td><span class="access-date-muted">—</span></td>
+              </tr>
+              <tr *ngFor="let share of orderedShares">
+                <td>
+                  <strong>{{ displayShareName(share) }}</strong>
+                  <small *ngIf="share.username">@{{ share.username }}</small>
+                </td>
+                <td>
+                  <span class="current-access-role" [class.editor]="share.accessLevel === 2">
+                    <mat-icon aria-hidden="true">{{ share.accessLevel === 2 ? 'edit' : 'visibility' }}</mat-icon>
+                    {{ share.accessLevel === 2 ? 'Editor' : 'Lector' }}
+                  </span>
+                </td>
+                <td>{{ share.sharedDate | date:'dd/MM/yyyy' }}</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        <p *ngIf="!shares.length" class="current-access-empty-note">
+          Este inventario todavía no tiene colaboradores adicionales. El titular conserva el acceso propietario.
+        </p>
+      </ng-container>
     </section>
   </div>
 </app-modal-shell>
