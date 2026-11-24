@@ -1,20 +1,15 @@
-<section class="confirm-shell ui-v2-dialog ui-v2-dialog--special" role="document">
-  <header class="confirm-header">
-    <div class="confirm-heading">
-      <span class="confirm-icon" [class.confirm-icon--danger]="data.tone === 'danger'">
-        <mat-icon aria-hidden="true">{{data.icon}}</mat-icon>
-      </span>
-      <div class="confirm-heading__text">
-        <h2 mat-dialog-title>{{data.title}}</h2>
-        <p>Verifica los detalles antes de continuar.</p>
-      </div>
-    </div>
-    <button type="button" appUiButton="close" aria-label="Cerrar confirmación"
-            (click)="dialogRef.close()">
-      <mat-icon aria-hidden="true">close</mat-icon>
-    </button>
-  </header>
-  <mat-dialog-content class="confirm-body">
+<app-modal-shell
+  type="confirmation"
+  [title]="data.title"
+  subtitle="Verifica los detalles antes de continuar"
+  [icon]="data.icon"
+  [infoVisible]="false"
+  [closeVisible]="false"
+  [footerActions]="modalFooterActions"
+  (actionClicked)="handleModalAction($event)"
+  (closeRequested)="dialogRef.close()">
+  <div class="confirm-body">
+
     <p class="confirm-description">{{data.message}}</p>
     <div *ngIf="data.requiresReason" class="confirm-reason">
       <label for="confirm-reason-input">{{data.reasonLabel || 'Motivo de la operación'}}</label>
@@ -26,13 +21,6 @@
                 autocomplete="off"></textarea>
       <span class="confirm-counter">{{reason.length}} / {{maxLength}}</span>
     </div>
-  </mat-dialog-content>
-  <mat-dialog-actions class="confirm-actions">
-    <button type="button" appUiButton="secondary" (click)="dialogRef.close()">Cancelar</button>
-    <button type="button" [appUiButton]="data.tone === 'danger' ? 'danger' : 'primary'"
-            [disabled]="!canConfirm" (click)="accept()">
-      <mat-icon aria-hidden="true">{{data.tone === 'danger' ? 'block' : 'check'}}</mat-icon>
-      {{data.confirmLabel}}
-    </button>
-  </mat-dialog-actions>
-</section>
+  
+  </div>
+</app-modal-shell>
