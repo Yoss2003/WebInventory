@@ -128,6 +128,7 @@ export class InventoryDialogMotionDirective implements AfterViewInit, OnChanges,
   private animateHeight(from: number, to: number): void {
     if (!Number.isFinite(from) || !Number.isFinite(to) || Math.abs(to - from) < 3) {
       this.currentHeight = to;
+      if (!this.heightAnimation) this.host.classList.remove('inv-dialog-height-transitioning');
       return;
     }
     this.currentHeight = to;
