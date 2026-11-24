@@ -68,7 +68,7 @@ function createDefinition(
       visibleByDefault: true,
       iconEnabledByDefault: options.iconEnabled ?? true,
       icon: options.icon ?? '',
-      subtitleEnabledByDefault: Boolean(options.subtitle),
+      subtitleEnabledByDefault: false,
       subtitle: options.subtitle ?? '',
       infoEnabledByDefault: options.info ?? true,
       infoText: 'Información adicional sobre esta operación.',
