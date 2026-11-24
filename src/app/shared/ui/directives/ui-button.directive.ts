@@ -14,7 +14,7 @@ export type UiButtonTone = 'primary' | 'secondary' | 'danger' | 'ghost' | 'close
     '[class.ui-v2-button--ghost]': 'effectiveTone() === "ghost"',
     '[class.ui-v2-button--close]': 'effectiveTone() === "close"',
     '[class.ui-v2-button--loading]': 'loading()',
-    '[attr.aria-busy]': 'loading() ? "true" : null',
+    '[attr.aria-busy]': 'loading() ? "true" : null',\n    '[attr.aria-live]': 'loading() ? "polite" : null',
     '[attr.data-loading-label]': 'loading() ? loadingText() : null'
   }
 })
