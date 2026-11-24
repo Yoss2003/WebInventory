@@ -1,16 +1,6 @@
-<div class="record-dialog ui-v2-dialog">
-  <header>
-    <span class="inv-seven-title-icon"><mat-icon>inventory_2</mat-icon></span>
-    <div class="record-header-title">
-      <h2>Ficha completa del artículo</h2>
-      <small>{{ article?.name || data.articleName || ('ID #' + data.id) }}</small>
-    </div>
-    <button type="button" appUiButton="close" class="detail-close-btn" (click)="dialogRef.close(hasChanges)" aria-label="Cerrar">
-      <mat-icon>close</mat-icon>
-    </button>
-  </header>
-
-  <main>
+<app-modal-shell type="detail" title="Ficha completa del artículo" [subtitle]="article?.name || data.articleName || ('ID #' + data.id)" icon="inventory_2" [infoVisible]="false" [closeVisible]="true" [footerVisible]="false" [contentScrollable]="false" (closeRequested)="dialogRef.close(hasChanges)">
+  <div class="record-dialog ui-v2-dialog">
+    <main>
     <div class="record-loading" *ngIf="loading" role="status" aria-label="Cargando ficha del artículo">
       <app-loading-indicator message="Consultando artículo y sus detalles..." />
       <div class="record-skeleton" aria-hidden="true"><span></span><span></span><span></span><span></span><span></span><span></span></div>
@@ -198,29 +188,7 @@
       </section>
     </ng-container>
   </main>
-  <!-- Visor de cámara para escaneo de series -->
-  <div class="batch-scanner-overlay" *ngIf="isScanningBatch">
-    <div class="batch-scanner-box">
-      <div class="batch-scanner-header">
-        <div>
-          <h4>{{ scanTargetIndex === -1 ? 'Escaneo continuo de series' : 'Escanear Serie #' + (scanTargetIndex + 1) }}</h4>
-          <small>{{ scanTargetIndex === -1 ? 'Escanea varias unidades seguidas; se irán agregando al lote.' : 'Apunta al código de barras o QR de esta unidad.' }}</small>
-        </div>
-        <button type="button" appUiButton="close" (click)="stopBatchScanner()" aria-label="Cerrar escáner">
-          <mat-icon>close</mat-icon>
-        </button>
-      </div>
-      <div class="batch-scanner-video-wrap">
-        <video id="detail-batch-video" playsinline muted></video>
-        <div class="batch-scanner-target"></div>
-      </div>
-      <div class="batch-scanner-footer">
-        <button type="button" appUiButton="secondary" (click)="stopBatchScanner()">Listo / Cerrar cámara</button>
-      </div>
-    </div>
-  </div>
-  <!-- Visor avanzado (Lightbox) -->
-  <dialog #mediaLightbox class="detail-media-lightbox" aria-label="Visor de imagen" (close)="onLightboxNativeClose()">
+    <dialog #mediaLightbox class="detail-media-lightbox" aria-label="Visor de imagen" (close)="onLightboxNativeClose()">
     <div class="lightbox-shell" *ngIf="previewMedia">
       <div class="lightbox-header">
         <div class="lightbox-title">
@@ -269,4 +237,5 @@
       </div>
     </div>
   </dialog>
-</div>
+  </div>
+</app-modal-shell>

@@ -1,14 +1,7 @@
+<app-modal-shell type="subTask" title="Datos de comunicación" subtitle="Registra los medios de contacto del proveedor" icon="contact_mail" [infoVisible]="false" [closeVisible]="false" [footerActions]="modalFooterActions" (actionClicked)="handleModalAction($event)" (closeRequested)="close()">
 <section class="supplier-communication-dialog ui-v2-dialog ui-v2-dialog--simple">
-  <header class="dialog-head">
-    <div>
-      <h2>Datos de comunicación</h2>
-      <p>Registra los medios de contacto del proveedor</p>
-    </div>
-    <button type="button" appUiButton="close" (click)="close()" aria-label="Cerrar datos de comunicación">
-      <mat-icon aria-hidden="true">close</mat-icon>
-    </button>
-  </header>
   <form class="dialog-content" (ngSubmit)="save()">
+
     <label>Nombre de contacto
       <input [(ngModel)]="data.contactName" name="contactName" maxlength="150" appUiControl />
     </label>
@@ -18,9 +11,7 @@
     <label>Correo electrónico
       <input [(ngModel)]="data.email" name="email" type="email" maxlength="254" appUiControl />
     </label>
-    <footer class="dialog-actions">
-      <button type="button" appUiButton="secondary" (click)="close()">Cancelar</button>
-      <button type="submit" appUiButton="primary">Aplicar datos</button>
-    </footer>
-  </form>
-</section>
+    
+</form>
+  </section>
+</app-modal-shell>

@@ -4,6 +4,8 @@ import { FormsModule } from '@angular/forms';
 import { MAT_DIALOG_DATA, MatDialogModule, MatDialogRef } from '@angular/material/dialog';
 import { MatIconModule } from '@angular/material/icon';
 import { UiButtonDirective } from '../ui/directives/ui-button.directive';
+import { ModalShellComponent } from '../ui/components/modal-shell/modal-shell.component';
+import type { ModalActionId, ModalFooterAction } from '../ui/models/modal-standard.model';
 
 export interface DevConfirmDialogData {
   title: string;
@@ -21,7 +23,7 @@ export interface DevConfirmDialogData {
 @Component({
   selector: 'app-dev-confirm-dialog',
   standalone: true,
-  imports: [CommonModule, MatDialogModule, MatIconModule, FormsModule, UiButtonDirective],
+  imports: [CommonModule, MatDialogModule, MatIconModule, FormsModule, UiButtonDirective, ModalShellComponent],
   templateUrl: './dev-confirm-dialog.html',
   styleUrl: './dev-confirm-dialog.scss'
 })
@@ -34,6 +36,18 @@ export class DevConfirmDialogComponent {
   get canConfirm(): boolean {
     return !this.data.requiresReason ||
       (this.reason.trim().length > 0 && this.reason.trim().length <= this.maxLength);
+  }
+
+  get modalFooterActions(): ModalFooterAction[] {
+    return [
+      { id: 'cancel', label: 'Cancelar', tone: 'secondary', order: 0 },
+      { id: 'primary', label: this.data.confirmLabel, tone: this.data.tone, order: 1, disabled: !this.canConfirm }
+    ];
+  }
+
+  handleModalAction(action: ModalActionId): void {
+    if (action === 'cancel') this.dialogRef.close();
+    if (action === 'primary') this.accept();
   }
 
   accept(): void {

@@ -16,6 +16,8 @@ import { Brand } from '../../../core/models/brand.model';
 import { BrandService } from '../../../core/services/brands';
 import { UiButtonDirective } from '../../../shared/ui/directives/ui-button.directive';
 import { UiTableActionDirective } from '../../../shared/ui/directives/ui-table-action.directive';
+import { ModalShellComponent } from '../../../shared/ui/components/modal-shell/modal-shell.component';
+import type { ModalActionId, ModalFooterAction } from '../../../shared/ui/models/modal-standard.model';
 
 export interface BrandDialogData {
   categoryId: number;
@@ -27,7 +29,7 @@ export interface BrandDialogData {
 @Component({
   selector: 'app-brand-dialog',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule, MatDialogModule, MatIconModule, MatProgressSpinnerModule, UiButtonDirective, UiTableActionDirective],
+  imports: [CommonModule, ReactiveFormsModule, MatDialogModule, MatIconModule, MatProgressSpinnerModule, UiButtonDirective, UiTableActionDirective, ModalShellComponent],
   templateUrl: './brand-dialog.html',
   styleUrls: ['./brand-dialog.scss']
 })
@@ -69,11 +71,15 @@ export class BrandDialogComponent implements OnInit {
   ngOnInit(): void {
     // La clase controla el contenedor EXTERIOR de Angular Material.
     this.dialogRef.addPanelClass('inventory-brand-dialog-pane');
-    this.dialogRef.updateSize(
-      'min(520px, calc(100vw - 24px))',
-      'min(700px, calc(100dvh - 24px))'
-    );
     this.loadBrands();
+  }
+
+  get modalFooterActions(): ModalFooterAction[] {
+    return [{ id: 'cancel', label: 'Cerrar', tone: 'secondary', order: 0, disabled: this.isSaving }];
+  }
+
+  handleModalAction(action: ModalActionId): void {
+    if (action === 'cancel' || action === 'close') this.close();
   }
 
   get inactiveCount(): number {

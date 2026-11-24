@@ -4,6 +4,7 @@ import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { MatIconModule } from '@angular/material/icon';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { UiButtonDirective } from '../../../shared/ui/directives/ui-button.directive';
+import { ModalShellComponent } from '../../../shared/ui/components/modal-shell/modal-shell.component';
 import type { SupplierRecord } from '../master-catalogs';
 
 interface FiscalInfoRow { label: string; value: string; }
@@ -11,7 +12,7 @@ interface FiscalInfoRow { label: string; value: string; }
 @Component({
   selector: 'app-supplier-fiscal-info-dialog',
   standalone: true,
-  imports: [CommonModule, MatIconModule, MatTooltipModule, UiButtonDirective],
+  imports: [CommonModule, MatIconModule, MatTooltipModule, UiButtonDirective, ModalShellComponent],
   templateUrl: './supplier-fiscal-info-dialog.html',
   styleUrl: './supplier-fiscal-info-dialog.scss'
 })

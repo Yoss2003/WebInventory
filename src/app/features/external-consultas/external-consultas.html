@@ -121,34 +121,18 @@
       <p *ngIf="usdError || eurError" class="error">{{usdError}} {{eurError}}</p>
       
       <ng-template #fxHistoryDialog>
-        <section
-          class="fx-history-dialog fx-unified-dialog"
-          role="dialog"
-          aria-labelledby="fx-dialog-title">
-
-          <header class="fx-unified-header">
-            <div class="fx-unified-heading">
-              <span class="fx-unified-icon">
-                <mat-icon>tune</mat-icon>
-              </span>
-
-              <div class="fx-unified-title">
-                <h2 id="fx-dialog-title">Filtro avanzado</h2>
-                <p>Consulta el historial de cotizaciones</p>
-              </div>
-            </div>
-
-            <button
-              type="button"
-              appUiButton="close"
-              class="fx-unified-close"
-              (click)="closeAdvancedFilters()"
-              aria-label="Cerrar filtro avanzado">
-              <mat-icon>close</mat-icon>
-            </button>
-          </header>
-
-          <main class="fx-unified-content">
+        <app-modal-shell
+          type="filters"
+          title="Filtro avanzado"
+          subtitle="Consulta el historial de cotizaciones"
+          icon="tune"
+          [infoVisible]="false"
+          [closeVisible]="false"
+          [footerActions]="filterModalActions"
+          (actionClicked)="handleFilterModalAction($event)"
+          (closeRequested)="closeAdvancedFilters()">
+          <div class="fx-history-dialog fx-unified-dialog">
+            <div class="fx-unified-content">
             <div class="fx-history-filters">
               <h3>Consultar otras fechas</h3>
 
@@ -254,19 +238,9 @@
                 Consultando el historial almacenado...
               </p>
             </div>
-          </main>
-
-          <footer class="fx-unified-footer">
-            <button
-              type="button"
-              appUiButton="secondary"
-              class="fx-footer-close"
-              (click)="closeAdvancedFilters()">
-              Cerrar
-            </button>
-          </footer>
-
-        </section>
+          </div>
+          </div>
+        </app-modal-shell>
       </ng-template>
 
       <p class="fx-disclaimer">Solo se muestran cotizaciones verificadas. Las fechas históricas están limitadas a los registros guardados por la API.</p>

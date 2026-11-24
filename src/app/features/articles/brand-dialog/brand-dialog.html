@@ -1,17 +1,18 @@
-<div class="brand-modal ui-v2-dialog ui-v2-dialog--special">
-  <header class="brand-header">
-    <div class="brand-heading">
-      <span class="header-icon"><mat-icon>sell</mat-icon></span>
-      <div>
-        <h2 id="brand-dialog-title">Administrar marcas</h2>
-        <p>Categoría: {{ data.categoryName }}</p>
-      </div>
-    </div>
-    <button type="button" appUiButton="close" aria-label="Cerrar administrador de marcas"
-            [disabled]="isSaving" (click)="close()"><mat-icon>close</mat-icon></button>
-  </header>
+<app-modal-shell
+  type="subTask"
+  title="Administrar marcas"
+  [subtitle]="'Categoría: ' + data.categoryName"
+  icon="sell"
+  [infoVisible]="true"
+  infoTooltip="Registra marcas para esta categoría, consulta las existentes, edita sus nombres y desactiva las que ya no deban utilizarse."
+  [closeVisible]="false"
+  [footerActions]="modalFooterActions"
+  [busyActionId]="null"
+  (actionClicked)="handleModalAction($event)"
+  (closeRequested)="close()">
+  <div class="brand-modal ui-v2-dialog ui-v2-dialog--special">
+    <div class="brand-content">
 
-  <div class="brand-content">
     <section class="form-section" aria-label="Crear o editar marca">
       <div class="section-row">
         <h3>{{ editingBrand ? 'Editar marca' : 'Nueva marca' }}</h3>
@@ -26,7 +27,7 @@
                  placeholder="Ej. Lenovo" autocomplete="off" [readonly]="isSaving" />
           <button type="submit" appUiButton="primary" [disabled]="isSaving || brandForm.invalid">
             <mat-icon>{{ editingBrand ? 'save' : 'add' }}</mat-icon>
-            {{ isSaving ? 'Guardando...' : editingBrand ? 'Guardar' : 'Agregar' }}
+            {{ isSaving ? 'Cargando' : editingBrand ? 'Guardar' : 'Agregar' }}
           </button>
         </div>
         <div class="brand-feedback-slot" aria-live="polite">
@@ -123,9 +124,7 @@
       </div>
       <p class="list-hint">Para asignar una marca al artículo, selecciónala en el ComboBox del formulario.</p>
     </section>
+  
+    </div>
   </div>
-
-  <footer class="brand-footer">
-    <button type="button" appUiButton="secondary" (click)="close()" [disabled]="isSaving">Cerrar</button>
-  </footer>
-</div>
+</app-modal-shell>

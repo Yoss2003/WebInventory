@@ -8,10 +8,11 @@ import { MatIconModule } from '@angular/material/icon';
 import { AssignmentService, AssignedArticle, AssignmentEvent } from '../../core/services/assignments';
 import { SerialUnitsService, SerialUnit } from '../../core/services/serial-units';
 import { UiButtonDirective } from '../../shared/ui/directives/ui-button.directive';
+import { ModalShellComponent } from '../../shared/ui/components/modal-shell/modal-shell.component';
 
 @Component({
   selector: 'app-assignment-history-dialog', standalone: true,
-  imports: [CleanArticleNamePipe, CommonModule, FormsModule, MatDialogModule, MatIconModule, UiButtonDirective],
+  imports: [CleanArticleNamePipe, CommonModule, FormsModule, MatDialogModule, MatIconModule, UiButtonDirective, ModalShellComponent],
   templateUrl: './assignment-history-dialog.html', styleUrl: './assignment-history-dialog.scss',
   encapsulation: ViewEncapsulation.None
 })

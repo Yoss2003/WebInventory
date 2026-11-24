@@ -9,12 +9,14 @@ import { forkJoin } from 'rxjs';
 import {  ManagedRole, PermissionItem, UserManagementService } from '../../../core/services/user-management';
 import { ConfirmationDialogService } from '../../../shared/confirm-dialog/confirmation-dialog.service';
 import { UiButtonDirective } from '../../../shared/ui/directives/ui-button.directive';
+import { ModalShellComponent } from '../../../shared/ui/components/modal-shell/modal-shell.component';
+import type { ModalActionId, ModalFooterAction } from '../../../shared/ui/models/modal-standard.model';
 
 @Component({
   selector: 'app-role-permissions-dialog',
   standalone: true,
   imports: [CommonModule, FormsModule, MatDialogModule, MatIconModule,
-    MatFormFieldModule, MatSelectModule, UiButtonDirective],
+    MatFormFieldModule, MatSelectModule, UiButtonDirective, ModalShellComponent],
   templateUrl: './role-permissions-dialog.html',
   styleUrl: './role-permissions-dialog.scss'
 })
@@ -30,6 +32,18 @@ export class RolePermissionsDialogComponent {
   loading = true;
   saving = false;
   error = '';
+
+  get modalFooterActions(): ModalFooterAction[] {
+    return [
+      { id: 'cancel', label: 'Cancelar', tone: 'secondary', order: 0, disabled: this.saving },
+      { id: 'primary', label: 'Guardar permisos', tone: 'primary', order: 1, disabled: this.saving || this.loading || !this.roleId }
+    ];
+  }
+
+  handleModalAction(action: ModalActionId): void {
+    if (action === 'cancel') this.close();
+    if (action === 'primary') this.save();
+  }
 
   constructor() { this.load(); }
 

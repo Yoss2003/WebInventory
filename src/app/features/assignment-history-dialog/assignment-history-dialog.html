@@ -1,28 +1,6 @@
-
-<div class="assignment-dialog ui-v2-dialog ui-v2-dialog--special">
-
-  <header class="assignment-dialog__header">
-    <div class="assignment-dialog__title">
-      <span class="assignment-dialog__icon">
-        <mat-icon>assignment</mat-icon>
-      </span>
-
-      <div>
-        <h2>Detalle de custodia</h2>
-        <p>Asignación #{{ data.id }} · {{ data.status }}</p>
-      </div>
-    </div>
-
-    <button
-      type="button"
-      appUiButton="close"
-      (click)="dialogRef.close()"
-      aria-label="Cerrar">
-      <mat-icon>close</mat-icon>
-    </button>
-  </header>
-
-  <mat-dialog-content class="assignment-dialog__body">
+<app-modal-shell type="detail" title="Detalle de custodia" [subtitle]="'Asignación #' + data.id + ' · ' + data.status" icon="assignment" [infoVisible]="false" [closeVisible]="true" [footerVisible]="false" (closeRequested)="dialogRef.close()">
+  <div class="assignment-dialog ui-v2-dialog ui-v2-dialog--special">
+    <div class="assignment-dialog__body">
 
     <!-- ARTÍCULO -->
     <section class="assignment-dialog__block custody-card">
@@ -314,15 +292,6 @@
       {{ errorMessage }}
     </p>
 
-  </mat-dialog-content>
-
-  <mat-dialog-actions class="assignment-dialog__footer">
-    <button
-      type="button"
-      appUiButton="secondary"
-      (click)="dialogRef.close()">
-      Cerrar
-    </button>
-  </mat-dialog-actions>
-
-</div>
+  </div>
+  </div>
+</app-modal-shell>

@@ -3,7 +3,8 @@ import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { MatIconModule } from '@angular/material/icon';
-import { UiButtonDirective } from '../../../shared/ui/directives/ui-button.directive'; 
+import { UiButtonDirective } from '../../../shared/ui/directives/ui-button.directive';
+import { ModalShellComponent } from '../../../shared/ui/components/modal-shell/modal-shell.component';
 import type { SupplierRecord } from '../master-catalogs';
 
 interface FiscalRow { label: string; value: string; }
@@ -11,7 +12,7 @@ interface FiscalRow { label: string; value: string; }
 @Component({
   selector: 'app-supplier-detail-dialog',
   standalone: true,
-  imports: [CommonModule, MatIconModule, UiButtonDirective],
+  imports: [CommonModule, MatIconModule, UiButtonDirective, ModalShellComponent],
   templateUrl: './supplier-detail-dialog.html',
   styleUrl: './supplier-detail-dialog.scss',
   changeDetection: ChangeDetectionStrategy.OnPush

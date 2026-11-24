@@ -5,6 +5,8 @@ import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { MatIconModule } from '@angular/material/icon';
 import { MeasurementUnit } from '../../../../core/services/measurement-units';
 import { UiButtonDirective } from '../../../../shared/ui/directives/ui-button.directive';
+import { ModalShellComponent } from '../../../../shared/ui/components/modal-shell/modal-shell.component';
+import type { ModalActionId, ModalFooterAction } from '../../../../shared/ui/models/modal-standard.model';
 
 export interface CategoryUnitPickerData {
   units: MeasurementUnit[];
@@ -15,7 +17,7 @@ export interface CategoryUnitPickerData {
 @Component({
   selector: 'app-category-unit-picker-dialog',
   standalone: true,
-  imports: [CommonModule, MatCheckboxModule, MatIconModule, UiButtonDirective],
+  imports: [CommonModule, MatCheckboxModule, MatIconModule, UiButtonDirective, ModalShellComponent],
   templateUrl: './category-unit-picker-dialog.html',
   styleUrl: './category-unit-picker-dialog.scss'
 })
@@ -61,6 +63,18 @@ export class CategoryUnitPickerDialogComponent {
 
   clearAllVisible(): void {
     for (const unit of this.visibleUnits) this.selected.delete(unit.id);
+  }
+
+  get modalFooterActions(): ModalFooterAction[] {
+    return [
+      { id: 'cancel', label: 'Cancelar', tone: 'secondary', order: 0 },
+      { id: 'primary', label: 'Aplicar selección', tone: 'primary', order: 1, disabled: this.selectedCount === 0 }
+    ];
+  }
+
+  handleModalAction(action: ModalActionId): void {
+    if (action === 'cancel') this.cancel();
+    if (action === 'primary') this.apply();
   }
 
   cancel(): void { this.dialogRef.close(); }

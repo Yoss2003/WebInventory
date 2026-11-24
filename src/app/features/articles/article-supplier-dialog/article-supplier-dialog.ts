@@ -9,6 +9,8 @@ import {
 } from '../../../core/services/article-reference-data';
 import { LoadingIndicatorComponent } from '../../../shared/loading/loading-indicator';
 import { UiButtonDirective } from '../../../shared/ui/directives/ui-button.directive';
+import { ModalShellComponent } from '../../../shared/ui/components/modal-shell/modal-shell.component';
+import type { ModalActionId, ModalFooterAction } from '../../../shared/ui/models/modal-standard.model';
 
 export interface ArticleSupplierDialogData {
   masterInventoryId: number;
@@ -18,7 +20,7 @@ export interface ArticleSupplierDialogData {
 @Component({
   selector: 'app-article-supplier-dialog',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule, MatDialogModule, MatIconModule, LoadingIndicatorComponent, UiButtonDirective],
+  imports: [CommonModule, ReactiveFormsModule, MatDialogModule, MatIconModule, LoadingIndicatorComponent, UiButtonDirective, ModalShellComponent],
   templateUrl: './article-supplier-dialog.html',
   styleUrl: './article-supplier-dialog.scss'
 })
@@ -61,6 +63,18 @@ export class ArticleSupplierDialogComponent {
       this.fiscalStatus = current.estado || null;
       this.fiscalCondition = current.condicion || null;
     }
+  }
+
+  get modalFooterActions(): ModalFooterAction[] {
+    return [
+      { id: 'cancel', label: 'Cancelar', tone: 'secondary', order: 0, disabled: this.saving || this.lookingUpRuc },
+      { id: 'primary', label: this.editing ? 'Guardar cambios' : 'Registrar proveedor', tone: 'primary', order: 1, disabled: this.saving || this.lookingUpRuc || this.form.invalid }
+    ];
+  }
+
+  handleModalAction(action: ModalActionId): void {
+    if (action === 'cancel') this.close();
+    if (action === 'primary') this.save();
   }
 
   lookupRuc(): void {

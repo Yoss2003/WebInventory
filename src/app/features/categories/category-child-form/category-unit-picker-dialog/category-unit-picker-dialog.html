@@ -1,13 +1,15 @@
-<div class="unit-picker ui-v2-dialog">
-  <header class="unit-picker__header">
-    <div class="unit-picker__icon"><mat-icon>straighten</mat-icon></div>
-    <div class="unit-picker__titles">
-      <h2>Unidades de medida</h2>
-      <p>Elige las unidades permitidas en esta categoría hija</p>
-    </div>
-    <button type="button" appUiButton="close" (click)="cancel()" aria-label="Cerrar sin guardar"><mat-icon>close</mat-icon></button>
-  </header>
-
+<app-modal-shell
+  class="inv-modal-adaptive-height"
+  type="selector"
+  title="Unidades de medida"
+  subtitle="Elige las unidades permitidas en esta categoría hija"
+  icon="straighten"
+  [infoVisible]="false"
+  [closeVisible]="false"
+  [footerActions]="modalFooterActions"
+  (actionClicked)="handleModalAction($event)"
+  [contentScrollable]="false" (closeRequested)="cancel()">
+  <div class="unit-picker">
   <div class="unit-picker__body">
     <div class="unit-picker__search-heading">
       <label class="unit-picker__search-label" for="unit-picker-search">Buscar por nombre o abreviatura</label>
@@ -34,12 +36,6 @@
       </div>
       <p class="unit-picker__empty" *ngIf="visibleUnits.length === 0">No se encontraron unidades con esa búsqueda.</p>
     </div>
-
   </div>
-
-  <footer class="unit-picker__footer">
-    <button type="button" appUiButton="primary" (click)="apply()" [disabled]="selectedCount === 0">
-      <mat-icon>check</mat-icon> Aplicar selección
-    </button>
-  </footer>
-</div>
+  </div>
+</app-modal-shell>

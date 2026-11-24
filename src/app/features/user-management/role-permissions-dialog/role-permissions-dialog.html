@@ -1,15 +1,17 @@
-<div class="roles-modal ui-v2-dialog ui-v2-dialog--simple" role="document">
-  <header class="roles-modal__header">
-    <span class="roles-modal__symbol"><mat-icon aria-hidden="true">admin_panel_settings</mat-icon></span>
-    <div class="roles-modal__heading">
-      <h2 mat-dialog-title>Permisos por rol</h2>
-      <p>Exclusivo del desarrollador · aplica a todas las empresas</p>
-    </div>
-    <button appUiButton="close" type="button" (click)="close()" aria-label="Cerrar">
-      <mat-icon aria-hidden="true">close</mat-icon>
-    </button>
-  </header>
-  <mat-dialog-content class="roles-modal__body">
+<app-modal-shell
+  type="mainForm"
+  title="Permisos por rol"
+  subtitle="Exclusivo del desarrollador · aplica a todas las empresas"
+  icon="admin_panel_settings"
+  [infoVisible]="true"
+  infoTooltip="El desarrollador tiene permisos fijos. Puedes configurar la visualización y edición del administrador, así como los permisos del personal."
+  [closeVisible]="false"
+  [footerActions]="modalFooterActions"
+  [busyActionId]="saving ? 'primary' : null"
+  (actionClicked)="handleModalAction($event)"
+  [contentScrollable]="false" (closeRequested)="close()">
+  <div class="roles-modal">
+  <div class="roles-modal__body">
     <p class="roles-modal__hint">
       El desarrollador tiene permisos fijos. Puedes configurar la visualización y edición
       del administrador, así como los permisos del personal.
@@ -32,12 +34,6 @@
         <span><strong>{{item.name}}</strong><small>{{item.systemCode}}</small></span>
       </label>
     </div>
-  </mat-dialog-content>
-  <mat-dialog-actions class="roles-modal__actions">
-    <button type="button" appUiButton="secondary" (click)="close()">Cancelar</button>
-    <button type="button" appUiButton="primary" (click)="save()" [disabled]="saving || loading || !roleId">
-      <mat-icon aria-hidden="true">save</mat-icon>
-      {{saving ? 'Guardando...' : 'Guardar permisos'}}
-    </button>
-  </mat-dialog-actions>
-</div>
+  </div>
+  </div>
+</app-modal-shell>

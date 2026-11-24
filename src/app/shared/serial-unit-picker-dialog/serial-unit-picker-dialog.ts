@@ -5,6 +5,8 @@ import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { MatIconModule } from '@angular/material/icon';
 import { SerialUnit } from '../../core/services/serial-units';
 import { UiButtonDirective } from '../ui/directives/ui-button.directive';
+import { ModalShellComponent } from '../ui/components/modal-shell/modal-shell.component';
+import type { ModalActionId, ModalFooterAction } from '../ui/models/modal-standard.model';
 
 export interface SerialUnitPickerData {
   units: SerialUnit[];
@@ -16,7 +18,7 @@ export interface SerialUnitPickerData {
 @Component({
   selector: 'app-serial-unit-picker-dialog',
   standalone: true,
-  imports: [CommonModule, MatCheckboxModule, MatIconModule, UiButtonDirective],
+  imports: [CommonModule, MatCheckboxModule, MatIconModule, UiButtonDirective, ModalShellComponent],
   templateUrl: './serial-unit-picker-dialog.html',
   styleUrl: './serial-unit-picker-dialog.scss'
 })
@@ -65,6 +67,18 @@ export class SerialUnitPickerDialogComponent {
 
   clearAllVisible(): void {
     for (const unit of this.visibleUnits) this.selected.delete(unit.id);
+  }
+
+  get modalFooterActions(): ModalFooterAction[] {
+    return [
+      { id: 'cancel', label: 'Cancelar', tone: 'secondary', order: 0 },
+      { id: 'primary', label: `Aplicar selección (${this.selectedCount})`, tone: 'primary', order: 1 }
+    ];
+  }
+
+  handleModalAction(action: ModalActionId): void {
+    if (action === 'cancel') this.cancel();
+    if (action === 'primary') this.apply();
   }
 
   cancel(): void { this.dialogRef.close(); }
