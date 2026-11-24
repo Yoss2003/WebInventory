@@ -9,6 +9,7 @@ import { MatDialogRef, MatDialogModule } from '@angular/material/dialog';
 import { MatInputModule } from '@angular/material/input';
 import { MatSelectModule } from '@angular/material/select';
 import { MatIconModule } from '@angular/material/icon';
+import { MatMenuModule } from '@angular/material/menu';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { ArticleService } from '../../../core/services/articles';
 import { MovementService } from '../../../core/services/movement';
@@ -27,7 +28,7 @@ import type { ModalActionId, ModalFooterAction, ModalSection } from '../../../sh
 @Component({
   selector: 'app-traspaso-form',
   standalone: true,
-  imports: [InventoryDialogMotionDirective, CleanArticleNamePipe, CommonModule, ReactiveFormsModule, MatDialogModule, MatInputModule, MatSelectModule, MatIconModule, MatFormFieldModule, UiButtonDirective, UiControlDirective, ModalShellComponent],
+  imports: [InventoryDialogMotionDirective, CleanArticleNamePipe, CommonModule, ReactiveFormsModule, MatDialogModule, MatInputModule, MatSelectModule, MatIconModule, MatMenuModule, MatFormFieldModule, UiButtonDirective, UiControlDirective, ModalShellComponent],
   templateUrl: './traspaso-form.html',
   styleUrl: './traspaso-form.scss'
 })
@@ -55,6 +56,9 @@ export class TraspasoFormComponent implements OnInit, OnDestroy {
   selectedSerialIds:number[]=[];
   serialError='';
   serialUnitsLoading = false;
+  recipientMode: 'internal' | 'external' = 'internal';
+  recipientsLoading = false;
+  recipientsError = '';
   recipientDocumentType: 'DNI' | 'RUC' = 'DNI';
   recipientDocument = '';
   recipientLookupLoading = false;
@@ -85,6 +89,18 @@ export class TraspasoFormComponent implements OnInit, OnDestroy {
       this.selectedSerialIds = ids.map(Number);
       this.form.controls.amount.setValue(this.selectedSerialIds.length);
     });
+  }
+
+  setRecipientMode(mode: 'internal' | 'external'): void {
+    if (this.recipientMode === mode) return;
+    this.recipientMode = mode;
+    this.recipientLookup?.unsubscribe();
+    this.recipientLookup = undefined;
+    this.recipientLookupLoading = false;
+    this.recipientLookupError = '';
+    this.recipientDocument = '';
+    this.form.controls.recipientUserId.setValue(null);
+    this.form.controls.recipientName.setValue('');
   }
 
   setRecipientDocumentType(type: 'DNI' | 'RUC'): void {
@@ -169,8 +185,12 @@ export class TraspasoFormComponent implements OnInit, OnDestroy {
       (!this.isSerialized || (this.operationType==='Asignar' && Number.isInteger(qty) && this.selectedSerialIds.length===qty));
   }
   get canAdvanceRecipient():boolean {
-    return !!this.form.controls.observation.value?.trim() &&
-      (this.operationType!=='Asignar'||!!this.form.controls.recipientName.value?.trim());
+    if (this.operationType !== 'Asignar') return true;
+    const recipientName = !!this.form.controls.recipientName.value?.trim();
+    if (this.recipientMode === 'internal') {
+      return Number(this.form.controls.recipientUserId.value) > 0 && recipientName;
+    }
+    return recipientName;
   }
   goStep(next:number):void {
     if(this.isSaving||next<1||next>3)return;
@@ -264,9 +284,16 @@ export class TraspasoFormComponent implements OnInit, OnDestroy {
       next: data => this.articles = data.filter(a => a.isActive && Number(a.stock) > 0),
       error: () => this.loadingError = 'No se pudieron consultar los artículos.'
     });
+    this.recipientsLoading = true;
     this.assignmentsApi.recipients().subscribe({
-      next: data => this.recipients = data,
-      error: () => this.loadingError = 'No se pudieron consultar destinatarios con cuenta; puedes registrar una entidad externa.'
+      next: data => {
+        this.recipients = data;
+        this.recipientsLoading = false;
+      },
+      error: () => {
+        this.recipientsLoading = false;
+        this.recipientsError = 'No se pudo cargar la lista de usuarios de la empresa.';
+      }
     });
     this.form.controls.articleId.valueChanges.subscribe(id => {
       this.selectedArticleStock = Number(this.articles.find(a => a.id === Number(id))?.stock ?? 0);
@@ -314,8 +341,9 @@ export class TraspasoFormComponent implements OnInit, OnDestroy {
   onPhotoSelected(event: Event): void {
     const input = event.target as HTMLInputElement;
     const file = input.files?.[0];
+    input.value = '';
     if (!file) return;
-    if (!file.type.startsWith('image/') || file.size > 8_000_000) {
+    if (!['image/jpeg', 'image/png', 'image/webp'].includes(file.type) || file.size > 8_000_000) {
       this.toast.warning('Usa una imagen JPG/PNG/WEBP de menos de 8 MB.');
       return;
     }

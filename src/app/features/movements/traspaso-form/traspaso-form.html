@@ -57,39 +57,61 @@
     <section class="form-card wizard-page" *ngIf="step===2">
       <div class="card-heading"><mat-icon>person_pin</mat-icon><div><strong>Destinatario y propósito</strong><small>La custodia identifica a quién se entrega el artículo.</small></div></div>
       <div class="form-grid">
-        <div class="field wide" *ngIf="operationType==='Asignar'"><label>Cuenta del destinatario (opcional)</label>
-          <mat-form-field appearance="outline" class="inventory-select"><mat-select formControlName="recipientUserId" panelClass="inventory-select-options" placeholder="Entidad externa / Sin cuenta"><mat-option [value]="null">Entidad externa / Sin cuenta</mat-option><mat-option *ngFor="let person of recipients" [value]="person.id">{{person.name}}</mat-option></mat-select></mat-form-field>
-          <small>Una cuenta vinculada podrá consultar sus propias asignaciones, sin abrir todo el almacén.</small>
+        <div class="recipient-mode-switch field wide" *ngIf="operationType==='Asignar'" role="group" aria-label="Tipo de destinatario">
+          <button type="button" [class.is-active]="recipientMode==='internal'"
+            [attr.aria-pressed]="recipientMode==='internal'" (click)="setRecipientMode('internal')">
+            <mat-icon aria-hidden="true">groups</mat-icon> Usuario de la empresa
+          </button>
+          <button type="button" [class.is-active]="recipientMode==='external'"
+            [attr.aria-pressed]="recipientMode==='external'" (click)="setRecipientMode('external')">
+            <mat-icon aria-hidden="true">person_search</mat-icon> Externo
+          </button>
         </div>
-        <div class="field wide"><label>Persona o entidad {{operationType==='Asignar'?'*':'(opcional)'}}</label>
-          <input type="text" formControlName="recipientName" appUiControl maxlength="180" placeholder="Nombre del responsable o entidad" />
+        <div class="field wide" *ngIf="operationType==='Asignar' && recipientMode==='internal'">
+          <label>Usuario destinatario <span class="required">*</span></label>
+          <mat-form-field appearance="outline" class="inventory-select">
+            <mat-select formControlName="recipientUserId" panelClass="inventory-select-options"
+              placeholder="Seleccionar usuario de la empresa">
+              <mat-option *ngFor="let person of recipients" [value]="person.id">{{person.name}}</mat-option>
+            </mat-select>
+          </mat-form-field>
+          <small *ngIf="recipientsLoading">Cargando usuarios de la empresa...</small>
+          <small *ngIf="!recipientsLoading && recipients.length===0">No hay usuarios disponibles. Puedes registrar un destinatario externo.</small>
+          <small *ngIf="recipientsError" class="transfer-error">{{recipientsError}}</small>
         </div>
-        <div class="recipient-identity-lookup field wide">
-          <div class="recipient-identity-lookup__heading">
-            <strong>Consultar nombre</strong>
-            <small>La consulta solo completa el nombre; no guarda el número de documento.</small>
+        <ng-container *ngIf="operationType==='Asignar' && recipientMode==='external'">
+          <div class="field wide">
+            <label>Persona o entidad <span class="required">*</span></label>
+            <input type="text" formControlName="recipientName" appUiControl maxlength="180" placeholder="Nombre del responsable o entidad" />
           </div>
-          <div class="recipient-identity-lookup__types" role="group" aria-label="Tipo de documento">
-            <button type="button" [class.is-active]="recipientDocumentType==='DNI'"
-              [attr.aria-pressed]="recipientDocumentType==='DNI'" (click)="setRecipientDocumentType('DNI')">DNI · RENIEC</button>
-            <button type="button" [class.is-active]="recipientDocumentType==='RUC'"
-              [attr.aria-pressed]="recipientDocumentType==='RUC'" (click)="setRecipientDocumentType('RUC')">RUC · SUNAT</button>
+          <div class="recipient-identity-lookup field wide">
+            <div class="recipient-identity-lookup__heading">
+              <strong>Consultar nombre</strong>
+              <small>La consulta solo completa el nombre; no guarda el número de documento.</small>
+            </div>
+            <div class="recipient-identity-lookup__types" role="group" aria-label="Tipo de documento">
+              <button type="button" [class.is-active]="recipientDocumentType==='DNI'"
+                [attr.aria-pressed]="recipientDocumentType==='DNI'" (click)="setRecipientDocumentType('DNI')">DNI · RENIEC</button>
+              <button type="button" [class.is-active]="recipientDocumentType==='RUC'"
+                [attr.aria-pressed]="recipientDocumentType==='RUC'" (click)="setRecipientDocumentType('RUC')">RUC · SUNAT</button>
+            </div>
+            <div class="recipient-identity-lookup__row">
+              <input type="text" appUiControl inputmode="numeric" autocomplete="off"
+                [attr.maxlength]="recipientDocumentType==='DNI' ? 8 : 11"
+                [placeholder]="recipientDocumentType==='DNI' ? 'DNI de 8 dígitos' : 'RUC de 11 dígitos'"
+                [value]="recipientDocument" (input)="onRecipientDocumentInput($event)" />
+              <button type="button" appUiButton="secondary" (click)="consultRecipientIdentity()"
+                [disabled]="recipientLookupLoading || recipientDocument.length !== (recipientDocumentType==='DNI' ? 8 : 11) || isSaving">
+                <mat-icon aria-hidden="true">manage_search</mat-icon>
+                {{recipientLookupLoading ? 'Consultando...' : 'Consultar'}}
+              </button>
+            </div>
+            <p class="transfer-error" *ngIf="recipientLookupError" role="alert">{{recipientLookupError}}</p>
           </div>
-          <div class="recipient-identity-lookup__row">
-            <input type="text" appUiControl inputmode="numeric" autocomplete="off"
-              [attr.maxlength]="recipientDocumentType==='DNI' ? 8 : 11"
-              [placeholder]="recipientDocumentType==='DNI' ? 'DNI de 8 dígitos' : 'RUC de 11 dígitos'"
-              [value]="recipientDocument" (input)="onRecipientDocumentInput($event)" />
-            <button type="button" appUiButton="secondary" (click)="consultRecipientIdentity()"
-              [disabled]="recipientLookupLoading || recipientDocument.length !== (recipientDocumentType==='DNI' ? 8 : 11) || isSaving">
-              <mat-icon aria-hidden="true">manage_search</mat-icon>
-              {{recipientLookupLoading ? 'Consultando...' : 'Consultar'}}
-            </button>
-          </div>
-          <p class="transfer-error" *ngIf="recipientLookupError" role="alert">{{recipientLookupError}}</p>
-        </div>
-        <div class="field wide"><label>Motivo / observaciones <span class="required">*</span></label>
-          <textarea formControlName="observation" rows="3" maxlength="2000" appUiControl placeholder="Describe la entrega y su propósito"></textarea>
+        </ng-container>
+        <div class="field wide" *ngIf="operationType==='Baja'">
+          <label>Persona o entidad (opcional)</label>
+          <input type="text" formControlName="recipientName" appUiControl maxlength="180" placeholder="Referencia opcional" />
         </div>
       </div>
     </section>
@@ -100,19 +122,46 @@
         <div><dt>Artículo</dt><dd>{{(selectedArticle?.name || '—') | cleanArticleName}}</dd></div>
         <div><dt>Cantidad</dt><dd>{{form.controls.amount.value}} {{selectedArticle?.measurementUnit || ''}}</dd></div>
         <div><dt>Destinatario</dt><dd>{{form.controls.recipientName.value || 'Baja interna'}}</dd></div>
-        <div class="wide"><dt>Motivo</dt><dd>{{form.controls.observation.value}}</dd></div>
       </dl>
-      <div class="evidence-card" *ngIf="operationType==='Asignar'">
-        <div class="card-heading"><mat-icon>photo_camera</mat-icon><div><strong>Evidencia fotográfica (opcional)</strong><small>JPG/PNG/WEBP, máximo 8 MB.</small></div></div>
-        <input type="file" #fileInput accept="image/jpeg,image/png,image/webp" hidden (change)="onPhotoSelected($event)" />
-        <div class="evidence-row">
-          <img *ngIf="evidencePreview" [src]="evidencePreview" alt="Evidencia seleccionada" />
-          <button type="button" appUiButton="secondary" (click)="fileInput.click()">
-            <mat-icon>image</mat-icon>{{evidencePreview ? 'Cambiar' : 'Seleccionar imagen'}}
+      <div class="evidence-card">
+        <div class="evidence-header" *ngIf="operationType==='Asignar'">
+          <div class="card-heading">
+            <mat-icon>photo_camera</mat-icon>
+            <div><strong>Evidencia fotográfica (opcional)</strong><small>JPG/PNG/WEBP, máximo 8 MB.</small></div>
+          </div>
+          <div class="evidence-actions">
+            <button type="button" appUiButton="secondary" [matMenuTriggerFor]="photoSourceMenu">
+              <mat-icon aria-hidden="true">{{evidencePreview ? 'edit' : 'add_a_photo'}}</mat-icon>
+              {{evidencePreview ? 'Cambiar' : 'Seleccionar imagen'}}
+            </button>
+            <button *ngIf="evidencePreview" type="button" appUiButton="danger" (click)="removePhoto()">
+              <mat-icon aria-hidden="true">delete_outline</mat-icon>Quitar
+            </button>
+          </div>
+        </div>
+        <mat-menu #photoSourceMenu="matMenu">
+          <button mat-menu-item type="button" (click)="cameraInput.click()">
+            <mat-icon>photo_camera</mat-icon><span>Tomar foto con cámara</span>
           </button>
-          <button *ngIf="evidencePreview" type="button" appUiButton="danger" (click)="removePhoto()">
-            <mat-icon>delete_outline</mat-icon>Quitar
+          <button mat-menu-item type="button" (click)="fileInput.click()">
+            <mat-icon>folder_open</mat-icon><span>Seleccionar desde archivos</span>
           </button>
+        </mat-menu>
+        <input #cameraInput type="file" accept="image/*" capture="environment" hidden (change)="onPhotoSelected($event)" />
+        <input #fileInput type="file" accept="image/jpeg,image/png,image/webp" hidden (change)="onPhotoSelected($event)" />
+        <div class="evidence-content" [class.evidence-content--without-photo]="operationType!=='Asignar'">
+          <div class="evidence-preview" *ngIf="operationType==='Asignar'">
+            <img *ngIf="evidencePreview" [src]="evidencePreview" alt="Evidencia seleccionada" />
+            <div *ngIf="!evidencePreview" class="evidence-preview__placeholder">
+              <mat-icon>add_photo_alternate</mat-icon>
+              <small>La vista previa aparecerá aquí</small>
+            </div>
+          </div>
+          <div class="field evidence-observations">
+            <label>Observaciones <span class="required">*</span></label>
+            <textarea formControlName="observation" rows="5" maxlength="2000" appUiControl
+              placeholder="Describe la entrega y su propósito"></textarea>
+          </div>
         </div>
       </div>
     </section>

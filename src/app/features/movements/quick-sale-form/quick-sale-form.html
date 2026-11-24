@@ -173,44 +173,6 @@
           {{ sunatError }}
         </p>
 
-        <div class="sale-ruc-result" *ngIf="sunatResult as empresa">
-          <div class="sale-ruc-result__title">
-            <mat-icon>check_circle</mat-icon>
-            <strong>Resultado de consulta</strong>
-          </div>
-
-          <div class="sale-ruc-result__grid">
-            <div>
-              <span>RUC</span>
-              <strong>{{ empresa.ruc }}</strong>
-            </div>
-            <div>
-              <span>Razón social</span>
-              <strong>{{ empresa.businessName }}</strong>
-            </div>
-            <div>
-              <span>Estado</span>
-              <strong>{{ empresa.estado || 'No informado' }}</strong>
-            </div>
-            <div>
-              <span>Condición</span>
-              <strong>{{ empresa.condicion || 'No informada' }}</strong>
-            </div>
-            <div class="wide">
-              <span>Dirección fiscal</span>
-              <strong>{{ empresa.address || 'No informada' }}</strong>
-            </div>
-          </div>
-        </div>
-
-        <div class="sale-ruc-result" *ngIf="dniResult as persona">
-          <div class="sale-ruc-result__title"><mat-icon>check_circle</mat-icon> <strong>Resultado DNI</strong></div>
-          <div class="sale-ruc-result__grid">
-            <div><span>DNI</span><strong>{{ persona.document_number || rucQuery }}</strong></div>
-            <div><span>Nombre completo</span><strong>{{ form.controls.customerName.value }}</strong></div>
-          </div>
-        </div>
-
         <small class="sale-ruc-note">
           El RUC es opcional. Para ventas en cuotas, debes
           identificar al comprador mediante su nombre o razón social.
@@ -371,38 +333,13 @@
             </div>
           </div>
 
-          <div
-            class="sale-credit-preview"
-            *ngIf="installmentSchedule.length">
-
-            <div class="sale-credit-preview-title">
-              <mat-icon>event_note</mat-icon>
-              <strong>Cronograma proyectado</strong>
-            </div>
-
-            <div class="sale-credit-table-wrap">
-              <table class="sale-credit-table">
-                <thead>
-                  <tr>
-                    <th>Cuota</th>
-                    <th>Vencimiento</th>
-                    <th>Importe</th>
-                  </tr>
-                </thead>
-
-                <tbody>
-                  <tr *ngFor="let installment of installmentSchedule">
-                    <td>#{{ installment.number }}</td>
-                    <td>
-                      {{ installment.date | date:'dd/MM/yyyy' }}
-                    </td>
-                    <td>
-                      {{ installment.amount | money:'PEN' }}
-                    </td>
-                  </tr>
-                </tbody>
-              </table>
-            </div>
+          <div class="sale-credit-preview" *ngIf="installmentSchedule.length">
+            <button type="button" appUiButton="secondary" class="sale-info-trigger"
+              (click)="openInstallmentSchedule()">
+              <mat-icon aria-hidden="true">event_note</mat-icon>
+              Ver cronograma proyectado
+            </button>
+            <small>Consulta las fechas e importes en una ventana informativa.</small>
           </div>
 
           <p
@@ -442,40 +379,16 @@
         </div>
       </div>
 
-      <div class="sale-sale-summary">
-        <div class="sale-sale-summary__heading">
-          <mat-icon>receipt_long</mat-icon>
+      <div class="sale-summary-action">
+        <div>
           <strong>Resumen de la venta</strong>
+          <small>Consulta artículos, comprador, importes y método de pago.</small>
         </div>
-
-        <div class="checkout-summary">
-          <div>
-            <small>Artículo</small>
-            <strong>{{ chosen?.name || '—' }}</strong>
-          </div>
-
-          <div>
-            <small>Comprador</small>
-            <strong>{{ form.controls.customerName.value }}</strong>
-          </div>
-
-          <div>
-            <small>Cantidad</small>
-            <strong>{{ form.controls.quantity.value }}</strong>
-          </div>
-
-          <div>
-            <small>Precio unitario</small>
-            <strong>
-              S/ {{ form.controls.unitPrice.value | number:'1.2-2' }}
-            </strong>
-          </div>
-        </div>
-
-        <div class="sale-total">
-          <span>Total de venta</span>
-          <strong>S/ {{ total | number:'1.2-2' }}</strong>
-        </div>
+        <button type="button" appUiButton="secondary" class="sale-info-trigger"
+          (click)="openSaleSummary()">
+          <mat-icon aria-hidden="true">receipt_long</mat-icon>
+          Ver resumen
+        </button>
       </div>
 
       <p class="sale-hint">
