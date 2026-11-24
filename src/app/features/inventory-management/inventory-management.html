@@ -7,8 +7,11 @@
         <app-loading-indicator *ngIf="refreshing; else inventoryRefreshLabel" [compact]="true" message="Cargando" />
         <ng-template #inventoryRefreshLabel><mat-icon aria-hidden="true">refresh</mat-icon> Actualizar</ng-template>
       </button>
-      <button *ngIf="canCreate" type="button" appUiButton="primary" (click)="openCreateDialog()">
-        <mat-icon aria-hidden="true">add</mat-icon> Crear inventario
+      <button *ngIf="canCreate" type="button" appUiButton="primary" (click)="openCreateDialog()"
+        [disabled]="isManager && usersLoading">
+        <app-loading-indicator *ngIf="isManager && usersLoading; else createInventoryLabel"
+          [compact]="true" message="Cargando usuarios" />
+        <ng-template #createInventoryLabel><mat-icon aria-hidden="true">add</mat-icon> Crear inventario</ng-template>
       </button>
     </div>
   </header>
@@ -24,20 +27,17 @@
       </a>
     </div>
 
-    <!-- Estado de carga: visible solo durante la carga inicial o actualización -->
     <div *ngIf="loading && !refreshing" class="inv-manage-loading" role="status" aria-label="Cargando inventarios">
       <div class="inv-manage-skeleton" aria-hidden="true">
         <span></span><span></span><span></span>
       </div>
     </div>
 
-    <!-- Error de carga -->
     <p *ngIf="error && !loading" class="inv-manage-error" role="alert">
       <mat-icon aria-hidden="true">error_outline</mat-icon>
       <span>{{ error }}</span>
     </p>
 
-    <!-- Tabla de inventarios: visible solo cuando no está cargando y hay registros -->
     <div class="inv-core-table-wrap inv-manage-table" *ngIf="!loading && operational.length > 0">
       <table>
         <thead>
@@ -57,23 +57,18 @@
             <td>{{ ownerName(row.userId) }}</td>
             <td><app-ui-status label="Activo" tone="success" /></td>
             <td class="inv-core-action-cell">
-              <!-- Compartir inventario (abre modal asistente en 3 secciones) -->
               <button *ngIf="canManageAccess" type="button" appUiTableAction="normal"
                 (click)="manageShares(row)" [disabled]="!isManager && row.userId !== selfId"
                 [attr.aria-label]="'Compartir inventario ' + (row.alias || row.inventoryName)"
                 title="Compartir inventario y administrar colaboradores">
                 <mat-icon aria-hidden="true">group_add</mat-icon>
               </button>
-
-              <!-- Editar inventario (abre diálogo modal) -->
               <button *ngIf="canCreate && (isManager || row.userId === selfId)" type="button" appUiTableAction="normal"
                 (click)="edit(row)"
                 [attr.aria-label]="'Editar inventario ' + (row.alias || row.inventoryName)"
                 title="Editar nombre y alias del inventario">
                 <mat-icon aria-hidden="true">edit</mat-icon>
               </button>
-
-              <!-- Desactivar inventario -->
               <button *ngIf="canCreate && (isManager || row.userId === selfId)" type="button" appUiTableAction="danger"
                 (click)="deactivate(row)"
                 [attr.aria-label]="'Desactivar inventario ' + (row.alias || row.inventoryName)"
@@ -86,7 +81,6 @@
       </table>
     </div>
 
-    <!-- Estado vacío -->
     <app-ui-empty-state
       *ngIf="!loading && !operational.length && !error"
       icon="warehouse"
