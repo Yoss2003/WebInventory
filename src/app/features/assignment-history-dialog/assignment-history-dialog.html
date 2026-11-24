@@ -1,4 +1,5 @@
-<app-modal-shell type="detail" title="Detalle de custodia" [subtitle]="'Asignación #' + data.id + ' · ' + data.status" icon="assignment" [infoVisible]="false" [closeVisible]="true" [footerVisible]="false" (closeRequested)="dialogRef.close()">
+<app-modal-shell
+  [contentScrollable]="false" type="detail" title="Detalle de custodia" [subtitle]="'Asignación #' + data.id + ' · ' + data.status" icon="assignment" [infoVisible]="false" [closeVisible]="true" [footerVisible]="false" (closeRequested)="dialogRef.close()">
   <div class="assignment-dialog ui-v2-dialog ui-v2-dialog--special">
     <div class="assignment-dialog__body">
 
