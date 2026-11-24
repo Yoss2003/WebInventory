@@ -34,30 +34,24 @@
         </div>
         <div class="field"><label>Cantidad a retirar <span class="required">*</span></label>
           <input type="number" min="0.01" step="0.01" appUiControl formControlName="amount" />
-          <small *ngIf="selectedArticle">Disponible: {{selectedArticleStock|number:'1.0-2'}} {{selectedArticle.measurementUnit}}</small>
-          <span class="transfer-error" *ngIf="selectedArticle && quantityExceedsStock">Cantidad superior al stock disponible.</span>
+          <small class="transfer-availability">Disponible: {{selectedArticle ? (selectedArticleStock|number:'1.0-2') + ' ' + selectedArticle.measurementUnit : '—'}}</small>
+          <small class="transfer-error transfer-validation-slot" [class.is-empty]="!selectedArticle || !quantityExceedsStock">{{selectedArticle && quantityExceedsStock ? 'Cantidad superior al stock disponible.' : ' '}}</small>
         </div>
         <div class="field info-block"><label>Almacén de origen</label><strong>{{selectedInventoryLabel}}</strong></div>
       </div>
       <div class="serial-selection-card">
         <div class="serial-selection-card__copy">
           <strong>Series de la operación</strong>
-          <small *ngIf="!isSerialized">Selecciona un artículo serializado para habilitar la selección.</small>
-          <small *ngIf="isSerialized && serialUnitsLoading">Cargando series disponibles...</small>
-          <small *ngIf="isSerialized && !serialUnitsLoading">{{selectedSerialIds.length}} de {{form.controls.amount.value || 0}} series seleccionadas</small>
+          <small>{{!isSerialized ? 'No aplica a este artículo.' : serialUnitsLoading ? 'Cargando series disponibles...' : selectedSerialIds.length + ' seleccionadas · ' + availableSerials.length + ' disponibles'}}</small>
+          <small class="serial-selection-card__status" role="status">
+            {{serialError || (isSerialized && operationType==='Baja' ? 'Para artículos serializados usa Asignación de custodia.' : isSerialized && !serialUnitsLoading && !availableSerials.length ? 'No hay series disponibles.' : 'La selección se administra en una ventana independiente.')}}
+          </small>
         </div>
         <button type="button" appUiButton="secondary" (click)="openSerialPicker()"
           [disabled]="!isSerialized || serialUnitsLoading || !availableSerials.length || operationType==='Baja' || isSaving">
           <mat-icon aria-hidden="true">checklist</mat-icon>
-          Seleccionar series
+          {{selectedSerialIds.length ? 'Modificar selección' : 'Seleccionar series'}}
         </button>
-        <p class="transfer-error" *ngIf="serialError">{{serialError}}</p>
-        <p class="transfer-error" *ngIf="isSerialized && operationType==='Baja'">
-          El retiro definitivo de serializados debe registrarse como operación con serie e historial; usa Asignar para entregar custodia.
-        </p>
-        <small class="serial-selection-card__empty" *ngIf="isSerialized && !serialUnitsLoading && !availableSerials.length">
-          No hay unidades disponibles. Registra primero sus series.
-        </small>
       </div>
     </section>
     <section class="form-card wizard-page" *ngIf="step===2">
