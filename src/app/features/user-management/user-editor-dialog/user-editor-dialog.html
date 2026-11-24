@@ -61,7 +61,7 @@
     <section class="user-dialog__panel" *ngIf="step === 2" aria-label="Rol y acceso">
       <div class="user-dialog__section-title">
         <mat-icon aria-hidden="true">admin_panel_settings</mat-icon>
-        <div><h3>Rol y acceso</h3><p>El rol determina los permisos generales dentro de la empresa.</p></div>
+        <div><h3>Rol y acceso</h3><p>El rol define los permisos generales; los permisos individuales permiten ajustar el acceso operativo de este usuario.</p></div>
       </div>
       <div class="user-dialog__grid">
         <label *ngIf="canChangeRole"><span class="user-dialog__label">Rol del usuario <span class="required">*</span></span>
@@ -78,6 +78,27 @@
           <small>Este rol no puede modificarse desde esta cuenta.</small>
         </div>
       </div>
+      <section *ngIf="!isEdit" class="user-dialog__individual-permissions" aria-label="Permisos individuales">
+        <div class="user-dialog__permissions-heading">
+          <mat-icon aria-hidden="true">tune</mat-icon>
+          <div><h4>Permisos individuales</h4>
+            <p>Se suman a los permisos generales heredados del rol seleccionado.</p>
+          </div>
+        </div>
+        <div class="user-dialog__flags">
+          <label><input type="checkbox" [(ngModel)]="permissions.canApplyDiscounts"
+            [disabled]="!canConfigureCreationPermissions"/> Aplicar descuentos</label>
+          <label><input type="checkbox" [(ngModel)]="permissions.canViewPurchaseCosts"
+            [disabled]="!canConfigureCreationPermissions"/> Ver costos de compra</label>
+          <label><input type="checkbox" [(ngModel)]="permissions.canCancelSales"
+            [disabled]="!canConfigureCreationPermissions"/> Anular ventas</label>
+          <label><input type="checkbox" [(ngModel)]="permissions.canEditProducts"
+            [disabled]="!canConfigureCreationPermissions"/> Editar artículos</label>
+          <label><input type="checkbox" [(ngModel)]="permissions.canViewProfits"
+            [disabled]="!canConfigureCreationPermissions"/> Ver ganancias</label>
+        </div>
+        <p class="user-dialog__hint">Puedes dejar todos desactivados. El usuario conservará únicamente los permisos definidos por su rol.</p>
+      </section>
       <p *ngIf="!availableRoles.length && !isEdit" class="user-dialog__hint">
         Esta empresa no tiene roles de personal disponibles. Configura los roles antes de registrar usuarios.
       </p>
@@ -89,11 +110,11 @@
     <section class="user-dialog__panel" *ngIf="step === 3" aria-label="Permisos y seguridad">
       <div class="user-dialog__section-title">
         <mat-icon aria-hidden="true">{{isEdit ? 'verified_user' : 'mark_email_read'}}</mat-icon>
-        <div><h3>{{isEdit ? 'Permisos individuales' : 'Credenciales automáticas'}}</h3>
-          <p>{{isEdit ? 'Ajusta los permisos adicionales de operación.' : 'Confirma cómo recibirá el acceso este usuario.'}}</p>
+        <div><h3>Permisos individuales</h3>
+          <p>Ajusta los permisos adicionales de operación.</p>
         </div>
       </div>
-      <ng-container *ngIf="isEdit; else creationSecurity">
+      <ng-container *ngIf="isEdit">
         <p *ngIf="loadingPermissions" class="user-dialog__hint" role="status">Consultando permisos del usuario...</p>
         <p *ngIf="permissionLoadFailed" class="user-dialog__hint">No se pudieron leer los permisos. No se modificarán al guardar.</p>
         <div *ngIf="!loadingPermissions" class="user-dialog__flags">
@@ -112,7 +133,13 @@
           Permisos generales heredados del rol actual: {{effectiveRoleCodes.join(', ')}}.
         </p>
       </ng-container>
-      <ng-template #creationSecurity>
+    </section>
+
+    <section class="user-dialog__panel" *ngIf="step === 3 && !isEdit" aria-label="Seguridad y credenciales">
+      <div class="user-dialog__section-title">
+        <mat-icon aria-hidden="true">mark_email_read</mat-icon>
+        <div><h3>Credenciales automáticas</h3><p>Confirma cómo recibirá el acceso este usuario.</p></div>
+      </div>
         <div class="user-dialog__security-note">
           <mat-icon aria-hidden="true">mark_email_read</mat-icon>
           <div><strong>La contraseña temporal se genera de forma segura en la API.</strong>
@@ -125,7 +152,6 @@
           <span>Usuario</span><strong>{{editing.username}}</strong>
           <span>Correo de destino</span><strong>{{editing.email}}</strong>
         </div>
-      </ng-template>
     </section>
   </main>
 
