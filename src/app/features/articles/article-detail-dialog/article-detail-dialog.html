@@ -1,4 +1,4 @@
-<app-modal-shell type="detail" title="Ficha completa del artículo" [subtitle]="article?.name || data.articleName || ('ID #' + data.id)" icon="inventory_2" [infoVisible]="false" [closeVisible]="true" [footerVisible]="false" [contentScrollable]="false" (closeRequested)="dialogRef.close(hasChanges)">
+<app-modal-shell type="detail" title="Ficha completa del artículo" [subtitle]="article?.name || data.articleName || ('ID #' + data.id)" icon="inventory_2" [infoVisible]="true" [closeVisible]="true" [footerVisible]="false" [contentScrollable]="false" (closeRequested)="dialogRef.close(hasChanges)">
   <div class="record-dialog ui-v2-dialog">
     <main>
     <div class="record-loading" *ngIf="loading" role="status" aria-label="Cargando ficha del artículo">
