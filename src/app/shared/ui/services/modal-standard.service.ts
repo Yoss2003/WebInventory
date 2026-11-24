@@ -88,6 +88,8 @@ export class ModalStandardService {
   }
 
   getSelectorPanelClass(kind: 'combo' | 'autocomplete'): string {
-    return kind === 'combo' ? 'inv-standard-select-panel' : 'inv-standard-autocomplete-panel';
+    return kind === 'combo'
+      ? 'inventory-select-options inv-standard-select-panel'
+      : 'inv-standard-autocomplete-panel';
   }
 }
