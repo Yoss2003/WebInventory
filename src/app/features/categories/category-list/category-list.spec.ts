@@ -2,9 +2,9 @@ import { TestBed } from '@angular/core/testing';
 import { provideNoopAnimations } from '@angular/platform-browser/animations';
 import { of } from 'rxjs';
 import { MatDialog } from '@angular/material/dialog';
-import { MatSnackBar } from '@angular/material/snack-bar';
 import { CategoryListComponent } from './category-list';
 import { CategoryService } from '../../../core/services/category';
+import { ToastService } from '../../../shared/toast/toast.service';
 
 describe('CategoryListComponent', () => {
   it('creates and loads categories', async () => {
@@ -14,7 +14,7 @@ describe('CategoryListComponent', () => {
         provideNoopAnimations(),
         { provide: CategoryService, useValue: {getCategories: () => of([])} },
         { provide: MatDialog, useValue: {open: () => ({afterClosed: () => of(false)})} },
-        { provide: MatSnackBar, useValue: {open: () => null} }
+        { provide: ToastService, useValue: {success: () => null, error: () => null, warning: () => null, info: () => null} }
       ]
     }).compileComponents();
     const fixture = TestBed.createComponent(CategoryListComponent);
