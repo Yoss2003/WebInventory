@@ -1,0 +1,88 @@
+<div class="modal-shell ui-v2-dialog" [attr.data-modal-type]="type">
+  <header class="modal-shell__header" *ngIf="showHeader">
+    <div class="modal-shell__identity">
+      <span class="modal-shell__icon" *ngIf="showIcon && effectiveIcon">
+        <mat-icon aria-hidden="true">{{ effectiveIcon }}</mat-icon>
+      </span>
+
+      <div class="modal-shell__titles">
+        <div class="modal-shell__title-row">
+          <h2 class="modal-shell__title">{{ title ?? standard.name }}</h2>
+          <button
+            *ngIf="showInfo"
+            type="button"
+            class="inv-info-button"
+            [matTooltip]="effectiveInfoTooltip"
+            matTooltipPosition="above"
+            aria-label="Información del modal">
+            <mat-icon aria-hidden="true">info_outline</mat-icon>
+          </button>
+        </div>
+        <p class="modal-shell__subtitle" *ngIf="showSubtitle && effectiveSubtitle">
+          {{ effectiveSubtitle }}
+        </p>
+      </div>
+    </div>
+
+    <div class="modal-shell__header-actions">
+      <nav class="modal-shell__sections" *ngIf="showSections" aria-label="Secciones" role="tablist">
+        <button
+          *ngFor="let section of effectiveSections; let index = index"
+          type="button"
+          class="modal-shell__section-tab"
+          [class.is-active]="activeSection === index"
+          [attr.aria-selected]="activeSection === index"
+          [attr.aria-controls]="contentId"
+          role="tab"
+          (click)="selectSection(index)">
+          {{ section.label }}
+        </button>
+      </nav>
+
+      <button
+        *ngIf="showClose"
+        type="button"
+        appUiButton="close"
+        aria-label="Cerrar modal"
+        (click)="requestClose()">
+        <mat-icon aria-hidden="true">close</mat-icon>
+      </button>
+    </div>
+  </header>
+
+  <section #content [id]="contentId" class="modal-shell__content" [attr.data-active-section]="activeSection">
+    <ng-content></ng-content>
+  </section>
+
+  <footer class="modal-shell__footer" *ngIf="showFooter">
+    <div class="modal-shell__footer-left">
+      <button
+        *ngFor="let action of leftActions"
+        type="button"
+        [appUiButton]="action.tone"
+        [disabled]="isDisabled(action)"
+        [attr.aria-busy]="isBusy(action)"
+        (click)="emitAction(action.id)">
+        <span class="modal-shell__action-label" [class.is-loading]="isBusy(action)">{{ action.label }}</span>
+        <span class="modal-shell__action-loading" *ngIf="isBusy(action)">
+          <app-loading-indicator [compact]="true" [message]="effectiveLoadingText" />
+        </span>
+      </button>
+    </div>
+
+    <div class="modal-shell__footer-right">
+      <button
+        *ngFor="let action of rightActions"
+        type="button"
+        [appUiButton]="action.tone"
+        [disabled]="isDisabled(action)"
+        [attr.aria-busy]="isBusy(action)"
+        (click)="emitAction(action.id)">
+        <span class="modal-shell__action-label" [class.is-loading]="isBusy(action)">{{ action.label }}</span>
+        <span class="modal-shell__action-loading" *ngIf="isBusy(action)">
+          <app-loading-indicator [compact]="true" [message]="effectiveLoadingText" />
+        </span>
+      </button>
+    </div>
+  </footer>
+</div>
