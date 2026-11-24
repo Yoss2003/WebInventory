@@ -11,7 +11,7 @@
   [footerActions]="modalFooterActions"
   [busyActionId]="submitting ? 'primary' : null"
   [closeVisible]="false"
-  [contentScrollable]="true"
+  [contentScrollable]="false"
   [invDialogMotion]="step + '-' + selectedPaymentMethod + '-' + documentType"
   [invDialogMotionWidth]="step === 1 ? 'min(640px, calc(100vw - 24px))' : step === 2 ? 'min(720px, calc(100vw - 24px))' : 'min(850px, calc(100vw - 24px))'"
   (sectionChange)="goStep($event + 1)"
