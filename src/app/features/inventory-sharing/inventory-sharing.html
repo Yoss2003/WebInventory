@@ -82,11 +82,8 @@
               </mat-select>
             </mat-form-field>
           </div>
-          <button appUiButton="primary" type="submit" [disabled]="saving || !identifier.trim()">
-            <app-loading-indicator *ngIf="saving; else sharingButtonLabel"
-              [compact]="true" message="Guardando..." />
-            <ng-template #sharingButtonLabel>Compartir</ng-template>
-          </button>
+          <button appUiButton="primary" type="submit" [uiButtonLoading]="saving"
+            [disabled]="saving || !identifier.trim()">Compartir</button>
         </form>
       </section>
     </div>
