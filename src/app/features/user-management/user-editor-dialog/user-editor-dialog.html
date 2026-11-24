@@ -107,9 +107,9 @@
       </p>
     </section>
 
-    <section class="user-dialog__panel" *ngIf="step === 3" aria-label="Permisos y seguridad">
+    <section class="user-dialog__panel" *ngIf="step === 3 && isEdit" aria-label="Permisos individuales">
       <div class="user-dialog__section-title">
-        <mat-icon aria-hidden="true">{{isEdit ? 'verified_user' : 'mark_email_read'}}</mat-icon>
+        <mat-icon aria-hidden="true">verified_user</mat-icon>
         <div><h3>Permisos individuales</h3>
           <p>Ajusta los permisos adicionales de operación.</p>
         </div>
