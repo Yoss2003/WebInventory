@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { ChangeDetectorRef, Component, OnInit, inject } from '@angular/core';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnInit, inject } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { MatIconModule } from '@angular/material/icon';
 import { MatSelectModule } from '@angular/material/select';
@@ -7,7 +7,7 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatDialog, MatDialogModule } from '@angular/material/dialog';
 import { ModalStandardService } from '../../shared/ui/services/modal-standard.service';
 import { RouterLink } from '@angular/router';
-import { catchError, forkJoin, of } from 'rxjs';
+import { finalize, timeout } from 'rxjs';
 
 import { UiPageHeadingComponent } from '../../shared/ui/components/ui-page-heading.component';
 import { UiButtonDirective } from '../../shared/ui/directives/ui-button.directive';
@@ -34,7 +34,8 @@ import { UiEmptyStateComponent } from '../../shared/ui/components/ui-empty-state
     UiTableActionDirective, LoadingIndicatorComponent
   ],
   templateUrl: './inventory-management.html',
-  styleUrl: './inventory-management.scss'
+  styleUrl: './inventory-management.scss',
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class InventoryManagementComponent implements OnInit {
   private readonly api = inject(InventoryService);
@@ -46,12 +47,16 @@ export class InventoryManagementComponent implements OnInit {
   private readonly modalStandards = inject(ModalStandardService);
   private readonly cdr = inject(ChangeDetectorRef);
 
+  private inventoryRequestId = 0;
+  private usersRequestId = 0;
+
   isManager = false;
   canCreate = false;
   canManageAccess = false;
   selfId = 0;
-  loading = true; // Carga inicial
+  loading = true;
   refreshing = false;
+  usersLoading = false;
   private hasLoadedOnce = false;
   error = '';
   rows: InventorySummary[] = [];
@@ -66,42 +71,87 @@ export class InventoryManagementComponent implements OnInit {
   }
 
   load(fromRefresh = false): void {
+    const requestId = ++this.inventoryRequestId;
     this.loading = !this.hasLoadedOnce && !fromRefresh;
     this.refreshing = fromRefresh;
     this.error = '';
+    this.cdr.markForCheck();
 
-    this.access.me().subscribe({
+    this.access.me().pipe(timeout({ first: 12000 })).subscribe({
       next: a => {
+        if (requestId !== this.inventoryRequestId) return;
+
         this.selfId = a.userId;
         this.isManager = a.isDeveloper || a.isAdministrator;
         this.canCreate = (a.permissions || []).includes('CREATE_INVENTORIES');
         this.canManageAccess = (a.permissions || []).includes('MANAGE_INVENTORY_ACCESS');
 
-        const members = this.isManager ? this.usersApi.users().pipe(catchError(() => of([] as ManagedUser[]))) : of([] as ManagedUser[]);
-        const inventories = this.isManager ? this.api.companyInventories() : this.api.getInventories();
-        forkJoin({ inventories, users: members }).subscribe({
-          next: ({ inventories, users }) => {
-            this.rows = (inventories || []).filter(i => i.isActive);
-            this.users = (users || []).filter(u => u.isActive && u.statusId === 1);
+        const usersRequestId = ++this.usersRequestId;
+        if (this.isManager) {
+          this.usersLoading = true;
+          this.usersApi.users().pipe(
+            timeout({ first: 15000 }),
+            finalize(() => {
+              if (usersRequestId !== this.usersRequestId) return;
+              this.usersLoading = false;
+              this.cdr.markForCheck();
+            })
+          ).subscribe({
+            next: users => {
+              if (usersRequestId !== this.usersRequestId) return;
+              this.users = Array.isArray(users)
+                ? users.filter(u => u.isActive && u.statusId === 1)
+                : [];
+              this.cdr.markForCheck();
+            },
+            error: () => {
+              if (usersRequestId !== this.usersRequestId) return;
+              this.users = [];
+              this.cdr.markForCheck();
+            }
+          });
+        } else {
+          this.usersLoading = false;
+          this.users = [];
+        }
+
+        const inventories$ = this.isManager
+          ? this.api.companyInventories()
+          : this.api.getInventories();
+
+        inventories$.pipe(
+          timeout({ first: 15000 }),
+          finalize(() => {
+            if (requestId !== this.inventoryRequestId) return;
             this.loading = false;
             this.refreshing = false;
             this.hasLoadedOnce = true;
             this.cdr.markForCheck();
+          })
+        ).subscribe({
+          next: inventories => {
+            if (requestId !== this.inventoryRequestId) return;
+            this.rows = (inventories || []).filter(i => i.isActive);
+            this.cdr.markForCheck();
           },
           error: e => {
-            this.loading = false;
-            this.refreshing = false;
-            this.hasLoadedOnce = true;
-            this.error = String(e?.error?.error || 'No se pudieron cargar inventarios y usuarios.');
+            if (requestId !== this.inventoryRequestId) return;
+            this.error = e?.name === 'TimeoutError'
+              ? 'La consulta de inventarios tardó demasiado. Intenta actualizar nuevamente.'
+              : String(e?.error?.error || 'No se pudieron cargar los inventarios.');
             this.cdr.markForCheck();
           }
         });
       },
-      error: () => {
+      error: err => {
+        if (requestId !== this.inventoryRequestId) return;
         this.loading = false;
         this.refreshing = false;
+        this.usersLoading = false;
         this.hasLoadedOnce = true;
-        this.error = 'No se pudieron verificar los permisos de la sesión.';
+        this.error = err?.name === 'TimeoutError'
+          ? 'La verificación de permisos tardó demasiado. Actualiza para volver a intentarlo.'
+          : 'No se pudieron verificar los permisos de la sesión.';
         this.cdr.markForCheck();
       }
     });
@@ -117,7 +167,7 @@ export class InventoryManagementComponent implements OnInit {
   }
 
   openCreateDialog(): void {
-    if (!this.canCreate) return;
+    if (!this.canCreate || (this.isManager && this.usersLoading)) return;
 
     const dialogRef = this.modalStandards.open(InventoryCreateDialogComponent, 'mainForm', {
       width: '520px',
@@ -131,9 +181,7 @@ export class InventoryManagementComponent implements OnInit {
     });
 
     dialogRef.afterClosed().subscribe(result => {
-      if (result) {
-        this.load();
-      }
+      if (result) this.load();
     });
   }
 
@@ -141,8 +189,9 @@ export class InventoryManagementComponent implements OnInit {
     if (!this.canManageAccess || (!this.isManager && row.userId !== this.selfId)) return;
 
     const dialogRef = this.modalStandards.open(ShareInventoryDialogComponent, 'wizard', {
-      width: '720px',
+      width: '820px',
       maxWidth: '96vw',
+      maxHeight: 'calc(100dvh - 28px)',
       panelClass: ['inv-v2-dialog-panel', 'inv-seven-modal'],
       data: {
         inventory: row,
@@ -164,15 +213,11 @@ export class InventoryManagementComponent implements OnInit {
       width: '520px',
       maxWidth: '94vw',
       panelClass: ['inv-v2-dialog-panel', 'inv-seven-modal'],
-      data: {
-        inventory: row
-      }
+      data: { inventory: row }
     });
 
     dialogRef.afterClosed().subscribe(result => {
-      if (result) {
-        this.load();
-      }
+      if (result) this.load();
     });
   }
 
