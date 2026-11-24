@@ -85,7 +85,7 @@ describe('ModalStandardService', () => {
   });
 
   it('centraliza las clases de panel para ComboBox y autocompletado', () => {
-    expect(service.getSelectorPanelClass('combo')).toBe('inv-standard-select-panel');
+    expect(service.getSelectorPanelClass('combo')).toBe('inventory-select-options inv-standard-select-panel');
     expect(service.getSelectorPanelClass('autocomplete')).toBe('inv-standard-autocomplete-panel');
   });
 
