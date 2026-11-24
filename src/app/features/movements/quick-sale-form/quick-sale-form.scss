@@ -1595,3 +1595,30 @@
   }
   .serial-picker-card > button { width: 100%; }
 }
+
+/* Resumen del artículo y selector serializado siempre ocupan el mismo espacio
+   al cambiar de artículo o al terminar de cargar las series. */
+.sale-dialog .article-summary {
+  height: 88px;
+  min-height: 88px;
+  max-height: 88px;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  overflow: hidden;
+}
+
+.serial-picker-card {
+  height: 70px;
+  min-height: 70px;
+  max-height: 70px;
+  overflow: hidden;
+}
+
+.serial-picker-card__copy { flex: 1 1 auto; }
+.serial-picker-card__copy small {
+  display: block;
+  min-height: 13px;
+  max-width: 100%;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}

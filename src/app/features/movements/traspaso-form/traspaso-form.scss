@@ -607,3 +607,33 @@
   -webkit-line-clamp: 2;
   overflow: hidden;
 }
+
+/* Reserva las líneas de disponibilidad/validación y evita que el contenido
+   del selector secundario cambie la altura del asistente. */
+.transfer-availability,
+.transfer-validation-slot {
+  display: block;
+  min-height: 14px;
+  line-height: 14px;
+}
+
+.transfer-validation-slot.is-empty {
+  visibility: hidden;
+}
+
+.serial-selection-card {
+  height: 72px;
+  min-height: 72px;
+  max-height: 72px;
+  overflow: hidden;
+}
+
+.serial-selection-card__copy { flex: 1 1 auto; }
+.serial-selection-card__copy small {
+  display: block;
+  max-width: 100%;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.serial-selection-card__copy .serial-selection-card__status { min-height: 13px; }

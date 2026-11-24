@@ -193,3 +193,12 @@ footer {
     padding: 15px;
   }
 }
+
+/* La tarjeta de stock reserva ambos indicadores antes y después de seleccionar
+   un artículo; el cambio de datos no modifica su altura. */
+.stock-panel {
+  height: 104px;
+  min-height: 104px;
+  max-height: 104px;
+  align-self: stretch;
+}
