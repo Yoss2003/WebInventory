@@ -20,14 +20,12 @@
     <div class="users-panel__head">
       <div><h2>Usuarios registrados <span class="users-count">{{users.length}}</span></h2>
         <p>Desactivar una cuenta no elimina su inventario ni su historial.</p></div>
-      <label class="users-filter">
-        <mat-icon aria-hidden="true">search</mat-icon>
-        <input type="search" [(ngModel)]="filter" placeholder="Buscar usuario o correo" aria-label="Buscar usuarios"/>
-      </label>
+      <app-ui-search [(value)]="filter" placeholder="Buscar usuario o correo"
+        label="Buscar usuarios" />
     </div>
     <p *ngIf="loading && !hasLoaded" class="users-message" role="status">Cargando usuarios y roles...</p>
     <p *ngIf="error" class="users-error" role="alert">{{error}}</p>
-    <div class="inv-core-table-wrap users-table" *ngIf="users.length">
+    <div class="inv-core-table-wrap users-table" *ngIf="filtered.length">
       <table>
         <thead><tr>
           <th>Usuario</th><th>Rol</th><th>Inventario</th><th>Estado</th><th>Acciones</th>
@@ -64,11 +62,13 @@
           </tr>
         </tbody>
       </table>
-      <p class="users-message" *ngIf="!filtered.length">Sin resultados para tu búsqueda.</p>
     </div>
-    <p class="users-message" *ngIf="hasLoaded && !users.length && !error">
-      Aún no se han registrado usuarios para esta empresa. Crea el primer administrador desde Gestión Dev.
-    </p>
+    <app-ui-empty-state *ngIf="hasLoaded && !users.length && !error"
+      icon="group" message="Aún no hay usuarios registrados."
+      hint="Crea el primer administrador desde Gestión Dev." />
+    <app-ui-empty-state *ngIf="hasLoaded && users.length > 0 && !filtered.length"
+      icon="search_off" message="Sin resultados para tu búsqueda."
+      hint="Prueba con otro nombre de usuario o correo." />
   </section>
 
   <section class="users-panel" *ngIf="isDeveloper">
