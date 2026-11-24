@@ -1622,3 +1622,21 @@
   text-overflow: ellipsis;
   white-space: nowrap;
 }
+
+@media (max-width: 550px) {
+  .serial-picker-card {
+    flex-direction: row;
+    flex-wrap: nowrap;
+    align-items: center;
+  }
+
+  .serial-picker-card > button {
+    width: auto;
+    max-width: 142px;
+    padding-inline: 8px;
+    font-size: 10px;
+    white-space: nowrap;
+  }
+
+  .serial-picker-card__copy small { font-size: 9px; }
+}

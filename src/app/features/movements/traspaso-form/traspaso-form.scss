@@ -637,3 +637,20 @@
   white-space: nowrap;
 }
 .serial-selection-card__copy .serial-selection-card__status { min-height: 13px; }
+
+@media (max-width: 520px) {
+  .serial-selection-card {
+    flex-wrap: nowrap;
+    align-items: center;
+  }
+
+  .serial-selection-card > button {
+    width: auto;
+    max-width: 142px;
+    padding-inline: 8px;
+    font-size: 10px;
+    white-space: nowrap;
+  }
+
+  .serial-selection-card__copy small { font-size: 9px; }
+}
