@@ -12,10 +12,8 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
 import { MatCheckboxModule } from '@angular/material/checkbox';
-import { MatSnackBar } from '@angular/material/snack-bar';
 import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
-import { MatDialog } from '@angular/material/dialog';
 import { ModalStandardService } from '../../../shared/ui/services/modal-standard.service';
 import { ConfirmationDialogService } from '../../../shared/confirm-dialog/confirmation-dialog.service';
 import { CategoryService } from '../../../core/services/category';
@@ -23,6 +21,7 @@ import { Category } from '../../../core/models/category.model';
 import { CategoryParentFormComponent } from '../category-parent-form/category-parent-form';
 import { CategoryChildFormComponent } from '../category-child-form/category-child-form';
 import { LoadingIndicatorComponent } from '../../../shared/loading/loading-indicator';
+import { ToastService } from '../../../shared/toast/toast.service';
 
 import { UiSearchComponent } from '../../../shared/ui/components/ui-search.component';
 
@@ -43,11 +42,10 @@ export class CategoryListComponent implements OnInit {
     if(!isPlatformBrowser(this.platformId))return false;
     try{return [1,2].includes(Number(JSON.parse(localStorage.getItem('userSession')||'{}').roleId));}catch{return false;}
   }
-  private readonly dialog=inject(MatDialog);
   private readonly modalStandards = inject(ModalStandardService);
   private readonly confirms=inject(ConfirmationDialogService);
   private readonly cdr=inject(ChangeDetectorRef);
-  private readonly snackbar=inject(MatSnackBar);
+  private readonly toast=inject(ToastService);
   columnsToDisplay=['expand','name','description','isActive','actions'];
   dataSource=new MatTableDataSource<Category>();
   expandedElement:Category|null=null;
@@ -64,7 +62,7 @@ export class CategoryListComponent implements OnInit {
       error:err=>{
         this.loading=false;this.hasLoaded=true;
         this.error=String(err?.error?.error??'No fue posible actualizar categorías. Los datos anteriores pueden estar desactualizados.');
-        this.snackbar.open(this.error,'Cerrar',{duration:5500});this.cdr.markForCheck();
+        this.toast.error(this.error);this.cdr.markForCheck();
       }
     });
   }
@@ -101,8 +99,8 @@ export class CategoryListComponent implements OnInit {
     }).subscribe(confirmed=>{
       if(!confirmed)return;
       this.categoryService.deleteCategory(id).subscribe({
-        next:()=>{this.snackbar.open('Categoría desactivada.','Cerrar',{duration:3000});this.loadData();},
-        error:err=>this.snackbar.open(String(err?.error?.error??'No se pudo desactivar la categoría.'),'Cerrar',{duration:5500})
+        next:()=>{this.toast.success('Categoría desactivada.');this.loadData();},
+        error:err=>this.toast.error(String(err?.error?.error??'No se pudo desactivar la categoría.'))
       });
     });
   }
