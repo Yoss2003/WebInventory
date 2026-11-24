@@ -326,8 +326,8 @@ export class MasterCatalogsComponent implements OnInit {
   }
 
   openSupplierCommunication(): void {
-    const ref = this.dialog.open<SupplierCommunicationDialogComponent, SupplierCommunicationData, SupplierCommunicationData>(
-      SupplierCommunicationDialogComponent,
+    const ref = this.modalStandards.open<SupplierCommunicationDialogComponent, SupplierCommunicationData, SupplierCommunicationData>(
+      SupplierCommunicationDialogComponent, 'subTask',
       {
         data: {
           contactName: this.supplier.contactName ?? '',

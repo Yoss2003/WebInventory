@@ -418,8 +418,8 @@ export class DevManagementComponent implements OnInit, OnDestroy {
   /** Sólo el desarrollador puede aprovisionar el primer administrador empresarial. */
   registerFirstAdmin(company: DevCompany): void {
     if (!this.developer || !company.isActive || (company.adminCount ?? 0) > 0) return;
-    this.dialog.open<FirstAdminDialogComponent, { companyId: number; companyName: string }, FirstAdminCreated>(
-      FirstAdminDialogComponent, {
+    this.modalStandards.open<FirstAdminDialogComponent, { companyId: number; companyName: string }, FirstAdminCreated>(
+      FirstAdminDialogComponent, 'mainForm', {
         data: { companyId: company.id, companyName: company.businessName },
         panelClass: 'inv-seven-modal',
         enterAnimationDuration: 260,

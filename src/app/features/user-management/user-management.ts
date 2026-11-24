@@ -113,8 +113,8 @@ export class UserManagementComponent implements OnInit {
       currentUserId: this.currentUserId,
       canManageIndividualPermissions: this.canManageIndividualPermissions
     };
-    this.dialogs.open<UserEditorDialogComponent, UserEditorDialogData, UserEditorDialogResult>(
-      UserEditorDialogComponent, {
+    this.modalStandards.open<UserEditorDialogComponent, UserEditorDialogData, UserEditorDialogResult>(
+      UserEditorDialogComponent, 'mainForm', {
         data,
         panelClass: 'inv-seven-modal',
         width: 'min(800px, calc(100vw - 24px))',

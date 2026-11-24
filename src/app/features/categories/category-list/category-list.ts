@@ -16,6 +16,7 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { MatDialog } from '@angular/material/dialog';
+import { ModalStandardService } from '../../../shared/ui/services/modal-standard.service';
 import { ConfirmationDialogService } from '../../../shared/confirm-dialog/confirmation-dialog.service';
 import { CategoryService } from '../../../core/services/category';
 import { Category } from '../../../core/models/category.model';
@@ -43,6 +44,7 @@ export class CategoryListComponent implements OnInit {
     try{return [1,2].includes(Number(JSON.parse(localStorage.getItem('userSession')||'{}').roleId));}catch{return false;}
   }
   private readonly dialog=inject(MatDialog);
+  private readonly modalStandards = inject(ModalStandardService);
   private readonly confirms=inject(ConfirmationDialogService);
   private readonly cdr=inject(ChangeDetectorRef);
   private readonly snackbar=inject(MatSnackBar);
@@ -80,12 +82,12 @@ export class CategoryListComponent implements OnInit {
   toggleInactivos():void{this.processData();}
   applyFilterText(text:string):void{this.dataSource.filter=text.trim().toLocaleLowerCase('es');}
   nuevaCategoriaPadre(categoriaEdit?:Category):void{
-    const ref=this.dialog.open(CategoryParentFormComponent,{panelClass:'inv-seven-modal',enterAnimationDuration:260,exitAnimationDuration:220,width:'min(540px,calc(100vw - 24px))',maxWidth:'calc(100vw - 24px)',data:categoriaEdit||null});
+    const ref=this.modalStandards.open(CategoryParentFormComponent,'mainForm',{panelClass:'inv-seven-modal',enterAnimationDuration:260,exitAnimationDuration:220,width:'min(540px,calc(100vw - 24px))',maxWidth:'calc(100vw - 24px)',data:categoriaEdit||null});
     ref.afterClosed().subscribe(ok=>{if(ok)this.loadData();});
   }
   nuevaCategoriaHija(categoriaEdit?:Category):void{
     const parents=this.rawData.filter(p=>!p.parentCategoryId&&(p.isActive||p.id===categoriaEdit?.parentCategoryId));
-    const ref=this.dialog.open(CategoryChildFormComponent,{enterAnimationDuration:260,exitAnimationDuration:220,
+    const ref=this.modalStandards.open(CategoryChildFormComponent,'wizard',{enterAnimationDuration:260,exitAnimationDuration:220,
       width:'min(700px,calc(100vw - 24px))',maxWidth:'calc(100vw - 24px)',data:{categoriaEdit:categoriaEdit||null,padres:parents}
     });
     ref.afterClosed().subscribe(ok=>{if(ok)this.loadData();});
