@@ -1,6 +1,6 @@
 import { Component, inject, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { MatDialogRef, MAT_DIALOG_DATA, MatDialogModule } from '@angular/material/dialog';
+import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { MatIconModule } from '@angular/material/icon';
 import { InventoryService, InventorySummary, InventoryShare } from '../../../core/services/inventories';
 import { Employee } from '../../../core/models/employee.model';
@@ -10,6 +10,7 @@ import { ConfirmationDialogService } from '../../../shared/confirm-dialog/confir
 import { UiButtonDirective } from '../../../shared/ui/directives/ui-button.directive';
 import { UiTableActionDirective } from '../../../shared/ui/directives/ui-table-action.directive';
 import { LoadingIndicatorComponent } from '../../../shared/loading/loading-indicator';
+import { ModalShellComponent } from '../../../shared/ui/components/modal-shell/modal-shell.component';
 
 export interface InventorySharesDialogData {
   inventory: InventorySummary;
@@ -21,7 +22,7 @@ export interface InventorySharesDialogData {
 @Component({
   selector: 'app-inventory-shares-dialog',
   standalone: true,
-  imports: [CommonModule, MatDialogModule, MatIconModule, UiButtonDirective, UiTableActionDirective, LoadingIndicatorComponent],
+  imports: [CommonModule, MatIconModule, UiButtonDirective, UiTableActionDirective, LoadingIndicatorComponent, ModalShellComponent],
   templateUrl: './inventory-shares-dialog.component.html',
   styleUrl: './inventory-shares-dialog.component.scss'
 })
@@ -39,6 +40,8 @@ export class InventorySharesDialogComponent implements OnInit {
   updatingShareId: number | null = null;
 
   ngOnInit(): void { this.load(); }
+
+  close(): void { this.dialogRef.close(); }
 
   getOwnerName(userId: number): string {
     const employee = this.data.employees?.find(e => e.userId === userId);
