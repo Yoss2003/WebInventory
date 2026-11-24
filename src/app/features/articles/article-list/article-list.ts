@@ -66,7 +66,7 @@ export class ArticleListComponent implements OnInit {
       { name?: string; inventoryName?: string } | undefined;
     const inventoryName = inv?.name || inv?.inventoryName || undefined;
 
-    const ref = this.dialog.open(ArticleDetailDialogComponent, {
+    const ref = this.modalStandards.open(ArticleDetailDialogComponent, 'detail', {
       panelClass: ['inv-seven-modal', 'article-detail-wide-modal'],
       enterAnimationDuration: 260,
       exitAnimationDuration: 220,

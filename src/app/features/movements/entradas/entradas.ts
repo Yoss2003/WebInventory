@@ -10,6 +10,7 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatTabsModule } from '@angular/material/tabs';
 import { TabViewTransitionDirective } from '../../../shared/ui/directives/tab-view-transition.directive';
 import { MatDialog } from '@angular/material/dialog';
+import { ModalStandardService } from '../../../shared/ui/services/modal-standard.service';
 import { ToastService } from '../../../shared/toast/toast.service';
 import { forkJoin, filter, take, catchError, of } from 'rxjs';
 import { CategoryService } from '../../../core/services/category';
@@ -31,6 +32,7 @@ import { UiSearchComponent } from '../../../shared/ui/components/ui-search.compo
 @Component({selector:'app-entradas',standalone:true,imports:[MoneyPipe, UiEmptyStateComponent, UiTableActionDirective, UiButtonDirective, UiPageHeadingComponent, CommonModule,MatIconModule,MatTabsModule,TabViewTransitionDirective,LoadingIndicatorComponent,UiSearchComponent],templateUrl:'./entradas.html',styleUrl:'./entradas.scss'})
 export class EntradasComponent implements OnInit {
   private readonly dialog=inject(MatDialog);
+  private readonly modalStandards = inject(ModalStandardService);
   private readonly confirms=inject(ConfirmationDialogService);
   private readonly articles=inject(ArticleService);
   private readonly inventoryContext=inject(InventoryContextService);
@@ -103,7 +105,7 @@ export class EntradasComponent implements OnInit {
   articleCode(id:number):string{return this.articleMap.get(id)?.code||'—';}
   newArticle():void{this.editArticle(null);}
   editArticle(id:number|null):void{
-    const ref=this.dialog.open(ArticleFormComponent,{enterAnimationDuration:260,exitAnimationDuration:220,width:'1080px',maxWidth:'calc(100vw - 24px)',maxHeight:'calc(100dvh - 24px)',disableClose:true,data:{id}});
+    const ref=this.modalStandards.open(ArticleFormComponent,'mainForm',{enterAnimationDuration:260,exitAnimationDuration:220,width:'1080px',maxWidth:'calc(100vw - 24px)',maxHeight:'calc(100dvh - 24px)',disableClose:true,data:{id}});
     ref.afterClosed().subscribe((result: boolean | { created: boolean; tracking: number } | undefined)=>{
       if (!result) return;
       if (typeof result === 'object' && result.created)
@@ -112,7 +114,7 @@ export class EntradasComponent implements OnInit {
     });
   }
   newEntry():void{
-    const ref=this.dialog.open(MovementForm,{width:'min(600px,calc(100vw - 24px))',data:{actionId:1}});
+    const ref=this.modalStandards.open(MovementForm,'mainForm',{width:'min(600px,calc(100vw - 24px))',data:{actionId:1}});
     ref.afterClosed().subscribe(ok=>{if(ok)this.loadRealData();});
   }
   showArticle(id: number): void {
@@ -121,7 +123,7 @@ export class EntradasComponent implements OnInit {
       i => Number(i.id) === Number(article?.inventoryId ?? this.inventoryContext.activeInventoryId)
     ) as { name?: string; inventoryName?: string } | undefined;
 
-    const ref = this.dialog.open(ArticleDetailDialogComponent, {
+    const ref = this.modalStandards.open(ArticleDetailDialogComponent, 'detail', {
       panelClass: ['inv-seven-modal', 'article-detail-wide-modal'],
       enterAnimationDuration: 260,
       exitAnimationDuration: 220,
@@ -144,7 +146,7 @@ export class EntradasComponent implements OnInit {
     });
   }
   showMovement(m:Movement):void{
-    this.dialog.open(MovementDetailDialogComponent,{panelClass:'inv-seven-modal',enterAnimationDuration:260,exitAnimationDuration:220,data:{movement:m,articleName:this.articleName(m.articleId),articleCode:this.articleCode(m.articleId)},width:'min(650px,calc(100vw - 24px))'});
+    this.modalStandards.open(MovementDetailDialogComponent,'detail',{panelClass:'inv-seven-modal',enterAnimationDuration:260,exitAnimationDuration:220,data:{movement:m,articleName:this.articleName(m.articleId),articleCode:this.articleCode(m.articleId)},width:'min(650px,calc(100vw - 24px))'});
   }
   deleteArticle(a:Article,event:Event):void{
     event.stopPropagation();
