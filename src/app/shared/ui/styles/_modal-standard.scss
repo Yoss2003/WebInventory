@@ -38,7 +38,7 @@
 
 /* Compatibilidad con el panel compartido ya utilizado por los formularios.
    Así las vistas existentes reciben animación sin cambiar cada template. */
-:is(.inv-standard-select-panel, .inventory-select-options).mdc-menu-surface--open {
+:is(.mat-mdc-select-panel, .inv-standard-select-panel, .inventory-select-options).mdc-menu-surface--open {
   animation: inv-standard-overlay-open 160ms cubic-bezier(.22, 1, .36, 1) both;
 }
 :is(.inv-standard-select-panel, .inventory-select-options).mdc-menu-surface--animating-closed {
