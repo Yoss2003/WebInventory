@@ -120,7 +120,7 @@
               <td>{{ item.sharedDate | date:'dd/MM/yyyy' }}</td>
               <td class="sharing-actions">
                 <button *ngIf="canManageAccess" type="button" appUiTableAction="normal"
-                  (click)="changeAccess(item)" [disabled]="updatingShareId === item.id"
+                  (click)="changeAccess(item)" [disabled]="updatingShareId === item.id" [uiTableActionLoading]="updatingShareId === item.id"
                   [title]="item.accessLevel === 2 ? 'Cambiar a lector' : 'Cambiar a editor'"
                   [attr.aria-label]="item.accessLevel === 2 ? 'Cambiar a lector' : 'Cambiar a editor'">
                   <mat-icon>swap_horiz</mat-icon>
