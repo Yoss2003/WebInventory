@@ -173,7 +173,7 @@ button.ui-v2-button--loading {
   cursor: progress;
 
   > * {
-    visibility: hidden !important;
+    opacity: 0 !important;
   }
 
   &::before {
