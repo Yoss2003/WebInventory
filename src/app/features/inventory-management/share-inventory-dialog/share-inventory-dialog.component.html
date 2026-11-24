@@ -18,39 +18,23 @@
   <div class="share-dialog-content">
     <section class="wizard-step-panel" *ngIf="currentStep === 1">
       <div class="field-wrap collaborator-picker-block">
-        <label for="share-employee-input" class="field-label">Empleado activo vinculado a un usuario <span class="required">*</span></label>
-        <div class="employee-search-row">
-          <input id="share-employee-input" type="search" appUiControl [(ngModel)]="employeeSearch"
-            (ngModelChange)="onEmployeeSearchChange($event)"
-            placeholder="Buscar por nombre, DNI, usuario o correo..." autocomplete="off"
-            aria-label="Buscar empleado activo" />
-          <span class="employee-count" *ngIf="!loadingRecipients">{{ filteredEmployees.length }}</span>
-        </div>
-
-        <div class="employee-load-state" *ngIf="loadingRecipients">
-          <app-loading-indicator [compact]="true" message="Cargando empleados..." />
-        </div>
-        <p *ngIf="recipientError && !loadingRecipients" class="error-notice" role="alert">
-          <mat-icon aria-hidden="true">error_outline</mat-icon>
-          <span>{{ recipientError }}</span>
-          <button type="button" appUiButton="secondary" (click)="loadRecipients()">Reintentar</button>
-        </p>
-
-        <div class="employee-results" *ngIf="!loadingRecipients && !recipientError && filteredEmployees.length">
-          <button type="button" class="employee-option" *ngFor="let employee of filteredEmployees"
-            [class.is-selected]="selectedEmployee?.userId === employee.userId"
-            (click)="selectEmployee(employee)">
-            <span class="employee-option-text">
-              <strong>{{ displayEmployee(employee) }}</strong>
-              <small>{{ employee.dni || 'Sin DNI' }} · {{ employee.username || employee.email || 'Cuenta vinculada' }}</small>
-            </span>
-            <mat-icon aria-hidden="true">{{ selectedEmployee?.userId === employee.userId ? 'check_circle' : 'radio_button_unchecked' }}</mat-icon>
+        <label class="field-label">Empleado activo vinculado a un usuario <span class="required">*</span></label>
+        <div class="employee-picker-control">
+          <button type="button" appUiButton="secondary" class="employee-picker-trigger"
+            (click)="openWorkerPicker()" [disabled]="submitting">
+            <mat-icon aria-hidden="true">person_search</mat-icon>
+            Seleccionar empleado
           </button>
-        </div>
-        <div class="employee-empty" *ngIf="!loadingRecipients && !recipientError && !filteredEmployees.length">
-          <mat-icon aria-hidden="true">person_search</mat-icon>
-          <strong>{{ employees.length ? 'No hay coincidencias' : 'No hay empleados disponibles' }}</strong>
-          <p>{{ employees.length ? 'Prueba con otro nombre, DNI o usuario.' : 'Solo aparecen empleados activos que tienen una cuenta de usuario vinculada en esta empresa.' }}</p>
+          <div *ngIf="selectedEmployee as employee" class="employee-selected-summary" aria-live="polite">
+            <mat-icon aria-hidden="true">check_circle</mat-icon>
+            <span>
+              <strong>{{ displayEmployee(employee) }}</strong>
+              <small>{{ collaboratorExtra || 'Cuenta de usuario vinculada' }}</small>
+            </span>
+          </div>
+          <p class="employee-picker-note">
+            La búsqueda y selección se realiza en el modal de empleados activos de tu empresa.
+          </p>
         </div>
       </div>
 

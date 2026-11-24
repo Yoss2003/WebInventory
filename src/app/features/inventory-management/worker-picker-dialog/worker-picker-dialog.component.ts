@@ -9,7 +9,7 @@ import { UiControlDirective } from '../../../shared/ui/directives/ui-control.dir
 import { InventoryService, InventoryShareRecipient } from '../../../core/services/inventories';
 import { LoadingIndicatorComponent } from '../../../shared/loading/loading-indicator';
 import { ModalShellComponent } from '../../../shared/ui/components/modal-shell/modal-shell.component';
-import { timeout } from 'rxjs';
+import { finalize, timeout } from 'rxjs';
 
 export interface WorkerPickerDialogData {
   inventoryId: number;
@@ -52,26 +52,47 @@ export class WorkerPickerDialogComponent implements OnInit {
     this.loading = !this.hasLoadedOnce && !fromRefresh;
     this.refreshing = fromRefresh;
     this.error = '';
+
+    if (!Number.isInteger(this.data.inventoryId) || this.data.inventoryId <= 0) {
+      this.loading = false;
+      this.refreshing = false;
+      this.hasLoadedOnce = true;
+      this.error = 'No se identificó un inventario válido para consultar los colaboradores.';
+      return;
+    }
+
     this.api.getShareRecipients(this.data.inventoryId).pipe(
-      timeout({ first: 15000 })
+      timeout({ first: 12000 }),
+      finalize(() => {
+        this.loading = false;
+        this.refreshing = false;
+        this.hasLoadedOnce = true;
+      })
     ).subscribe({
       next: rows => {
-        this.employees = (rows || []).filter(e => e.userId > 0 && e.userId !== this.data.excludeUserId);
-        this.loading = false;
-        this.refreshing = false;
-        this.hasLoadedOnce = true;
+        const payload = rows as unknown;
+        const list = Array.isArray(payload)
+          ? payload as InventoryShareRecipient[]
+          : payload && typeof payload === 'object' &&
+            Array.isArray((payload as { items?: unknown }).items)
+              ? (payload as { items: InventoryShareRecipient[] }).items
+              : [];
+
+        this.employees = list.filter(employee =>
+          !!employee && Number(employee.userId) > 0 &&
+          employee.userId !== this.data.excludeUserId
+        );
       },
       error: err => {
-        this.loading = false;
-        this.refreshing = false;
-        this.hasLoadedOnce = true;
+        this.employees = [];
         this.error = err?.name === 'TimeoutError'
           ? 'La consulta de empleados tardó demasiado. Puedes volver a intentarlo.'
-          : String(err?.error?.error || 'No se pudieron consultar los colaboradores disponibles.');
+          : err?.status === 404
+            ? 'No se encontró la lista de colaboradores para este inventario. Comprueba que la API esté actualizada y que el inventario siga activo.'
+            : String(err?.error?.error || 'No se pudieron consultar los colaboradores disponibles.');
       }
     });
   }
-
   refresh(): void { this.load(true); }
   select(employee: InventoryShareRecipient): void { this.dialogRef.close(employee); }
 }

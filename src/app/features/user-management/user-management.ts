@@ -147,7 +147,7 @@ export class UserManagementComponent implements OnInit {
     if (!this.isDeveloper) return;
     this.modalStandards.open(RolePermissionsDialogComponent, 'mainForm', {
       panelClass: 'inv-seven-modal',
-      width: 'min(800px, calc(100vw - 24px))',
+      width: 'min(1160px, calc(100vw - 24px))',
       maxWidth: 'calc(100vw - 24px)',
       maxHeight: 'calc(100dvh - 24px)',
       enterAnimationDuration: 260,

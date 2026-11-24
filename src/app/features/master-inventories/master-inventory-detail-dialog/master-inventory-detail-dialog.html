@@ -1,0 +1,72 @@
+<app-modal-shell
+  type="detail"
+  [title]="'Catálogo maestro · ' + data.master.companyName"
+  icon="inventory_2"
+  [infoVisible]="true"
+  infoTooltip="Consulta de solo lectura de los catálogos generales de esta empresa. No se muestran existencias ni movimientos."
+  [subtitleVisible]="false"
+  [closeVisible]="true"
+  [footerVisible]="false"
+  [contentScrollable]="true"
+  (closeRequested)="close()">
+  <div class="master-detail-dialog">
+    <header class="master-detail-summary">
+      <div class="master-detail-identity">
+        <strong>{{ data.master.alias || data.master.inventoryName }}</strong>
+        <div class="master-detail-meta">
+          <span>Empresa #{{ data.master.companyId }}</span>
+          <span>Inventario #{{ data.master.id }}</span>
+          <span class="master-detail-status" [class.inactive]="!data.master.isActive">
+            {{ data.master.isActive ? 'Activo' : 'Inactivo' }}
+          </span>
+        </div>
+      </div>
+      <a *ngIf="sameCompany" routerLink="/dashboard/catalogo-general"
+        (click)="close()" class="master-detail-link">
+        <mat-icon aria-hidden="true">edit_note</mat-icon>
+        Abrir catálogo general
+      </a>
+    </header>
+
+    <p *ngIf="!sameCompany" class="master-detail-note">
+      Para editar los catálogos de esta empresa, inicia una sesión en el contexto de esa empresa.
+      Esta consulta global nunca permite modificar datos de otras organizaciones.
+    </p>
+
+    <div *ngIf="loading" class="master-detail-loading" role="status">
+      <app-loading-indicator message="Consultando categorías, marcas y proveedores..." />
+    </div>
+
+    <p *ngIf="error && !loading" class="master-detail-error" role="alert">
+      <mat-icon aria-hidden="true">error_outline</mat-icon>
+      <span>{{ error }}</span>
+      <button type="button" appUiButton="secondary" (click)="load()">Reintentar</button>
+    </p>
+
+    <div class="master-detail-grid" *ngIf="catalog && !loading">
+      <section class="master-detail-group">
+        <h3>Categorías <span>{{ catalog.categories.length }}</span></h3>
+        <div class="master-detail-list">
+          <p *ngFor="let item of catalog.categories">{{ item.name }}</p>
+          <p *ngIf="!catalog.categories.length" class="master-detail-empty">Sin categorías registradas.</p>
+        </div>
+      </section>
+
+      <section class="master-detail-group">
+        <h3>Marcas <span>{{ catalog.brands.length }}</span></h3>
+        <div class="master-detail-list">
+          <p *ngFor="let item of catalog.brands">{{ item.name }}</p>
+          <p *ngIf="!catalog.brands.length" class="master-detail-empty">Sin marcas registradas.</p>
+        </div>
+      </section>
+
+      <section class="master-detail-group">
+        <h3>Proveedores <span>{{ catalog.suppliers.length }}</span></h3>
+        <div class="master-detail-list">
+          <p *ngFor="let item of catalog.suppliers">{{ item.businessName }} <small>{{ item.ruc }}</small></p>
+          <p *ngIf="!catalog.suppliers.length" class="master-detail-empty">Sin proveedores registrados.</p>
+        </div>
+      </section>
+    </div>
+  </div>
+</app-modal-shell>

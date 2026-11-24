@@ -1,20 +1,18 @@
-import { Component, OnInit, inject } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { ModalStandardService } from '../../../shared/ui/services/modal-standard.service';
 import { MatIconModule } from '@angular/material/icon';
 import { UiButtonDirective } from '../../../shared/ui/directives/ui-button.directive';
-import { UiControlDirective } from '../../../shared/ui/directives/ui-control.directive';
 import { InventoryDialogMotionDirective } from '../../../shared/ui/directives/inv-dialog-motion.directive';
 import { InventoryService, InventorySummary, InventoryShareRecipient } from '../../../core/services/inventories';
 import { ManagedUser } from '../../../core/services/user-management';
 import { InventorySharesDialogComponent } from '../inventory-shares-dialog/inventory-shares-dialog.component';
 import { ToastService } from '../../../shared/toast/toast.service';
 import { ModalShellComponent } from '../../../shared/ui/components/modal-shell/modal-shell.component';
-import { LoadingIndicatorComponent } from '../../../shared/loading/loading-indicator';
-import { timeout } from 'rxjs';
 import type { ModalActionId, ModalFooterAction, ModalSection } from '../../../shared/ui/models/modal-standard.model';
+import { WorkerPickerDialogComponent, WorkerPickerDialogData } from '../worker-picker-dialog/worker-picker-dialog.component';
 
 export interface ShareInventoryDialogData {
   inventory: InventorySummary;
@@ -28,12 +26,12 @@ export interface ShareInventoryDialogData {
   standalone: true,
   imports: [
     CommonModule, FormsModule, MatIconModule, InventoryDialogMotionDirective,
-    UiButtonDirective, UiControlDirective, ModalShellComponent, LoadingIndicatorComponent
+    UiButtonDirective, ModalShellComponent
   ],
   templateUrl: './share-inventory-dialog.component.html',
   styleUrl: './share-inventory-dialog.component.scss'
 })
-export class ShareInventoryDialogComponent implements OnInit {
+export class ShareInventoryDialogComponent {
   readonly dialogRef = inject(MatDialogRef<ShareInventoryDialogComponent>);
   readonly data: ShareInventoryDialogData = inject(MAT_DIALOG_DATA);
   private readonly modalStandards = inject(ModalStandardService);
@@ -42,29 +40,13 @@ export class ShareInventoryDialogComponent implements OnInit {
 
   currentStep = 1;
   readonly selectedInventoryId = this.data.inventory?.id || 0;
-  employeeSearch = '';
   selectedEmployee: InventoryShareRecipient | null = null;
-  employees: InventoryShareRecipient[] = [];
-  loadingRecipients = false;
-  recipientError = '';
   accessLevel: 1 | 2 = 1;
   submitting = false;
   error = '';
 
-  ngOnInit(): void { this.loadRecipients(); }
-
   get currentInventory(): InventorySummary { return this.data.inventory; }
 
-  get filteredEmployees(): InventoryShareRecipient[] {
-    const term = this.employeeSearch.trim().toLowerCase();
-    return this.employees.filter(employee => {
-      const text = [
-        employee.firstName || '', employee.lastName || '', employee.dni || '',
-        employee.username || '', employee.email || ''
-      ].join(' ').toLowerCase();
-      return !term || text.includes(term);
-    });
-  }
 
   displayEmployee(employee: InventoryShareRecipient): string {
     const fullName = `${employee.firstName || ''} ${employee.lastName || ''}`.trim();
@@ -98,40 +80,30 @@ export class ShareInventoryDialogComponent implements OnInit {
     return userId === this.data.selfId ? 'Mi cuenta' : `Usuario #${userId}`;
   }
 
-  loadRecipients(): void {
-    if (!this.selectedInventoryId) {
-      this.recipientError = 'No se identificó el inventario que se desea compartir.';
-      return;
-    }
-    this.loadingRecipients = true;
-    this.recipientError = '';
-    this.api.getShareRecipients(this.selectedInventoryId).pipe(
-      timeout({ first: 15000 })
-    ).subscribe({
-      next: rows => {
-        this.employees = (rows || []).filter(item => item.userId > 0);
-        this.loadingRecipients = false;
+  openWorkerPicker(): void {
+    if (this.submitting || !this.selectedInventoryId) return;
+
+    const dialogRef = this.modalStandards.open<
+      WorkerPickerDialogComponent,
+      WorkerPickerDialogData,
+      InventoryShareRecipient
+    >(WorkerPickerDialogComponent, 'selector', {
+      width: 'min(780px, calc(100vw - 24px))',
+      maxWidth: 'calc(100vw - 24px)',
+      panelClass: ['inv-v2-dialog-panel', 'inv-seven-modal'],
+      data: {
+        inventoryId: this.selectedInventoryId,
+        excludeUserId: this.data.selfId
       },
-      error: err => {
-        this.loadingRecipients = false;
-        this.recipientError = err?.name === 'TimeoutError'
-          ? 'La consulta de empleados tardó demasiado. Puedes volver a intentarlo.'
-          : String(err?.error?.error || 'No se pudieron consultar los empleados disponibles para compartir.');
-      }
+      autoFocus: 'first-tabbable',
+      restoreFocus: true
     });
-  }
 
-  onEmployeeSearchChange(value: string): void {
-    if (this.selectedEmployee && value.trim() !== this.displayEmployee(this.selectedEmployee)) {
-      this.selectedEmployee = null;
-    }
-  }
-
-  selectEmployee(employee: InventoryShareRecipient): void {
-    if (!employee?.userId) return;
-    this.selectedEmployee = employee;
-    this.employeeSearch = this.displayEmployee(employee);
-    this.error = '';
+    dialogRef.afterClosed().subscribe(recipient => {
+      if (!recipient || recipient.userId <= 0) return;
+      this.selectedEmployee = recipient;
+      this.error = '';
+    });
   }
 
   openSharesDialog(): void {

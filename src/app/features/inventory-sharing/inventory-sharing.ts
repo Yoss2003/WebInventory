@@ -18,6 +18,7 @@ import { MatSelectModule } from '@angular/material/select';
 import { InventoryService, InventoryShare, InventorySummary } from '../../core/services/inventories';
 import { AccessService } from '../../core/services/access';
 import { LoadingIndicatorComponent } from '../../shared/loading/loading-indicator';
+import { finalize, timeout } from 'rxjs';
 
 @Component({
   selector: 'app-inventory-sharing', standalone: true,
@@ -47,6 +48,7 @@ export class InventorySharingComponent implements OnInit {
   saving = false;
   updatingShareId: number | null = null;
   error = '';
+  sharesError = '';
   private requestId = 0;
   private loadedSharesInventoryId: number | null = null;
 
@@ -86,57 +88,82 @@ export class InventorySharingComponent implements OnInit {
     this.loading = true;
     this.error = '';
     this.cdr.markForCheck();
-    this.api.getInventories().subscribe({
+
+    this.api.getInventories().pipe(
+      timeout({ first: 15000 }),
+      finalize(() => {
+        this.loading = false;
+        this.hasLoaded = true;
+        this.cdr.markForCheck();
+      })
+    ).subscribe({
       next: values => {
-        this.inventories = values;
+        this.inventories = Array.isArray(values) ? values : [];
         if (!this.ownedInventories.some(x => x.id === this.currentInventoryId)) {
           this.currentInventoryId = this.ownedInventories[0]?.id ?? null;
           this.shares = [];
           this.sharesLoaded = false;
+          this.sharesError = '';
           this.loadedSharesInventoryId = null;
         }
-        this.loading = false;
-        this.hasLoaded = true;
         if (this.currentInventoryId) this.loadShares();
-        else { this.requestId++; this.shares = []; this.loadingShares = false; }
-        this.cdr.markForCheck();
+        else {
+          this.requestId++;
+          this.shares = [];
+          this.loadingShares = false;
+          this.sharesLoaded = false;
+          this.sharesError = '';
+        }
       },
-      error: () => {
-        this.loading = false;
-        this.hasLoaded = true;
-        this.error = 'No se pudieron consultar los inventarios. Los datos anteriores pueden estar desactualizados.';
-        this.cdr.markForCheck();
+      error: err => {
+        this.error = err?.name === 'TimeoutError'
+          ? 'La consulta de inventarios tardó demasiado. Intenta actualizar nuevamente.'
+          : String(err?.error?.error || 'No se pudieron consultar los inventarios. Los datos anteriores pueden estar desactualizados.');
       }
     });
   }
 
   loadShares(): void {
     const inventoryId = this.currentInventoryId;
-    if (!inventoryId) { this.shares = []; this.sharesLoaded = false; this.loadingShares = false; this.requestId++; this.cdr.markForCheck(); return; }
+    if (!inventoryId) {
+      this.shares = [];
+      this.sharesLoaded = false;
+      this.loadingShares = false;
+      this.sharesError = '';
+      this.requestId++;
+      this.cdr.markForCheck();
+      return;
+    }
+
     const requestId = ++this.requestId;
     this.loadingShares = true;
+    this.sharesError = '';
     if (this.loadedSharesInventoryId !== inventoryId) {
       this.sharesLoaded = false;
-      this.shares = []; // Al cambiar de almacén no se exhiben permisos del anterior.
+      this.shares = [];
       this.loadedSharesInventoryId = inventoryId;
     }
     this.cdr.markForCheck();
-    this.api.getShares(inventoryId).subscribe({
+
+    this.api.getShares(inventoryId).pipe(
+      timeout({ first: 15000 }),
+      finalize(() => {
+        if (requestId !== this.requestId || inventoryId !== this.currentInventoryId) return;
+        this.loadingShares = false;
+        this.sharesLoaded = true;
+        this.cdr.markForCheck();
+      })
+    ).subscribe({
       next: data => {
         if (requestId !== this.requestId || inventoryId !== this.currentInventoryId) return;
-        this.shares = data;
-        this.sharesLoaded = true;
-        this.loadingShares = false;
-        this.error = '';
-        this.cdr.markForCheck();
+        this.shares = Array.isArray(data) ? data : [];
+        this.sharesError = '';
       },
       error: err => {
         if (requestId !== this.requestId || inventoryId !== this.currentInventoryId) return;
-        this.shares = [];
-        this.sharesLoaded = true;
-        this.loadingShares = false;
-        this.error = String(err?.error?.error || 'No se pudieron consultar los permisos de este inventario.');
-        this.cdr.markForCheck();
+        this.sharesError = err?.name === 'TimeoutError'
+          ? 'La consulta de colaboradores tardó demasiado. Actualiza para volver a intentarlo.'
+          : String(err?.error?.error || 'No se pudieron consultar los permisos de este inventario.');
       }
     });
   }
