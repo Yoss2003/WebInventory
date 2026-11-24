@@ -18,13 +18,15 @@
   <div class="share-dialog-content">
     <section class="wizard-step-panel" *ngIf="currentStep === 1">
       <div class="field-wrap collaborator-picker-block">
-        <label class="field-label">Empleado activo vinculado a un usuario <span class="required">*</span></label>
-        <div class="employee-picker-control">
+        <div class="collaborator-picker-heading">
+          <label class="field-label">Empleado activo vinculado a un usuario <span class="required">*</span></label>
           <button type="button" appUiButton="secondary" class="employee-picker-trigger"
             (click)="openWorkerPicker()" [disabled]="submitting">
             <mat-icon aria-hidden="true">person_search</mat-icon>
             Seleccionar empleado
           </button>
+        </div>
+        <div class="employee-picker-control">
           <div *ngIf="selectedEmployee as employee" class="employee-selected-summary" aria-live="polite">
             <mat-icon aria-hidden="true">check_circle</mat-icon>
             <span>
@@ -106,25 +108,25 @@
         </div>
       </div>
 
-      <div *ngIf="loadingShares" class="current-access-loading" role="status" aria-live="polite">
-        <app-loading-indicator [compact]="true" message="Consultando accesos..." />
-      </div>
-
-      <p *ngIf="sharesError" class="current-access-error" role="alert">
-        <mat-icon aria-hidden="true">error_outline</mat-icon>
-        <span>{{ sharesError }}</span>
-        <button type="button" appUiButton="secondary" (click)="loadShares()" [disabled]="loadingShares || refreshingShares">
-          Reintentar
-        </button>
-      </p>
-
-      <ng-container *ngIf="!loadingShares && !sharesError">
-        <div class="current-access-table-wrap">
-          <table class="current-access-table">
-            <thead>
-              <tr><th scope="col">Usuario</th><th scope="col">Rol de acceso</th><th scope="col">Fecha</th></tr>
-            </thead>
-            <tbody>
+      <div class="current-access-table-wrap" [class.has-overflow]="totalAccessCount > 2">
+        <table class="current-access-table">
+          <thead>
+            <tr><th scope="col">Usuario</th><th scope="col">Rol de acceso</th><th scope="col">Fecha</th></tr>
+          </thead>
+          <tbody>
+            <tr *ngIf="loadingShares" class="current-access-state-row">
+              <td colspan="3">
+                <app-loading-indicator [compact]="true" message="Consultando accesos..." />
+              </td>
+            </tr>
+            <tr *ngIf="!loadingShares && sharesError" class="current-access-state-row">
+              <td colspan="3">
+                <span>No se pudieron cargar los accesos.</span>
+                <button type="button" appUiButton="secondary" (click)="loadShares()"
+                  [disabled]="loadingShares || refreshingShares">Reintentar</button>
+              </td>
+            </tr>
+            <ng-container *ngIf="!loadingShares && !sharesError">
               <tr class="owner-access-row">
                 <td>
                   <strong>{{ getOwnerName(currentInventory.userId) }}</strong>
@@ -146,13 +148,14 @@
                 </td>
                 <td>{{ share.sharedDate | date:'dd/MM/yyyy' }}</td>
               </tr>
-            </tbody>
-          </table>
-        </div>
-        <p *ngIf="!shares.length" class="current-access-empty-note">
-          Este inventario todavía no tiene colaboradores adicionales. El titular conserva el acceso propietario.
-        </p>
-      </ng-container>
+            </ng-container>
+          </tbody>
+        </table>
+      </div>
+      <p *ngIf="!loadingShares && !sharesError && !shares.length" class="current-access-empty-note">
+        Este inventario todavía no tiene colaboradores adicionales. El titular conserva el acceso propietario.
+      </p>
+      <p *ngIf="sharesError" class="current-access-error" role="alert">{{ sharesError }}</p>
     </section>
   </div>
 </app-modal-shell>
