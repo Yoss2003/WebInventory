@@ -51,14 +51,14 @@
           </mat-form-field>
         </div>
 
-        <div class="article-summary wide" *ngIf="chosen">
+        <div class="article-summary wide" aria-live="polite">
           <div>
             <small>Código</small>
-            <strong>{{ chosen.code }}</strong>
+            <strong>{{ chosen?.code || '—' }}</strong>
           </div>
           <div>
             <small>Modelo</small>
-            <strong>{{ chosen.model || '—' }}</strong>
+            <strong>{{ chosen?.model || '—' }}</strong>
           </div>
           <div>
             <small>Seguimiento</small>
@@ -66,9 +66,7 @@
           </div>
           <div>
             <small>Stock disponible</small>
-            <strong>
-              {{ chosen.stock }} {{ chosen.measurementUnit }}
-            </strong>
+            <strong>{{ chosen ? (chosen.stock + ' ' + chosen.measurementUnit) : '—' }}</strong>
           </div>
         </div>
 
@@ -98,32 +96,23 @@
         </div>
       </div>
 
-      <div class="serial-reference" *ngIf="isSerialized">
-        <strong>Selecciona las series exactas para esta venta:</strong>
-
-        <label
-          class="serial-check"
-          *ngFor="let unit of availableSerials">
-          <input
-            type="checkbox"
-            [checked]="selectedSerial(unit.id)"
-            (change)="toggleSerial(
-              unit.id,
-              $any($event.target).checked
-            )" />
-
-          Serie {{ unit.serialNumber }} · Unidad #{{ unit.id }}
-        </label>
-
-        <p *ngIf="!availableSerials.length">
-          No hay series disponibles; registra primero las unidades.
-        </p>
-
-        <p *ngIf="serialError" class="sale-warning">
-          {{ serialError }}
-        </p>
-
-        <small>La cantidad se calcula con las series seleccionadas.</small>
+      <div class="serial-picker-card">
+        <div class="serial-picker-card__copy">
+          <strong>Unidades serializadas</strong>
+          <small *ngIf="!isSerialized">La selección de series no aplica a este artículo.</small>
+          <small *ngIf="isSerialized && serialUnitsLoading">Cargando series disponibles...</small>
+          <small *ngIf="isSerialized && !serialUnitsLoading">
+            {{selectedSerialIds.length}} seleccionadas · {{availableSerials.length}} disponibles
+          </small>
+          <small class="serial-picker-card__status" role="status">
+            {{serialError || (isSerialized && !serialUnitsLoading && !availableSerials.length ? 'No hay series disponibles para este artículo.' : 'La cantidad se calcula automáticamente con las series seleccionadas.')}}
+          </small>
+        </div>
+        <button type="button" appUiButton="secondary" (click)="openSerialPicker()"
+          [disabled]="!isSerialized || serialUnitsLoading || !availableSerials.length || submitting">
+          <mat-icon aria-hidden="true">checklist</mat-icon>
+          {{selectedSerialIds.length ? 'Modificar selección' : 'Seleccionar series'}}
+        </button>
       </div>
     </section>
 
