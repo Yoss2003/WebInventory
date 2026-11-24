@@ -592,3 +592,18 @@
   .serial-selection-card > button { width: 100%; }
   .recipient-identity-lookup__row { grid-template-columns: 1fr; }
 }
+
+/* El almacén de origen se mantiene siempre reservado, incluso antes de
+   seleccionar un artículo, para evitar saltos de altura. */
+.transfer-dialog .info-block {
+  min-height: 76px;
+  height: 76px;
+  overflow: hidden;
+}
+
+.transfer-dialog .info-block strong {
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+  overflow: hidden;
+}
