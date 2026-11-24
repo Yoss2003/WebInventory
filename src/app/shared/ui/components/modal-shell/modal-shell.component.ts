@@ -59,6 +59,7 @@ export class ModalShellComponent implements AfterViewInit, OnChanges, OnDestroy 
   @Input() footerVisible: boolean | null = null;
   @Input() busyActionId: ModalActionId | null = null;
   @Input() loadingText: string | null = null;
+  @Input() contentScrollable = true;
 
   @Output() readonly sectionChange = new EventEmitter<number>();
   @Output() readonly actionClicked = new EventEmitter<ModalActionId>();
@@ -126,7 +127,7 @@ export class ModalShellComponent implements AfterViewInit, OnChanges, OnDestroy 
   }
 
   selectSection(index: number): void {
-    if (index === this.activeSection || index < 0 || index >= this.effectiveSections.length) return;
+    if (index === this.activeSection || index < 0 || index >= this.effectiveSections.length || this.effectiveSections[index]?.disabled) return;
     this.sectionChange.emit(index);
   }
 

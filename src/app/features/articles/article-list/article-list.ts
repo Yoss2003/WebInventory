@@ -20,6 +20,7 @@ import { ArticleDetailDialogComponent } from '../article-detail-dialog/article-d
 import { ArticleFormComponent } from '../article-form/article-form';
 import { ToastService } from '../../../shared/toast/toast.service';
 import { LoadingIndicatorComponent } from '../../../shared/loading/loading-indicator';
+import { ModalStandardService } from '../../../shared/ui/services/modal-standard.service';
 
 interface ArticleRow extends Article { categoryName: string; brandName: string; }
 import { UiSearchComponent } from '../../../shared/ui/components/ui-search.component';
@@ -33,6 +34,7 @@ export class ArticleListComponent implements OnInit {
   private readonly categories=inject(CategoryService);
   private readonly brands=inject(BrandService);
   private readonly dialog=inject(MatDialog);
+  private readonly modalStandards=inject(ModalStandardService);
   private readonly confirms=inject(ConfirmationDialogService);
   private readonly cdr=inject(ChangeDetectorRef);
   private readonly toast = inject(ToastService);
@@ -86,7 +88,7 @@ export class ArticleListComponent implements OnInit {
   create():void {this.openEditor(null);}
   edit(row:ArticleRow,event:Event):void {event.stopPropagation();if(row.isActive)this.openEditor(row.id);}
   private openEditor(id:number|null):void {
-    const dialogRef=this.dialog.open(ArticleFormComponent,{enterAnimationDuration:260,exitAnimationDuration:220,data:{id},width:'min(1080px, calc(100vw - 24px))',maxWidth:'calc(100vw - 24px)',maxHeight:'calc(100dvh - 24px)',disableClose:true});
+    const dialogRef=this.modalStandards.open(ArticleFormComponent,'mainForm',{data:{id},width:'min(1080px, calc(100vw - 24px))',maxWidth:'calc(100vw - 24px)',maxHeight:'calc(100dvh - 24px)',disableClose:true});
     dialogRef.afterClosed().subscribe(changed=>{if(changed)this.load();});
   }
   delete(row:ArticleRow,event:Event):void {
