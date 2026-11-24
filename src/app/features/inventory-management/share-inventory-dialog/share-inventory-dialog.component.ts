@@ -1,11 +1,10 @@
 import { Component, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { MatDialogRef, MAT_DIALOG_DATA, MatDialog, MatDialogModule } from '@angular/material/dialog';
+import { MatDialogRef, MAT_DIALOG_DATA, MatDialog } from '@angular/material/dialog';
 import { ModalStandardService } from '../../../shared/ui/services/modal-standard.service';
 import { MatIconModule } from '@angular/material/icon';
 import { MatAutocompleteModule } from '@angular/material/autocomplete';
-import { MatTooltipModule } from '@angular/material/tooltip';
 import { UiButtonDirective } from '../../../shared/ui/directives/ui-button.directive';
 import { UiControlDirective } from '../../../shared/ui/directives/ui-control.directive';
 import { InventoryService, InventorySummary } from '../../../core/services/inventories';
@@ -14,7 +13,8 @@ import { Employee } from '../../../core/models/employee.model';
 import { WorkerPickerDialogComponent } from '../worker-picker-dialog/worker-picker-dialog.component';
 import { InventorySharesDialogComponent } from '../inventory-shares-dialog/inventory-shares-dialog.component';
 import { ToastService } from '../../../shared/toast/toast.service';
-import { LoadingIndicatorComponent } from '../../../shared/loading/loading-indicator';
+import { ModalShellComponent } from '../../../shared/ui/components/modal-shell/modal-shell.component';
+import type { ModalActionId, ModalFooterAction, ModalSection } from '../../../shared/ui/models/modal-standard.model';
 
 export interface ShareInventoryDialogData {
   inventory: InventorySummary;
@@ -28,9 +28,9 @@ export interface ShareInventoryDialogData {
   selector: 'app-share-inventory-dialog',
   standalone: true,
   imports: [
-    CommonModule, FormsModule, MatDialogModule, MatIconModule,
-    MatAutocompleteModule, MatTooltipModule, UiButtonDirective,
-    UiControlDirective, LoadingIndicatorComponent
+    CommonModule, FormsModule, MatIconModule,
+    MatAutocompleteModule, UiButtonDirective, UiControlDirective,
+    ModalShellComponent
   ],
   templateUrl: './share-inventory-dialog.component.html',
   styleUrl: './share-inventory-dialog.component.scss'
@@ -139,8 +139,51 @@ export class ShareInventoryDialogComponent {
     });
   }
 
+  get modalSections(): ModalSection[] {
+    return [
+      { id: 'access', label: 'Acceso y permisos', completed: this.currentStep > 1 && this.isStep1Valid },
+      { id: 'summary', label: 'Resumen', disabled: this.submitting || !this.isStep1Valid }
+    ];
+  }
+
+  get modalFooterActions(): ModalFooterAction[] {
+    const actions: ModalFooterAction[] = [];
+    if (this.currentStep > 1) {
+      actions.push({ id: 'previous', label: 'Anterior', tone: 'secondary', icon: 'arrow_back', order: 0, disabled: this.submitting });
+    }
+    actions.push({ id: 'cancel', label: 'Cancelar', tone: 'secondary', order: 1, disabled: this.submitting });
+    if (this.currentStep === 1) {
+      actions.push({ id: 'next', label: 'Siguiente: Resumen', tone: 'primary', icon: 'arrow_forward', order: 2, disabled: !this.isStep1Valid || this.submitting });
+    } else {
+      actions.push({ id: 'primary', label: 'Conceder acceso', tone: 'primary', icon: 'group_add', order: 2, disabled: !this.isStep1Valid || this.submitting });
+    }
+    return actions;
+  }
+
+  handleModalAction(action: ModalActionId): void {
+    switch (action) {
+      case 'previous':
+        this.setStep(1);
+        break;
+      case 'cancel':
+      case 'close':
+        this.close();
+        break;
+      case 'next':
+        this.setStep(2);
+        break;
+      case 'primary':
+        this.submitShare();
+        break;
+    }
+  }
+
+  close(): void {
+    if (!this.submitting) this.dialogRef.close();
+  }
+
   setStep(step: number): void {
-    if (step === 2 && !this.isStep1Valid) return;
+    if (this.submitting || step < 1 || step > 2 || (step === 2 && !this.isStep1Valid)) return;
     this.currentStep = step;
     this.error = '';
   }
