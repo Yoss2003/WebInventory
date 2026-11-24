@@ -185,7 +185,7 @@ button.ui-v2-table-action--loading {
   pointer-events: none;
   cursor: progress;
 
-  > * { visibility: hidden !important; }
+  > * { opacity: 0 !important; }
 
   &::after {
     content: '';
