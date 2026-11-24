@@ -1,6 +1,40 @@
 .category-simple-form {
   display: flex;
   flex-direction: column;
-  gap: 15px;
-  margin-top: 10px;
+  gap: 18px;
+  width: 100%;
+  padding: 20px;
+}
+
+.category-field {
+  display: flex;
+  flex-direction: column;
+  gap: 7px;
+  min-width: 0;
+}
+
+.category-field label {
+  color: var(--inv-text);
+  font-size: 12px;
+  font-weight: 650;
+}
+
+.required {
+  color: var(--inv-brand);
+}
+
+.optional {
+  color: var(--inv-muted);
+  font-weight: 400;
+}
+
+.field-error {
+  color: var(--inv-danger, #ff9c9c);
+  font-size: 11px;
+}
+
+@media (max-width: 520px) {
+  .category-simple-form {
+    padding: 15px;
+  }
 }
