@@ -82,6 +82,19 @@ describe('ModalStandardService', () => {
     expect(config.exitAnimationDuration).toBe(280);
     expect(config.width).toBeUndefined();
     expect(config.height).toBeUndefined();
+    expect(config.maxWidth).toBe('calc(100vw - 24px)');
+    expect(config.maxHeight).toBe('calc(100dvh - 24px)');
+  });
+
+  it('permite que cada vista sobrescriba los límites del viewport', () => {
+    const config = service.createDialogConfig('wizard', {
+      width: 'min(900px, calc(100vw - 32px))',
+      maxWidth: 'calc(100vw - 32px)',
+      maxHeight: 'calc(100dvh - 32px)'
+    });
+    expect(config.width).toBe('min(900px, calc(100vw - 32px))');
+    expect(config.maxWidth).toBe('calc(100vw - 32px)');
+    expect(config.maxHeight).toBe('calc(100dvh - 32px)');
   });
 
   it('centraliza las clases de panel para ComboBox y autocompletado', () => {
