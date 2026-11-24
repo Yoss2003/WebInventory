@@ -6,11 +6,13 @@ import { MatIconModule } from '@angular/material/icon';
 import { ManagedUser, UserManagementService } from '../../../core/services/user-management';
 import { ToastService } from '../../../shared/toast/toast.service';
 import { UiButtonDirective } from '../../../shared/ui/directives/ui-button.directive';
+import { ModalShellComponent } from '../../../shared/ui/components/modal-shell/modal-shell.component';
+import type { ModalActionId, ModalFooterAction } from '../../../shared/ui/models/modal-standard.model';
 
 @Component({
   selector: 'app-resend-credentials-dialog',
   standalone: true,
-  imports: [CommonModule, FormsModule, MatDialogModule, MatIconModule, UiButtonDirective],
+  imports: [CommonModule, FormsModule, MatDialogModule, MatIconModule, UiButtonDirective, ModalShellComponent],
   templateUrl: './resend-credentials-dialog.html',
   styleUrl: './resend-credentials-dialog.scss'
 })
@@ -25,6 +27,18 @@ export class ResendCredentialsDialogComponent {
   get valid(): boolean {
     return !this.sending && /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(this.email.trim());
   }
+  get modalFooterActions(): ModalFooterAction[] {
+    return [
+      { id: 'cancel', label: 'Cancelar', tone: 'secondary', order: 0, disabled: this.sending },
+      { id: 'primary', label: 'Generar y reenviar', tone: 'primary', order: 1, disabled: !this.valid }
+    ];
+  }
+
+  handleModalAction(action: ModalActionId): void {
+    if (action === 'cancel') this.close();
+    if (action === 'primary') this.send();
+  }
+
   close(): void { if (!this.sending) this.ref.close(false); }
   send(): void {
     if (!this.valid) return;
