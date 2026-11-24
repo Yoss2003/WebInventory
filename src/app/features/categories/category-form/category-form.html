@@ -16,7 +16,7 @@
       <input id="category-name" appUiControl formControlName="name" type="text"
              placeholder="Ej. Electrónicos" maxlength="255"
              [class.invalid]="categoryForm.get('name')?.invalid && categoryForm.get('name')?.touched" />
-      <span class="field-error" *ngIf="categoryForm.controls.name.invalid && categoryForm.controls.name.touched">
+      <span class="field-error" *ngIf="categoryForm.get('name')?.invalid && categoryForm.get('name')?.touched">
         Escribe el nombre de la categoría.
       </span>
     </div>
