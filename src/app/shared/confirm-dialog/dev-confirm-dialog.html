@@ -7,7 +7,8 @@
   [closeVisible]="false"
   [footerActions]="modalFooterActions"
   (actionClicked)="handleModalAction($event)"
-  (closeRequested)="dialogRef.close()">
+  [contentScrollable]="false" (closeRequested)="dialogRef.close()">
+  <section class="confirm-shell">
   <div class="confirm-body">
 
     <p class="confirm-description">{{data.message}}</p>
@@ -23,4 +24,5 @@
     </div>
   
   </div>
+  </section>
 </app-modal-shell>
