@@ -1,0 +1,47 @@
+/* Animaciones compartidas para overlays que optan por el estándar OmniStock.
+   Las clases se asignan mediante panelClass en MatSelect y MatAutocomplete. */
+
+@keyframes inv-standard-overlay-open {
+  from { opacity: 0; transform: translateY(-5px) scale(.99); }
+  to { opacity: 1; transform: translateY(0) scale(1); }
+}
+
+@keyframes inv-standard-overlay-close {
+  from { opacity: 1; transform: translateY(0) scale(1); }
+  to { opacity: 0; transform: translateY(-5px) scale(.99); }
+}
+
+.cdk-overlay-pane.inv-standard-modal {
+  --mat-dialog-transition-duration: 380ms;
+}
+
+.cdk-overlay-pane.inv-standard-modal
+  .mat-mdc-dialog-container.mdc-dialog--closing {
+  --mat-dialog-transition-duration: 280ms;
+}
+
+.inv-standard-select-panel,
+.inv-standard-autocomplete-panel {
+  transform-origin: top center;
+}
+
+/* MatSelect MDC: la clase de cierre se mantiene durante la animación de salida. */
+.inv-standard-select-panel.mdc-menu-surface--open,
+.inv-standard-autocomplete-panel.mat-mdc-autocomplete-visible {
+  animation: inv-standard-overlay-open 160ms cubic-bezier(.22, 1, .36, 1) both;
+}
+
+.inv-standard-select-panel.mdc-menu-surface--animating-closed,
+.inv-standard-autocomplete-panel.mat-mdc-autocomplete-hidden {
+  animation: inv-standard-overlay-close 160ms cubic-bezier(.4, 0, 1, 1) both;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .cdk-overlay-pane.inv-standard-modal,
+  .inv-standard-select-panel,
+  .inv-standard-autocomplete-panel {
+    --mat-dialog-transition-duration: 0ms;
+    animation: none !important;
+    transition: none !important;
+  }
+}
