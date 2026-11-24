@@ -57,6 +57,93 @@
   accent-color: var(--inv-brand);
 }
 
+/* Controles nativos: el shell aplica el mismo contrato visual aunque una vista
+   todavía no haya añadido explícitamente appUiControl. Se excluyen controles
+   de acción, medios y campos Material para no romper componentes especializados. */
+:where(.ui-v2-screen, .ui-v2-dialog) :where(
+  input:not([type=checkbox]):not([type=radio]):not([type=file]):not([type=color]):not([type=range]):not([type=hidden]):not([type=button]):not([type=submit]):not([type=reset]):not([type=image]):not([matInput]),
+  textarea,
+  select
+) {
+  box-sizing: border-box;
+  width: 100%;
+  min-width: 0;
+  min-height: var(--inv-control-height, 43px);
+  border: 1px solid var(--inv-border, #51697c);
+  border-radius: var(--inv-radius-control, 9px);
+  background: var(--inv-input-bg, #111922);
+  color: var(--inv-text, #edf5fc);
+  font: inherit;
+  font-size: 13px;
+  padding: 10px 12px;
+  transition: border-color 160ms ease, box-shadow 160ms ease, background-color 160ms ease;
+}
+
+:where(.ui-v2-screen, .ui-v2-dialog) :where(
+  input:not([type=checkbox]):not([type=radio]):not([type=file]):not([type=color]):not([type=range]):not([type=hidden]):not([type=button]):not([type=submit]):not([type=reset]):not([type=image]):not([matInput]),
+  select
+) {
+  height: var(--inv-control-height, 43px);
+}
+
+:where(.ui-v2-screen, .ui-v2-dialog) :where(textarea, textarea.ui-v2-control) {
+  min-height: 58px;
+  line-height: 1.45;
+  resize: vertical;
+}
+
+:where(.ui-v2-screen, .ui-v2-dialog) :where(input, textarea, select)::placeholder {
+  color: var(--inv-muted, #a9bac8);
+  opacity: 1;
+}
+
+:where(.ui-v2-screen, .ui-v2-dialog) :where(
+  input:not([type=checkbox]):not([type=radio]):not([type=file]):not([type=color]):not([type=range]):not([type=hidden]):not([type=button]):not([type=submit]):not([type=reset]):not([type=image]):not([matInput]),
+  textarea,
+  select
+):focus-visible {
+  outline: none;
+  border-color: var(--inv-company-accent, #A2D149);
+  box-shadow: 0 0 0 2px color-mix(in srgb, var(--inv-company-accent, #A2D149) 20%, transparent);
+}
+
+:where(.ui-v2-screen, .ui-v2-dialog) :where(input, textarea, select)[aria-invalid=true],
+:where(.ui-v2-screen, .ui-v2-dialog) :where(input, textarea, select).ng-invalid.ng-touched {
+  border-color: var(--inv-danger, #ffaeb7);
+}
+
+:where(.ui-v2-screen, .ui-v2-dialog) :where(input, textarea, select):disabled {
+  background: color-mix(in srgb, var(--inv-input-bg, #111922) 72%, var(--inv-surface, #14212b));
+  color: var(--inv-muted, #a9bac8);
+  opacity: 1;
+  cursor: not-allowed;
+}
+
+:where(.ui-v2-screen, .ui-v2-dialog) :where(input, textarea, select)[readonly] {
+  background: color-mix(in srgb, var(--inv-input-bg, #111922) 78%, var(--inv-surface, #14212b));
+  cursor: default;
+}
+
+/* Calendario Material: conserva su estructura y adopta la paleta empresarial. */
+.mat-datepicker-content {
+  color: var(--inv-text, #edf5fc);
+  background: var(--inv-panel, #172531);
+  border: 1px solid var(--inv-border, #51697c);
+  border-radius: 12px;
+  box-shadow: 0 16px 36px rgba(0, 0, 0, .42);
+}
+.mat-datepicker-content .mat-calendar-body-selected {
+  background: var(--inv-company-accent, #A2D149);
+  color: var(--inv-company-on-accent, #12202B);
+}
+.mat-datepicker-content .mat-calendar-body-today:not(.mat-calendar-body-selected) {
+  border-color: var(--inv-company-accent, #A2D149);
+}
+.mat-datepicker-content .mat-calendar-body-cell:not(.mat-calendar-body-disabled):hover
+  > .mat-calendar-body-cell-content:not(.mat-calendar-body-selected) {
+  background: color-mix(in srgb, var(--inv-company-accent, #A2D149) 18%, transparent);
+}
+
 /* ComboBox Angular Material: una única clase y dimensiones compartidas. */
 .inventory-select.mat-mdc-form-field {
   display: block;
