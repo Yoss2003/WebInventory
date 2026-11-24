@@ -1,0 +1,97 @@
+<app-modal-shell
+  class="sale-info-dialog-shell"
+  type="subInfo"
+  [title]="data.title"
+  [icon]="data.kind === 'schedule' ? 'event_note' : 'receipt_long'"
+  [subtitleVisible]="false"
+  [infoVisible]="false"
+  [closeVisible]="true"
+  [contentScrollable]="true"
+  [footerActions]="[]"
+  (closeRequested)="close()">
+  <div class="sale-info-dialog">
+    <ng-container *ngIf="data.kind === 'schedule'">
+      <div class="sale-info-dialog__intro">
+        <div>
+          <span>Frecuencia</span>
+          <strong>{{ data.installmentFrequency || 'Mensual' }}</strong>
+        </div>
+        <div>
+          <span>Número de cuotas</span>
+          <strong>{{ data.installmentCount || data.schedule?.length || 0 }}</strong>
+        </div>
+        <div>
+          <span>Saldo financiado</span>
+          <strong>S/ {{ (data.financedAmount || 0) | number:'1.2-2' }}</strong>
+        </div>
+      </div>
+
+      <div class="sale-info-dialog__table-wrap">
+        <table class="sale-info-dialog__table">
+          <thead>
+            <tr>
+              <th>Cuota</th>
+              <th>Vencimiento</th>
+              <th>Importe</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let installment of data.schedule">
+              <td>#{{ installment.number }}</td>
+              <td>{{ installment.date | date:'dd/MM/yyyy' }}</td>
+              <td>S/ {{ installment.amount | number:'1.2-2' }}</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      <p class="sale-info-dialog__note">Este cronograma es una proyección calculada con la frecuencia y el número de cuotas configurados.</p>
+    </ng-container>
+
+    <ng-container *ngIf="data.kind === 'summary'">
+      <div class="sale-info-dialog__details">
+        <div>
+          <span>Artículo</span>
+          <strong>{{ data.articleName || '—' }}</strong>
+        </div>
+        <div>
+          <span>Comprador</span>
+          <strong>{{ data.buyerName || '—' }}</strong>
+        </div>
+        <div>
+          <span>Cantidad</span>
+          <strong>{{ data.quantity ?? '—' }}</strong>
+        </div>
+        <div>
+          <span>Precio unitario</span>
+          <strong>S/ {{ (data.unitPrice || 0) | number:'1.2-2' }}</strong>
+        </div>
+        <div>
+          <span>Método de pago</span>
+          <strong>{{ data.paymentMethod || '—' }}{{ data.walletProvider ? ' · ' + data.walletProvider : '' }}</strong>
+        </div>
+        <ng-container *ngIf="data.paymentMethod === 'Cuotas'">
+          <div>
+            <span>Frecuencia</span>
+            <strong>{{ data.installmentFrequency || 'Mensual' }}</strong>
+          </div>
+          <div>
+            <span>Número de cuotas</span>
+            <strong>{{ data.installmentCount || '—' }}</strong>
+          </div>
+          <div>
+            <span>Adelanto</span>
+            <strong>S/ {{ (data.downPayment || 0) | number:'1.2-2' }}</strong>
+          </div>
+          <div>
+            <span>Saldo financiado</span>
+            <strong>S/ {{ (data.financedAmount || 0) | number:'1.2-2' }}</strong>
+          </div>
+        </ng-container>
+      </div>
+      <div class="sale-info-dialog__total">
+        <span>Total de venta</span>
+        <strong>S/ {{ (data.total || 0) | number:'1.2-2' }}</strong>
+      </div>
+    </ng-container>
+  </div>
+</app-modal-shell>
