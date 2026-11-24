@@ -8,6 +8,7 @@ import { MatIconModule } from '@angular/material/icon';
 import { Movement } from '../../../core/models/movement.model';
 import { SalesService, SaleInstallmentsSummary } from '../../../core/services/sales';
 import { UiButtonDirective } from '../../../shared/ui/directives/ui-button.directive';
+import { ModalShellComponent } from '../../../shared/ui/components/modal-shell/modal-shell.component';
 
 @Component({
   selector: 'app-movement-detail-dialog',
@@ -18,7 +19,8 @@ import { UiButtonDirective } from '../../../shared/ui/directives/ui-button.direc
     CommonModule,
     MatDialogModule,
     MatIconModule,
-    UiButtonDirective
+    UiButtonDirective,
+    ModalShellComponent
   ],
   templateUrl: './movement-detail-dialog.html',
   styleUrl: './movement-detail-dialog.scss'
