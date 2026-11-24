@@ -177,3 +177,33 @@ app-ui-status .ui-v2-status:not(.ui-v2-status--danger):not(.ui-v2-status--warnin
   border-color: var(--inv-brand-border);
   color: var(--inv-brand);
 }
+
+/* Estado de espera para acciones de tabla: sustituye el icono sin cambiar
+   las dimensiones ni la posición de la acción. */
+button.ui-v2-table-action--loading {
+  position: relative;
+  pointer-events: none;
+  cursor: progress;
+
+  > * { opacity: 0 !important; }
+
+  &::after {
+    content: '';
+    position: absolute;
+    width: 15px;
+    height: 15px;
+    box-sizing: border-box;
+    border: 2px solid currentColor;
+    border-right-color: transparent;
+    border-radius: 50%;
+    animation: inv-table-action-spin .7s linear infinite;
+  }
+}
+
+@keyframes inv-table-action-spin {
+  to { transform: rotate(360deg); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  button.ui-v2-table-action--loading::after { animation-duration: 2s; }
+}

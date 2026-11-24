@@ -181,9 +181,9 @@
       </div>
 
       <div class="form-actions">
-        <button type="submit" appUiButton="primary" [disabled]="saving || renewing || !companyForm.valid">
-          <app-loading-indicator *ngIf="saving; else saveText" [compact]="true" message="Guardando..." />
-          <ng-template #saveText><mat-icon>save</mat-icon> {{editing ? 'Guardar cambios' : 'Crear empresa'}}</ng-template>
+        <button type="submit" appUiButton="primary" [uiButtonLoading]="saving"
+          [disabled]="saving || renewing || !companyForm.valid">
+          <mat-icon>save</mat-icon> {{editing ? 'Guardar cambios' : 'Crear empresa'}}
         </button>
       </div>
       </fieldset>

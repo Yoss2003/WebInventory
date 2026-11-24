@@ -25,9 +25,10 @@
         <div class="brand-form-row">
           <input id="brand-name" formControlName="name" type="text" maxlength="255"
                  placeholder="Ej. Lenovo" autocomplete="off" [readonly]="isSaving" />
-          <button type="submit" appUiButton="primary" [disabled]="isSaving || brandForm.invalid">
+          <button type="submit" appUiButton="primary" [uiButtonLoading]="isSaving"
+            [disabled]="isSaving || brandForm.invalid">
             <mat-icon>{{ editingBrand ? 'save' : 'add' }}</mat-icon>
-            {{ isSaving ? 'Cargando' : editingBrand ? 'Guardar' : 'Agregar' }}
+            {{ editingBrand ? 'Guardar' : 'Agregar' }}
           </button>
         </div>
         <div class="brand-feedback-slot" aria-live="polite">
