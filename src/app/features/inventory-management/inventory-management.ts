@@ -4,7 +4,6 @@ import { FormsModule } from '@angular/forms';
 import { MatIconModule } from '@angular/material/icon';
 import { MatSelectModule } from '@angular/material/select';
 import { MatFormFieldModule } from '@angular/material/form-field';
-import { MatDialog, MatDialogModule } from '@angular/material/dialog';
 import { ModalStandardService } from '../../shared/ui/services/modal-standard.service';
 import { RouterLink } from '@angular/router';
 import { finalize, timeout } from 'rxjs';
@@ -30,7 +29,7 @@ import { UiEmptyStateComponent } from '../../shared/ui/components/ui-empty-state
   imports: [
     UiEmptyStateComponent, UiStatusComponent,
     CommonModule, FormsModule, MatIconModule, MatSelectModule, MatFormFieldModule,
-    MatDialogModule, RouterLink, UiPageHeadingComponent, UiButtonDirective,
+    RouterLink, UiPageHeadingComponent, UiButtonDirective,
     UiTableActionDirective, LoadingIndicatorComponent
   ],
   templateUrl: './inventory-management.html',
@@ -43,7 +42,6 @@ export class InventoryManagementComponent implements OnInit {
   private readonly access = inject(AccessService);
   private readonly toast = inject(ToastService);
   private readonly confirms = inject(ConfirmationDialogService);
-  private readonly dialog = inject(MatDialog);
   private readonly modalStandards = inject(ModalStandardService);
   private readonly cdr = inject(ChangeDetectorRef);
 
