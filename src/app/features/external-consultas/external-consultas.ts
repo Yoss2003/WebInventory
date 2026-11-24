@@ -17,8 +17,10 @@ import { ExternalConsultasService, SupplierContact, SunatRuc, ExchangeRate } fro
 import { LoadingIndicatorComponent } from '../../shared/loading/loading-indicator';
 import { ToastService } from '../../shared/toast/toast.service';
 import { ModalStandardService } from '../../shared/ui/services/modal-standard.service';
+import { ModalShellComponent } from '../../shared/ui/components/modal-shell/modal-shell.component';
+import type { ModalActionId, ModalFooterAction } from '../../shared/ui/models/modal-standard.model';
 
-@Component({selector:'app-external-consultas',standalone:true,imports:[MoneyPipe, UiControlDirective, UiTableActionDirective, UiButtonDirective, UiPageHeadingComponent, CommonModule,FormsModule,LoadingIndicatorComponent,MatIconModule,MatDatepickerModule,MatFormFieldModule,MatInputModule],providers:[provideNativeDateAdapter(),{provide:MAT_DATE_LOCALE,useValue:'es-PE'}],templateUrl:'./external-consultas.html',styleUrl:'./external-consultas.scss'})
+@Component({selector:'app-external-consultas',standalone:true,imports:[MoneyPipe, UiControlDirective, UiTableActionDirective, UiButtonDirective, UiPageHeadingComponent, CommonModule,FormsModule,LoadingIndicatorComponent,MatIconModule,MatDatepickerModule,MatFormFieldModule,MatInputModule,ModalShellComponent],providers:[provideNativeDateAdapter(),{provide:MAT_DATE_LOCALE,useValue:'es-PE'}],templateUrl:'./external-consultas.html',styleUrl:'./external-consultas.scss'})
 export class ExternalConsultasComponent implements OnInit {
   private readonly api=inject(ExternalConsultasService);
   private readonly cdr=inject(ChangeDetectorRef);
@@ -109,6 +111,12 @@ export class ExternalConsultasComponent implements OnInit {
     }));
     this.fxHistoryRef=ref;
     ref.afterClosed().subscribe(()=>{if(this.fxHistoryRef===ref)this.fxHistoryRef=undefined;});
+  }
+  get filterModalActions(): ModalFooterAction[] {
+    return [{ id: 'cancel', label: 'Cerrar', tone: 'secondary', order: 0 }];
+  }
+  handleFilterModalAction(action: ModalActionId): void {
+    if (action === 'cancel' || action === 'close') this.closeAdvancedFilters();
   }
   closeAdvancedFilters():void {this.fxHistoryRef?.close();}
   /* Última cotización verificada al entrar a la vista. */
