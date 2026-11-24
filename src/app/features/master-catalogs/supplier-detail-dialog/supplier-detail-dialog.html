@@ -1,5 +1,6 @@
 <app-modal-shell type="detail" title="Detalle del proveedor" subtitle="Datos comerciales y situación fiscal registrada" icon="storefront" [infoVisible]="false" [closeVisible]="true" [footerVisible]="false" [contentScrollable]="false" (closeRequested)="close()">
-<div class="detail-content">
+<div class="supplier-detail-modal ui-v2-dialog ui-v2-dialog--simple">
+  <div class="detail-content">
     <section class="detail-section">
       <h3><mat-icon aria-hidden="true">badge</mat-icon> Identificación</h3>
       <p class="business-name">{{item.businessName}}</p>
@@ -76,5 +77,5 @@
       Este proveedor todavía no tiene una instantánea fiscal avanzada guardada. Puedes consultar su RUC desde el formulario de edición y guardar los cambios.
     </p>
   </div>
-  
+</div>
 </app-modal-shell>
