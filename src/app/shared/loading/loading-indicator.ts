@@ -23,6 +23,6 @@ import { Component, input } from '@angular/core';
   `]
 })
 export class LoadingIndicatorComponent {
-  readonly message = input('Cargando...');
+  readonly message = input('Cargando');
   readonly compact = input(false);
 }

@@ -95,7 +95,11 @@ export class ModalShellComponent implements AfterViewInit, OnChanges, OnDestroy 
   }
   get showHeader(): boolean { return this.headerVisible ?? this.standard.header.visibleByDefault; }
   get showIcon(): boolean { return this.iconVisible ?? this.standard.header.iconEnabledByDefault; }
-  get showSubtitle(): boolean { return false; }
+  get showSubtitle(): boolean {
+    return this.subtitleVisible ?? (
+      this.standard.header.subtitleEnabledByDefault && Boolean(this.effectiveSubtitle.trim())
+    );
+  }
   get showInfo(): boolean {
     return this.infoVisible ?? (
       this.standard.header.infoEnabledByDefault ||

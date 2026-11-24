@@ -22,7 +22,7 @@ import { MatIconModule } from '@angular/material/icon';
     .ui-page-heading { display:flex; align-items:center; gap:13px; min-width:0; }
     .ui-page-heading__icon { width:44px; height:44px; flex:none;
       display:grid; place-items:center; border-radius:11px;
-      color:var(--inv-accent,#a8d73d); background:color-mix(in srgb, var(--inv-company-accent, #A2D149) 17%, #14212b);
+      color:var(--inv-company-accent, #A2D149); background:color-mix(in srgb, var(--inv-company-accent, #A2D149) 17%, #14212b);
       border:1px solid color-mix(in srgb, var(--inv-company-accent, #A2D149) 55%, #455a6d); box-sizing:border-box; }
     .ui-page-heading__icon mat-icon { width:23px; height:23px; font-size:23px; }
     .ui-page-heading__copy { min-width:0; }
