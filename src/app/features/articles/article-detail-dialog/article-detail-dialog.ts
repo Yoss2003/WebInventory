@@ -17,6 +17,7 @@ import { BarcodeFormat, BrowserMultiFormatReader } from '@zxing/browser';
 import { DecodeHintType } from '@zxing/library';
 import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
 import { MatTooltipModule } from '@angular/material/tooltip';
+import { ModalShellComponent } from '../../../shared/ui/components/modal-shell/modal-shell.component';
 
 interface SerialUnitDraft {
   serialNumber: string;
@@ -27,7 +28,7 @@ interface SerialUnitDraft {
   standalone: true,
   imports: [
     MoneyPipe, CommonModule, FormsModule, MatDialogModule, MatIconModule,
-    MatTooltipModule, LoadingIndicatorComponent, UiButtonDirective, UiTableActionDirective
+    MatTooltipModule, LoadingIndicatorComponent, UiButtonDirective, UiTableActionDirective, ModalShellComponent
   ],
   templateUrl: './article-detail-dialog.html',
   styleUrl: './article-detail-dialog.scss'
