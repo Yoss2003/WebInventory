@@ -74,6 +74,8 @@ export class ModalStandardService {
     return {
       ...overrides,
       panelClass,
+      maxWidth: overrides.maxWidth ?? 'calc(100vw - 24px)',
+      maxHeight: overrides.maxHeight ?? 'calc(100dvh - 24px)',
       enterAnimationDuration: standard.motion.entry.duration,
       exitAnimationDuration: standard.motion.exit.duration
     };
