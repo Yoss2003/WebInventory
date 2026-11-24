@@ -7,6 +7,7 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatAutocompleteModule } from '@angular/material/autocomplete';
 import { UiButtonDirective } from '../../../shared/ui/directives/ui-button.directive';
 import { UiControlDirective } from '../../../shared/ui/directives/ui-control.directive';
+import { InventoryDialogMotionDirective } from '../../../shared/ui/directives/inv-dialog-motion.directive';
 import { InventoryService, InventorySummary } from '../../../core/services/inventories';
 import { ManagedUser } from '../../../core/services/user-management';
 import { Employee } from '../../../core/models/employee.model';
@@ -29,8 +30,8 @@ export interface ShareInventoryDialogData {
   standalone: true,
   imports: [
     CommonModule, FormsModule, MatIconModule,
-    MatAutocompleteModule, UiButtonDirective, UiControlDirective,
-    ModalShellComponent
+    MatAutocompleteModule, InventoryDialogMotionDirective,
+    UiButtonDirective, UiControlDirective, ModalShellComponent
   ],
   templateUrl: './share-inventory-dialog.component.html',
   styleUrl: './share-inventory-dialog.component.scss'
