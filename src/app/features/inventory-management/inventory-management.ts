@@ -5,6 +5,7 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatSelectModule } from '@angular/material/select';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatDialog, MatDialogModule } from '@angular/material/dialog';
+import { ModalStandardService } from '../../shared/ui/services/modal-standard.service';
 import { RouterLink } from '@angular/router';
 import { catchError, forkJoin, of } from 'rxjs';
 
@@ -45,6 +46,7 @@ export class InventoryManagementComponent implements OnInit {
   private readonly toast = inject(ToastService);
   private readonly confirms = inject(ConfirmationDialogService);
   private readonly dialog = inject(MatDialog);
+  private readonly modalStandards = inject(ModalStandardService);
   private readonly cdr = inject(ChangeDetectorRef);
 
   isManager = false;
@@ -129,7 +131,7 @@ export class InventoryManagementComponent implements OnInit {
   openCreateDialog(): void {
     if (!this.canCreate) return;
 
-    const dialogRef = this.dialog.open(InventoryCreateDialogComponent, {
+    const dialogRef = this.modalStandards.open(InventoryCreateDialogComponent, 'mainForm', {
       width: '520px',
       maxWidth: '94vw',
       panelClass: ['inv-v2-dialog-panel', 'inv-seven-modal'],
@@ -150,7 +152,7 @@ export class InventoryManagementComponent implements OnInit {
   manageShares(row: InventorySummary): void {
     if (!this.canManageAccess || (!this.isManager && row.userId !== this.selfId)) return;
 
-    const dialogRef = this.dialog.open(ShareInventoryDialogComponent, {
+    const dialogRef = this.modalStandards.open(ShareInventoryDialogComponent, 'wizard', {
       width: '720px',
       maxWidth: '96vw',
       panelClass: ['inv-v2-dialog-panel', 'inv-seven-modal'],
@@ -171,7 +173,7 @@ export class InventoryManagementComponent implements OnInit {
   edit(row: InventorySummary): void {
     if (!this.canCreate || (!this.isManager && row.userId !== this.selfId)) return;
 
-    const dialogRef = this.dialog.open(InventoryEditDialogComponent, {
+    const dialogRef = this.modalStandards.open(InventoryEditDialogComponent, 'mainForm', {
       width: '520px',
       maxWidth: '94vw',
       panelClass: ['inv-v2-dialog-panel', 'inv-seven-modal'],

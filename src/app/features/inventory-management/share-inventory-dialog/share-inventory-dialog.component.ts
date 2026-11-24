@@ -2,6 +2,7 @@ import { Component, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { MatDialogRef, MAT_DIALOG_DATA, MatDialog, MatDialogModule } from '@angular/material/dialog';
+import { ModalStandardService } from '../../../shared/ui/services/modal-standard.service';
 import { MatIconModule } from '@angular/material/icon';
 import { MatAutocompleteModule } from '@angular/material/autocomplete';
 import { MatTooltipModule } from '@angular/material/tooltip';
@@ -38,6 +39,7 @@ export class ShareInventoryDialogComponent {
   readonly dialogRef = inject(MatDialogRef<ShareInventoryDialogComponent>);
   readonly data: ShareInventoryDialogData = inject(MAT_DIALOG_DATA);
   private readonly dialog = inject(MatDialog);
+  private readonly modalStandards = inject(ModalStandardService);
   private readonly api = inject(InventoryService);
   private readonly toast = inject(ToastService);
 
@@ -113,7 +115,7 @@ export class ShareInventoryDialogComponent {
   }
 
   openWorkerPicker(): void {
-    const pickerRef = this.dialog.open(WorkerPickerDialogComponent, {
+    const pickerRef = this.modalStandards.open(WorkerPickerDialogComponent, 'selector', {
       width: '780px', maxWidth: '96vw',
       panelClass: ['inv-v2-dialog-panel', 'inv-seven-modal'],
       data: { excludeUserId: this.currentInventory.userId }
@@ -130,7 +132,7 @@ export class ShareInventoryDialogComponent {
   }
 
   openSharesDialog(): void {
-    this.dialog.open(InventorySharesDialogComponent, {
+    this.modalStandards.open(InventorySharesDialogComponent, 'detail', {
       width: '760px', maxWidth: '96vw',
       panelClass: ['inv-v2-dialog-panel', 'inv-seven-modal'],
       data: { inventory: this.currentInventory, employees: this.data.employees, users: this.data.users, selfId: this.data.selfId }

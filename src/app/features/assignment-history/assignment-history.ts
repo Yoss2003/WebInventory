@@ -5,6 +5,7 @@ import { ChangeDetectorRef, Component, OnInit, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
+import { ModalStandardService } from '../../shared/ui/services/modal-standard.service';
 import { MatIconModule } from '@angular/material/icon';
 import { forkJoin } from 'rxjs';
 import { AssignmentService, AssignedArticle } from '../../core/services/assignments';
@@ -19,6 +20,7 @@ import { UiSearchComponent } from '../../shared/ui/components/ui-search.componen
 export class AssignmentHistoryComponent implements OnInit {
   private readonly api=inject(AssignmentService);
   private readonly dialog=inject(MatDialog);
+  private readonly modalStandards = inject(ModalStandardService);
   private readonly cdr=inject(ChangeDetectorRef);
   outgoing:AssignedArticle[]=[];received:AssignedArticle[]=[];
   currentTab:'history'|'received'='history';search='';
@@ -49,7 +51,7 @@ export class AssignmentHistoryComponent implements OnInit {
     });
   }
   openDetail(row:AssignedArticle):void{
-    const ref=this.dialog.open(AssignmentHistoryDialogComponent,{
+    const ref=this.modalStandards.open(AssignmentHistoryDialogComponent,'detail',{
       panelClass:['assignment-history-dialog-panel','inv-seven-modal'],enterAnimationDuration:260,exitAnimationDuration:220,
       data:row,width:'min(710px, calc(100vw - 24px))',maxWidth:'calc(100vw - 24px)',
       maxHeight:'calc(100dvh - 24px)',autoFocus:false

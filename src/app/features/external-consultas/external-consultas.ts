@@ -16,12 +16,14 @@ import { FormsModule } from '@angular/forms';
 import { ExternalConsultasService, SupplierContact, SunatRuc, ExchangeRate } from '../../core/services/external-consultas';
 import { LoadingIndicatorComponent } from '../../shared/loading/loading-indicator';
 import { ToastService } from '../../shared/toast/toast.service';
+import { ModalStandardService } from '../../shared/ui/services/modal-standard.service';
 
 @Component({selector:'app-external-consultas',standalone:true,imports:[MoneyPipe, UiControlDirective, UiTableActionDirective, UiButtonDirective, UiPageHeadingComponent, CommonModule,FormsModule,LoadingIndicatorComponent,MatIconModule,MatDatepickerModule,MatFormFieldModule,MatInputModule],providers:[provideNativeDateAdapter(),{provide:MAT_DATE_LOCALE,useValue:'es-PE'}],templateUrl:'./external-consultas.html',styleUrl:'./external-consultas.scss'})
 export class ExternalConsultasComponent implements OnInit {
   private readonly api=inject(ExternalConsultasService);
   private readonly cdr=inject(ChangeDetectorRef);
   private readonly matDialog=inject(MatDialog);
+  private readonly modalStandards=inject(ModalStandardService);
   @ViewChild('fxHistoryDialog') private fxHistoryTemplate?: TemplateRef<unknown>;
   private fxHistoryRef?: MatDialogRef<unknown>;
   private readonly toast=inject(ToastService); // UX_FINAL_TOAST_CONSULTAS
@@ -100,11 +102,11 @@ export class ExternalConsultasComponent implements OnInit {
 
   openAdvancedFilters():void {
     if (!this.fxHistoryTemplate || this.fxHistoryRef) return;
-    const ref=this.matDialog.open(this.fxHistoryTemplate,{
-      panelClass:['fx-history-modal','inv-seven-modal'],enterAnimationDuration:260,exitAnimationDuration:220,
+    const ref=this.matDialog.open(this.fxHistoryTemplate,this.modalStandards.createDialogConfig('filters',{
+      panelClass:['fx-history-modal'],
       width:'min(620px, calc(100vw - 24px))',maxWidth:'calc(100vw - 24px)',
       maxHeight:'calc(100dvh - 24px)',autoFocus:false,restoreFocus:true
-    });
+    }));
     this.fxHistoryRef=ref;
     ref.afterClosed().subscribe(()=>{if(this.fxHistoryRef===ref)this.fxHistoryRef=undefined;});
   }

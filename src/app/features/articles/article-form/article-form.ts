@@ -4,6 +4,7 @@ import { CommonModule } from '@angular/common';
 import { InventoryDialogMotionDirective } from '../../../shared/ui/directives/inv-dialog-motion.directive';
 import { FormBuilder, FormGroup, Validators, ReactiveFormsModule, FormArray } from '@angular/forms';
 import { MatDialog, MatDialogRef, MatDialogModule, MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { ModalStandardService } from '../../../shared/ui/services/modal-standard.service';
 import { HttpErrorResponse } from '@angular/common/http';
 import { catchError, forkJoin, of } from 'rxjs';
 import type { Observable } from 'rxjs';
@@ -61,6 +62,7 @@ export class ArticleFormComponent implements OnInit, OnDestroy {
   private articleService = inject(ArticleService);
   private inventoryContext = inject(InventoryContextService);
   private dialog = inject(MatDialog);
+  private readonly modalStandards = inject(ModalStandardService);
   private readonly toast = inject(ToastService);
   private readonly measurementUnitsService = inject(MeasurementUnitsService);
   private readonly referenceData = inject(ArticleReferenceDataService);
@@ -968,7 +970,7 @@ export class ArticleFormComponent implements OnInit, OnDestroy {
       : null;
     if (editing && !selected) return;
 
-    const dialogRef = this.dialog.open(ArticleSupplierDialogComponent, {
+    const dialogRef = this.modalStandards.open(ArticleSupplierDialogComponent, 'mainForm', {
       panelClass: 'inv-seven-modal',
       enterAnimationDuration: 260,
       exitAnimationDuration: 220,
@@ -1010,7 +1012,7 @@ export class ArticleFormComponent implements OnInit, OnDestroy {
       inventoryId: Number(category.inventoryId),
       selectedBrandId: this.identityForm.get('brandId')?.value ?? null
     };
-    const dialogRef = this.dialog.open(BrandDialogComponent, {
+    const dialogRef = this.modalStandards.open(BrandDialogComponent, 'subTask', {
       width: '530px',
       maxWidth: 'calc(100vw - 20px)',
       autoFocus: 'first-tabbable',

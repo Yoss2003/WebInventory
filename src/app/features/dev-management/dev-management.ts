@@ -10,6 +10,7 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatSelectModule } from '@angular/material/select';
 import { MatIconModule } from '@angular/material/icon';
 import { MatDialog } from '@angular/material/dialog';
+import { ModalStandardService } from '../../shared/ui/services/modal-standard.service';
 import { DevConfirmDialogComponent, DevConfirmDialogData } from '../../shared/confirm-dialog/dev-confirm-dialog';
 import { FirstAdminDialogComponent, FirstAdminCreated } from './first-admin-dialog/first-admin-dialog';
 import { Observable } from 'rxjs';
@@ -38,6 +39,7 @@ export class DevManagementComponent implements OnInit, OnDestroy {
   private readonly cdr = inject(ChangeDetectorRef);
   private readonly toasts = inject(ToastService);
   private readonly dialog = inject(MatDialog);
+  private readonly modalStandards = inject(ModalStandardService);
 
   readonly plans: LicensePlan[] = ['Básico', 'Pro', 'Plus', 'Max'];
   readonly developer = this.isDeveloper();
@@ -416,8 +418,8 @@ export class DevManagementComponent implements OnInit, OnDestroy {
   /** Sólo el desarrollador puede aprovisionar el primer administrador empresarial. */
   registerFirstAdmin(company: DevCompany): void {
     if (!this.developer || !company.isActive || (company.adminCount ?? 0) > 0) return;
-    this.dialog.open<FirstAdminDialogComponent, { companyId: number; companyName: string }, FirstAdminCreated>(
-      FirstAdminDialogComponent, {
+    this.modalStandards.open<FirstAdminDialogComponent, { companyId: number; companyName: string }, FirstAdminCreated>(
+      FirstAdminDialogComponent, 'mainForm', {
         data: { companyId: company.id, companyName: company.businessName },
         panelClass: 'inv-seven-modal',
         enterAnimationDuration: 260,
@@ -443,7 +445,7 @@ export class DevManagementComponent implements OnInit, OnDestroy {
 
   /** Confirmación coherente con el tema oscuro, con soporte de Escape y foco del teclado. */
   private askConfirmation(data: DevConfirmDialogData, onConfirm: () => void): void {
-    this.dialog.open(DevConfirmDialogComponent, {
+    this.modalStandards.open(DevConfirmDialogComponent, 'confirmation', {
       panelClass: ['inv-seven-modal', 'inv-standard-confirm-modal'],
       width: 'min(470px, calc(100vw - 24px))',
       maxWidth: 'calc(100vw - 24px)',

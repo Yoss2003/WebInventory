@@ -11,6 +11,7 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatSelectModule } from '@angular/material/select';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { MatDialog } from '@angular/material/dialog';
+import { ModalStandardService } from '../../shared/ui/services/modal-standard.service';
 import { SupplierDetailDialogComponent } from './supplier-detail-dialog/supplier-detail-dialog';
 import { ConfirmationDialogService } from '../../shared/confirm-dialog/confirmation-dialog.service';
 import { InventoryContextService } from '../../core/services/inventory-context';
@@ -92,6 +93,7 @@ export class MasterCatalogsComponent implements OnInit {
   private readonly inventories = inject(InventoryContextService);
   private readonly toast = inject(ToastService);
   private readonly dialog = inject(MatDialog);
+  private readonly modalStandards = inject(ModalStandardService);
   private readonly confirms = inject(ConfirmationDialogService);
   private readonly cdr = inject(ChangeDetectorRef);
   private readonly platformId = inject(PLATFORM_ID);
@@ -324,8 +326,8 @@ export class MasterCatalogsComponent implements OnInit {
   }
 
   openSupplierCommunication(): void {
-    const ref = this.dialog.open<SupplierCommunicationDialogComponent, SupplierCommunicationData, SupplierCommunicationData>(
-      SupplierCommunicationDialogComponent,
+    const ref = this.modalStandards.open<SupplierCommunicationDialogComponent, SupplierCommunicationData, SupplierCommunicationData>(
+      SupplierCommunicationDialogComponent, 'subTask',
       {
         data: {
           contactName: this.supplier.contactName ?? '',
@@ -362,7 +364,7 @@ export class MasterCatalogsComponent implements OnInit {
       ...(this.readStoredFiscalInfo() ?? {}),
       ...(this.advancedInfo ?? {})
     };
-    this.dialog.open(SupplierFiscalInfoDialogComponent, {
+    this.modalStandards.open(SupplierFiscalInfoDialogComponent, 'informative', {
       data: info,
       panelClass: ['inv-seven-modal', 'inv-modal--wide'],
       ariaLabelledBy: 'supplier-fiscal-title',
@@ -400,7 +402,7 @@ export class MasterCatalogsComponent implements OnInit {
   }
 
   showSupplierDetail(item: SupplierRecord): void {
-    this.dialog.open(SupplierDetailDialogComponent, {
+    this.modalStandards.open(SupplierDetailDialogComponent, 'detail', {
       data: { ...item },
       panelClass: 'inv-seven-modal',
       enterAnimationDuration: 260,
