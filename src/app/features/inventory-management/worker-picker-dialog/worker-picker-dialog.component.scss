@@ -4,12 +4,14 @@
 }
 
 .worker-picker-dialog {
+  box-sizing: border-box;
   width: min(780px, 96vw);
+  min-height: 0;
   background: #141f29;
   overflow: hidden;
   display: flex;
   flex-direction: column;
-  max-height: 85vh;
+  max-height: min(85vh, calc(100dvh - 28px));
 }
 
 .worker-dialog-header {
@@ -134,18 +136,21 @@
 }
 
 .worker-dialog-content {
+  box-sizing: border-box;
   padding: 14px 20px;
-  overflow-y: auto;
-  flex: 1;
-  min-height: 180px;
+  overflow: hidden;
+  flex: 1 1 auto;
+  min-height: clamp(168px, 25vh, 190px);
 }
 
 .worker-table-wrap {
   border: 1px solid #354a5a;
   border-radius: 10px;
   background: #101c26;
-  overflow: auto;
+  overflow-x: auto;
+  overflow-y: auto;
   max-height: 48vh;
+  overscroll-behavior: contain;
 }
 
 .worker-table {
@@ -349,7 +354,7 @@
 .worker-picker-skeleton {
   display: grid;
   grid-template-columns: minmax(0, 1fr);
-  gap: 10px;
+  gap: 8px;
 
   box-sizing: border-box;
   width: 100%;
@@ -368,7 +373,7 @@
   max-width: 100%;
   min-width: 0;
 
-  height: 34px;
+  height: 30px;
   border-radius: 8px;
 
   background: linear-gradient(
