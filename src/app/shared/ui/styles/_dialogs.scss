@@ -423,7 +423,7 @@ dialog.inv-submodal-dialog {
 /* Contrato global de viewport para todos los diálogos abiertos por ModalStandardService.
    El ancho sigue siendo responsabilidad de cada vista; los límites evitan que
    el panel rebase la ventana y mantienen el scroll dentro del contenido. */
-.cdk-overlay-pane.inv-standard-modal {
+.cdk-overlay-pane:is(.inv-standard-modal, .inv-seven-modal):has(app-modal-shell) {
   max-width: calc(100vw - 24px) !important;
   max-height: calc(100dvh - 24px) !important;
   min-width: 0;
@@ -446,7 +446,7 @@ dialog.inv-submodal-dialog {
 }
 
 @media (max-width: 600px) {
-  .cdk-overlay-pane.inv-standard-modal {
+  .cdk-overlay-pane:is(.inv-standard-modal, .inv-seven-modal):has(app-modal-shell) {
     max-width: calc(100vw - 16px) !important;
     max-height: calc(100dvh - 16px) !important;
 
