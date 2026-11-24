@@ -9,7 +9,8 @@
   [footerActions]="modalFooterActions"
   [busyActionId]="saving ? 'primary' : null"
   (actionClicked)="handleModalAction($event)"
-  (closeRequested)="close()">
+  [contentScrollable]="false" (closeRequested)="close()">
+  <div class="roles-modal">
   <div class="roles-modal__body">
     <p class="roles-modal__hint">
       El desarrollador tiene permisos fijos. Puedes configurar la visualización y edición
@@ -33,5 +34,6 @@
         <span><strong>{{item.name}}</strong><small>{{item.systemCode}}</small></span>
       </label>
     </div>
+  </div>
   </div>
 </app-modal-shell>
