@@ -24,11 +24,7 @@ import {
   SerialUnit
 } from '../../../core/services/serial-units';
 import { SalesService } from '../../../core/services/sales';
-import {
-  ExternalConsultasService,
-  SunatRuc,
-  ReniecDni
-} from '../../../core/services/external-consultas';
+import { ExternalConsultasService } from '../../../core/services/external-consultas';
 import {
   InventoryDialogMotionDirective
 } from '../../../shared/ui/directives/inv-dialog-motion.directive';
@@ -36,6 +32,7 @@ import { UiButtonDirective } from '../../../shared/ui/directives/ui-button.direc
 import { UiControlDirective } from '../../../shared/ui/directives/ui-control.directive';
 import { ModalStandardService } from '../../../shared/ui/services/modal-standard.service';
 import { SerialUnitPickerDialogComponent } from '../../../shared/serial-unit-picker-dialog/serial-unit-picker-dialog';
+import { SaleInfoDialogComponent } from '../sale-info-dialog/sale-info-dialog';
 import { ModalShellComponent } from '../../../shared/ui/components/modal-shell/modal-shell.component';
 import type { ModalActionId, ModalFooterAction, ModalSection } from '../../../shared/ui/models/modal-standard.model';
 
@@ -80,10 +77,8 @@ export class QuickSaleFormComponent implements OnInit, OnDestroy {
 
   // Consulta optativa de identidad: no crea automáticamente un cliente.
   documentType: 'RUC' | 'DNI' = 'RUC';
-  dniResult: ReniecDni | null = null;
   rucQuery = '';
   loadingRuc = false;
-  sunatResult: SunatRuc | null = null;
   sunatError = '';
   private rucRequest?: Subscription;
 
@@ -95,8 +90,6 @@ export class QuickSaleFormComponent implements OnInit, OnDestroy {
     this.rucRequest?.unsubscribe();
     this.rucQuery = '';
     this.loadingRuc = false;
-    this.sunatResult = null;
-    this.dniResult = null;
     this.sunatError = '';
     this.cdr.markForCheck();
   }
@@ -383,6 +376,49 @@ export class QuickSaleFormComponent implements OnInit, OnDestroy {
     return !customer || customer === 'público general';
   }
 
+  openInstallmentSchedule(): void {
+    const schedule = this.installmentSchedule;
+    if (!schedule.length) return;
+    this.modalStandards.open(SaleInfoDialogComponent, 'subInfo', {
+      width: 'min(620px, calc(100vw - 24px))',
+      maxWidth: 'calc(100vw - 24px)',
+      maxHeight: 'calc(100dvh - 28px)',
+      autoFocus: false,
+      data: {
+        kind: 'schedule',
+        title: 'Cronograma proyectado',
+        schedule,
+        installmentFrequency: this.form.controls.installmentFrequency.value || 'Mensual',
+        installmentCount: this.installmentCount,
+        financedAmount: this.financedAmount
+      }
+    });
+  }
+
+  openSaleSummary(): void {
+    this.modalStandards.open(SaleInfoDialogComponent, 'subInfo', {
+      width: 'min(620px, calc(100vw - 24px))',
+      maxWidth: 'calc(100vw - 24px)',
+      maxHeight: 'calc(100dvh - 28px)',
+      autoFocus: false,
+      data: {
+        kind: 'summary',
+        title: 'Resumen de la venta',
+        articleName: this.chosen?.name || '—',
+        buyerName: this.form.controls.customerName.value || '—',
+        quantity: Number(this.form.controls.quantity.value),
+        unitPrice: Number(this.form.controls.unitPrice.value),
+        total: this.total,
+        paymentMethod: this.selectedPaymentMethod,
+        walletProvider: this.form.controls.walletProvider.value || '',
+        installmentFrequency: this.form.controls.installmentFrequency.value || 'Mensual',
+        installmentCount: this.installmentCount,
+        downPayment: this.downPayment,
+        financedAmount: this.financedAmount
+      }
+    });
+  }
+
   ngOnInit(): void {
     this.articlesApi.getArticles().subscribe({
       next: articles => {
@@ -504,8 +540,6 @@ export class QuickSaleFormComponent implements OnInit, OnDestroy {
     this.rucRequest = undefined;
 
     this.loadingRuc = false;
-    this.sunatResult = null;
-    this.dniResult = null;
     this.sunatError = '';
 
     this.cdr.markForCheck();
@@ -522,8 +556,6 @@ export class QuickSaleFormComponent implements OnInit, OnDestroy {
     }
     this.loadingRuc = true;
     this.sunatError = '';
-    this.sunatResult = null;
-    this.dniResult = null;
     this.cdr.markForCheck();
 
     const onFailure = (err: { error?: { error?: string }; status?: number }) => {
@@ -538,7 +570,6 @@ export class QuickSaleFormComponent implements OnInit, OnDestroy {
         next: result => {
           if (this.rucQuery !== document || this.documentType !== type) return;
           this.loadingRuc = false;
-          this.sunatResult = result;
           if (result.businessName?.trim()) this.form.controls.customerName.setValue(result.businessName.trim());
           this.cdr.markForCheck();
         },
@@ -549,7 +580,6 @@ export class QuickSaleFormComponent implements OnInit, OnDestroy {
         next: result => {
           if (this.rucQuery !== document || this.documentType !== type) return;
           this.loadingRuc = false;
-          this.dniResult = result;
           const name = [result.first_name, result.first_last_name, result.second_last_name]
             .map(p => String(p ?? '').trim()).filter(Boolean).join(' ');
           if (name) this.form.controls.customerName.setValue(name);
