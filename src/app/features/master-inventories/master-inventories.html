@@ -21,18 +21,15 @@
       <span class="master-count">{{ masters.length }} maestros</span>
     </div>
 
-    <label class="master-filter">
-      <mat-icon aria-hidden="true">search</mat-icon>
-      <input type="search" [(ngModel)]="query" placeholder="Filtrar empresa o inventario"
-        aria-label="Buscar inventario maestro"/>
-    </label>
+    <div class="inv-core-toolbar">
+      <app-ui-search [(value)]="query" placeholder="Filtrar empresa o inventario"
+        label="Buscar inventarios maestros" />
+    </div>
 
-    <p class="master-message" *ngIf="loading && !hasLoaded" role="status">
-      Cargando inventarios maestros...
-    </p>
+    <app-loading-indicator *ngIf="loading && !hasLoaded" message="Cargando inventarios maestros..." />
     <p class="master-error" *ngIf="error" role="alert">{{ error }}</p>
 
-    <div class="inv-core-table-wrap master-table" *ngIf="masters.length">
+    <div class="inv-core-table-wrap master-table" *ngIf="filtered.length">
       <table>
         <thead>
           <tr><th>Empresa</th><th>Inventario</th><th>Estado</th><th>Acciones</th></tr>
@@ -57,11 +54,13 @@
           </tr>
         </tbody>
       </table>
-      <p *ngIf="!filtered.length" class="master-message">No hay resultados para ese filtro.</p>
     </div>
 
-    <p *ngIf="hasLoaded && !masters.length && !error" class="master-message">
-      No se encontraron inventarios maestros disponibles.
-    </p>
+    <app-ui-empty-state *ngIf="hasLoaded && !masters.length && !error"
+      icon="inventory_2" message="No se encontraron inventarios maestros disponibles."
+      hint="Los inventarios generales aparecerán aquí cuando estén registrados." />
+    <app-ui-empty-state *ngIf="hasLoaded && masters.length > 0 && !filtered.length"
+      icon="search_off" message="No hay resultados para ese filtro."
+      hint="Prueba con otro nombre de empresa o inventario." />
   </section>
 </section>
