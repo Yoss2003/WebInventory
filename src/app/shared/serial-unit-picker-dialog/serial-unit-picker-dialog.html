@@ -1,0 +1,47 @@
+<div class="serial-picker ui-v2-dialog">
+  <header class="serial-picker__header">
+    <span class="serial-picker__icon"><mat-icon aria-hidden="true">qr_code_2</mat-icon></span>
+    <div class="serial-picker__titles">
+      <h2>Seleccionar series</h2>
+      <p>{{articleName || 'Unidades serializadas disponibles'}}</p>
+    </div>
+    <span class="serial-picker__counter" aria-live="polite">{{selectedCount}} seleccionadas</span>
+  </header>
+
+  <div class="serial-picker__body">
+    <label class="serial-picker__search-label" for="serial-picker-search">Buscar serie o número de unidad</label>
+    <div class="serial-picker__search">
+      <mat-icon aria-hidden="true">search</mat-icon>
+      <input id="serial-picker-search" type="search" [value]="search" (input)="onSearch($event)"
+        autocomplete="off" placeholder="Escribe un número de serie..." />
+    </div>
+
+    <div class="serial-picker__actions">
+      <span>{{visibleUnits.length}} disponibles</span>
+      <button type="button" appUiButton="secondary" (click)="selectAllVisible()"
+        [disabled]="!visibleUnits.length || allVisibleSelected">Seleccionar visibles</button>
+      <button type="button" appUiButton="secondary" (click)="clearAllVisible()"
+        [disabled]="!selectedVisibleCount">Limpiar visibles</button>
+    </div>
+
+    <div class="serial-picker__list" role="group" aria-label="Series disponibles">
+      <label class="serial-picker__option" *ngFor="let unit of visibleUnits; trackBy: trackByUnit">
+        <mat-checkbox [checked]="selected.has(unit.id)" (change)="toggle(unit.id, $event.checked)">
+          <span class="serial-picker__name">{{unit.serialNumber}}</span>
+        </mat-checkbox>
+        <span class="serial-picker__id">Unidad #{{unit.id}}</span>
+      </label>
+      <p class="serial-picker__empty" *ngIf="!visibleUnits.length">
+        No se encontraron series con esa búsqueda.
+      </p>
+    </div>
+  </div>
+
+  <footer class="serial-picker__footer">
+    <button type="button" appUiButton="secondary" (click)="cancel()">Cancelar</button>
+    <button type="button" appUiButton="primary" (click)="apply()">
+      <mat-icon aria-hidden="true">check</mat-icon>
+      Aplicar selección ({{selectedCount}})
+    </button>
+  </footer>
+</div>
