@@ -70,7 +70,7 @@ export class ModalStandardService {
       'inv-standard-modal--' + type
     ])];
 
-    // No se define width, height, maxWidth ni maxHeight: pertenecen a cada vista.
+    // El ancho y alto preferidos pertenecen a cada vista; los límites del viewport son globales.
     return {
       ...overrides,
       panelClass,
