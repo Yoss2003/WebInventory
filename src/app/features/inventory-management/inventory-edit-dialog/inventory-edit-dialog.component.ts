@@ -3,7 +3,6 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { MatIconModule } from '@angular/material/icon';
-import { UiButtonDirective } from '../../../shared/ui/directives/ui-button.directive';
 import { UiControlDirective } from '../../../shared/ui/directives/ui-control.directive';
 import { InventoryService, InventorySummary } from '../../../core/services/inventories';
 import { ToastService } from '../../../shared/toast/toast.service';
@@ -19,7 +18,7 @@ export interface InventoryEditDialogData {
   standalone: true,
   imports: [
     CommonModule, FormsModule, MatIconModule,
-    UiButtonDirective, UiControlDirective, ModalShellComponent
+    UiControlDirective, ModalShellComponent
   ],
   templateUrl: './inventory-edit-dialog.component.html',
   styleUrl: './inventory-edit-dialog.component.scss'
