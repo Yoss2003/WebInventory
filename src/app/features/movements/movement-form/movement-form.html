@@ -1,11 +1,21 @@
-<div class="movement-modal ui-v2-dialog ui-v2-dialog--simple">
-  <header class="movement-header"><span class="movement-icon"><mat-icon>inventory</mat-icon></span>
-    <div><h2>{{ data.actionId === 1 ? 'Nueva entrada de stock' : 'Nueva salida de stock' }}</h2><p>Registra un movimiento real en el inventario</p></div>
-    
-  </header>
-  <app-loading-indicator *ngIf="loading" message="Cargando artículos del inventario..." />
-  <form *ngIf="!loading" [formGroup]="form" (ngSubmit)="onSubmit()" autocomplete="off">
-    <main class="movement-body">
+<app-modal-shell
+  type="mainForm"
+  [title]="isEntry ? 'Nueva entrada de stock' : 'Nueva salida de stock'"
+  subtitle="Registra un movimiento real en el inventario"
+  icon="inventory"
+  [infoVisible]="true"
+  infoTooltip="Registra entradas o salidas de existencias. Las cantidades se validan según las unidades y el tipo de seguimiento del artículo."
+  [closeVisible]="false"
+  [footerActions]="modalFooterActions"
+  [busyActionId]="saving ? 'primary' : null"
+  [contentScrollable]="true"
+  (actionClicked)="handleModalAction($event)"
+  (closeRequested)="dialogRef.close()">
+  <div class="movement-modal ui-v2-dialog ui-v2-dialog--simple">
+    <app-loading-indicator *ngIf="loading" message="Cargando artículos del inventario..." />
+    <form *ngIf="!loading" [formGroup]="form" (ngSubmit)="onSubmit()" autocomplete="off">
+      <main class="movement-body">
+
       <div class="field"><label>Artículo <span>*</span></label>
         <mat-form-field appearance="outline" class="inventory-select">
           <mat-select formControlName="articleId" placeholder="Seleccionar artículo" panelClass="inventory-select-options">
@@ -54,12 +64,8 @@
       <div class="field"><label>Observación (opcional)</label><textarea appUiControl rows="3" formControlName="observation" placeholder="Motivo del movimiento..."></textarea></div>
       <p class="message" *ngIf="error" role="alert">{{ error }}</p>
       <p class="hint" *ngIf="selected?.tracking === 1">Los artículos serializados requieren cantidades enteras.</p>
-    </main>
-    <footer><button type="button" appUiButton="secondary" (click)="dialogRef.close()" [disabled]="saving">Cancelar</button>
-      <button type="submit" appUiButton="primary" class="confirm" [disabled]="!canSave">
-        <app-loading-indicator *ngIf="saving; else movementSave" [compact]="true" message="Guardando..." />
-        <ng-template #movementSave><mat-icon>save</mat-icon>Confirmar movimiento</ng-template>
-      </button>
-    </footer>
-  </form>
-</div>
+    
+      </main>
+    </form>
+  </div>
+</app-modal-shell>
