@@ -1,49 +1,21 @@
-<div class="category-modal ui-v2-dialog ui-v2-dialog--special" [invDialogMotion]="categoryMotionStep" [invDialogMotionWidth]="categoryMotionStep === 2 && showAttributesStep ? 'min(1060px, calc(100vw - 32px))' : 'min(900px, calc(100vw - 32px))'">
-  <header class="category-header">
-    <div class="heading-group">
-      <div class="heading-icon"><mat-icon>category</mat-icon></div>
-      <h2>{{ isEdit ? 'EDITAR CATEGORÍA HIJA' : 'NUEVA CATEGORÍA HIJA' }}</h2>
-    </div>
-
-    <nav class="steps-nav" aria-label="Etapas de la categoría">
-      <button type="button" class="step"
-        [class.active]="categoryMotionStep === 0"
-        [class.completed]="categoryMotionStep > 0"
-        (click)="goToStep(0)">
-        <span class="step-num">
-          <mat-icon *ngIf="categoryMotionStep > 0">check</mat-icon>
-          <span *ngIf="categoryMotionStep === 0">1</span>
-        </span>
-        <span class="step-text">Identidad</span>
-      </button>
-
-      <span class="step-divider"></span>
-
-      <button type="button" class="step"
-        [class.active]="categoryMotionStep === 1"
-        [class.completed]="categoryMotionStep > 1"
-        [disabled]="identityForm.invalid"
-        (click)="goToStep(1)">
-        <span class="step-num">
-          <mat-icon *ngIf="categoryMotionStep > 1">check</mat-icon>
-          <span *ngIf="categoryMotionStep <= 1">2</span>
-        </span>
-        <span class="step-text">Reglas</span>
-      </button>
-
-      <ng-container *ngIf="showAttributesStep && rulesForm.get('isNamingLibre')?.value">
-        <span class="step-divider"></span>
-        <button type="button" class="step"
-          [class.active]="categoryMotionStep === 2"
-          [disabled]="identityForm.invalid || rulesForm.invalid"
-          (click)="goToStep(2)">
-          <span class="step-num">3</span>
-          <span class="step-text">Atributos</span>
-        </button>
-      </ng-container>
-    </nav>
-  </header>
-
+<app-modal-shell
+  class="custom-modal ui-v2-dialog ui-v2-dialog--special"
+  type="wizard"
+  [title]="isEdit ? 'EDITAR CATEGORÍA HIJA' : 'NUEVA CATEGORÍA HIJA'"
+  subtitle="Configura la identidad, las reglas y los atributos de la categoría"
+  icon="category"
+  [sections]="modalSections"
+  [activeSection]="categoryMotionStep"
+  [footerActions]="modalFooterActions"
+  [busyActionId]="isSaving ? 'primary' : null"
+  [closeVisible]="true"
+  [contentScrollable]="false"
+  [invDialogMotion]="categoryMotionStep"
+  [invDialogMotionWidth]="categoryMotionStep === 2 && modalSections.length === 3 ? 'min(1060px, calc(100vw - 32px))' : 'min(900px, calc(100vw - 32px))'"
+  (sectionChange)="goToStep($event)"
+  (actionClicked)="handleModalAction($event)"
+  (closeRequested)="close()">
+  <div class="category-modal ui-v2-dialog ui-v2-dialog--special">
   <mat-dialog-content class="category-content" [class.is-transitioning]="isTransitioningStep">
     <mat-stepper animationDuration="0ms" linear #stepper class="category-stepper" (selectionChange)="setDialogWidth($event.selectedIndex)">
       <ng-template matStepperIcon="edit"><mat-icon>check</mat-icon></ng-template>
@@ -282,57 +254,8 @@
     </mat-stepper>
   </mat-dialog-content>
   
-  <footer class="category-footer">
-    <button
-      *ngIf="stepper.selectedIndex > 0"
-      type="button"
-      appUiButton="secondary"
-      (click)="stepper.previous()">
-      <mat-icon>arrow_back</mat-icon>
-      Atrás
-    </button>
-
-    <span class="footer-spacer"></span>
-
-    <button
-      type="button"
-      appUiButton="secondary"
-      (click)="dialogRef.close()">
-      Cancelar
-    </button>
-
-    <button
-      *ngIf="stepper.selectedIndex === 0"
-      type="button"
-      appUiButton="primary"
-      [disabled]="identityForm.invalid"
-      (click)="stepper.next()">
-      Siguiente: Reglas
-      <mat-icon>arrow_forward</mat-icon>
-    </button>
-
-    <button
-      *ngIf="stepper.selectedIndex === 1 && showAttributesStep && rulesForm.get('isNamingLibre')?.value"
-      type="button"
-      appUiButton="primary"
-      [disabled]="rulesForm.invalid"
-      (click)="stepper.next()">
-      Siguiente: Atributos
-      <mat-icon>arrow_forward</mat-icon>
-    </button>
-
-    <button
-      *ngIf="stepper.selectedIndex === 2 || (stepper.selectedIndex === 1 && !(showAttributesStep && rulesForm.get('isNamingLibre')?.value))"
-      type="button"
-      appUiButton="primary"
-      [disabled]="!isFormComplete || (isEdit && !hasEditChanges)"
-      (click)="onSubmit()">
-      <mat-icon>save</mat-icon>
-      {{ isEdit ? 'Actualizar categoría' : 'Guardar categoría' }}
-    </button>
-  </footer>
-
-</div>
+  </div>
+</app-modal-shell>
 
 <!-- Sub-Modal independiente: Vista previa del nombre -->
 <dialog #previewModal class="inv-submodal-dialog name-preview-modal" aria-labelledby="preview-modal-title" [class.is-closing]="isClosingPreviewModal" (close)="onPreviewModalNativeClose()">

@@ -17,11 +17,13 @@ import { Article } from '../../../core/models/article.model';
 import { SerialUnitsService, SerialUnit } from '../../../core/services/serial-units';
 import { UiButtonDirective } from '../../../shared/ui/directives/ui-button.directive';
 import { UiControlDirective } from '../../../shared/ui/directives/ui-control.directive';
+import { ModalShellComponent } from '../../../shared/ui/components/modal-shell/modal-shell.component';
+import type { ModalActionId, ModalFooterAction, ModalSection } from '../../../shared/ui/models/modal-standard.model';
 
 @Component({
   selector: 'app-traspaso-form',
   standalone: true,
-  imports: [InventoryDialogMotionDirective, CleanArticleNamePipe, CommonModule, ReactiveFormsModule, MatDialogModule, MatInputModule, MatSelectModule, MatIconModule, MatFormFieldModule, UiButtonDirective, UiControlDirective],
+  imports: [InventoryDialogMotionDirective, CleanArticleNamePipe, CommonModule, ReactiveFormsModule, MatDialogModule, MatInputModule, MatSelectModule, MatIconModule, MatFormFieldModule, UiButtonDirective, UiControlDirective, ModalShellComponent],
   templateUrl: './traspaso-form.html',
   styleUrl: './traspaso-form.scss'
 })
@@ -71,6 +73,58 @@ export class TraspasoFormComponent implements OnInit {
   }
   nextStep():void{this.goStep(this.step+1);}
   previousStep():void{this.goStep(this.step-1);}
+
+  get modalSections(): ModalSection[] {
+    return [
+      { id: 'operation', label: 'Artículo y salida', completed: this.step > 1 && this.canAdvanceOperation },
+      { id: 'recipient', label: 'Destinatario', completed: this.step > 2 && this.canAdvanceRecipient, disabled: this.isSaving || !this.canAdvanceOperation },
+      { id: 'confirmation', label: 'Confirmar', disabled: this.isSaving || !this.canAdvanceOperation || !this.canAdvanceRecipient }
+    ];
+  }
+
+  get modalFooterActions(): ModalFooterAction[] {
+    const actions: ModalFooterAction[] = [];
+    if (this.step > 1) actions.push({ id: 'previous', label: 'Anterior', tone: 'secondary', icon: 'arrow_back', order: 0 });
+    actions.push({ id: 'cancel', label: 'Cancelar', tone: 'secondary', order: 1 });
+    if (this.step < 3) {
+      actions.push({
+        id: 'next',
+        label: this.step === 1 ? 'Siguiente: Destinatario' : 'Siguiente: Confirmación',
+        tone: 'primary',
+        icon: 'arrow_forward',
+        order: 2,
+        disabled: this.step === 1 ? !this.canAdvanceOperation : !this.canAdvanceRecipient
+      });
+    } else {
+      actions.push({
+        id: 'primary',
+        label: 'Confirmar operación',
+        tone: 'primary',
+        icon: 'save',
+        order: 2,
+        disabled: !this.canSubmit
+      });
+    }
+    return actions;
+  }
+
+  handleModalAction(action: ModalActionId): void {
+    switch (action) {
+      case 'previous':
+        this.previousStep();
+        break;
+      case 'cancel':
+      case 'close':
+        this.close();
+        break;
+      case 'next':
+        this.nextStep();
+        break;
+      case 'primary':
+        this.onSubmit();
+        break;
+    }
+  }
 
   recipients: AssignmentRecipient[] = [];
   selectedArticleStock = 0;

@@ -1,4 +1,6 @@
 import { UiButtonDirective } from '../../../shared/ui/directives/ui-button.directive';
+import { ModalShellComponent } from '../../../shared/ui/components/modal-shell/modal-shell.component';
+import type { ModalActionId, ModalFooterAction, ModalSection } from '../../../shared/ui/models/modal-standard.model';
 import { ChangeDetectorRef, Component, ElementRef, inject, OnInit, ViewChild } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
@@ -29,7 +31,7 @@ import { UiControlDirective } from '../../../shared/ui/directives/ui-control.dir
     selector: 'app-category-child-form',
     standalone: true,
     imports: [
-        UiButtonDirective, UiControlDirective,
+        UiButtonDirective, UiControlDirective, ModalShellComponent,
         ReactiveFormsModule, MatInputModule, MatButtonModule, MatDialogModule,
         MatSelectModule, MatStepperModule, MatSlideToggleModule, MatCheckboxModule,
         MatIconModule, MatTooltipModule, CommonModule, InventoryDialogMotionDirective
@@ -107,6 +109,74 @@ export class CategoryChildFormComponent implements OnInit {
     readonly formulaTagEnabled: boolean[] = Array(6).fill(false);
 
     categoryMotionStep = 0;
+    isSaving = false;
+
+    get modalSections(): ModalSection[] {
+        const hasAttributes = this.showAttributesStep && Boolean(this.rulesForm.get('isNamingLibre')?.value);
+        const sections: ModalSection[] = [
+            { id: 'identity', label: 'Identidad', completed: this.categoryMotionStep > 0 && this.identityForm.valid },
+            { id: 'rules', label: 'Reglas', completed: this.categoryMotionStep > 1 && this.rulesForm.valid, disabled: this.identityForm.invalid }
+        ];
+        if (hasAttributes) {
+            sections.push({
+                id: 'attributes',
+                label: 'Atributos',
+                disabled: this.identityForm.invalid || this.rulesForm.invalid
+            });
+        }
+        return sections;
+    }
+
+    get modalFooterActions(): ModalFooterAction[] {
+        const actions: ModalFooterAction[] = [];
+        const lastSection = this.modalSections.length - 1;
+        if (this.categoryMotionStep > 0) {
+            actions.push({ id: 'previous', label: 'Anterior', tone: 'secondary', icon: 'arrow_back', order: 0 });
+        }
+        actions.push({ id: 'cancel', label: 'Cancelar', tone: 'secondary', order: 1 });
+        if (this.categoryMotionStep < lastSection) {
+            actions.push({
+                id: 'next',
+                label: this.categoryMotionStep === 0 ? 'Siguiente: Reglas' : 'Siguiente: Atributos',
+                tone: 'primary',
+                icon: 'arrow_forward',
+                order: 2,
+                disabled: this.categoryMotionStep === 0 ? this.identityForm.invalid : this.rulesForm.invalid
+            });
+        } else {
+            actions.push({
+                id: 'primary',
+                label: this.isEdit ? 'Actualizar categoría' : 'Guardar categoría',
+                tone: 'primary',
+                icon: 'save',
+                order: 2,
+                disabled: !this.isFormComplete || (this.isEdit && !this.hasEditChanges) || this.isSaving
+            });
+        }
+        return actions;
+    }
+
+    handleModalAction(action: ModalActionId): void {
+        switch (action) {
+            case 'previous':
+                this.goToStep(this.categoryMotionStep - 1);
+                break;
+            case 'cancel':
+            case 'close':
+                this.close();
+                break;
+            case 'next':
+                this.goToStep(this.categoryMotionStep + 1);
+                break;
+            case 'primary':
+                this.onSubmit();
+                break;
+        }
+    }
+
+    close(): void {
+        if (!this.isSaving) this.dialogRef.close();
+    }
 
     setDialogWidth(step: number): void {
         this.categoryMotionStep = step;
@@ -545,7 +615,7 @@ export class CategoryChildFormComponent implements OnInit {
     }
 
     onSubmit() {
-        if (!this.isFormComplete || !this.hasEditChanges) return;
+        if (!this.isFormComplete || !this.hasEditChanges || this.isSaving) return;
         const rules = this.rulesForm.getRawValue();
         const attrs = this.attributesForm.getRawValue();
         const finalNaming = rules.isNamingLibre ? this.normalizeFormula(String(attrs.namingCustom ?? '')) : rules.namingMethod;
@@ -569,14 +639,19 @@ export class CategoryChildFormComponent implements OnInit {
         const request$: Observable<unknown> = this.isEdit
           ? this.categoryService.updateCategory(payload)
           : this.categoryService.createCategory(payload,allowSimilar);
+        this.isSaving = true;
+        this.cdr.markForCheck();
         request$.subscribe({
             next: result => {
+                this.isSaving = false;
                 const saved = result as Category | undefined;
                 if (!this.isEdit && saved?.reused) this.toast.info(`Se reutilizó la categoría «${saved.name}».`,'Categoría existente');
                 else this.toast.success(`Categoría ${this.isEdit ? 'actualizada' : 'creada'} con éxito`);
                 this.dialogRef.close(true);
             },
             error: (error:HttpErrorResponse) => {
+                this.isSaving = false;
+                this.cdr.markForCheck();
                 if (!this.isEdit && error.status===409 && error.error?.code==='similar_name') {
                     this.toast.warning('Encontramos subcategorías parecidas.','Posible duplicado');
                     this.modalStandards.open(CatalogSimilarDialogComponent, 'confirmation', {data:{type:'subcategorías',enteredName:payload.name,matches:error.error?.matches||[]},width:'min(500px,calc(100vw - 24px))'})
