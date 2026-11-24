@@ -7,7 +7,6 @@ import {
   inject
 } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { MoneyPipe } from '../../../shared/money.pipe';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { MatDialogRef } from '@angular/material/dialog';
 import { MatIconModule } from '@angular/material/icon';
@@ -39,7 +38,7 @@ import type { ModalActionId, ModalFooterAction, ModalSection } from '../../../sh
 @Component({
   selector: 'app-quick-sale-form',
   standalone: true,
-  imports: [MoneyPipe, 
+  imports: [
     CommonModule,
     ReactiveFormsModule,
     MatIconModule,
