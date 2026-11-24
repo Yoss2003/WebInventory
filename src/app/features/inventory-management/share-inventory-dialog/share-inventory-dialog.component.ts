@@ -5,6 +5,7 @@ import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { ModalStandardService } from '../../../shared/ui/services/modal-standard.service';
 import { MatIconModule } from '@angular/material/icon';
 import { UiButtonDirective } from '../../../shared/ui/directives/ui-button.directive';
+import { LoadingIndicatorComponent } from '../../../shared/loading/loading-indicator';
 import { InventoryDialogMotionDirective } from '../../../shared/ui/directives/inv-dialog-motion.directive';
 import { InventoryService, InventorySummary, InventoryShare, InventoryShareRecipient } from '../../../core/services/inventories';
 import { ManagedUser } from '../../../core/services/user-management';
@@ -27,7 +28,7 @@ export interface ShareInventoryDialogData {
   standalone: true,
   imports: [
     CommonModule, FormsModule, MatIconModule, InventoryDialogMotionDirective,
-    UiButtonDirective, ModalShellComponent
+    UiButtonDirective, LoadingIndicatorComponent, ModalShellComponent
   ],
   templateUrl: './share-inventory-dialog.component.html',
   styleUrl: './share-inventory-dialog.component.scss',
