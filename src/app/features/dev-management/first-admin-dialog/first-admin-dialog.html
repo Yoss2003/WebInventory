@@ -1,10 +1,12 @@
 <app-modal-shell
   type="mainForm"
   [title]="isFirstAdmin ? 'Primer administrador' : 'Registrar nuevo usuario'"
-  [subtitle]="data.companyName + ' · Empresa #' + data.companyId"
   [icon]="isFirstAdmin ? 'admin_panel_settings' : 'person_add'"
+  [sections]="[]"
+  [sectionsVisible]="false"
   [infoVisible]="true"
-  infoTooltip="Se creará automáticamente un inventario personal. La contraseña temporal se enviará al correo del usuario y deberá cambiarla al iniciar sesión."
+  [infoTooltip]="'Empresa: ' + data.companyName + ' (#' + data.companyId + '). Se creará automáticamente un inventario personal. La contraseña temporal se enviará al correo del usuario y deberá cambiarla al iniciar sesión.'"
+  [contentScrollable]="true"
   [closeVisible]="false"
   [footerActions]="modalFooterActions"
   [busyActionId]="saving ? 'primary' : null"
@@ -12,10 +14,6 @@
   (closeRequested)="close()">
   <div class="first-admin-modal">
     <div class="first-admin-body">
-      <p class="first-admin-help">
-        Se creará automáticamente un inventario personal. El maestro de la empresa se conserva.
-        El sistema generará una contraseña temporal que solo se enviará al correo del usuario.
-      </p>
       <div class="first-admin-fields">
         <label><span>Nombre <b>*</b></span>
           <input appUiControl [(ngModel)]="firstName" (ngModelChange)="onNamesChanged()"

@@ -38,9 +38,23 @@
   min-width: 0;
 }
 
-.modal-shell__identity { gap: 10px; }
-.modal-shell__header-actions { justify-content: flex-end; gap: 9px; }
-.modal-shell__title-row { gap: 7px; }
+.modal-shell__identity { gap: 10px; flex: 0 1 auto; }
+.modal-shell__header-actions { justify-content: flex-end; gap: 9px; flex: 0 0 auto; }
+.modal-shell__titles { display: block; flex: 0 1 auto; min-width: 0; }
+.modal-shell__title-row {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  width: fit-content;
+  max-width: 100%;
+  vertical-align: middle;
+}
+.modal-shell__title { flex: 0 1 auto; min-width: 0; }
+.modal-shell__title-row > .inv-info-button {
+  flex: 0 0 24px;
+  margin: 0 !important;
+  align-self: center;
+}
 
 .modal-shell__icon {
   display: grid;

@@ -1,8 +1,9 @@
 <app-modal-shell
   type="mainForm"
   [title]="isEntry ? 'Nueva entrada de stock' : 'Nueva salida de stock'"
-  subtitle="Registra un movimiento real en el inventario"
   icon="inventory"
+  [sections]="[]"
+  [sectionsVisible]="false"
   [infoVisible]="true"
   infoTooltip="Registra entradas o salidas de existencias. Las cantidades se validan según las unidades y el tipo de seguimiento del artículo."
   [closeVisible]="false"
@@ -51,15 +52,17 @@
           </div>
         </div>
       </div>
-      <div class="field" *ngIf="needsConversion && fixedFactor === null">
-        <label>Unidades por {{purchaseUnit}} <span>*</span></label>
-        <input appUiControl type="number" min="1" step="1" formControlName="conversionFactor" [class.invalid-quantity]="isEntry && !enteredFactorValid" (input)="onEntryQuantityInput('conversionFactor')" (blur)="onEntryQuantityBlur('conversionFactor', $event)" />
-        <small class="unit-step-hint">El factor corresponde a este ingreso. Debe ser entero.</small>
-        <small class="unit-value-error" *ngIf="!enteredFactorValid">Ingresa un factor entero mayor que cero.</small>
+      <div class="conversion-field-slot">
+        <div class="field" *ngIf="needsConversion && fixedFactor === null">
+          <label>Unidades por {{purchaseUnit}} <span>*</span></label>
+          <input appUiControl type="number" min="1" step="1" formControlName="conversionFactor" [class.invalid-quantity]="isEntry && !enteredFactorValid" (input)="onEntryQuantityInput('conversionFactor')" (blur)="onEntryQuantityBlur('conversionFactor', $event)" />
+          <small class="unit-step-hint">El factor corresponde a este ingreso. Debe ser entero.</small>
+          <small class="unit-value-error" *ngIf="!enteredFactorValid">Ingresa un factor entero mayor que cero.</small>
+        </div>
+        <p class="unit-step-hint conversion-fixed-note" *ngIf="needsConversion && fixedFactor !== null">
+          Equivalencia fija: 1 {{purchaseUnit}} = {{fixedFactor}} unidades.
+        </p>
       </div>
-      <p class="unit-step-hint" *ngIf="needsConversion && fixedFactor !== null">
-        Equivalencia fija: 1 {{purchaseUnit}} = {{fixedFactor}} unidades.
-      </p>
       <p class="message" *ngIf="ruleError" role="alert">{{ruleError}}</p>
       <div class="field"><label>Observación (opcional)</label><textarea appUiControl rows="3" formControlName="observation" placeholder="Motivo del movimiento..."></textarea></div>
       <p class="message" *ngIf="error" role="alert">{{ error }}</p>
