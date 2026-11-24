@@ -445,31 +445,30 @@
   }
 }
 
-/* El ModalShell mantiene cabecera y acciones fijas; solo se desplaza el cuerpo. */
+/* Tamaño natural por etapa: el shell no hereda una altura fija de otro formulario. */
 :host {
   display: flex;
   flex-direction: column;
   width: 100%;
-  height: 100%;
+  height: auto;
   min-height: 0;
-  max-height: 100%;
+  max-height: calc(100dvh - 28px);
   overflow: hidden;
 }
 .transfer-dialog {
   display: flex;
-  flex: 1 1 auto;
+  flex: 0 1 auto;
   flex-direction: column;
   width: 100%;
-  height: 100%;
-  min-height: 0;
-  max-height: 100%;
-  overflow: hidden;
-}
-.transfer-body {
-  flex: 1 1 auto;
-  height: 100%;
+  height: auto;
   min-height: 0;
   max-height: none;
-  overflow-y: auto;
-  overscroll-behavior: contain;
+  overflow: visible;
+}
+.transfer-body {
+  flex: 0 0 auto;
+  height: auto;
+  min-height: 0;
+  max-height: none;
+  overflow: visible;
 }
