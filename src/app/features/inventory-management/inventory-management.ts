@@ -17,8 +17,6 @@ import { ToastService } from '../../shared/toast/toast.service';
 import { AccessService } from '../../core/services/access';
 import { InventoryService, InventorySummary } from '../../core/services/inventories';
 import { UserManagementService, ManagedUser } from '../../core/services/user-management';
-import { EmployeeService } from '../../core/services/employees';
-import { Employee } from '../../core/models/employee.model';
 import { LoadingIndicatorComponent } from '../../shared/loading/loading-indicator';
 import { InventoryEditDialogComponent } from './inventory-edit-dialog/inventory-edit-dialog.component';
 import { InventoryCreateDialogComponent } from './inventory-create-dialog/inventory-create-dialog.component';
@@ -41,7 +39,6 @@ import { UiEmptyStateComponent } from '../../shared/ui/components/ui-empty-state
 export class InventoryManagementComponent implements OnInit {
   private readonly api = inject(InventoryService);
   private readonly usersApi = inject(UserManagementService);
-  private readonly employeesApi = inject(EmployeeService);
   private readonly access = inject(AccessService);
   private readonly toast = inject(ToastService);
   private readonly confirms = inject(ConfirmationDialogService);
@@ -59,7 +56,6 @@ export class InventoryManagementComponent implements OnInit {
   error = '';
   rows: InventorySummary[] = [];
   users: ManagedUser[] = [];
-  employees: Employee[] = [];
 
   get operational(): InventorySummary[] {
     return this.rows.filter(r => !r.isMaster);
@@ -83,13 +79,10 @@ export class InventoryManagementComponent implements OnInit {
 
         const members = this.isManager ? this.usersApi.users().pipe(catchError(() => of([] as ManagedUser[]))) : of([] as ManagedUser[]);
         const inventories = this.isManager ? this.api.companyInventories() : this.api.getInventories();
-        const employeesReq = this.employeesApi.getEmployees().pipe(catchError(() => of([] as Employee[])));
-
-        forkJoin({ inventories, users: members, employees: employeesReq }).subscribe({
-          next: ({ inventories, users, employees }) => {
+        forkJoin({ inventories, users: members }).subscribe({
+          next: ({ inventories, users }) => {
             this.rows = (inventories || []).filter(i => i.isActive);
             this.users = (users || []).filter(u => u.isActive && u.statusId === 1);
-            this.employees = (employees || []).filter(e => e.isActive);
             this.loading = false;
             this.refreshing = false;
             this.hasLoadedOnce = true;
@@ -115,11 +108,6 @@ export class InventoryManagementComponent implements OnInit {
   }
 
   ownerName(id: number): string {
-    const emp = this.employees.find(e => e.userId === id);
-    if (emp) {
-      const full = `${emp.firstName || ''} ${emp.lastName || ''}`.trim();
-      if (full) return `${full} (${emp.user?.username || emp.dni || 'ID #' + id})`;
-    }
     const user = this.users.find(x => x.id === id);
     if (user) {
       const full = `${user.firstName || ''} ${user.lastName || ''}`.trim();
@@ -160,7 +148,6 @@ export class InventoryManagementComponent implements OnInit {
         inventory: row,
         isManager: this.isManager,
         users: this.users,
-        employees: this.employees,
         selfId: this.selfId
       }
     });

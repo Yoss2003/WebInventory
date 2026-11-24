@@ -1,27 +1,25 @@
-import { Component, inject } from '@angular/core';
+import { Component, OnInit, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { MatDialogRef, MAT_DIALOG_DATA, MatDialog } from '@angular/material/dialog';
+import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { ModalStandardService } from '../../../shared/ui/services/modal-standard.service';
 import { MatIconModule } from '@angular/material/icon';
-import { MatAutocompleteModule } from '@angular/material/autocomplete';
 import { UiButtonDirective } from '../../../shared/ui/directives/ui-button.directive';
 import { UiControlDirective } from '../../../shared/ui/directives/ui-control.directive';
 import { InventoryDialogMotionDirective } from '../../../shared/ui/directives/inv-dialog-motion.directive';
-import { InventoryService, InventorySummary } from '../../../core/services/inventories';
+import { InventoryService, InventorySummary, InventoryShareRecipient } from '../../../core/services/inventories';
 import { ManagedUser } from '../../../core/services/user-management';
-import { Employee } from '../../../core/models/employee.model';
-import { WorkerPickerDialogComponent } from '../worker-picker-dialog/worker-picker-dialog.component';
 import { InventorySharesDialogComponent } from '../inventory-shares-dialog/inventory-shares-dialog.component';
 import { ToastService } from '../../../shared/toast/toast.service';
 import { ModalShellComponent } from '../../../shared/ui/components/modal-shell/modal-shell.component';
+import { LoadingIndicatorComponent } from '../../../shared/loading/loading-indicator';
+import { timeout } from 'rxjs';
 import type { ModalActionId, ModalFooterAction, ModalSection } from '../../../shared/ui/models/modal-standard.model';
 
 export interface ShareInventoryDialogData {
   inventory: InventorySummary;
   isManager?: boolean;
   users?: ManagedUser[];
-  employees?: Employee[];
   selfId?: number;
 }
 
@@ -29,70 +27,70 @@ export interface ShareInventoryDialogData {
   selector: 'app-share-inventory-dialog',
   standalone: true,
   imports: [
-    CommonModule, FormsModule, MatIconModule,
-    MatAutocompleteModule, InventoryDialogMotionDirective,
-    UiButtonDirective, UiControlDirective, ModalShellComponent
+    CommonModule, FormsModule, MatIconModule, InventoryDialogMotionDirective,
+    UiButtonDirective, UiControlDirective, ModalShellComponent, LoadingIndicatorComponent
   ],
   templateUrl: './share-inventory-dialog.component.html',
   styleUrl: './share-inventory-dialog.component.scss'
 })
-export class ShareInventoryDialogComponent {
+export class ShareInventoryDialogComponent implements OnInit {
   readonly dialogRef = inject(MatDialogRef<ShareInventoryDialogComponent>);
   readonly data: ShareInventoryDialogData = inject(MAT_DIALOG_DATA);
-  private readonly dialog = inject(MatDialog);
   private readonly modalStandards = inject(ModalStandardService);
   private readonly api = inject(InventoryService);
   private readonly toast = inject(ToastService);
 
   currentStep = 1;
   readonly selectedInventoryId = this.data.inventory?.id || 0;
-  employeeInput: string | Employee = '';
-  selectedEmployee: Employee | null = null;
-  guestIdentifier = '';
+  employeeSearch = '';
+  selectedEmployee: InventoryShareRecipient | null = null;
+  employees: InventoryShareRecipient[] = [];
+  loadingRecipients = false;
+  recipientError = '';
   accessLevel: 1 | 2 = 1;
   submitting = false;
   error = '';
 
+  ngOnInit(): void { this.loadRecipients(); }
+
   get currentInventory(): InventorySummary { return this.data.inventory; }
 
-  get filteredEmployees(): Employee[] {
-    const term = typeof this.employeeInput === 'string' ? this.employeeInput.trim().toLowerCase() : '';
-    const active = (this.data.employees || []).filter(e => e.isActive && e.userId !== this.currentInventory.userId);
-    if (!term) return active;
-    return active.filter(e =>
-      `${e.firstName || ''} ${e.lastName || ''} ${e.dni || ''} ${e.user?.username || ''}`.toLowerCase().includes(term)
-    );
+  get filteredEmployees(): InventoryShareRecipient[] {
+    const term = this.employeeSearch.trim().toLowerCase();
+    return this.employees.filter(employee => {
+      const text = [
+        employee.firstName || '', employee.lastName || '', employee.dni || '',
+        employee.username || '', employee.email || ''
+      ].join(' ').toLowerCase();
+      return !term || text.includes(term);
+    });
   }
 
-  displayEmployee = (employee: Employee | string | null): string =>
-    typeof employee === 'string' ? employee : employee ? `${employee.firstName || ''} ${employee.lastName || ''}`.trim() : '';
+  displayEmployee(employee: InventoryShareRecipient): string {
+    const fullName = `${employee.firstName || ''} ${employee.lastName || ''}`.trim();
+    return fullName || employee.username || employee.email || `Usuario #${employee.userId}`;
+  }
 
   get isStep1Valid(): boolean {
-    return !!this.selectedEmployee && !!this.guestIdentifier.trim() && (this.accessLevel === 1 || this.accessLevel === 2);
+    return !!this.selectedEmployee && this.selectedEmployee.userId > 0 &&
+      (this.accessLevel === 1 || this.accessLevel === 2);
   }
 
   get collaboratorDisplay(): string {
-    if (!this.selectedEmployee) return '';
-    const full = `${this.selectedEmployee.firstName || ''} ${this.selectedEmployee.lastName || ''}`.trim();
-    return full || this.selectedEmployee.user?.username || this.selectedEmployee.dni || 'Colaborador seleccionado';
+    return this.selectedEmployee ? this.displayEmployee(this.selectedEmployee) : '';
   }
 
   get collaboratorExtra(): string {
     if (!this.selectedEmployee) return '';
-    const parts: string[] = [];
-    if (this.selectedEmployee.dni) parts.push(`DNI: ${this.selectedEmployee.dni}`);
-    if (this.selectedEmployee.user?.username) parts.push(`Usuario: ${this.selectedEmployee.user.username}`);
-    if (this.selectedEmployee.user?.email) parts.push(this.selectedEmployee.user.email);
-    return parts.join(' · ');
+    return [
+      this.selectedEmployee.dni ? `DNI: ${this.selectedEmployee.dni}` : '',
+      this.selectedEmployee.username ? `Usuario: ${this.selectedEmployee.username}` : '',
+      this.selectedEmployee.email || ''
+    ].filter(Boolean).join(' · ');
   }
 
   getOwnerName(userId: number): string {
-    const employee = this.data.employees?.find(e => e.userId === userId);
-    if (employee) {
-      const full = `${employee.firstName || ''} ${employee.lastName || ''}`.trim();
-      if (full) return full;
-    }
-    const user = this.data.users?.find(u => u.id === userId);
+    const user = this.data.users?.find(item => item.id === userId);
     if (user) {
       const full = `${user.firstName || ''} ${user.lastName || ''}`.trim();
       return full ? `${full} (${user.username})` : user.username;
@@ -100,43 +98,47 @@ export class ShareInventoryDialogComponent {
     return userId === this.data.selfId ? 'Mi cuenta' : `Usuario #${userId}`;
   }
 
-  onEmployeeInputChange(value: string | Employee): void {
-    if (typeof value === 'string') {
+  loadRecipients(): void {
+    if (!this.selectedInventoryId) {
+      this.recipientError = 'No se identificó el inventario que se desea compartir.';
+      return;
+    }
+    this.loadingRecipients = true;
+    this.recipientError = '';
+    this.api.getShareRecipients(this.selectedInventoryId).pipe(
+      timeout({ first: 15000 })
+    ).subscribe({
+      next: rows => {
+        this.employees = (rows || []).filter(item => item.userId > 0);
+        this.loadingRecipients = false;
+      },
+      error: err => {
+        this.loadingRecipients = false;
+        this.recipientError = err?.name === 'TimeoutError'
+          ? 'La consulta de empleados tardó demasiado. Puedes volver a intentarlo.'
+          : String(err?.error?.error || 'No se pudieron consultar los empleados disponibles para compartir.');
+      }
+    });
+  }
+
+  onEmployeeSearchChange(value: string): void {
+    if (this.selectedEmployee && value.trim() !== this.displayEmployee(this.selectedEmployee)) {
       this.selectedEmployee = null;
-      this.guestIdentifier = '';
     }
   }
 
-  selectEmployee(employee: Employee | null): void {
-    if (!employee) return;
+  selectEmployee(employee: InventoryShareRecipient): void {
+    if (!employee?.userId) return;
     this.selectedEmployee = employee;
-    this.employeeInput = employee;
-    this.guestIdentifier = employee.dni || employee.user?.username || employee.user?.email || '';
+    this.employeeSearch = this.displayEmployee(employee);
     this.error = '';
-  }
-
-  openWorkerPicker(): void {
-    const pickerRef = this.modalStandards.open(WorkerPickerDialogComponent, 'selector', {
-      width: '780px', maxWidth: '96vw',
-      panelClass: ['inv-v2-dialog-panel', 'inv-seven-modal'],
-      data: { excludeUserId: this.currentInventory.userId }
-    });
-    pickerRef.afterClosed().subscribe((selected: Employee | undefined) => {
-      if (selected) this.selectEmployee(selected);
-    });
-  }
-
-  clearSelectedEmployee(): void {
-    this.selectedEmployee = null;
-    this.employeeInput = '';
-    this.guestIdentifier = '';
   }
 
   openSharesDialog(): void {
     this.modalStandards.open(InventorySharesDialogComponent, 'detail', {
       width: '760px', maxWidth: '96vw',
       panelClass: ['inv-v2-dialog-panel', 'inv-seven-modal'],
-      data: { inventory: this.currentInventory, employees: this.data.employees, users: this.data.users, selfId: this.data.selfId }
+      data: { inventory: this.currentInventory, users: this.data.users, selfId: this.data.selfId }
     });
   }
 
@@ -163,19 +165,11 @@ export class ShareInventoryDialogComponent {
 
   handleModalAction(action: ModalActionId): void {
     switch (action) {
-      case 'previous':
-        this.setStep(1);
-        break;
+      case 'previous': this.setStep(1); break;
       case 'cancel':
-      case 'close':
-        this.close();
-        break;
-      case 'next':
-        this.setStep(2);
-        break;
-      case 'primary':
-        this.submitShare();
-        break;
+      case 'close': this.close(); break;
+      case 'next': this.setStep(2); break;
+      case 'primary': this.submitShare(); break;
     }
   }
 
@@ -190,10 +184,11 @@ export class ShareInventoryDialogComponent {
   }
 
   submitShare(): void {
-    if (!this.isStep1Valid || this.submitting) return;
+    const guestUserId = this.selectedEmployee?.userId;
+    if (!this.isStep1Valid || !guestUserId || this.submitting) return;
     this.submitting = true;
     this.error = '';
-    this.api.share(this.selectedInventoryId, this.guestIdentifier.trim(), this.accessLevel).subscribe({
+    this.api.share(this.selectedInventoryId, '', this.accessLevel, guestUserId).subscribe({
       next: () => {
         this.submitting = false;
         this.toast.success(`Acceso concedido exitosamente a ${this.collaboratorDisplay}.`);

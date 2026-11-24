@@ -12,6 +12,15 @@ export interface InventorySummary {
   userId: number;
   isMaster: boolean;
 }
+export interface InventoryShareRecipient {
+  userId: number;
+  username: string;
+  email?: string | null;
+  firstName?: string | null;
+  lastName?: string | null;
+  dni?: string | null;
+  pictureUrl?: string | null;
+}
 export interface InventoryShare {
   id: number;
   inventoryId: number;
@@ -55,8 +64,13 @@ export class InventoryService {
   getShares(inventoryId: number): Observable<InventoryShare[]> {
     return this.http.get<InventoryShare[]>(`${this.url}/${inventoryId}/Shared`);
   }
-  share(inventoryId: number, guestIdentifier: string, accessLevel: 1 | 2): Observable<{ message: string }> {
-    return this.http.post<{ message: string }>(`${this.url}/Share`, { inventoryId, guestIdentifier, accessLevel });
+  getShareRecipients(inventoryId: number): Observable<InventoryShareRecipient[]> {
+    return this.http.get<InventoryShareRecipient[]>(`${this.url}/${inventoryId}/share-recipients`);
+  }
+  share(inventoryId: number, guestIdentifier: string, accessLevel: 1 | 2, guestUserId?: number | null): Observable<{ message: string }> {
+    return this.http.post<{ message: string }>(`${this.url}/Share`, {
+      inventoryId, guestIdentifier, guestUserId: guestUserId ?? null, accessLevel
+    });
   }
   updateShareAccess(shareId: number, accessLevel: 1 | 2): Observable<InventoryShare> {
     return this.http.put<InventoryShare>(`${this.url}/Share/${shareId}/Access`, { accessLevel });
