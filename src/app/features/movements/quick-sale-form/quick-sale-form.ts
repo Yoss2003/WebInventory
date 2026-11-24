@@ -34,6 +34,8 @@ import {
 } from '../../../shared/ui/directives/inv-dialog-motion.directive';
 import { UiButtonDirective } from '../../../shared/ui/directives/ui-button.directive';
 import { UiControlDirective } from '../../../shared/ui/directives/ui-control.directive';
+import { ModalStandardService } from '../../../shared/ui/services/modal-standard.service';
+import { SerialUnitPickerDialogComponent } from '../../../shared/serial-unit-picker-dialog/serial-unit-picker-dialog';
 import { ModalShellComponent } from '../../../shared/ui/components/modal-shell/modal-shell.component';
 import type { ModalActionId, ModalFooterAction, ModalSection } from '../../../shared/ui/models/modal-standard.model';
 
@@ -63,6 +65,7 @@ export class QuickSaleFormComponent implements OnInit, OnDestroy {
   private readonly sunatApi = inject(ExternalConsultasService);
   private readonly toast = inject(ToastService);
   private readonly cdr = inject(ChangeDetectorRef);
+  private readonly modalStandards = inject(ModalStandardService);
 
   readonly dialogRef = inject(MatDialogRef<QuickSaleFormComponent>);
 
@@ -73,6 +76,7 @@ export class QuickSaleFormComponent implements OnInit, OnDestroy {
   availableSerials: SerialUnit[] = [];
   selectedSerialIds: number[] = [];
   serialError = '';
+  serialUnitsLoading = false;
 
   // Consulta optativa de identidad: no crea automáticamente un cliente.
   documentType: 'RUC' | 'DNI' = 'RUC';
@@ -405,6 +409,7 @@ export class QuickSaleFormComponent implements OnInit, OnDestroy {
       this.selectedSerialIds = [];
       this.availableSerials = [];
       this.serialError = '';
+      this.serialUnitsLoading = false;
 
       if (
         article &&
@@ -415,19 +420,21 @@ export class QuickSaleFormComponent implements OnInit, OnDestroy {
           )
         )
       ) {
+        this.serialUnitsLoading = true;
         this.serialsApi.available(article.id).subscribe({
           next: rows => {
-            if (
-              Number(this.form.controls.articleId.value) === article.id
-            ) {
+            if (Number(this.form.controls.articleId.value) === article.id) {
+              this.serialUnitsLoading = false;
               this.availableSerials = rows;
               this.cdr.markForCheck();
             }
           },
           error: () => {
-            this.serialError =
-              'No se pudieron cargar las unidades disponibles.';
-            this.cdr.markForCheck();
+            if (Number(this.form.controls.articleId.value) === article.id) {
+              this.serialUnitsLoading = false;
+              this.serialError = 'No se pudieron cargar las unidades disponibles.';
+              this.cdr.markForCheck();
+            }
           }
         });
       }
@@ -462,6 +469,27 @@ export class QuickSaleFormComponent implements OnInit, OnDestroy {
     this.form.controls.quantity.setValue(
       this.selectedSerialIds.length
     );
+  }
+  
+  openSerialPicker(): void {
+    if (!this.isSerialized || this.serialUnitsLoading || !this.availableSerials.length) return;
+    this.modalStandards.open(SerialUnitPickerDialogComponent, 'selector', {
+      panelClass: ['inv-seven-modal'],
+      width: 'min(560px, calc(100vw - 24px))',
+      maxWidth: 'calc(100vw - 24px)',
+      maxHeight: 'calc(100dvh - 28px)',
+      autoFocus: false,
+      data: {
+        units: this.availableSerials,
+        selectedIds: this.selectedSerialIds,
+        articleName: this.chosen?.name || ''
+      }
+    }).afterClosed().subscribe((ids: number[] | undefined) => {
+      if (!Array.isArray(ids)) return;
+      this.selectedSerialIds = ids.map(Number);
+      this.form.controls.quantity.setValue(this.selectedSerialIds.length);
+      this.cdr.markForCheck();
+    });
   }
 
   // Mantener el RUC como texto para no perder ceros iniciales.
