@@ -974,7 +974,7 @@ export class ArticleFormComponent implements OnInit, OnDestroy {
       panelClass: 'inv-seven-modal',
       enterAnimationDuration: 260,
       exitAnimationDuration: 220,
-      width: 'min(760px, calc(100vw - 24px))',
+      width: 'min(900px, calc(100vw - 24px))',
       maxWidth: 'calc(100vw - 24px)',
       maxHeight: 'calc(100dvh - 24px)',
       disableClose: true,

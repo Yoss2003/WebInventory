@@ -9,6 +9,7 @@ import {
 } from '../../../core/services/article-reference-data';
 import { LoadingIndicatorComponent } from '../../../shared/loading/loading-indicator';
 import { UiButtonDirective } from '../../../shared/ui/directives/ui-button.directive';
+import { UiControlDirective } from '../../../shared/ui/directives/ui-control.directive';
 import { ModalShellComponent } from '../../../shared/ui/components/modal-shell/modal-shell.component';
 import type { ModalActionId, ModalFooterAction } from '../../../shared/ui/models/modal-standard.model';
 
@@ -20,7 +21,7 @@ export interface ArticleSupplierDialogData {
 @Component({
   selector: 'app-article-supplier-dialog',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule, MatDialogModule, MatIconModule, LoadingIndicatorComponent, UiButtonDirective, ModalShellComponent],
+  imports: [CommonModule, ReactiveFormsModule, MatDialogModule, MatIconModule, LoadingIndicatorComponent, UiButtonDirective, UiControlDirective, ModalShellComponent],
   templateUrl: './article-supplier-dialog.html',
   styleUrl: './article-supplier-dialog.scss'
 })
