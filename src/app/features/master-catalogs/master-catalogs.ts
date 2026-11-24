@@ -10,7 +10,6 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatSelectModule } from '@angular/material/select';
 import { MatTooltipModule } from '@angular/material/tooltip';
-import { MatDialog } from '@angular/material/dialog';
 import { ModalStandardService } from '../../shared/ui/services/modal-standard.service';
 import { SupplierDetailDialogComponent } from './supplier-detail-dialog/supplier-detail-dialog';
 import { ConfirmationDialogService } from '../../shared/confirm-dialog/confirmation-dialog.service';
@@ -92,7 +91,6 @@ export class MasterCatalogsComponent implements OnInit {
   private readonly masterCatalogsApi = inject(MasterCatalogsService);
   private readonly inventories = inject(InventoryContextService);
   private readonly toast = inject(ToastService);
-  private readonly dialog = inject(MatDialog);
   private readonly modalStandards = inject(ModalStandardService);
   private readonly confirms = inject(ConfirmationDialogService);
   private readonly cdr = inject(ChangeDetectorRef);
