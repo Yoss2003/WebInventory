@@ -8,7 +8,8 @@
   [closeVisible]="false"
   [footerActions]="modalFooterActions"
   (actionClicked)="handleModalAction($event)"
-  (closeRequested)="cancel()">
+  [contentScrollable]="false" (closeRequested)="cancel()">
+  <div class="unit-picker">
   <div class="unit-picker__body">
     <div class="unit-picker__search-heading">
       <label class="unit-picker__search-label" for="unit-picker-search">Buscar por nombre o abreviatura</label>
@@ -35,5 +36,6 @@
       </div>
       <p class="unit-picker__empty" *ngIf="visibleUnits.length === 0">No se encontraron unidades con esa búsqueda.</p>
     </div>
+  </div>
   </div>
 </app-modal-shell>
