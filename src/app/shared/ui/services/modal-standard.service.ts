@@ -55,7 +55,7 @@ export class ModalStandardService {
     return visible && this.resolveFooterActions(type, actions).length > 0;
   }
 
-  createDialogConfig<D = unknown>(
+  createDialogConfig<D = any>(
     type: ModalStandardType,
     overrides: MatDialogConfig<D> = {}
   ): MatDialogConfig<D> {
@@ -79,7 +79,7 @@ export class ModalStandardService {
     };
   }
 
-  open<T, D = unknown, R = unknown>(
+  open<T, D = any, R = any>(
     component: ComponentType<T>,
     type: ModalStandardType,
     overrides: MatDialogConfig<D> = {}
