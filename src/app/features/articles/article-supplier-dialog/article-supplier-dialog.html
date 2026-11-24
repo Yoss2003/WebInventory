@@ -4,14 +4,14 @@
   subtitle="Catálogo maestro de la empresa · Los datos de contacto se pueden completar manualmente"
   icon="local_shipping"
   [infoVisible]="true"
-  infoTooltip="El RUC consulta los datos fiscales disponibles. Los datos de contacto pueden completarse manualmente."
+  infoTooltip="Catálogo maestro de la empresa. Consulta el RUC para completar los datos fiscales disponibles y registra manualmente los medios de contacto."
   [closeVisible]="false"
   [footerActions]="modalFooterActions"
   [busyActionId]="saving ? 'primary' : null"
   (actionClicked)="handleModalAction($event)"
-  [contentScrollable]="false" (closeRequested)="close()">
+  [contentScrollable]="true" (closeRequested)="close()">
   <div class="supplier-modal">
-  <form [formGroup]="form" class="supplier-modal__body">
+  <form [formGroup]="form" class="supplier-modal__body" (ngSubmit)="save()">
     <section class="supplier-modal__section">
       <div class="supplier-modal__section-title"><mat-icon>verified</mat-icon><div><h3>Identificación fiscal</h3><p>Consulta el RUC para completar los datos básicos.</p></div></div>
       <div class="supplier-modal__ruc-row">
