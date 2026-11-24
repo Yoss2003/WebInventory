@@ -1,4 +1,5 @@
 <app-modal-shell
+  class="inv-modal-adaptive-height master-inventory-detail-shell"
   type="detail"
   [title]="'Catálogo maestro · ' + data.master.companyName"
   icon="inventory_2"
@@ -7,9 +8,9 @@
   [subtitleVisible]="false"
   [closeVisible]="true"
   [footerVisible]="false"
-  [contentScrollable]="true"
+  [contentScrollable]="false"
   (closeRequested)="close()">
-  <div class="master-detail-dialog">
+  <div class="master-detail-dialog ui-v2-dialog">
     <header class="master-detail-summary">
       <div class="master-detail-identity">
         <strong>{{ data.master.alias || data.master.inventoryName }}</strong>
@@ -33,38 +34,45 @@
       Esta consulta global nunca permite modificar datos de otras organizaciones.
     </p>
 
-    <div *ngIf="loading" class="master-detail-loading" role="status">
-      <app-loading-indicator message="Consultando categorías, marcas y proveedores..." />
+    <div *ngIf="loading" class="master-detail-loading" role="status" aria-live="polite">
+      <app-loading-indicator [compact]="true" message="Consultando catálogos..." />
     </div>
 
-    <p *ngIf="error && !loading" class="master-detail-error" role="alert">
+    <p *ngIf="error" class="master-detail-error" role="alert">
       <mat-icon aria-hidden="true">error_outline</mat-icon>
       <span>{{ error }}</span>
-      <button type="button" appUiButton="secondary" (click)="load()">Reintentar</button>
+      <button type="button" appUiButton="secondary" (click)="load()" [disabled]="loading">
+        Reintentar
+      </button>
     </p>
 
-    <div class="master-detail-grid" *ngIf="catalog && !loading">
-      <section class="master-detail-group">
+    <div class="master-detail-grid">
+      <section class="master-detail-group" aria-label="Categorías">
         <h3>Categorías <span>{{ catalog.categories.length }}</span></h3>
         <div class="master-detail-list">
           <p *ngFor="let item of catalog.categories">{{ item.name }}</p>
-          <p *ngIf="!catalog.categories.length" class="master-detail-empty">Sin categorías registradas.</p>
+          <p *ngIf="loading && !catalog.categories.length" class="master-detail-placeholder">Consultando...</p>
+          <p *ngIf="!loading && !catalog.categories.length" class="master-detail-empty">Sin registros.</p>
         </div>
       </section>
 
-      <section class="master-detail-group">
+      <section class="master-detail-group" aria-label="Marcas">
         <h3>Marcas <span>{{ catalog.brands.length }}</span></h3>
         <div class="master-detail-list">
           <p *ngFor="let item of catalog.brands">{{ item.name }}</p>
-          <p *ngIf="!catalog.brands.length" class="master-detail-empty">Sin marcas registradas.</p>
+          <p *ngIf="loading && !catalog.brands.length" class="master-detail-placeholder">Consultando...</p>
+          <p *ngIf="!loading && !catalog.brands.length" class="master-detail-empty">Sin registros.</p>
         </div>
       </section>
 
-      <section class="master-detail-group">
+      <section class="master-detail-group" aria-label="Proveedores">
         <h3>Proveedores <span>{{ catalog.suppliers.length }}</span></h3>
         <div class="master-detail-list">
-          <p *ngFor="let item of catalog.suppliers">{{ item.businessName }} <small>{{ item.ruc }}</small></p>
-          <p *ngIf="!catalog.suppliers.length" class="master-detail-empty">Sin proveedores registrados.</p>
+          <p *ngFor="let item of catalog.suppliers">
+            {{ item.businessName }} <small>{{ item.ruc }}</small>
+          </p>
+          <p *ngIf="loading && !catalog.suppliers.length" class="master-detail-placeholder">Consultando...</p>
+          <p *ngIf="!loading && !catalog.suppliers.length" class="master-detail-empty">Sin registros.</p>
         </div>
       </section>
     </div>
