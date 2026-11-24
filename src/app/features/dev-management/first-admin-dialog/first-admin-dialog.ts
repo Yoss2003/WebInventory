@@ -12,6 +12,8 @@ import { suggestedUsername } from '../../../shared/user-name';
 import { UiButtonDirective } from '../../../shared/ui/directives/ui-button.directive';
 import { UiControlDirective } from '../../../shared/ui/directives/ui-control.directive';
 import { Observable } from 'rxjs';
+import { ModalShellComponent } from '../../../shared/ui/components/modal-shell/modal-shell.component';
+import type { ModalActionId, ModalFooterAction } from '../../../shared/ui/models/modal-standard.model';
 
 export interface FirstAdminDialogData {
   companyId: number;
@@ -39,7 +41,8 @@ export interface FirstAdminCreated {
     MatFormFieldModule,
     MatSelectModule,
     UiButtonDirective,
-    UiControlDirective
+    UiControlDirective,
+    ModalShellComponent
   ],
   templateUrl: './first-admin-dialog.html',
   styleUrl: './first-admin-dialog.scss'
@@ -76,13 +79,25 @@ export class FirstAdminDialogComponent {
   }
 
   get valid(): boolean {
-    return !this.saving &&
+    return !this.saving && !this.lookingUpDni &&
       !!this.firstName.trim() &&
       !!this.lastName.trim() &&
       this.username.length >= 3 &&
       /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(this.email.trim()) &&
       (!this.dni || /^\d{8}$/.test(this.dni)) &&
       (this.isFirstAdmin || this.availableRoles.some(r => r.id === this.roleId));
+  }
+
+  get modalFooterActions(): ModalFooterAction[] {
+    return [
+      { id: 'cancel', label: 'Cancelar', tone: 'secondary', order: 0, disabled: this.saving || this.lookingUpDni },
+      { id: 'primary', label: this.isFirstAdmin ? 'Crear administrador' : 'Crear usuario', tone: 'primary', order: 1, disabled: !this.valid }
+    ];
+  }
+
+  handleModalAction(action: ModalActionId): void {
+    if (action === 'cancel') this.close();
+    if (action === 'primary') this.save();
   }
 
   constructor() {
@@ -120,7 +135,7 @@ export class FirstAdminDialogComponent {
   }
 
   close(): void {
-    if (!this.saving) this.dialog.close(null);
+    if (!this.saving && !this.lookingUpDni) this.dialog.close(null);
   }
 
   save(): void {
