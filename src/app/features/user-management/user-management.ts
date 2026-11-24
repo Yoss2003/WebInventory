@@ -119,7 +119,7 @@ export class UserManagementComponent implements OnInit {
         panelClass: 'inv-seven-modal',
         width: 'min(800px, calc(100vw - 24px))',
         maxWidth: 'calc(100vw - 24px)',
-        maxHeight: 'calc(100dvh - 24px)',
+        maxHeight: 'calc(100dvh - 28px)',
         enterAnimationDuration: 260,
         exitAnimationDuration: 220,
         autoFocus: 'first-tabbable',

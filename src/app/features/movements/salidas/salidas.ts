@@ -86,11 +86,11 @@ export class SalidasComponent implements OnInit {
   }
   isCancelled(m:Movement):boolean{return this.cancelledIds.has(Number(m.id))||(this.saleId(m)!==null&&this.cancelledSaleIds.has(this.saleId(m)!));}
   newTransfer():void{
-    const ref=this.modalStandards.open(TraspasoFormComponent,'wizard',{panelClass:'inv-seven-modal',enterAnimationDuration:260,exitAnimationDuration:220,width:'min(710px,calc(100vw - 24px))',maxWidth:'calc(100vw - 24px)',disableClose:true});
+    const ref=this.modalStandards.open(TraspasoFormComponent,'wizard',{panelClass:'inv-seven-modal',enterAnimationDuration:260,exitAnimationDuration:220,width:'min(710px,calc(100vw - 24px))',maxWidth:'calc(100vw - 24px)',maxHeight:'calc(100dvh - 28px)',disableClose:true});
     ref.afterClosed().subscribe(ok=>{if(ok)this.loadRealData();});
   }
   newSale():void{
-    const ref=this.modalStandards.open(QuickSaleFormComponent,'wizard',{panelClass:'inv-seven-modal',enterAnimationDuration:260,exitAnimationDuration:220,width:'min(640px,calc(100vw - 24px))',maxWidth:'calc(100vw - 24px)',disableClose:true});
+    const ref=this.modalStandards.open(QuickSaleFormComponent,'wizard',{panelClass:'inv-seven-modal',enterAnimationDuration:260,exitAnimationDuration:220,width:'min(640px,calc(100vw - 24px))',maxWidth:'calc(100vw - 24px)',maxHeight:'calc(100dvh - 28px)',disableClose:true});
     ref.afterClosed().subscribe(ok=>{if(ok)this.loadRealData();});
   }
   showDetail(m:Movement):void{

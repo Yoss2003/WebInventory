@@ -133,7 +133,7 @@ export class CategoryChildFormComponent implements OnInit {
         if (this.categoryMotionStep > 0) {
             actions.push({ id: 'previous', label: 'Anterior', tone: 'secondary', icon: 'arrow_back', order: 0 });
         }
-        actions.push({ id: 'cancel', label: 'Cancelar', tone: 'secondary', order: 1 });
+        actions.push({ id: 'cancel', label: 'Cancelar', tone: 'secondary', order: 1, disabled: this.isSaving });
         if (this.categoryMotionStep < lastSection) {
             actions.push({
                 id: 'next',

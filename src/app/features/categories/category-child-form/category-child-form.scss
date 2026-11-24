@@ -913,31 +913,30 @@ $muted: #a8b5c2;
   }
 }
 
-/* El shell compartido controla la cabecera y el footer. El scroll queda
-   exclusivamente en el contenido interno del asistente. */
+/* Tamaño natural por etapa: el shell no hereda una altura fija de otro formulario. */
 :host {
   display: flex;
   flex-direction: column;
   width: 100%;
-  height: 100%;
+  height: auto;
   min-height: 0;
-  max-height: 100%;
+  max-height: calc(100dvh - 28px);
   overflow: hidden;
 }
 .category-modal {
   display: flex;
-  flex: 1 1 auto;
+  flex: 0 1 auto;
   flex-direction: column;
   width: 100%;
-  height: 100%;
+  height: auto;
   min-height: 0;
-  max-height: 100%;
-  overflow: hidden;
+  max-height: none;
+  overflow: visible;
 }
 .category-content.mat-mdc-dialog-content {
-  flex: 1 1 auto;
-  height: 100%;
+  flex: 0 0 auto;
+  height: auto;
   min-height: 0;
   max-height: none !important;
-  overflow-y: auto;
+  overflow: visible !important;
 }

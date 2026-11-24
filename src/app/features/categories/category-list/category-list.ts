@@ -88,7 +88,7 @@ export class CategoryListComponent implements OnInit {
   nuevaCategoriaHija(categoriaEdit?:Category):void{
     const parents=this.rawData.filter(p=>!p.parentCategoryId&&(p.isActive||p.id===categoriaEdit?.parentCategoryId));
     const ref=this.modalStandards.open(CategoryChildFormComponent,'wizard',{enterAnimationDuration:260,exitAnimationDuration:220,
-      width:'min(700px,calc(100vw - 24px))',maxWidth:'calc(100vw - 24px)',data:{categoriaEdit:categoriaEdit||null,padres:parents}
+      width:'min(700px,calc(100vw - 24px))',maxWidth:'calc(100vw - 24px)',maxHeight:'calc(100dvh - 28px)',data:{categoriaEdit:categoriaEdit||null,padres:parents}
     });
     ref.afterClosed().subscribe(ok=>{if(ok)this.loadData();});
   }
