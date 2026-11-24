@@ -155,7 +155,7 @@ button.ui-v2-table-action--success {
   }
 }
 
-:is(td.actions, td.entry-actions, td.actions-col, td.supplier-actions-col, th.actions-col, .inv-core-action-cell) {
+:is(td.actions, td.entry-actions, td.actions-col, td.supplier-actions-col, td.action-cell, td.actions-cell, th.actions-col, th.actions-head, .inv-core-action-cell) {
   text-align: center !important;
   white-space: nowrap;
 }
