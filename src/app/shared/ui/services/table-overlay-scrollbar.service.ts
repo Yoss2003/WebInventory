@@ -45,7 +45,12 @@ export class TableOverlayScrollbarService {
     
     this.resizes = new ResizeObserver(() => this.schedule());
     this.mutation = new MutationObserver(() => this.schedule());
-    this.mutation.observe(this.doc.body, { childList: true, subtree: true });
+    this.mutation.observe(this.doc.body, {
+      childList: true,
+      subtree: true,
+      attributes: true,
+      attributeFilter: ['class', 'hidden']
+    });
     this.doc.addEventListener('scroll', this.onScroll, true);
     this.doc.defaultView?.addEventListener('resize', this.onScroll, { passive: true });
     this.schedule();
@@ -72,8 +77,20 @@ export class TableOverlayScrollbarService {
 
     for (const target of Array.from(candidates)) {
       const table = target.querySelector<HTMLTableElement>(':scope > table');
-      if (!table) continue;
       const previous = this.records.get(target);
+
+      if (!table) {
+        if (previous) this.detach(target, previous);
+        continue;
+      }
+
+      const css = getComputedStyle(target);
+      const isScrollable = /auto|scroll|overlay/.test(`${css.overflowX} ${css.overflowY}`);
+      if (!isScrollable) {
+        if (previous) this.detach(target, previous);
+        continue;
+      }
+
       if (previous) {
         if (previous.table !== table) {
           this.resizes?.unobserve(previous.table);
@@ -82,19 +99,27 @@ export class TableOverlayScrollbarService {
         }
         continue;
       }
-      const css = getComputedStyle(target);
-      if (!/auto|scroll|overlay/.test(`${css.overflowX} ${css.overflowY}`)) continue;
       this.attach(target, table);
     }
 
     for (const [target, record] of this.records) {
-      if (target.isConnected) continue;
-      record.vertical.track.remove();
-      record.horizontal.track.remove();
-      this.resizes?.unobserve(record.target);
-      this.resizes?.unobserve(record.table);
-      this.records.delete(target);
+      if (!target.isConnected || !target.matches(
+        '.inv-core-table-wrap, .supplier-table-viewport, .parameter-table-viewport, ' +
+        '.table-wrapper, .companies-table, .recovery-table, .history-rates-scroll, ' +
+        '.subcategories-wrap'
+      )) {
+        this.detach(target, record);
+      }
     }
+  }
+
+  private detach(target: HTMLElement, record: TableRecord): void {
+    record.vertical.track.remove();
+    record.horizontal.track.remove();
+    target.classList.remove('inv-overlay-scroll-target');
+    this.resizes?.unobserve(target);
+    this.resizes?.unobserve(record.table);
+    this.records.delete(target);
   }
 
   private attach(target: HTMLElement, table: HTMLTableElement): void {

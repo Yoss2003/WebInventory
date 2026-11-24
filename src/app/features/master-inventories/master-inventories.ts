@@ -5,6 +5,8 @@ import { InventoryService } from '../../core/services/inventories';
 import { MatIconModule } from '@angular/material/icon';
 import { LoadingIndicatorComponent } from '../../shared/loading/loading-indicator';
 import { UiPageHeadingComponent } from '../../shared/ui/components/ui-page-heading.component';
+import { UiSearchComponent } from '../../shared/ui/components/ui-search.component';
+import { UiEmptyStateComponent } from '../../shared/ui/components/ui-empty-state.component';
 import { UiButtonDirective } from '../../shared/ui/directives/ui-button.directive';
 import { UiTableActionDirective } from '../../shared/ui/directives/ui-table-action.directive';
 import { ToastService } from '../../shared/toast/toast.service';
@@ -30,6 +32,8 @@ interface MasterInventory {
     MatIconModule,
     LoadingIndicatorComponent,
     UiPageHeadingComponent,
+    UiSearchComponent,
+    UiEmptyStateComponent,
     UiButtonDirective,
     UiTableActionDirective
   ],

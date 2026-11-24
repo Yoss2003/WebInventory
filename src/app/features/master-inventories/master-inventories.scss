@@ -5,6 +5,7 @@
 }
 
 .master-page {
+  --core-table-max-height: 430px;
   display: grid;
   gap: 17px;
   min-width: 0;
@@ -48,42 +49,7 @@
   font-size: 11px;
 }
 
-.master-filter {
-  display: flex;
-  align-items: center;
-  gap: 9px;
-  width: min(100%, 410px);
-  margin-bottom: 12px;
-  padding: 0 11px;
-  border: 1px solid #597488;
-  border-radius: 9px;
-  background: #111f29;
-}
 
-.master-filter mat-icon {
-  width: 19px;
-  height: 19px;
-  color: #aac1d2;
-  font-size: 19px;
-}
-
-.master-filter input {
-  flex: 1;
-  min-width: 0;
-  min-height: 40px;
-  border: 0;
-  outline: 0;
-  background: transparent;
-  color: #f1f8fc;
-  font: inherit;
-  font-size: 12px;
-}
-
-.master-table {
-  max-height: 430px;
-  overflow: auto;
-  scrollbar-width: thin;
-}
 
 .master-table table {
   width: 100%;
