@@ -11,7 +11,7 @@
   [footerActions]="modalFooterActions"
   [busyActionId]="isSaving ? 'primary' : null"
   [closeVisible]="false"
-  [contentScrollable]="true"
+  [contentScrollable]="false"
   [invDialogMotion]="step"
   (sectionChange)="goStep($event + 1)"
   (actionClicked)="handleModalAction($event)"
