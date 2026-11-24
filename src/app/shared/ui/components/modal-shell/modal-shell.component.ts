@@ -74,7 +74,9 @@ export class ModalShellComponent implements AfterViewInit, OnChanges, OnDestroy 
 
   get standard() { return this.standards.get(this.type); }
   get effectiveSubtitle(): string { return this.subtitle ?? this.standard.header.subtitle; }
-  get effectiveIcon(): string { return this.icon ?? this.standard.header.icon; }
+  get effectiveIcon(): string {
+    return String(this.icon ?? '').trim() || this.standard.header.icon;
+  }
   get effectiveInfoTooltip(): string {
     const messages = [this.infoTooltip, this.subtitle]
       .map(value => String(value ?? '').trim())
