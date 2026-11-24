@@ -1,4 +1,4 @@
-<app-modal-shell type="detail" title="Detalle del movimiento" [subtitle]="'Movimiento #' + data.movement.id" icon="receipt_long" [infoVisible]="false" [closeVisible]="true" [footerVisible]="false" (closeRequested)="dialogRef.close()">
+<app-modal-shell type="detail" title="Detalle del movimiento" [subtitle]="'Movimiento #' + data.movement.id" icon="receipt_long" [infoVisible]="false" [closeVisible]="true" [footerVisible]="false" [contentScrollable]="false" (closeRequested)="dialogRef.close()">
   <div class="movement-dialog ui-v2-dialog ui-v2-dialog--simple">
     <main><div class="record-grid">
     <div><label>Artículo</label><strong>{{data.articleName | cleanArticleName}}</strong></div><div><label>Código</label><strong>{{data.articleCode}}</strong></div>
