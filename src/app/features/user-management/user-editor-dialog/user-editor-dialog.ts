@@ -25,7 +25,7 @@ export interface UserEditorDialogData {
 }
 
 export type UserEditorDialogResult =
-  | { kind: 'created'; username: string; personalInventoryId: number; emailSent: boolean; message?: string }
+  | { kind: 'created'; username: string; personalInventoryId: number; emailSent: boolean; message?: string; permissionSaveFailed?: boolean }
   | { kind: 'updated'; changed: boolean; partialFailure?: boolean };
 
 /** Un mismo asistente de tres pasos para crear y editar usuarios de la empresa del JWT. */
@@ -86,6 +86,9 @@ export class UserEditorDialogComponent implements OnInit {
       user.id !== this.data.currentUserId && user.roleId > 2 &&
       !this.loadingPermissions && !this.permissionLoadFailed;
   }
+  get canConfigureCreationPermissions(): boolean {
+    return !this.isEdit && this.data.canManageIndividualPermissions && !this.saving;
+  }
   get personalValid(): boolean {
     return !!this.editing.firstName.trim() && !!this.editing.lastName.trim() &&
       this.editing.username.trim().length >= 3 && this.editing.username.length <= 80 &&
@@ -103,7 +106,7 @@ export class UserEditorDialogComponent implements OnInit {
     return !this.saving && this.personalValid && this.roleValid && !this.loadingPermissions;
   }
   get motionWidth(): string {
-    const width = this.step === 1 ? 800 : this.step === 2 ? 630 : (this.isEdit ? 760 : 650);
+    const width = this.step === 1 ? 800 : this.step === 2 ? 760 : (this.isEdit ? 760 : 650);
     return 'min(' + width + 'px, calc(100vw - 24px))';
   }
 
@@ -263,11 +266,24 @@ export class UserEditorDialogComponent implements OnInit {
     if (!this.data.user) {
       this.api.create({ ...details, roleId: this.selectedRole }).subscribe({
         next: created => {
-          this.saving = false;
-          this.dialog.close({
-            kind: 'created', username: created.username,
-            personalInventoryId: created.personalInventoryId,
-            emailSent: created.emailSent, message: created.message
+          const finishCreation = (permissionSaveFailed = false) => {
+            this.saving = false;
+            this.dialog.close({
+              kind: 'created', username: created.username,
+              personalInventoryId: created.personalInventoryId,
+              emailSent: created.emailSent, message: created.message,
+              ...(permissionSaveFailed ? { permissionSaveFailed: true } : {})
+            });
+          };
+          const hasIndividualPermissions = this.data.canManageIndividualPermissions &&
+            Object.values(this.permissions).some(Boolean);
+          if (!hasIndividualPermissions) {
+            finishCreation();
+            return;
+          }
+          this.api.saveUserPermissions(created.id, this.permissions).subscribe({
+            next: () => finishCreation(),
+            error: () => finishCreation(true)
           });
         },
         error: error => {
