@@ -1,15 +1,13 @@
 <app-modal-shell
   type="confirmation"
   [title]="data.title"
-  subtitle="Verifica los detalles antes de continuar"
-  [icon]="data.icon"
-  [infoVisible]="true"
+  [icon]="data.icon || (data.tone === 'danger' ? 'warning_amber' : 'help_outline')"
+  [infoVisible]="false"
   [closeVisible]="false"
   [footerActions]="modalFooterActions"
   (actionClicked)="handleModalAction($event)"
-  [contentScrollable]="false" (closeRequested)="dialogRef.close()">
-  <section class="confirm-shell">
-  <div class="confirm-body">
+  [contentScrollable]="true" (closeRequested)="dialogRef.close()">
+  <section class="confirm-content">
 
     <p class="confirm-description">{{data.message}}</p>
     <div *ngIf="data.requiresReason" class="confirm-reason">
@@ -18,11 +16,11 @@
                 [(ngModel)]="reason"
                 [attr.maxlength]="maxLength"
                 rows="3"
+              appUiControl
                 [placeholder]="data.reasonPlaceholder || 'Escribe el motivo...'"
                 autocomplete="off"></textarea>
       <span class="confirm-counter">{{reason.length}} / {{maxLength}}</span>
     </div>
   
-  </div>
   </section>
 </app-modal-shell>

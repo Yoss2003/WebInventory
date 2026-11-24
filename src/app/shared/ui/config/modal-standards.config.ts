@@ -104,7 +104,7 @@ export const MODAL_STANDARDS: Readonly<Record<ModalStandardType, ModalStandardDe
   mainForm: createDefinition(
     'mainForm', 'Formulario principal', 'Alta y edición de registros en el sistema.',
     {
-      icon: '', subtitle: 'Registro y configuración del artículo', info: true,
+      icon: 'edit_note', subtitle: 'Registro y configuración del artículo', info: true,
       sections: ['Identificación', 'Logística', 'Finanzas'], footer: true,
       allowedActions: ['previous', 'cancel', 'primary', 'next'],
       actions: [
@@ -117,7 +117,7 @@ export const MODAL_STANDARDS: Readonly<Record<ModalStandardType, ModalStandardDe
   wizard: createDefinition(
     'wizard', 'Proceso guiado', 'Operación secuencial que requiere avanzar por etapas.',
     {
-      icon: '', iconEnabled: false, subtitle: 'Completa cada paso para continuar', info: true,
+      icon: 'checklist', iconEnabled: true, subtitle: 'Completa cada paso para continuar', info: true,
       sections: ['Información', 'Configuración', 'Revisión'], footer: true,
       allowedActions: ['previous', 'cancel', 'next', 'primary'],
       actions: [
@@ -130,7 +130,7 @@ export const MODAL_STANDARDS: Readonly<Record<ModalStandardType, ModalStandardDe
   detail: createDefinition(
     'detail', 'Detalle / consulta', 'Consultar información sin modificar el registro.',
     {
-      icon: '', subtitle: 'Consulta de información', info: true, close: true,
+      icon: 'description', subtitle: 'Consulta de información', info: true, close: true,
       footer: false, allowedActions: ['close'],
       actions: [action('close', 'Cerrar', 'secondary', 0)], selectors: false,
       selectorTypes: ['autocomplete'], selectorMotionEnabled: false
@@ -139,7 +139,7 @@ export const MODAL_STANDARDS: Readonly<Record<ModalStandardType, ModalStandardDe
   selector: createDefinition(
     'selector', 'Selector de registros', 'Buscar y elegir uno o varios registros.',
     {
-      icon: '', subtitle: 'Busca y elige un elemento', info: true,
+      icon: 'search', subtitle: 'Busca y elige un elemento', info: true,
       footer: true, allowedActions: ['cancel', 'primary'],
       actions: [
         action('cancel', 'Cancelar', 'secondary', 0),
@@ -150,7 +150,7 @@ export const MODAL_STANDARDS: Readonly<Record<ModalStandardType, ModalStandardDe
   confirmation: createDefinition(
     'confirmation', 'Confirmación', 'Solicitar confirmación antes de ejecutar una acción importante.',
     {
-      icon: '', subtitle: 'Revisa la acción antes de continuar', info: false,
+      icon: 'warning_amber', subtitle: 'Revisa la acción antes de continuar', info: false,
       footer: true, allowedActions: ['cancel', 'primary'],
       actions: [
         action('cancel', 'Cancelar', 'secondary', 0),
@@ -179,7 +179,7 @@ export const MODAL_STANDARDS: Readonly<Record<ModalStandardType, ModalStandardDe
   subTask: createDefinition(
     'subTask', 'Submodal complementario', 'Completar una acción secundaria dentro del flujo principal.',
     {
-      icon: 'edit', subtitle: 'Completa los datos necesarios', info: true,
+      icon: 'task_alt', subtitle: 'Completa los datos necesarios', info: true,
       footer: true, allowedActions: ['cancel', 'primary'],
       actions: [
         action('cancel', 'Cancelar', 'secondary', 0),
@@ -190,7 +190,7 @@ export const MODAL_STANDARDS: Readonly<Record<ModalStandardType, ModalStandardDe
   filters: createDefinition(
     'filters', 'Filtros avanzados', 'Definir criterios de búsqueda para filtrar información.',
     {
-      icon: '', subtitle: 'Define los criterios de búsqueda', info: true,
+      icon: 'filter_list', subtitle: 'Define los criterios de búsqueda', info: true,
       footer: true, allowedActions: ['cancel', 'primary'],
       // Limpiar pertenece al contenido propio de cada vista, no al footer común.
       actions: [
