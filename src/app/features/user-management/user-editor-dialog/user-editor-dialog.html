@@ -1,42 +1,20 @@
-<div class="user-dialog ui-v2-dialog ui-v2-dialog--special"
-  [invDialogMotion]="step" [invDialogMotionWidth]="motionWidth" role="document">
-  <header class="user-dialog__header">
-    <div class="user-dialog__identity">
-      <span class="user-dialog__icon"><mat-icon aria-hidden="true">{{isEdit ? 'manage_accounts' : 'person_add'}}</mat-icon></span>
-      <div>
-        <h2>{{isEdit ? 'Editar usuario' : 'Nuevo usuario'}}</h2>
-        <p>{{isEdit ? 'Actualiza los datos y accesos de esta cuenta.' : 'Registra un usuario y configura su acceso.'}}</p>
-      </div>
-    </div>
-    <button type="button" appUiButton="close" (click)="close()" [disabled]="saving"
-      aria-label="Cerrar modal" title="Cerrar"><mat-icon aria-hidden="true">close</mat-icon></button>
-  </header>
-
-  <nav class="user-dialog__steps" aria-label="Secciones de usuario">
-    <button type="button" [class.active]="step === 1"
-      [class.completed]="step > 1 && personalValid" [attr.aria-current]="step === 1 ? 'step' : null"
-      (click)="goStep(1)" [disabled]="saving">
-      <span class="user-dialog__number">
-        <mat-icon *ngIf="step > 1 && personalValid" aria-hidden="true">check</mat-icon>
-        <ng-container *ngIf="step <= 1 || !personalValid">1</ng-container>
-      </span><span>Datos personales</span>
-    </button>
-    <span class="user-dialog__connector"></span>
-    <button type="button" [class.active]="step === 2"
-      [class.completed]="step > 2 && roleValid" [attr.aria-current]="step === 2 ? 'step' : null"
-      (click)="goStep(2)" [disabled]="saving || !personalValid">
-      <span class="user-dialog__number">
-        <mat-icon *ngIf="step > 2 && roleValid" aria-hidden="true">check</mat-icon>
-        <ng-container *ngIf="step <= 2 || !roleValid">2</ng-container>
-      </span><span>Rol y acceso</span>
-    </button>
-    <span class="user-dialog__connector"></span>
-    <button type="button" [class.active]="step === 3" [attr.aria-current]="step === 3 ? 'step' : null"
-      (click)="goStep(3)" [disabled]="saving || !personalValid || !roleValid">
-      <span class="user-dialog__number">3</span><span>{{isEdit ? 'Permisos' : 'Seguridad'}}</span>
-    </button>
-  </nav>
-
+<app-modal-shell
+  type="wizard"
+  [title]="isEdit ? 'Editar usuario' : 'Nuevo usuario'"
+  [subtitle]="isEdit ? 'Actualiza los datos y accesos de esta cuenta.' : 'Registra un usuario y configura su acceso.'"
+  [icon]="isEdit ? 'manage_accounts' : 'person_add'"
+  [sections]="modalSections"
+  [activeSection]="step - 1"
+  [footerActions]="modalFooterActions"
+  [busyActionId]="saving ? 'primary' : null"
+  [closeVisible]="true"
+  [contentScrollable]="false"
+  [invDialogMotion]="step"
+  [invDialogMotionWidth]="motionWidth"
+  (sectionChange)="goStep($event + 1)"
+  (actionClicked)="handleModalAction($event)"
+  (closeRequested)="close()">
+  <div class="user-dialog ui-v2-dialog ui-v2-dialog--special" role="document">
   <main class="user-dialog__body" aria-live="polite">
     <section class="user-dialog__panel" *ngIf="step === 1" aria-label="Datos personales">
       <div class="user-dialog__section-title">
@@ -148,18 +126,6 @@
     </section>
   </main>
 
-  <footer class="user-dialog__footer">
-    <button type="button" appUiButton="secondary" class="user-dialog__back" *ngIf="step > 1" (click)="goStep(step - 1)"
-      [disabled]="saving"><mat-icon aria-hidden="true">arrow_back</mat-icon> Anterior</button>
-    <button type="button" appUiButton="secondary" (click)="close()" [disabled]="saving">Cancelar</button>
-    <button type="button" appUiButton="primary" *ngIf="step < 3"
-      (click)="goStep(step + 1)" [disabled]="saving || (step === 1 && !personalValid) || (step === 2 && !roleValid)">
-      Siguiente <mat-icon aria-hidden="true">arrow_forward</mat-icon>
-    </button>
-    <button type="button" appUiButton="primary" *ngIf="step === 3"
-      (click)="save()" [disabled]="!canSubmit">
-      <mat-icon aria-hidden="true">{{saving ? 'hourglass_top' : isEdit ? 'save' : 'person_add'}}</mat-icon>
-      {{saving ? 'Guardando...' : isEdit ? 'Guardar cambios' : 'Crear usuario'}}
-    </button>
-  </footer>
-</div>
+  </div>
+</app-modal-shell>
+
