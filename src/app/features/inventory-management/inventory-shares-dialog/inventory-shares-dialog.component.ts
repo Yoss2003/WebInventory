@@ -1,4 +1,4 @@
-import { Component, inject, OnInit } from '@angular/core';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, inject, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { MatIconModule } from '@angular/material/icon';
@@ -11,6 +11,7 @@ import { UiButtonDirective } from '../../../shared/ui/directives/ui-button.direc
 import { UiTableActionDirective } from '../../../shared/ui/directives/ui-table-action.directive';
 import { LoadingIndicatorComponent } from '../../../shared/loading/loading-indicator';
 import { ModalShellComponent } from '../../../shared/ui/components/modal-shell/modal-shell.component';
+import { finalize, timeout } from 'rxjs';
 
 export interface InventorySharesDialogData {
   inventory: InventorySummary;
@@ -24,7 +25,8 @@ export interface InventorySharesDialogData {
   standalone: true,
   imports: [CommonModule, MatIconModule, UiButtonDirective, UiTableActionDirective, LoadingIndicatorComponent, ModalShellComponent],
   templateUrl: './inventory-shares-dialog.component.html',
-  styleUrl: './inventory-shares-dialog.component.scss'
+  styleUrl: './inventory-shares-dialog.component.scss',
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class InventorySharesDialogComponent implements OnInit {
   readonly dialogRef = inject(MatDialogRef<InventorySharesDialogComponent>);
@@ -32,12 +34,15 @@ export class InventorySharesDialogComponent implements OnInit {
   private readonly api = inject(InventoryService);
   private readonly toast = inject(ToastService);
   private readonly confirms = inject(ConfirmationDialogService);
+  private readonly cdr = inject(ChangeDetectorRef);
 
   shares: InventoryShare[] = [];
   loading = true;
   refreshing = false;
   error = '';
   updatingShareId: number | null = null;
+  private hasLoadedOnce = false;
+  private requestId = 0;
 
   ngOnInit(): void { this.load(); }
 
@@ -57,6 +62,11 @@ export class InventorySharesDialogComponent implements OnInit {
     return userId === this.data.selfId ? 'Mi cuenta' : `Usuario #${userId}`;
   }
 
+  getShareName(share: InventoryShare): string {
+    const name = `${share.firstName || ''} ${share.lastName || ''}`.trim();
+    return name || share.username || this.getOwnerName(share.userId);
+  }
+
   getEmail(userId: number): string | null {
     const employee = this.data.employees?.find(e => e.userId === userId);
     if (employee?.user?.email) return employee.user.email;
@@ -64,15 +74,36 @@ export class InventorySharesDialogComponent implements OnInit {
   }
 
   load(): void {
-    const hasData = this.shares.length > 0;
-    this.loading = !hasData;
-    this.refreshing = hasData;
+    if (this.loading || this.refreshing) return;
+    const requestId = ++this.requestId;
+    const keepExisting = this.hasLoadedOnce;
+    this.loading = !keepExisting;
+    this.refreshing = keepExisting;
     this.error = '';
-    this.api.getShares(this.data.inventory.id).subscribe({
-      next: rows => { this.shares = rows || []; this.loading = false; this.refreshing = false; },
+    this.cdr.markForCheck();
+
+    this.api.getShares(this.data.inventory.id).pipe(
+      timeout({ first: 15000 }),
+      finalize(() => {
+        if (requestId !== this.requestId) return;
+        this.loading = false;
+        this.refreshing = false;
+        this.hasLoadedOnce = true;
+        this.cdr.markForCheck();
+      })
+    ).subscribe({
+      next: rows => {
+        if (requestId !== this.requestId) return;
+        this.shares = Array.isArray(rows) ? rows : [];
+        this.error = '';
+        this.cdr.markForCheck();
+      },
       error: err => {
-        this.loading = false; this.refreshing = false;
-        this.error = String(err?.error?.error || 'No se pudieron consultar las personas con acceso.');
+        if (requestId !== this.requestId) return;
+        this.error = err?.name === 'TimeoutError'
+          ? 'La consulta de personas con acceso tardó demasiado. Puedes volver a intentarlo.'
+          : String(err?.error?.error || 'No se pudieron consultar las personas con acceso.');
+        this.cdr.markForCheck();
       }
     });
   }
@@ -83,20 +114,29 @@ export class InventorySharesDialogComponent implements OnInit {
     const label = level === 2 ? 'Editor' : 'Solo Lector';
     this.confirms.confirm({
       title: 'Modificar nivel de permiso',
-      message: `¿Cambiar el acceso de «${item.username || 'este usuario'}» a ${label}?`,
+      message: `¿Cambiar el acceso de «${item.username || this.getShareName(item)}» a ${label}?`,
       confirmLabel: `Cambiar a ${label}`, tone: 'primary', icon: 'swap_horiz'
     }).subscribe(ok => {
-      if (!ok) return;
+      if (!ok || this.updatingShareId !== null) return;
       this.updatingShareId = item.id;
-      this.api.updateShareAccess(item.id, level).subscribe({
+      this.cdr.markForCheck();
+      this.api.updateShareAccess(item.id, level).pipe(
+        timeout({ first: 15000 }),
+        finalize(() => {
+          this.updatingShareId = null;
+          this.cdr.markForCheck();
+        })
+      ).subscribe({
         next: () => {
           this.shares = this.shares.map(s => s.id === item.id ? { ...s, accessLevel: level } : s);
-          this.updatingShareId = null;
           this.toast.success(`Permiso actualizado a ${label}.`);
+          this.cdr.markForCheck();
         },
         error: err => {
-          this.updatingShareId = null;
-          this.toast.error(String(err?.error?.error || 'No se pudo actualizar el permiso.'));
+          this.toast.error(err?.name === 'TimeoutError'
+            ? 'La actualización tardó demasiado. Verifica el permiso antes de volver a intentarlo.'
+            : String(err?.error?.error || 'No se pudo actualizar el permiso.'));
+          this.cdr.markForCheck();
         }
       });
     });
@@ -105,13 +145,18 @@ export class InventorySharesDialogComponent implements OnInit {
   revoke(item: InventoryShare): void {
     this.confirms.confirm({
       title: 'Revocar acceso de inventario',
-      message: `¿Revocar definitivamente el acceso a «${item.username || 'este usuario'}»? El inventario y su historial no se verán afectados.`,
+      message: `¿Revocar definitivamente el acceso a «${item.username || this.getShareName(item)}»? El inventario y su historial no se verán afectados.`,
       confirmLabel: 'Sí, revocar acceso', tone: 'danger', icon: 'person_remove'
     }).subscribe(ok => {
       if (!ok) return;
-      this.api.revoke(item.id).subscribe({
-        next: () => { this.toast.success('Acceso revocado correctamente.'); this.load(); },
-        error: err => this.toast.error(String(err?.error?.error || 'No se pudo revocar el acceso.'))
+      this.api.revoke(item.id).pipe(timeout({ first: 15000 })).subscribe({
+        next: () => {
+          this.toast.success('Acceso revocado correctamente.');
+          this.load();
+        },
+        error: err => this.toast.error(err?.name === 'TimeoutError'
+          ? 'La revocación tardó demasiado. Actualiza la lista para comprobar el estado.'
+          : String(err?.error?.error || 'No se pudo revocar el acceso.'))
       });
     });
   }
