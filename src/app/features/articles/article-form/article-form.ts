@@ -32,6 +32,8 @@ import {
 import { DecodeHintType } from '@zxing/library';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { UiControlDirective } from '../../../shared/ui/directives/ui-control.directive';
+import { ModalShellComponent } from '../../../shared/ui/components/modal-shell/modal-shell.component';
+import type { ModalActionId, ModalFooterAction, ModalSection } from '../../../shared/ui/models/modal-standard.model';
 
 interface AttributeField {
   control: string;
@@ -44,7 +46,7 @@ interface AttributeField {
   imports: [
     UiButtonDirective, UiControlDirective, CommonModule, ReactiveFormsModule, MatDialogModule,
     MatIconModule, MatSelectModule, MatFormFieldModule, MatTooltipModule,
-    InventoryDialogMotionDirective
+    InventoryDialogMotionDirective, ModalShellComponent
   ],
   templateUrl: './article-form.html',
   styleUrls: ['./article-form.scss']
@@ -78,10 +80,8 @@ export class ArticleFormComponent implements OnInit, OnDestroy {
   isLoadingBrands = false;
   isScanningLive = false;
   isCameraActive = false;
-  isTransitioningStep = false;
   isContinuousScanMode = false;
   isClosingMultiScanner = false;
-  private stepTransitionTimer: ReturnType<typeof setTimeout> | null = null;
   private currentScanTarget: string = '';
   private scanControls: any = null;
   categoriesError = '';
@@ -189,6 +189,62 @@ export class ArticleFormComponent implements OnInit, OnDestroy {
 
   currentStep = 1;
   activeSubTab: 'general' | 'attributes' | 'images' = 'general';
+
+  readonly articleSelectPanelClass = ['inventory-select-options', 'inv-standard-select-panel'];
+
+  get modalSections(): ModalSection[] {
+    return [
+      { id: 'identity', label: 'Identidad', completed: this.currentStep > 1 },
+      { id: 'logistics', label: 'Logística', completed: this.currentStep > 2, disabled: !this.isIdentityComplete },
+      {
+        id: 'finance',
+        label: 'Finanzas',
+        disabled: !this.isIdentityComplete || Boolean(this.logisticsForm?.invalid)
+      }
+    ];
+  }
+
+  get modalFooterActions(): ModalFooterAction[] {
+    const actions: ModalFooterAction[] = [];
+    if (this.currentStep > 1) {
+      actions.push({ id: 'previous', label: 'Anterior', tone: 'secondary', icon: 'arrow_back', order: 0 });
+    }
+    actions.push({ id: 'cancel', label: 'Cancelar', tone: 'secondary', order: 1 });
+    if (this.currentStep === 1) {
+      actions.push({ id: 'next', label: 'Siguiente: Logística', tone: 'primary', icon: 'arrow_forward', order: 2 });
+    } else if (this.currentStep === 2) {
+      actions.push({ id: 'next', label: 'Siguiente: Finanzas', tone: 'primary', icon: 'arrow_forward', order: 2 });
+    } else {
+      actions.push({
+        id: 'primary',
+        label: this.isEditMode ? 'Actualizar artículo' : 'Guardar artículo',
+        tone: 'primary',
+        icon: 'save',
+        order: 2,
+        disabled: this.isSaving
+      });
+    }
+    return actions;
+  }
+
+  handleModalAction(action: ModalActionId): void {
+    switch (action) {
+      case 'previous':
+        this.setStep(this.currentStep - 1);
+        break;
+      case 'cancel':
+      case 'close':
+        this.dialogRef.close();
+        break;
+      case 'next':
+        if (this.currentStep === 1) this.goNextFromIdentity();
+        else if (this.currentStep === 2) this.goNextFromLogistics();
+        break;
+      case 'primary':
+        this.onSubmit();
+        break;
+    }
+  }
   attemptedNext = false;
   attemptedLogistics = false;
   attemptedSave = false;
@@ -352,7 +408,6 @@ export class ArticleFormComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy(): void {
-    if (this.stepTransitionTimer) clearTimeout(this.stepTransitionTimer);
     this.closeMediaPreview();
     this.stopCamera();
     this.stopBarcodeScanner();
@@ -814,7 +869,6 @@ export class ArticleFormComponent implements OnInit, OnDestroy {
       return;
     }
     if (step !== 1) this.stopCamera();
-    this.triggerStepTransition();
     this.currentStep = step;
     this.attemptedNext = false;
   }
@@ -840,7 +894,6 @@ export class ArticleFormComponent implements OnInit, OnDestroy {
       return;
     }
     this.stopCamera();
-    this.triggerStepTransition();
     this.currentStep = 2;
   }
 
@@ -852,7 +905,6 @@ export class ArticleFormComponent implements OnInit, OnDestroy {
       this.toast.warning('Revisa los datos de Logística.');
       return;
     }
-    this.triggerStepTransition();
     this.currentStep = 3;
   }
 
@@ -1831,15 +1883,6 @@ export class ArticleFormComponent implements OnInit, OnDestroy {
       seen.add(normalized);
     }
     return false;
-  }
-
-  private triggerStepTransition(): void {
-    this.isTransitioningStep = true;
-    if (this.stepTransitionTimer) clearTimeout(this.stepTransitionTimer);
-    this.stepTransitionTimer = setTimeout(() => {
-      this.isTransitioningStep = false;
-      this.cdr.markForCheck();
-    }, 300);
   }
 
   saveAndCloseMultiScannerModal(): void {

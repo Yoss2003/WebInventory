@@ -1,32 +1,21 @@
-<div class="custom-modal ui-v2-dialog ui-v2-dialog--special" [invDialogMotion]="currentStep + '-' + activeSubTab" [invDialogMotionWidth]="currentStep === 1 ? 'min(1080px, calc(100vw - 24px))' : currentStep === 2 ? 'min(950px, calc(100vw - 24px))' : 'min(1040px, calc(100vw - 24px))'">
-  <header class="modal-header">
-    <div class="title-area">
-      <span class="title-mark"><mat-icon>inventory_2</mat-icon></span>
-      <div>
-        <h2>{{ isEditMode ? 'EDITAR ARTÍCULO' : 'ALTA DE ARTÍCULO' }}</h2>
-        <p>Completa los datos del producto en tres pasos</p>
-      </div>
-    </div>
+<app-modal-shell
+  class="custom-modal ui-v2-dialog ui-v2-dialog--special"
+  type="mainForm"
+  [title]="isEditMode ? 'EDITAR ARTÍCULO' : 'ALTA DE ARTÍCULO'"
+  subtitle="Completa los datos del producto en tres pasos"
+  icon="inventory_2"
+  [sections]="modalSections"
+  [activeSection]="currentStep - 1"
+  [footerActions]="modalFooterActions"
+  [busyActionId]="isSaving ? 'primary' : null"
+  [contentScrollable]="false"
+  [invDialogMotion]="currentStep + '-' + activeSubTab"
+  [invDialogMotionWidth]="currentStep === 1 ? 'min(1080px, calc(100vw - 24px))' : currentStep === 2 ? 'min(950px, calc(100vw - 24px))' : 'min(1040px, calc(100vw - 24px))'"
+  (sectionChange)="setStep($event + 1)"
+  (actionClicked)="handleModalAction($event)"
+  (closeRequested)="dialogRef.close()">
 
-    <!-- Navegación de pasos (ahora se alineará a la derecha mediante el SCSS global) -->
-    <nav class="steps-nav" aria-label="Etapas del artículo">
-      <button type="button" class="step" [class.active]="currentStep === 1" [class.completed]="currentStep > 1" (click)="setStep(1)">
-        <span class="step-num"><mat-icon *ngIf="currentStep > 1">check</mat-icon><span *ngIf="currentStep <= 1">1</span></span>
-        <span class="step-text">Identidad</span>
-      </button>
-      <span class="step-divider"></span>
-      <button type="button" class="step" [class.active]="currentStep === 2" [class.completed]="currentStep > 2" [disabled]="!isIdentityComplete" (click)="setStep(2)">
-        <span class="step-num"><mat-icon *ngIf="currentStep > 2">check</mat-icon><span *ngIf="currentStep <= 2">2</span></span>
-        <span class="step-text">Logística</span>
-      </button>
-      <span class="step-divider"></span>
-      <button type="button" class="step" [class.active]="currentStep === 3" [disabled]="!isIdentityComplete || logisticsForm.invalid" (click)="setStep(3)">
-        <span class="step-num">3</span><span class="step-text">Finanzas</span>
-      </button>
-    </nav>
-  </header>
-
-  <main class="modal-body" [class.is-transitioning]="isTransitioningStep">
+  <main class="modal-body">
     <!-- PASO 1: opción 2: pestañas laterales y panel de datos -->
     <section class="step-content identity-layout" *ngIf="currentStep === 1" aria-label="Identidad del artículo">
       <nav class="sidebar-menu" aria-label="Secciones de identidad">
@@ -89,7 +78,7 @@
                   </span>
                 </div>
                 <mat-form-field appearance="outline" class="inventory-select" [class.invalid]="isInvalid('identity', 'categoryId')">
-                  <mat-select id="article-category" formControlName="categoryId" placeholder="Seleccionar categoría" panelClass="inventory-select-options" (openedChange)="$event && resetFieldMessage('identity','categoryId')">
+                  <mat-select id="article-category" formControlName="categoryId" placeholder="Seleccionar categoría" [panelClass]="articleSelectPanelClass" (openedChange)="$event && resetFieldMessage('identity','categoryId')">
                     <mat-option [value]="null">Seleccionar categoría</mat-option>
                     <mat-option *ngFor="let cat of categoriasHijas" [value]="cat.id">{{ cat.name }}</mat-option>
                   </mat-select>
@@ -106,7 +95,7 @@
                   <mat-form-field appearance="outline" class="inventory-select" [class.invalid]="isInvalid('identity', 'brandId')">
                     <mat-select id="article-brand" formControlName="brandId" placeholder="Seleccionar marca"
                                 [disabled]="!selectedCategory || isLoadingBrands"
-                                panelClass="inventory-select-options" (openedChange)="$event && resetFieldMessage('identity','brandId')">
+                                [panelClass]="articleSelectPanelClass" (openedChange)="$event && resetFieldMessage('identity','brandId')">
                       <mat-option [value]="null">Seleccionar marca</mat-option>
                       <mat-option *ngFor="let marca of marcasFiltradas" [value]="marca.id">{{ marca.name }}</mat-option>
                     </mat-select>
@@ -126,7 +115,7 @@
                 </div>
                 <div class="field-with-button supplier-select-row">
                   <mat-form-field appearance="outline" class="inventory-select">
-                    <mat-select id="article-supplier" formControlName="supplierId" placeholder="Sin proveedor asociado" panelClass="inventory-select-options">
+                    <mat-select id="article-supplier" formControlName="supplierId" placeholder="Sin proveedor asociado" [panelClass]="articleSelectPanelClass">
                       <mat-option [value]="null">Sin proveedor asociado</mat-option>
                       <mat-option *ngFor="let supplier of proveedores" [value]="supplier.id">
                         {{supplier.businessName}} · RUC {{supplier.ruc}}
@@ -333,7 +322,7 @@
             <div class="field-tile">
               <div class="tile-label"><mat-icon>local_shipping</mat-icon><label for="acq-unit">Se compra por <span class="required">*</span></label></div>
               <mat-form-field appearance="outline" class="inventory-select">
-                <mat-select id="acq-unit" formControlName="acqUnit" panelClass="inventory-select-options">
+                <mat-select id="acq-unit" formControlName="acqUnit" [panelClass]="articleSelectPanelClass">
                   <mat-option *ngFor="let u of unidades" [value]="u">{{u}}</mat-option>
                 </mat-select>
               </mat-form-field>
@@ -344,7 +333,7 @@
                 <mat-icon class="unit-lock" *ngIf="isPhysicalPurchase" title="Igual que compra; sin conversión">lock</mat-icon>
               </div>
               <mat-form-field appearance="outline" class="inventory-select">
-                <mat-select id="sale-unit" formControlName="saleUnit" panelClass="inventory-select-options">
+                <mat-select id="sale-unit" formControlName="saleUnit" [panelClass]="articleSelectPanelClass">
                   <mat-option *ngFor="let u of saleUnits" [value]="u">{{u}}</mat-option>
                 </mat-select>
               </mat-form-field>
@@ -389,7 +378,7 @@
             <div class="field-tile">
               <label for="article-status">Estado</label>
               <mat-form-field appearance="outline" class="inventory-select">
-                <mat-select id="article-status" formControlName="statusId" placeholder="Sin especificar" panelClass="inventory-select-options">
+                <mat-select id="article-status" formControlName="statusId" placeholder="Sin especificar" [panelClass]="articleSelectPanelClass">
                   <mat-option [value]="null">Sin especificar</mat-option>
                   <mat-option *ngFor="let item of estados" [value]="item.id">{{item.name}}</mat-option>
                 </mat-select>
@@ -398,7 +387,7 @@
             <div class="field-tile">
               <label for="article-condition">Condición física</label>
               <mat-form-field appearance="outline" class="inventory-select">
-                <mat-select id="article-condition" formControlName="conditionId" placeholder="Sin especificar" panelClass="inventory-select-options">
+                <mat-select id="article-condition" formControlName="conditionId" placeholder="Sin especificar" [panelClass]="articleSelectPanelClass">
                   <mat-option [value]="null">Sin especificar</mat-option>
                   <mat-option *ngFor="let item of condiciones" [value]="item.id">{{item.name}}</mat-option>
                 </mat-select>
@@ -407,7 +396,7 @@
             <div class="field-tile">
               <label for="article-location">Ubicación</label>
               <mat-form-field appearance="outline" class="inventory-select">
-                <mat-select id="article-location" formControlName="locationId" placeholder="Sin especificar" panelClass="inventory-select-options">
+                <mat-select id="article-location" formControlName="locationId" placeholder="Sin especificar" [panelClass]="articleSelectPanelClass">
                   <mat-option [value]="null">Sin especificar</mat-option>
                   <mat-option *ngFor="let item of ubicaciones" [value]="item.id">{{item.name}}</mat-option>
                 </mat-select>
@@ -433,7 +422,7 @@
               <div class="money-input">
                 <input id="acq-price" type="number" min="0" step="0.01" formControlName="acqPrice" appUiControl class="custom-input" placeholder="0.00" [class.invalid]="isInvalid('finance', 'acqPrice')" />
                 <mat-form-field appearance="outline" class="inventory-select" aria-label="Moneda de adquisición">
-                  <mat-select formControlName="acqCurrency" panelClass="inventory-select-options">
+                  <mat-select formControlName="acqCurrency" [panelClass]="articleSelectPanelClass">
                     <mat-option *ngFor="let m of monedas" [value]="m.code">{{ m.code }}</mat-option>
                   </mat-select>
                 </mat-form-field>
@@ -445,7 +434,7 @@
               <div class="money-input">
                 <input id="sale-price" type="number" min="0" step="0.01" formControlName="salePrice" appUiControl class="custom-input" placeholder="0.00" [class.invalid]="isInvalid('finance', 'salePrice')" />
                 <mat-form-field appearance="outline" class="inventory-select" aria-label="Moneda de venta">
-                  <mat-select formControlName="saleCurrency" panelClass="inventory-select-options">
+                  <mat-select formControlName="saleCurrency" [panelClass]="articleSelectPanelClass">
                     <mat-option *ngFor="let m of monedas" [value]="m.code">{{ m.code }}</mat-option>
                   </mat-select>
                 </mat-form-field>
@@ -520,18 +509,6 @@
     </section>
   </main>
 
-  <footer class="modal-footer">
-    <button *ngIf="currentStep > 1" type="button" appUiButton="secondary" (click)="setStep(currentStep - 1)">
-      <mat-icon>arrow_back</mat-icon> Atrás
-    </button>
-
-    <span class="footer-spacer"></span>
-
-    <button type="button" appUiButton="secondary" mat-dialog-close>Cancelar</button>
-    <button *ngIf="currentStep === 1" type="button" appUiButton="primary" (click)="goNextFromIdentity()">Siguiente: Logística <mat-icon>arrow_forward</mat-icon></button>
-    <button *ngIf="currentStep === 2" type="button" appUiButton="primary" (click)="goNextFromLogistics()">Siguiente: Finanzas <mat-icon>arrow_forward</mat-icon></button>
-    <button *ngIf="currentStep === 3" type="button" appUiButton="primary" [disabled]="isSaving" (click)="onSubmit()"><mat-icon>save</mat-icon> {{ isSaving ? 'Guardando...' : isEditMode ? 'Actualizar artículo' : 'Guardar artículo' }}</button>
-  </footer>
 
   <div class="scanner-overlay" *ngIf="isScanningLive">
     <div class="scanner-container">
@@ -553,7 +530,7 @@
     <div class="edit-spinner"></div>
     <span>Cargando configuración del artículo...</span>
   </div>
-</div>
+</app-modal-shell>
 
 <!-- Visor ampliado. El elemento nativo dialog evita que el modal de artículo recorte su contenido. -->
 <dialog #mediaViewer class="media-lightbox" aria-labelledby="media-lightbox-title" (close)="onMediaPreviewClosed()" (click)="onMediaBackdropClick($event)">

@@ -31,11 +31,16 @@
           type="button"
           class="modal-shell__section-tab"
           [class.is-active]="activeSection === index"
+          [class.is-completed]="section.completed"
           [attr.aria-selected]="activeSection === index"
+          [attr.aria-disabled]="section.disabled || null"
           [attr.aria-controls]="contentId"
+          [disabled]="section.disabled"
           role="tab"
           (click)="selectSection(index)">
-          {{ section.label }}
+          <mat-icon *ngIf="section.completed" aria-hidden="true">check</mat-icon>
+          <span *ngIf="!section.completed" class="modal-shell__section-number">{{ index + 1 }}</span>
+          <span>{{ section.label }}</span>
         </button>
       </nav>
 
@@ -50,12 +55,17 @@
     </div>
   </header>
 
-  <section #content [id]="contentId" class="modal-shell__content" [attr.data-active-section]="activeSection">
+  <section
+    #content
+    [id]="contentId"
+    class="modal-shell__content"
+    [class.modal-shell__content--contained]="!contentScrollable"
+    [attr.data-active-section]="activeSection">
     <ng-content></ng-content>
   </section>
 
   <footer class="modal-shell__footer" *ngIf="showFooter">
-    <div class="modal-shell__footer-left">
+    <div class="modal-shell__footer-left" *ngIf="leftActions.length">
       <button
         *ngFor="let action of leftActions"
         type="button"
@@ -63,6 +73,7 @@
         [disabled]="isDisabled(action)"
         [attr.aria-busy]="isBusy(action)"
         (click)="emitAction(action.id)">
+        <mat-icon *ngIf="action.icon && !isBusy(action)" aria-hidden="true">{{ action.icon }}</mat-icon>
         <span class="modal-shell__action-label" [class.is-loading]="isBusy(action)">{{ action.label }}</span>
         <span class="modal-shell__action-loading" *ngIf="isBusy(action)">
           <app-loading-indicator [compact]="true" [message]="effectiveLoadingText" />
@@ -70,7 +81,7 @@
       </button>
     </div>
 
-    <div class="modal-shell__footer-right">
+    <div class="modal-shell__footer-right" *ngIf="rightActions.length">
       <button
         *ngFor="let action of rightActions"
         type="button"
@@ -78,6 +89,7 @@
         [disabled]="isDisabled(action)"
         [attr.aria-busy]="isBusy(action)"
         (click)="emitAction(action.id)">
+        <mat-icon *ngIf="action.icon && !isBusy(action)" aria-hidden="true">{{ action.icon }}</mat-icon>
         <span class="modal-shell__action-label" [class.is-loading]="isBusy(action)">{{ action.label }}</span>
         <span class="modal-shell__action-loading" *ngIf="isBusy(action)">
           <app-loading-indicator [compact]="true" [message]="effectiveLoadingText" />

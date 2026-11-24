@@ -18,6 +18,8 @@ export type ModalActionId = 'previous' | 'cancel' | 'close' | 'next' | 'primary'
 export interface ModalSection {
   id: string;
   label: string;
+  completed?: boolean;
+  disabled?: boolean;
 }
 
 export interface ModalFooterAction {
@@ -26,6 +28,7 @@ export interface ModalFooterAction {
   tone: UiButtonTone;
   order?: number;
   disabled?: boolean;
+  icon?: string;
 }
 
 export interface ModalMotionDefinition {
