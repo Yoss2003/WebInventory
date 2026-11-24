@@ -346,14 +346,52 @@
 .worker-dialog-title-row { display: inline-flex; align-items: center; gap: 8px; width: fit-content; max-width: 100%; }
 .worker-dialog-title-row h2 { margin: 0; white-space: nowrap; }
 .worker-dialog-title-row .inv-info-button { flex: none; margin: 0; }
-.worker-picker-skeleton { display: grid; gap: 10px; width: 100%; padding: 8px 2px; }
-.worker-picker-skeleton span {
-  display: block; height: 34px; border-radius: 8px;
-  background: linear-gradient(90deg, #1c2e39 20%, #2c4351 45%, #1c2e39 70%);
-  background-size: 220% 100%; animation: worker-picker-shimmer 1.35s ease-in-out infinite;
+.worker-picker-skeleton {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 10px;
+
+  box-sizing: border-box;
+  width: 100%;
+  max-width: 100%;
+  min-width: 0;
+
+  padding: 8px 2px;
+  overflow: hidden;
 }
-.worker-picker-skeleton span:nth-child(2) { width: 94%; }
-.worker-picker-skeleton span:nth-child(3) { width: 88%; }
-.worker-picker-skeleton span:nth-child(4) { width: 82%; }
+
+.worker-picker-skeleton span {
+  display: block;
+
+  box-sizing: border-box;
+  width: 100%;
+  max-width: 100%;
+  min-width: 0;
+
+  height: 34px;
+  border-radius: 8px;
+
+  background: linear-gradient(
+    90deg,
+    #1c2e39 20%,
+    #2c4351 45%,
+    #1c2e39 70%
+  );
+
+  background-size: 220% 100%;
+  animation: worker-picker-shimmer 1.35s ease-in-out infinite;
+}
+
+.worker-picker-skeleton span:nth-child(2) {
+  width: 94%;
+}
+
+.worker-picker-skeleton span:nth-child(3) {
+  width: 88%;
+}
+
+.worker-picker-skeleton span:nth-child(4) {
+  width: 82%;
+}
 @keyframes worker-picker-shimmer { to { background-position: -220% 0; } }
 @media (prefers-reduced-motion: reduce) { .worker-picker-skeleton span { animation: none; background: #263b48; } }
