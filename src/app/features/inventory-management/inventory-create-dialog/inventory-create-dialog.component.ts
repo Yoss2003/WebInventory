@@ -1,7 +1,7 @@
 import { Component, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { MatDialogRef, MAT_DIALOG_DATA, MatDialogModule } from '@angular/material/dialog';
+import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { MatIconModule } from '@angular/material/icon';
 import { MatSelectModule } from '@angular/material/select';
 import { MatFormFieldModule } from '@angular/material/form-field';
@@ -11,7 +11,8 @@ import { UiControlDirective } from '../../../shared/ui/directives/ui-control.dir
 import { InventoryService, InventorySummary } from '../../../core/services/inventories';
 import { ManagedUser } from '../../../core/services/user-management';
 import { ToastService } from '../../../shared/toast/toast.service';
-import { LoadingIndicatorComponent } from '../../../shared/loading/loading-indicator';
+import { ModalShellComponent } from '../../../shared/ui/components/modal-shell/modal-shell.component';
+import type { ModalActionId, ModalFooterAction } from '../../../shared/ui/models/modal-standard.model';
 
 export interface InventoryCreateDialogData {
   isManager: boolean;
@@ -25,14 +26,13 @@ export interface InventoryCreateDialogData {
   imports: [
     CommonModule,
     FormsModule,
-    MatDialogModule,
     MatIconModule,
     MatSelectModule,
     MatFormFieldModule,
     MatTooltipModule,
     UiButtonDirective,
     UiControlDirective,
-    LoadingIndicatorComponent
+    ModalShellComponent
   ],
   templateUrl: './inventory-create-dialog.component.html',
   styleUrl: './inventory-create-dialog.component.scss'
@@ -57,6 +57,18 @@ export class InventoryCreateDialogComponent {
     if (!trimmed || trimmed.length > 255) return false;
     if (this.data.isManager && (!this.ownerId || this.ownerId <= 0)) return false;
     return true;
+  }
+
+  get modalFooterActions(): ModalFooterAction[] {
+    return [
+      { id: 'cancel', label: 'Cancelar', tone: 'secondary', order: 0, disabled: this.saving },
+      { id: 'primary', label: 'Crear inventario', tone: 'primary', icon: 'add', order: 1, disabled: !this.isValid || this.saving }
+    ];
+  }
+
+  handleModalAction(action: ModalActionId): void {
+    if (action === 'cancel' || action === 'close') this.close();
+    if (action === 'primary') this.create();
   }
 
   close(): void {
