@@ -9,12 +9,13 @@ import { UiControlDirective } from '../../../shared/ui/directives/ui-control.dir
 import { EmployeeService } from '../../../core/services/employees';
 import { Employee } from '../../../core/models/employee.model';
 import { LoadingIndicatorComponent } from '../../../shared/loading/loading-indicator';
+import { ModalShellComponent } from '../../../shared/ui/components/modal-shell/modal-shell.component';
 
 export interface WorkerPickerDialogData { excludeUserId?: number | null; employees?: Employee[]; }
 
 @Component({
   selector: 'app-worker-picker-dialog', standalone: true,
-  imports: [CommonModule, FormsModule, MatDialogModule, MatIconModule, MatTooltipModule, UiButtonDirective, UiControlDirective, LoadingIndicatorComponent],
+  imports: [CommonModule, FormsModule, MatDialogModule, MatIconModule, MatTooltipModule, UiButtonDirective, UiControlDirective, LoadingIndicatorComponent, ModalShellComponent],
   templateUrl: './worker-picker-dialog.component.html',
   styleUrl: './worker-picker-dialog.component.scss'
 })
