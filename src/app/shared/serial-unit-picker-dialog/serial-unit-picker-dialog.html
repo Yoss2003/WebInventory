@@ -8,7 +8,8 @@
   [closeVisible]="false"
   [footerActions]="modalFooterActions"
   (actionClicked)="handleModalAction($event)"
-  (closeRequested)="cancel()">
+  [contentScrollable]="false" (closeRequested)="cancel()">
+  <div class="serial-picker">
   <div class="serial-picker__body">
     <label class="serial-picker__search-label" for="serial-picker-search">Buscar serie o número de unidad</label>
     <div class="serial-picker__search">
@@ -37,5 +38,6 @@
         No se encontraron series con esa búsqueda.
       </p>
     </div>
+  </div>
   </div>
 </app-modal-shell>
