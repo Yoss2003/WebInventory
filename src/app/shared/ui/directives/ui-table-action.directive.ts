@@ -9,9 +9,12 @@ export type UiTableActionTone = 'normal' | 'danger' | 'success';
   host: {
     'class': 'ui-v2-table-action',
     '[class.ui-v2-table-action--danger]': 'tone() === "danger"',
-    '[class.ui-v2-table-action--success]': 'tone() === "success"'
+    '[class.ui-v2-table-action--success]': 'tone() === "success"',
+    '[class.ui-v2-table-action--loading]': 'loading()',
+    '[attr.aria-busy]': 'loading() ? "true" : null'
   }
 })
 export class UiTableActionDirective {
   readonly tone = input<UiTableActionTone>('normal', { alias: 'appUiTableAction' });
+  readonly loading = input(false, { alias: 'uiTableActionLoading' });
 }
