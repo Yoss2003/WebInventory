@@ -1,5 +1,5 @@
 import { Injectable, inject } from '@angular/core';
-import { MatDialog } from '@angular/material/dialog';
+import { ModalStandardService } from '../ui/services/modal-standard.service';
 import { map, Observable } from 'rxjs';
 import {
   DevConfirmDialogComponent,
@@ -9,17 +9,15 @@ import {
 /** Confirmaciones de la aplicación con diseño común, nunca confirm()/prompt() nativos. */
 @Injectable({ providedIn: 'root' })
 export class ConfirmationDialogService {
-  private readonly dialog = inject(MatDialog);
+  private readonly modals = inject(ModalStandardService);
 
   private open(data: DevConfirmDialogData) {
-    return this.dialog.open<DevConfirmDialogComponent, DevConfirmDialogData, boolean | string>(
-      DevConfirmDialogComponent, {
+    return this.modals.open<DevConfirmDialogComponent, DevConfirmDialogData, boolean | string>(
+      DevConfirmDialogComponent, 'confirmation', {
         panelClass: ['inv-seven-modal', 'inv-standard-confirm-modal'],
         width: 'min(470px, calc(100vw - 24px))',
         maxWidth: 'calc(100vw - 24px)',
         maxHeight: 'calc(100dvh - 24px)',
-        enterAnimationDuration: 260,
-        exitAnimationDuration: 220,
         autoFocus: 'first-tabbable',
         restoreFocus: true,
         data
