@@ -46,7 +46,8 @@
         <tbody>
           <tr *ngFor="let share of shares">
             <td>
-              <strong>{{ share.username || getOwnerName(share.userId) }}</strong>
+              <strong>{{ getShareName(share) }}</strong>
+              <small *ngIf="share.username">@{{ share.username }}</small>
               <small *ngIf="getEmail(share.userId)">{{ getEmail(share.userId) }}</small>
             </td>
             <td>
