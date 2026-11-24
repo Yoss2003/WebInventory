@@ -15,10 +15,10 @@
         <div class="supplier-ruc-control">
           <div class="supplier-ruc-label"><div class="supplier-ruc-heading"><label for="supplier-ruc">RUC</label><button type="button" class="inv-info-button" (click)="showFiscalInfo()" [disabled]="!hasCurrentRucConsultation" [matTooltip]="hasCurrentRucConsultation ? 'Ver información fiscal adicional' : 'Primero consulta el RUC'" matTooltipPosition="above" aria-label="Ver información fiscal adicional"><mat-icon aria-hidden="true">info_outline</mat-icon></button></div><input id="supplier-ruc" [(ngModel)]="supplier.ruc" name="ruc" maxlength="11" inputmode="numeric" required appUiControl /></div>
           <button type="button" appUiButton="secondary" class="ruc-lookup supplier-lookup-compact" (click)="lookupRuc()"
-                  [disabled]="lookupRucLoading || saving || supplier.ruc.length !== 11"
+                  [disabled]="lookupRucLoading || saving || supplier.ruc.length !== 11" [uiButtonLoading]="lookupRucLoading"
                   title="Consultar datos ante SUNAT" aria-label="Consultar RUC ante SUNAT">
             <mat-icon aria-hidden="true">search</mat-icon>
-            <span>{{lookupRucLoading ? 'Consultando...' : 'Consultar'}}</span>
+            <span>Consultar</span>
           </button>
           <button type="button" appUiButton="secondary" class="supplier-communication-trigger" (click)="openSupplierCommunication()" [disabled]="saving || !hasCurrentRucConsultation" [attr.title]="hasCurrentRucConsultation ? 'Agregar datos de comunicación' : 'Primero consulta el RUC'">
             <mat-icon aria-hidden="true">contact_mail</mat-icon><span>Agregar comunicación</span>
@@ -36,7 +36,7 @@
                     placeholder="Ej.: distribuidor habitual de equipos y accesorios" appUiControl></textarea>
         </label>
       </div>
-      <div class="actions"><button type="submit" appUiButton="primary" [disabled]="saving">{{saving?'Guardando...':editingSupplierId?'Guardar cambios':'Registrar proveedor'}}</button><button type="button" appUiButton="secondary" (click)="newSupplier()" [disabled]="saving || !hasSupplierFormData"><mat-icon aria-hidden="true">cleaning_services</mat-icon>Limpiar campos</button><button *ngIf="editingSupplierId" type="button" appUiButton="secondary" (click)="newSupplier()">Cancelar edición</button></div>
+      <div class="actions"><button type="submit" appUiButton="primary" [uiButtonLoading]="saving" [disabled]="saving">{{editingSupplierId ? 'Guardar cambios' : 'Registrar proveedor'}}</button><button type="button" appUiButton="secondary" (click)="newSupplier()" [disabled]="saving || !hasSupplierFormData"><mat-icon aria-hidden="true">cleaning_services</mat-icon>Limpiar campos</button><button *ngIf="editingSupplierId" type="button" appUiButton="secondary" (click)="newSupplier()">Cancelar edición</button></div>
     </form>
     <div class="list supplier-list" aria-label="Proveedores de la empresa">
       <header class="supplier-list-heading">
@@ -135,8 +135,8 @@
         </label>
       </div>
       <div class="actions">
-        <button type="submit" appUiButton="primary" [disabled]="saving">
-          {{saving ? 'Guardando...' : editingParameterId ? 'Guardar cambios' : 'Registrar parámetro'}}
+        <button type="submit" appUiButton="primary" [uiButtonLoading]="saving" [disabled]="saving">
+          {{editingParameterId ? 'Guardar cambios' : 'Registrar parámetro'}}
         </button>
         <button *ngIf="editingParameterId" type="button" appUiButton="secondary" (click)="newParameter()">
           Cancelar edición
