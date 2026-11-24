@@ -148,10 +148,10 @@ button.ui-v2-table-action--danger,
 
 button[appUiTableAction="success"],
 button.ui-v2-table-action--success {
-  color: #b0e6bc !important;
+  color: var(--inv-company-accent) !important;
 
   &:hover:not(:disabled) {
-    background: rgba(176, 230, 188, 0.14) !important;
+    background: color-mix(in srgb, var(--inv-company-accent) 14%, transparent) !important;
   }
 }
 
