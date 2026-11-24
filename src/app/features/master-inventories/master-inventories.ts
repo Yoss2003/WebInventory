@@ -109,7 +109,7 @@ export class MasterInventoriesComponent implements OnInit {
         master,
         currentCompanyId: this.companyId
       },
-      width: 'min(980px, calc(100vw - 24px))',
+      width: 'min(860px, calc(100vw - 24px))',
       maxWidth: 'calc(100vw - 24px)',
       maxHeight: 'calc(100dvh - 28px)',
       panelClass: ['inv-v2-dialog-panel', 'inv-seven-modal'],
