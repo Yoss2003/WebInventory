@@ -195,7 +195,7 @@
 @media (max-width: 760px) {
   .modal-shell__header { grid-template-columns: minmax(0, 1fr); gap: 8px; }
   .modal-shell__header-actions { justify-content: space-between; max-width: 100%; }
-  .modal-shell__sections { justify-content: flex-start; max-width: calc(100vw - 48px); }
+  .modal-shell__sections { justify-content: flex-start; flex-wrap: wrap; max-width: 100%; overflow-x: hidden; }
 }
 
 @media (max-width: 480px) {
@@ -203,4 +203,26 @@
   .modal-shell__footer-left,
   .modal-shell__footer-right { flex: 1 1 auto; }
   .modal-shell__footer-right { justify-content: flex-end; }
+}
+
+/* Formularios guiados adaptativos: crecen con el contenido de la etapa,
+   sin reservar la altura máxima de otro modal. El scroll solo aparece
+   como protección cuando el contenido supera el viewport disponible. */
+:host(.inv-modal-adaptive-height) {
+  height: auto;
+  min-height: 0;
+  max-height: calc(100dvh - 28px);
+}
+
+:host(.inv-modal-adaptive-height) .modal-shell {
+  height: auto;
+  min-height: 0;
+  max-height: calc(100dvh - 28px);
+}
+
+:host(.inv-modal-adaptive-height) .modal-shell__content {
+  flex: 0 1 auto;
+  min-height: 0;
+  overflow-x: hidden;
+  overflow-y: auto;
 }
