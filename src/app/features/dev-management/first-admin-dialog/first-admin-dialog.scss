@@ -1,7 +1,6 @@
 :host{display:block;color:#edf4fc;width:100%;font-size:12px}
 :host *{box-sizing:border-box}
-.first-admin-modal{display:flex;flex-direction:column;width:100%;max-height:calc(100dvh - 30px);
-  overflow:hidden;border-radius:17px;background:#162736;color:#edf4fc}
+.first-admin-modal{display:block;width:100%;min-width:0;min-height:0;overflow:visible;background:transparent;color:#edf4fc}
 .first-admin-header{flex:0 0 auto;display:flex;justify-content:space-between;align-items:center;gap:12px;
   padding:15px 19px;background:#1d303e;border-bottom:1px solid #506879}
 .first-admin-heading{display:flex;align-items:center;gap:12px;min-width:0}
@@ -12,9 +11,8 @@
 .first-admin-symbol mat-icon{width:23px;height:23px;font-size:23px}
 .first-admin-heading h2{margin:0;padding:0;font-size:18px;font-weight:760;line-height:1.35}
 .first-admin-heading p{margin:4px 0 0;color:#acc5d5;font-size:11px}
-.first-admin-body{flex:1 1 auto;overflow-y:auto;overflow-x:hidden;min-height:0;
-  padding:16px 19px 14px!important;scrollbar-width:thin;
-  scrollbar-color:var(--inv-company-accent,#a2d149) transparent}
+.first-admin-body{display:block;min-width:0;min-height:0;overflow:visible;
+  padding:16px 19px 14px}
 .first-admin-help{color:#b8ccdb;font-size:12px;line-height:1.5;margin:0 0 14px}
 .first-admin-fields{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));column-gap:13px;row-gap:12px}
 .first-admin-fields label,.first-admin-role-fixed{display:flex;flex-direction:column;gap:6px;min-width:0}
@@ -43,7 +41,7 @@
 .first-admin-actions{flex:0 0 auto;display:flex;align-items:center;justify-content:flex-end;
   gap:9px;flex-wrap:wrap;margin:0;padding:12px 19px!important;
   background:#1d303e;border-top:1px solid #506879}
-@media(max-width:580px){.first-admin-header,.first-admin-actions{padding-inline:13px!important}
+@media(max-width:580px){
   .first-admin-body{padding-inline:13px!important}
   .first-admin-fields{grid-template-columns:1fr}
   .first-admin-actions button{flex:1 1 auto}}

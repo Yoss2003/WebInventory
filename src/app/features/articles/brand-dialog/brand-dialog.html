@@ -1,10 +1,10 @@
 <app-modal-shell
   type="subTask"
   title="Administrar marcas"
-  [subtitle]="'Categoría: ' + data.categoryName"
   icon="sell"
+  [sectionsVisible]="false"
   [infoVisible]="true"
-  infoTooltip="Registra marcas para esta categoría, consulta las existentes, edita sus nombres y desactiva las que ya no deban utilizarse."
+  [infoTooltip]="'Categoría: ' + data.categoryName + '. Registra marcas, consulta las existentes, edita sus nombres y desactiva las que ya no deban utilizarse.'"
   [closeVisible]="false"
   [footerActions]="modalFooterActions"
   [busyActionId]="null"

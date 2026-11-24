@@ -5,7 +5,7 @@
 .supplier-modal__heading{min-width:0;flex:1}
 .supplier-modal__heading h2{margin:0;font-size:18px;font-weight:750}
 .supplier-modal__heading p{margin:4px 0 0;color:#a9bdca;font-size:11px;line-height:1.4}
-.supplier-modal__body{overflow:visible;min-height:0;margin:0;padding:16px 20px;display:grid;gap:13px}
+.supplier-modal__body{overflow:visible;min-width:0;min-height:0;margin:0;padding:16px 20px;display:grid;grid-template-columns:repeat(2,minmax(0,1fr));align-items:stretch;gap:13px}
 .supplier-modal__section{border:1px solid #3c5364;border-radius:12px;background:#17242e;padding:14px;display:grid;gap:11px}
 .supplier-modal__section-title{display:flex;align-items:center;gap:10px}
 .supplier-modal__section-title>mat-icon{color:var(--inv-company-accent,#a2d149)}
@@ -19,11 +19,12 @@
 .supplier-modal__ruc-row{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:10px;align-items:end}
 .supplier-modal__lookup,.supplier-modal__save{display:inline-flex;align-items:center;justify-content:center;gap:6px;min-height:38px;border-radius:8px;padding:8px 12px;font-size:11px;font-weight:750;cursor:pointer}
 .supplier-modal__lookup{border:1px solid #638196;background:#263d4b;color:#edf6fa}
-.supplier-modal__grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
-.supplier-modal__wide{margin-top:10px}
+.supplier-modal__grid{display:grid;grid-template-columns:minmax(0,1fr);gap:10px}
+.supplier-modal__wide{margin-top:0}
 .supplier-modal__fiscal{display:flex;gap:14px;flex-wrap:wrap;color:#a9c1cf;font-size:11px}
 .supplier-modal__fiscal strong{color:#b8e7c4}
 .supplier-modal__footer{display:flex;justify-content:flex-end;gap:9px;padding:13px 18px;background:#1b2b37;border-top:1px solid #405769}
 .supplier-modal__lookup mat-icon{width:17px;height:17px;font-size:17px}
 .supplier-modal button:disabled{opacity:.45;cursor:not-allowed}
+@media(max-width:760px){.supplier-modal__body{grid-template-columns:1fr}.supplier-modal__grid{grid-template-columns:repeat(2,minmax(0,1fr))}}
 @media(max-width:600px){.supplier-modal__grid{grid-template-columns:1fr}.supplier-modal__ruc-row{grid-template-columns:1fr}.supplier-modal__body{padding:12px}}
