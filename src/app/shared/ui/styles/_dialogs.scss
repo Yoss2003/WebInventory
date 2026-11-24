@@ -420,7 +420,7 @@ dialog.inv-submodal-dialog {
   }
 }
 
-/* Contrato global de viewport para todos los diálogos abiertos por ModalStandardService.
+/* Contrato global de viewport para todos los diálogos que usan app-modal-shell.
    El ancho sigue siendo responsabilidad de cada vista; los límites evitan que
    el panel rebase la ventana y mantienen el scroll dentro del contenido. */
 .cdk-overlay-pane:is(.inv-standard-modal, .inv-seven-modal):has(app-modal-shell) {
@@ -459,9 +459,9 @@ dialog.inv-submodal-dialog {
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .cdk-overlay-pane.inv-standard-modal,
-  .cdk-overlay-pane.inv-standard-modal .mat-mdc-dialog-container,
-  .cdk-overlay-pane.inv-standard-modal .mat-mdc-dialog-surface {
+  .cdk-overlay-pane:is(.inv-standard-modal, .inv-seven-modal):has(app-modal-shell),
+  .cdk-overlay-pane:is(.inv-standard-modal, .inv-seven-modal):has(app-modal-shell) .mat-mdc-dialog-container,
+  .cdk-overlay-pane:is(.inv-standard-modal, .inv-seven-modal):has(app-modal-shell) .mat-mdc-dialog-surface {
     --mat-dialog-transition-duration: 0ms !important;
     transition: none !important;
     animation: none !important;
