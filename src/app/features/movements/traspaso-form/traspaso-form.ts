@@ -85,7 +85,7 @@ export class TraspasoFormComponent implements OnInit {
   get modalFooterActions(): ModalFooterAction[] {
     const actions: ModalFooterAction[] = [];
     if (this.step > 1) actions.push({ id: 'previous', label: 'Anterior', tone: 'secondary', icon: 'arrow_back', order: 0 });
-    actions.push({ id: 'cancel', label: 'Cancelar', tone: 'secondary', order: 1 });
+    actions.push({ id: 'cancel', label: 'Cancelar', tone: 'secondary', order: 1, disabled: this.isSaving });
     if (this.step < 3) {
       actions.push({
         id: 'next',

@@ -146,7 +146,7 @@
 
 .wizard-page {
   animation: wizard-slide-in 0.2s ease both;
-  min-height: 255px;
+  min-height: 0;
 }
 
 @keyframes wizard-slide-in {
