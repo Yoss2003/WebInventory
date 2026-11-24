@@ -1,4 +1,4 @@
-import { Component, inject, OnInit } from '@angular/core';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, inject, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { MatDialogRef, MAT_DIALOG_DATA, MatDialogModule } from '@angular/material/dialog';
@@ -17,15 +17,19 @@ export interface WorkerPickerDialogData {
 }
 
 @Component({
-  selector: 'app-worker-picker-dialog', standalone: true,
+  selector: 'app-worker-picker-dialog',
+  standalone: true,
   imports: [CommonModule, FormsModule, MatDialogModule, MatIconModule, MatTooltipModule, UiButtonDirective, UiControlDirective, LoadingIndicatorComponent, ModalShellComponent],
   templateUrl: './worker-picker-dialog.component.html',
-  styleUrl: './worker-picker-dialog.component.scss'
+  styleUrl: './worker-picker-dialog.component.scss',
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class WorkerPickerDialogComponent implements OnInit {
   readonly dialogRef = inject(MatDialogRef<WorkerPickerDialogComponent>);
   readonly data: WorkerPickerDialogData = inject(MAT_DIALOG_DATA);
   private readonly api = inject(InventoryService);
+  private readonly cdr = inject(ChangeDetectorRef);
+
   loading = false;
   refreshing = false;
   private hasLoadedOnce = false;
@@ -49,15 +53,19 @@ export class WorkerPickerDialogComponent implements OnInit {
   ngOnInit(): void { this.load(); }
 
   load(fromRefresh = false): void {
+    if (this.loading || this.refreshing) return;
+
     this.loading = !this.hasLoadedOnce && !fromRefresh;
     this.refreshing = fromRefresh;
     this.error = '';
+    this.cdr.markForCheck();
 
     if (!Number.isInteger(this.data.inventoryId) || this.data.inventoryId <= 0) {
       this.loading = false;
       this.refreshing = false;
       this.hasLoadedOnce = true;
       this.error = 'No se identificó un inventario válido para consultar los colaboradores.';
+      this.cdr.markForCheck();
       return;
     }
 
@@ -67,6 +75,7 @@ export class WorkerPickerDialogComponent implements OnInit {
         this.loading = false;
         this.refreshing = false;
         this.hasLoadedOnce = true;
+        this.cdr.markForCheck();
       })
     ).subscribe({
       next: rows => {
@@ -82,6 +91,7 @@ export class WorkerPickerDialogComponent implements OnInit {
           !!employee && Number(employee.userId) > 0 &&
           employee.userId !== this.data.excludeUserId
         );
+        this.cdr.markForCheck();
       },
       error: err => {
         this.employees = [];
@@ -90,9 +100,14 @@ export class WorkerPickerDialogComponent implements OnInit {
           : err?.status === 404
             ? 'No se encontró la lista de colaboradores para este inventario. Comprueba que la API esté actualizada y que el inventario siga activo.'
             : String(err?.error?.error || 'No se pudieron consultar los colaboradores disponibles.');
+        this.cdr.markForCheck();
       }
     });
   }
+
   refresh(): void { this.load(true); }
-  select(employee: InventoryShareRecipient): void { this.dialogRef.close(employee); }
+
+  select(employee: InventoryShareRecipient): void {
+    this.dialogRef.close(employee);
+  }
 }
