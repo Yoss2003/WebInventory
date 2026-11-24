@@ -1,5 +1,7 @@
 import { UiButtonDirective } from '../../../shared/ui/directives/ui-button.directive';
 import { UiControlDirective } from '../../../shared/ui/directives/ui-control.directive';
+import { ModalShellComponent } from '../../../shared/ui/components/modal-shell/modal-shell.component';
+import type { ModalActionId, ModalFooterAction } from '../../../shared/ui/models/modal-standard.model';
 import { ChangeDetectorRef, Component, OnInit, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
@@ -16,7 +18,7 @@ import { isUnitConversion, fixedUnitFactor, isMeasuredUnit, validPieces, validQu
 
 @Component({
   selector: 'app-movement-form', standalone: true,
-  imports: [UiButtonDirective, CommonModule, ReactiveFormsModule, MatIconModule, MatSelectModule, MatFormFieldModule, LoadingIndicatorComponent],
+  imports: [UiButtonDirective, UiControlDirective, CommonModule, ReactiveFormsModule, MatIconModule, MatSelectModule, MatFormFieldModule, LoadingIndicatorComponent, ModalShellComponent],
   templateUrl: './movement-form.html', styleUrl: './movement-form.scss'
 })
 export class MovementForm implements OnInit {
@@ -37,6 +39,18 @@ export class MovementForm implements OnInit {
     conversionFactor: [null as number | null],
     observation: ['', Validators.maxLength(1000)]
   });
+  get modalFooterActions(): ModalFooterAction[] {
+    return [
+      { id: 'cancel', label: 'Cancelar', tone: 'secondary', order: 0, disabled: this.saving },
+      { id: 'primary', label: 'Confirmar movimiento', tone: 'primary', order: 1, disabled: !this.canSave }
+    ];
+  }
+
+  handleModalAction(action: ModalActionId): void {
+    if (action === 'cancel') this.dialogRef.close();
+    if (action === 'primary') this.onSubmit();
+  }
+
   get selected(): Article | undefined {
     return this.articles.find(a => a.id === Number(this.form.controls.articleId.value));
   }
