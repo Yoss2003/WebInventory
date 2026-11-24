@@ -3,6 +3,7 @@ import { ChangeDetectorRef, Component, inject, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { ModalStandardService } from '../../../shared/ui/services/modal-standard.service';
 import { MatIconModule } from '@angular/material/icon';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatDialog } from '@angular/material/dialog';
@@ -29,6 +30,7 @@ export class CategoryParentFormComponent implements OnInit {
   private readonly inventoryService = inject(InventoryService);
   private readonly toast = inject(ToastService);
   private readonly dialogs = inject(MatDialog);
+  private readonly modalStandards = inject(ModalStandardService);
   private readonly inventoryContext = inject(InventoryContextService);
   private readonly cdr = inject(ChangeDetectorRef);
   inventories: InventorySummary[] = [];
@@ -99,7 +101,7 @@ export class CategoryParentFormComponent implements OnInit {
         this.isSaving = false;
         if (!this.isEdit && error.status === 409 && error.error?.code === 'similar_name') {
           this.toast.warning('Encontramos categorías parecidas.','Posible duplicado');
-          this.dialogs.open(CatalogSimilarDialogComponent, {data:{type:'categorías',enteredName:payload.name,matches:error.error.matches||[]},width:'min(500px,calc(100vw - 24px))'})
+          this.modalStandards.open(CatalogSimilarDialogComponent, 'confirmation', {data:{type:'categorías',enteredName:payload.name,matches:error.error.matches||[]},width:'min(500px,calc(100vw - 24px))'})
             .afterClosed().subscribe((choice:CatalogSimilarChoice | undefined) => {
               if (choice?.action==='create') {this.isSaving=true;this.savePayload(payload,true);}
               else if(choice?.action==='reuse') {this.toast.info('Se utilizará una categoría ya registrada.');this.dialogRef.close(true);}

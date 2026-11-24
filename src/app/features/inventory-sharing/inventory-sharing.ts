@@ -1,4 +1,5 @@
 import { MatDialog, MatDialogModule } from '@angular/material/dialog';
+import { ModalStandardService } from '../../shared/ui/services/modal-standard.service';
 import { WorkerPickerDialogComponent } from '../inventory-management/worker-picker-dialog/worker-picker-dialog.component';
 import { Employee } from '../../core/models/employee.model';
 import { UiControlDirective } from '../../shared/ui/directives/ui-control.directive';
@@ -29,6 +30,7 @@ export class InventorySharingComponent implements OnInit {
   private readonly toast = inject(ToastService);
   private readonly confirms = inject(ConfirmationDialogService);
   private readonly dialog = inject(MatDialog);
+  private readonly modalStandards = inject(ModalStandardService);
   private readonly cdr = inject(ChangeDetectorRef);
   myUserId = 0;
   canManageAccess = false;
@@ -139,7 +141,7 @@ export class InventorySharingComponent implements OnInit {
   }
 
   openWorkerPicker(): void {
-    const dialogRef = this.dialog.open(WorkerPickerDialogComponent, {
+    const dialogRef = this.modalStandards.open(WorkerPickerDialogComponent, 'selector', {
       width: '780px',
       maxWidth: '96vw',
       panelClass: 'inv-v2-dialog-panel',

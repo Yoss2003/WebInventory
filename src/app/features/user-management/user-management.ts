@@ -3,6 +3,7 @@ import { ChangeDetectorRef, Component, OnInit, inject } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { MatIconModule } from '@angular/material/icon';
 import { MatDialog } from '@angular/material/dialog';
+import { ModalStandardService } from '../../shared/ui/services/modal-standard.service';
 import { forkJoin } from 'rxjs';
 
 import { LoadingIndicatorComponent } from '../../shared/loading/loading-indicator';
@@ -31,6 +32,7 @@ export class UserManagementComponent implements OnInit {
   private readonly toast = inject(ToastService);
   private readonly confirms = inject(ConfirmationDialogService);
   private readonly dialogs = inject(MatDialog);
+  private readonly modalStandards = inject(ModalStandardService);
   private readonly cdr = inject(ChangeDetectorRef);
 
   isDeveloper = false;
@@ -137,7 +139,7 @@ export class UserManagementComponent implements OnInit {
 
   openRolePermissions(): void {
     if (!this.isDeveloper) return;
-    this.dialogs.open(RolePermissionsDialogComponent, {
+    this.modalStandards.open(RolePermissionsDialogComponent, 'mainForm', {
       panelClass: 'inv-seven-modal',
       width: 'min(800px, calc(100vw - 24px))',
       maxWidth: 'calc(100vw - 24px)',
@@ -154,7 +156,7 @@ export class UserManagementComponent implements OnInit {
   resendCredentials(user: ManagedUser): void {
     if (!this.canEditUsers || user.id === this.currentUserId ||
         user.roleId === 1 || (user.roleId === 2 && !this.isDeveloper)) return;
-    this.dialogs.open(ResendCredentialsDialogComponent, {
+    this.modalStandards.open(ResendCredentialsDialogComponent, 'subTask', {
       data: user,
       panelClass: 'inv-seven-modal',
       width: 'min(500px, calc(100vw - 24px))',

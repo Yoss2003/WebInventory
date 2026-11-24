@@ -4,6 +4,7 @@ import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { HttpErrorResponse } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { MAT_DIALOG_DATA, MatDialog, MatDialogModule, MatDialogRef } from '@angular/material/dialog';
+import { ModalStandardService } from '../../../shared/ui/services/modal-standard.service';
 import { PLATFORM_ID } from '@angular/core';
 import { isPlatformBrowser } from '@angular/common';
 import { ToastService } from '../../../shared/toast/toast.service';
@@ -36,6 +37,7 @@ export class BrandDialogComponent implements OnInit {
   private readonly brandsService = inject(BrandService);
   private readonly toast = inject(ToastService);
   private readonly dialogs = inject(MatDialog);
+  private readonly modalStandards = inject(ModalStandardService);
   private readonly confirms = inject(ConfirmationDialogService);
   private readonly platformId = inject(PLATFORM_ID);
   get canManage(): boolean {
@@ -195,7 +197,7 @@ export class BrandDialogComponent implements OnInit {
         if (!previous && error.status === 409 && error.error?.code === 'similar_name') {
           const matches = (error.error?.matches || []) as {id:number;name:string}[];
           this.toast.warning('Encontramos marcas parecidas. Elige una opción.', 'Posible duplicado');
-          this.dialogs.open(CatalogSimilarDialogComponent, { data: {type:'marcas',enteredName:name,matches}, width:'min(500px,calc(100vw - 24px))' })
+          this.modalStandards.open(CatalogSimilarDialogComponent, 'confirmation', { data: {type:'marcas',enteredName:name,matches}, width:'min(500px,calc(100vw - 24px))' })
             .afterClosed().subscribe((choice: CatalogSimilarChoice | undefined) => {
               if (choice?.action === 'create') this.persistBrand(name, true);
               else if (choice?.action === 'reuse') {

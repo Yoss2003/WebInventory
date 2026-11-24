@@ -10,6 +10,7 @@ import { MatCheckboxModule } from '@angular/material/checkbox';
 import { MatIconModule } from '@angular/material/icon';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { MatDialogRef, MatDialogModule, MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { ModalStandardService } from '../../../../shared/ui/services/modal-standard.service';
 import { MatDialog } from '@angular/material/dialog';
 import { HttpErrorResponse } from '@angular/common/http';
 import { ToastService } from '../../../shared/toast/toast.service';
@@ -42,6 +43,7 @@ export class CategoryChildFormComponent implements OnInit {
     private categoryService = inject(CategoryService);
     private readonly toast = inject(ToastService);
     private readonly dialogs = inject(MatDialog);
+  private readonly modalStandards = inject(ModalStandardService);
     public dialogRef = inject(MatDialogRef<CategoryChildFormComponent>);
     private readonly cdr = inject(ChangeDetectorRef);
     public data: { categoriaEdit?: Category, padres: Category[] } = inject(MAT_DIALOG_DATA);
@@ -162,7 +164,7 @@ export class CategoryChildFormComponent implements OnInit {
     openUnitPicker(): void {
         if (this.cargandoUnidades || !this.unidadesDisponibles.length) return;
         const selectedIds = (this.rulesForm.get('selectedUnitIds')?.value ?? []) as number[];
-        this.dialogs.open(CategoryUnitPickerDialogComponent, {
+        this.modalStandards.open(CategoryUnitPickerDialogComponent, 'selector', {
             panelClass: 'inv-seven-modal',
             backdropClass: 'inv-submodal-backdrop',
             enterAnimationDuration: 260,
@@ -577,7 +579,7 @@ export class CategoryChildFormComponent implements OnInit {
             error: (error:HttpErrorResponse) => {
                 if (!this.isEdit && error.status===409 && error.error?.code==='similar_name') {
                     this.toast.warning('Encontramos subcategorías parecidas.','Posible duplicado');
-                    this.dialogs.open(CatalogSimilarDialogComponent, {data:{type:'subcategorías',enteredName:payload.name,matches:error.error?.matches||[]},width:'min(500px,calc(100vw - 24px))'})
+                    this.modalStandards.open(CatalogSimilarDialogComponent, 'confirmation', {data:{type:'subcategorías',enteredName:payload.name,matches:error.error?.matches||[]},width:'min(500px,calc(100vw - 24px))'})
                       .afterClosed().subscribe((choice:CatalogSimilarChoice | undefined) => {
                         if(choice?.action==='create')this.saveCategory(payload,true);
                         else if(choice?.action==='reuse'){this.toast.info('Se utilizará la subcategoría existente.');this.dialogRef.close(true);}
