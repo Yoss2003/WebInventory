@@ -1,4 +1,4 @@
-<app-modal-shell type="subInfo" title="Información fiscal adicional" subtitle="Datos disponibles después de consultar el RUC" icon="receipt_long" [infoVisible]="true" infoTooltip="Información de solo consulta. Los datos pueden variar en los registros de SUNAT; los campos no disponibles se muestran con un guion." [closeVisible]="true" [footerVisible]="false" (closeRequested)="close()">
+<app-modal-shell type="subInfo" title="Información fiscal adicional" subtitle="Datos disponibles después de consultar el RUC" icon="receipt_long" [infoVisible]="true" infoTooltip="Información de solo consulta. Los datos pueden variar en los registros de SUNAT; los campos no disponibles se muestran con un guion." [closeVisible]="true" [footerVisible]="false" [contentScrollable]="false" (closeRequested)="close()">
 <div class="dialog-content">
     <dl class="fiscal-grid">
       <div *ngFor="let row of rows">
