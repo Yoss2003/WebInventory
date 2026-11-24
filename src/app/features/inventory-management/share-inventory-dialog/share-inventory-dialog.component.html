@@ -1,63 +1,104 @@
-<div class="share-inventory-dialog ui-v2-dialog ui-v2-dialog--special" role="document">
-  <header class="share-dialog-header">
-    <div class="share-dialog-heading">
-      <span class="share-dialog-symbol"><mat-icon aria-hidden="true">group_add</mat-icon></span>
-      <div class="share-dialog-heading__text">
-        <div class="share-dialog-title-row">
-          <h2 mat-dialog-title>Compartir inventario</h2>
-          <button type="button" class="inv-info-button" matTooltip="Concede acceso a un colaborador activo de tu empresa. El nivel de permiso determina si podrá consultar o modificar el inventario." matTooltipPosition="above" aria-label="Información sobre compartir inventario"><mat-icon aria-hidden="true">info_outline</mat-icon></button>
-        </div>
-        <p>{{ currentInventory.alias || currentInventory.inventoryName }}</p>
-      </div>
-    </div>
-    <nav class="wizard-steps-nav" aria-label="Secciones para compartir inventario">
-      <button type="button" class="step-nav-btn" [class.active]="currentStep === 1" [class.completed]="currentStep > 1" (click)="setStep(1)"><span class="step-num-circle"><mat-icon *ngIf="currentStep > 1">check</mat-icon><span *ngIf="currentStep === 1">1</span></span><span class="step-name">Acceso y permisos</span></button>
-      <span class="step-nav-connector"></span>
-      <button type="button" class="step-nav-btn" [class.active]="currentStep === 2" (click)="setStep(2)" [disabled]="!isStep1Valid"><span class="step-num-circle">2</span><span class="step-name">Resumen</span></button>
-    </nav>
-  </header>
-  <mat-dialog-content class="share-dialog-content">
+<app-modal-shell
+  class="inv-modal-adaptive-height share-inventory-modal"
+  type="wizard"
+  title="Compartir inventario"
+  [subtitle]="currentInventory.alias || currentInventory.inventoryName"
+  [subtitleVisible]="true"
+  icon="group_add"
+  [infoVisible]="true"
+  infoTooltip="Concede acceso a un colaborador activo de tu empresa. El nivel de permiso determina si podrá consultar o modificar el inventario."
+  [sections]="modalSections"
+  [activeSection]="currentStep - 1"
+  [footerActions]="modalFooterActions"
+  [busyActionId]="submitting ? 'primary' : null"
+  [closeVisible]="false"
+  [contentScrollable]="true"
+  [invDialogMotion]="currentStep"
+  (sectionChange)="setStep($event + 1)"
+  (actionClicked)="handleModalAction($event)"
+  (closeRequested)="close()">
+  <div class="share-dialog-content">
     <section class="wizard-step-panel" *ngIf="currentStep === 1">
       <div class="field-wrap collaborator-picker-block">
         <label for="share-employee-input" class="field-label">Empleado activo <span class="required">*</span></label>
         <div class="employee-autocomplete-row">
-          <input id="share-employee-input" type="text" appUiControl [(ngModel)]="employeeInput" (ngModelChange)="onEmployeeInputChange($event)" [matAutocomplete]="employeeAuto" placeholder="Escribe el nombre del empleado..." autocomplete="off" aria-label="Buscar empleado activo" />
-          <mat-autocomplete #employeeAuto="matAutocomplete" [displayWith]="displayEmployee" autoActiveFirstOption (optionSelected)="selectEmployee($event.option.value)">
-            <mat-option *ngFor="let employee of filteredEmployees" [value]="employee"><span class="employee-option-name">{{ displayEmployee(employee) }}</span><small>{{ employee.dni || 'Sin DNI' }} · {{ employee.user?.username || 'Sin usuario' }}</small></mat-option>
+          <input id="share-employee-input" type="text" appUiControl [(ngModel)]="employeeInput"
+            (ngModelChange)="onEmployeeInputChange($event)" [matAutocomplete]="employeeAuto"
+            placeholder="Escribe el nombre del empleado..." autocomplete="off"
+            aria-label="Buscar empleado activo" />
+          <mat-autocomplete #employeeAuto="matAutocomplete" [displayWith]="displayEmployee"
+            autoActiveFirstOption (optionSelected)="selectEmployee($event.option.value)">
+            <mat-option *ngFor="let employee of filteredEmployees" [value]="employee">
+              <span class="employee-option-name">{{ displayEmployee(employee) }}</span>
+              <small>{{ employee.dni || 'Sin DNI' }} · {{ employee.user?.username || 'Sin usuario' }}</small>
+            </mat-option>
           </mat-autocomplete>
-          <button type="button" appUiButton="secondary" class="employee-list-button" (click)="openWorkerPicker()" title="Ver empleados activos" aria-label="Ver lista de empleados activos"><mat-icon aria-hidden="true">groups</mat-icon></button>
+          <button type="button" appUiButton="secondary" class="employee-list-button"
+            (click)="openWorkerPicker()" title="Ver empleados activos" aria-label="Ver lista de empleados activos">
+            <mat-icon aria-hidden="true">groups</mat-icon>
+          </button>
         </div>
-        <div class="selected-employee-summary" *ngIf="selectedEmployee"><span>{{ collaboratorDisplay }}</span><small>{{ collaboratorExtra }}</small><button type="button" appUiButton="secondary" (click)="clearSelectedEmployee()" aria-label="Cambiar empleado"><mat-icon aria-hidden="true">edit</mat-icon> Cambiar</button></div>
+        <div class="selected-employee-summary" *ngIf="selectedEmployee">
+          <span>{{ collaboratorDisplay }}</span>
+          <small>{{ collaboratorExtra }}</small>
+          <button type="button" appUiButton="secondary" (click)="clearSelectedEmployee()" aria-label="Cambiar empleado">
+            <mat-icon aria-hidden="true">edit</mat-icon> Cambiar
+          </button>
+        </div>
       </div>
+
       <div class="field-wrap permission-block">
         <label class="field-label">Nivel de acceso <span class="required">*</span></label>
         <div class="role-cards-grid">
-          <label class="role-option-card" [class.is-selected]="accessLevel === 1"><input type="radio" name="accessLevel" [value]="1" [(ngModel)]="accessLevel" /><div class="role-option-body"><div class="role-option-head"><mat-icon aria-hidden="true">visibility</mat-icon><strong>Solo Lector</strong></div><p>Permite consultar existencias, artículos y movimientos sin modificar datos ni crear registros.</p></div></label>
-          <label class="role-option-card" [class.is-selected]="accessLevel === 2"><input type="radio" name="accessLevel" [value]="2" [(ngModel)]="accessLevel" /><div class="role-option-body"><div class="role-option-head"><mat-icon aria-hidden="true">edit</mat-icon><strong>Editor de almacén</strong></div><p>Permite registrar ingresos, salidas, ajustes de inventario y dar de alta artículos.</p></div></label>
+          <label class="role-option-card" [class.is-selected]="accessLevel === 1">
+            <input type="radio" name="accessLevel" [value]="1" [(ngModel)]="accessLevel" />
+            <div class="role-option-body">
+              <div class="role-option-head"><mat-icon aria-hidden="true">visibility</mat-icon><strong>Solo Lector</strong></div>
+              <p>Permite consultar existencias, artículos y movimientos sin modificar datos ni crear registros.</p>
+            </div>
+          </label>
+          <label class="role-option-card" [class.is-selected]="accessLevel === 2">
+            <input type="radio" name="accessLevel" [value]="2" [(ngModel)]="accessLevel" />
+            <div class="role-option-body">
+              <div class="role-option-head"><mat-icon aria-hidden="true">edit</mat-icon><strong>Editor de almacén</strong></div>
+              <p>Permite registrar ingresos, salidas, ajustes de inventario y dar de alta artículos.</p>
+            </div>
+          </label>
         </div>
       </div>
-      <p *ngIf="error" class="error-notice" role="alert"><mat-icon aria-hidden="true">error_outline</mat-icon>{{ error }}</p>
+      <p *ngIf="error" class="error-notice" role="alert">
+        <mat-icon aria-hidden="true">error_outline</mat-icon>{{ error }}
+      </p>
     </section>
+
     <section class="wizard-step-panel" *ngIf="currentStep === 2">
       <div class="summary-card">
-        <div class="summary-head"><mat-icon aria-hidden="true">verified</mat-icon><div><h3>Resumen de la autorización</h3><p>Revisa la configuración antes de conceder el acceso.</p></div>
-          <button type="button" appUiButton="secondary" class="summary-access-button" (click)="openSharesDialog()"><mat-icon aria-hidden="true">groups</mat-icon> Personas con acceso</button>
+        <div class="summary-head">
+          <mat-icon aria-hidden="true">verified</mat-icon>
+          <div>
+            <h3>Resumen de la autorización</h3>
+            <p>Revisa la configuración antes de conceder el acceso.</p>
+          </div>
+          <button type="button" appUiButton="secondary" class="summary-access-button" (click)="openSharesDialog()">
+            <mat-icon aria-hidden="true">groups</mat-icon> Personas con acceso
+          </button>
         </div>
         <div class="summary-details">
           <div class="summary-row"><span class="summary-label">Inventario:</span><strong class="summary-value">{{ currentInventory.alias || currentInventory.inventoryName }}</strong></div>
           <div class="summary-row"><span class="summary-label">Titular responsable:</span><span class="summary-value">{{ getOwnerName(currentInventory.userId) }}</span></div>
           <div class="summary-row"><span class="summary-label">Empleado autorizado:</span><strong class="summary-value highlight">{{ collaboratorDisplay }}</strong></div>
-          <div class="summary-row"><span class="summary-label">Nivel de permiso:</span><span class="summary-pill" [class.editor]="accessLevel === 2"><mat-icon aria-hidden="true">{{ accessLevel === 2 ? 'edit' : 'visibility' }}</mat-icon>{{ accessLevel === 2 ? 'Editor (Lectura y Escritura)' : 'Lector (Solo Consulta)' }}</span></div>
+          <div class="summary-row">
+            <span class="summary-label">Nivel de permiso:</span>
+            <span class="summary-pill" [class.editor]="accessLevel === 2">
+              <mat-icon aria-hidden="true">{{ accessLevel === 2 ? 'edit' : 'visibility' }}</mat-icon>
+              {{ accessLevel === 2 ? 'Editor (Lectura y Escritura)' : 'Lector (Solo Consulta)' }}
+            </span>
+          </div>
         </div>
       </div>
-      <p *ngIf="error" class="error-notice" role="alert"><mat-icon aria-hidden="true">error_outline</mat-icon>{{ error }}</p>
+      <p *ngIf="error" class="error-notice" role="alert">
+        <mat-icon aria-hidden="true">error_outline</mat-icon>{{ error }}
+      </p>
     </section>
-  </mat-dialog-content>
-  <mat-dialog-actions class="share-dialog-footer">
-    <button type="button" appUiButton="secondary" *ngIf="currentStep > 1" (click)="setStep(currentStep - 1)" [disabled]="submitting"><mat-icon aria-hidden="true">arrow_back</mat-icon> Anterior</button>
-    <span class="footer-spacer"></span>
-    <button type="button" appUiButton="secondary" (click)="dialogRef.close()" [disabled]="submitting">Cerrar</button>
-    <button type="button" appUiButton="primary" *ngIf="currentStep === 1" (click)="setStep(2)" [disabled]="!isStep1Valid">Siguiente: Resumen <mat-icon aria-hidden="true">arrow_forward</mat-icon></button>
-    <button type="button" appUiButton="primary" *ngIf="currentStep === 2" (click)="submitShare()" [disabled]="!isStep1Valid || submitting"><app-loading-indicator *ngIf="submitting; else shareSubmitLabel" [compact]="true" message="Concediendo" /><ng-template #shareSubmitLabel><mat-icon aria-hidden="true">group_add</mat-icon> Conceder acceso</ng-template></button>
-  </mat-dialog-actions>
-</div>
+  </div>
+</app-modal-shell>
