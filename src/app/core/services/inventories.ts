@@ -26,6 +26,8 @@ export interface InventoryShare {
   inventoryId: number;
   userId: number;
   username?: string | null;
+  firstName?: string | null;
+  lastName?: string | null;
   accessLevel: number;
   sharedDate: string;
 }
