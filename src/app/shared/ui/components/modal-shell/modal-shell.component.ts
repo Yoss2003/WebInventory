@@ -75,7 +75,12 @@ export class ModalShellComponent implements AfterViewInit, OnChanges, OnDestroy 
   get standard() { return this.standards.get(this.type); }
   get effectiveSubtitle(): string { return this.subtitle ?? this.standard.header.subtitle; }
   get effectiveIcon(): string { return this.icon ?? this.standard.header.icon; }
-  get effectiveInfoTooltip(): string { return this.infoTooltip ?? this.standard.header.infoText; }
+  get effectiveInfoTooltip(): string {
+    const messages = [this.infoTooltip, this.subtitle]
+      .map(value => String(value ?? '').trim())
+      .filter(Boolean);
+    return messages.length ? [...new Set(messages)].join('\n\n') : this.standard.header.infoText;
+  }
   get effectiveSections(): ModalSection[] { return this.sections ?? this.standard.header.defaultSections; }
   get effectiveActions(): ModalResolvedFooterAction[] {
     return this.standards.resolveFooterActions(this.type, this.footerActions);
@@ -89,7 +94,12 @@ export class ModalShellComponent implements AfterViewInit, OnChanges, OnDestroy 
   get showHeader(): boolean { return this.headerVisible ?? this.standard.header.visibleByDefault; }
   get showIcon(): boolean { return this.iconVisible ?? this.standard.header.iconEnabledByDefault; }
   get showSubtitle(): boolean { return this.subtitleVisible ?? this.standard.header.subtitleEnabledByDefault; }
-  get showInfo(): boolean { return this.infoVisible ?? this.standard.header.infoEnabledByDefault; }
+  get showInfo(): boolean {
+    return this.infoVisible ?? (
+      this.standard.header.infoEnabledByDefault ||
+      Boolean(String(this.subtitle ?? '').trim() || String(this.infoTooltip ?? '').trim())
+    );
+  }
   get showClose(): boolean { return this.closeVisible ?? this.standard.header.closeEnabledByDefault; }
   get showSections(): boolean {
     const enabled = this.sectionsVisible ?? this.standard.header.sectionNavigationEnabledByDefault;
