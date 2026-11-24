@@ -128,7 +128,13 @@ export class UserManagementComponent implements OnInit {
       }
     ).afterClosed().subscribe(result => {
       if (!result || result.kind !== 'created') return;
-      if (result.emailSent) this.toast.success(
+      if (result.permissionSaveFailed) {
+        const emailStatus = result.emailSent
+          ? ' Las credenciales fueron enviadas.'
+          : ' No se confirmó el envío de credenciales; revisa el correo desde la gestión de usuarios.';
+        this.toast.warning(
+          'Usuario creado, pero no se pudieron guardar los permisos individuales. Abre su edición para configurarlos.' + emailStatus);
+      } else if (result.emailSent) this.toast.success(
         'Usuario ' + result.username + ' registrado con inventario #' +
         result.personalInventoryId + '. Credenciales enviadas.');
       else this.toast.warning(result.message ||
