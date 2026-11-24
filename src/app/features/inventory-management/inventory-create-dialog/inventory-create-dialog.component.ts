@@ -5,7 +5,6 @@ import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { MatIconModule } from '@angular/material/icon';
 import { MatSelectModule } from '@angular/material/select';
 import { MatFormFieldModule } from '@angular/material/form-field';
-import { MatTooltipModule } from '@angular/material/tooltip';
 import { UiButtonDirective } from '../../../shared/ui/directives/ui-button.directive';
 import { UiControlDirective } from '../../../shared/ui/directives/ui-control.directive';
 import { InventoryService, InventorySummary } from '../../../core/services/inventories';
@@ -29,7 +28,6 @@ export interface InventoryCreateDialogData {
     MatIconModule,
     MatSelectModule,
     MatFormFieldModule,
-    MatTooltipModule,
     UiButtonDirective,
     UiControlDirective,
     ModalShellComponent
