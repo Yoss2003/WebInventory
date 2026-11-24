@@ -1640,3 +1640,65 @@
 
   .serial-picker-card__copy small { font-size: 9px; }
 }
+
+
+/* Información de venta y cronograma se consultan en submodales independientes. */
+.sale-info-trigger {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  min-height: 38px;
+}
+
+.sale-credit-preview {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.sale-credit-preview > small {
+  color: #a8bacb;
+  font-size: 10px;
+}
+
+.sale-summary-action {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  margin-top: 18px;
+  padding: 13px 15px;
+  border: 1px solid #43586a;
+  border-radius: 10px;
+  background: #142531;
+}
+
+.sale-summary-action > div {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  min-width: 0;
+}
+
+.sale-summary-action strong {
+  color: #edf4fa;
+  font-size: 12px;
+}
+
+.sale-summary-action small {
+  color: #a8bacb;
+  font-size: 10px;
+}
+
+@media (max-width: 550px) {
+  .sale-summary-action {
+    align-items: stretch;
+    flex-direction: column;
+  }
+
+  .sale-summary-action .sale-info-trigger {
+    width: 100%;
+  }
+}
