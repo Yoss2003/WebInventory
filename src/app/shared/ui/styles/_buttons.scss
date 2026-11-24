@@ -163,3 +163,53 @@ button[appUiButton],
     cursor: not-allowed !important;
   }
 }
+
+
+/* Estado de carga compartido: conserva el ancho del contenido original y evita
+   saltos de layout mientras se muestra el spinner y el texto estándar. */
+button.ui-v2-button--loading {
+  position: relative;
+  pointer-events: none;
+  cursor: progress;
+
+  > * {
+    visibility: hidden !important;
+  }
+
+  &::before {
+    content: '';
+    position: absolute;
+    left: calc(50% - 43px);
+    top: 50%;
+    width: 14px;
+    height: 14px;
+    box-sizing: border-box;
+    border: 2px solid currentColor;
+    border-right-color: transparent;
+    border-radius: 50%;
+    transform: translateY(-50%);
+    animation: inv-button-spin .7s linear infinite;
+  }
+
+  &::after {
+    content: attr(data-loading-label);
+    position: absolute;
+    inset: 0;
+    display: grid;
+    place-items: center;
+    padding-left: 16px;
+    color: inherit;
+    font: inherit;
+    white-space: nowrap;
+  }
+}
+
+@keyframes inv-button-spin {
+  to { transform: translateY(-50%) rotate(360deg); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  button.ui-v2-button--loading::before {
+    animation-duration: 2s;
+  }
+}
