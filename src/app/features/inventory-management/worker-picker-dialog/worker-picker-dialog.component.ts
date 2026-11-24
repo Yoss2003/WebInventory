@@ -6,12 +6,15 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { UiButtonDirective } from '../../../shared/ui/directives/ui-button.directive';
 import { UiControlDirective } from '../../../shared/ui/directives/ui-control.directive';
-import { EmployeeService } from '../../../core/services/employees';
-import { Employee } from '../../../core/models/employee.model';
+import { InventoryService, InventoryShareRecipient } from '../../../core/services/inventories';
 import { LoadingIndicatorComponent } from '../../../shared/loading/loading-indicator';
 import { ModalShellComponent } from '../../../shared/ui/components/modal-shell/modal-shell.component';
+import { timeout } from 'rxjs';
 
-export interface WorkerPickerDialogData { excludeUserId?: number | null; employees?: Employee[]; }
+export interface WorkerPickerDialogData {
+  inventoryId: number;
+  excludeUserId?: number | null;
+}
 
 @Component({
   selector: 'app-worker-picker-dialog', standalone: true,
@@ -21,56 +24,54 @@ export interface WorkerPickerDialogData { excludeUserId?: number | null; employe
 })
 export class WorkerPickerDialogComponent implements OnInit {
   readonly dialogRef = inject(MatDialogRef<WorkerPickerDialogComponent>);
-  readonly data: WorkerPickerDialogData = inject(MAT_DIALOG_DATA, { optional: true }) || {};
-  private readonly employeesApi = inject(EmployeeService);
+  readonly data: WorkerPickerDialogData = inject(MAT_DIALOG_DATA);
+  private readonly api = inject(InventoryService);
   loading = false;
   refreshing = false;
   private hasLoadedOnce = false;
   error = '';
   search = '';
-  employees: Employee[] = [];
+  employees: InventoryShareRecipient[] = [];
 
-  get filteredEmployees(): Employee[] {
+  get filteredEmployees(): InventoryShareRecipient[] {
     const term = this.search.trim().toLowerCase();
-    const visible = this.employees.filter(e => e.isActive && (!this.data.excludeUserId || e.userId !== this.data.excludeUserId));
+    const visible = this.employees.filter(e => e.userId > 0 && e.userId !== this.data.excludeUserId);
     if (!term) return visible;
     return visible.filter(e => {
       const fullName = `${e.firstName || ''} ${e.lastName || ''}`.toLowerCase();
       const dni = (e.dni || '').toLowerCase();
-      const username = (e.user?.username || '').toLowerCase();
-      return fullName.includes(term) || dni.includes(term) || username.includes(term);
+      const username = (e.username || '').toLowerCase();
+      const email = (e.email || '').toLowerCase();
+      return fullName.includes(term) || dni.includes(term) || username.includes(term) || email.includes(term);
     });
   }
 
-  ngOnInit(): void {
-    if (this.data.employees?.length) {
-      this.employees = this.data.employees.filter(e => e.isActive);
-      this.hasLoadedOnce = true;
-    } else {
-      this.load();
-    }
-  }
+  ngOnInit(): void { this.load(); }
 
   load(fromRefresh = false): void {
     this.loading = !this.hasLoadedOnce && !fromRefresh;
     this.refreshing = fromRefresh;
     this.error = '';
-    this.employeesApi.getEmployees().subscribe({
+    this.api.getShareRecipients(this.data.inventoryId).pipe(
+      timeout({ first: 15000 })
+    ).subscribe({
       next: rows => {
-        this.employees = (rows || []).filter(e => e.isActive);
+        this.employees = (rows || []).filter(e => e.userId > 0 && e.userId !== this.data.excludeUserId);
         this.loading = false;
         this.refreshing = false;
         this.hasLoadedOnce = true;
       },
-      error: () => {
+      error: err => {
         this.loading = false;
         this.refreshing = false;
         this.hasLoadedOnce = true;
-        this.error = 'No se pudieron consultar los colaboradores de la empresa.';
+        this.error = err?.name === 'TimeoutError'
+          ? 'La consulta de empleados tardó demasiado. Puedes volver a intentarlo.'
+          : String(err?.error?.error || 'No se pudieron consultar los colaboradores disponibles.');
       }
     });
   }
 
   refresh(): void { this.load(true); }
-  select(employee: Employee): void { this.dialogRef.close(employee); }
+  select(employee: InventoryShareRecipient): void { this.dialogRef.close(employee); }
 }

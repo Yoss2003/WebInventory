@@ -36,7 +36,7 @@
           <div class="recipient-cell">
             <label for="share-recipient">Usuario, correo o DNI</label>
             <div class="recipient-input-group">
-              <input id="share-recipient" type="text" name="recipient" [(ngModel)]="identifier" maxlength="180" placeholder="Buscar colaborador de tu empresa" required appUiControl />
+              <input id="share-recipient" type="text" name="recipient" [(ngModel)]="identifier" (ngModelChange)="onIdentifierInput($event)" maxlength="180" placeholder="Buscar colaborador de tu empresa" required appUiControl />
               <button type="button" appUiButton="secondary" class="picker-launch-btn" (click)="openWorkerPicker()" title="Buscar y seleccionar trabajador activo de la empresa">
                 <mat-icon aria-hidden="true">badge</mat-icon> Buscar
               </button>
