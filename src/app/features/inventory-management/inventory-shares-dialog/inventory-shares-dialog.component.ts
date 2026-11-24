@@ -37,7 +37,7 @@ export class InventorySharesDialogComponent implements OnInit {
   private readonly cdr = inject(ChangeDetectorRef);
 
   shares: InventoryShare[] = [];
-  loading = true;
+  loading = false;
   refreshing = false;
   error = '';
   updatingShareId: number | null = null;
