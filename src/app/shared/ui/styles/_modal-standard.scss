@@ -41,7 +41,7 @@
 :is(.mat-mdc-select-panel, .inv-standard-select-panel, .inventory-select-options).mdc-menu-surface--open {
   animation: inv-standard-overlay-open 160ms cubic-bezier(.22, 1, .36, 1) both;
 }
-:is(.inv-standard-select-panel, .inventory-select-options).mdc-menu-surface--animating-closed {
+:is(.mat-mdc-select-panel, .inv-standard-select-panel, .inventory-select-options).mdc-menu-surface--animating-closed {
   animation: inv-standard-overlay-close 160ms cubic-bezier(.4, 0, 1, 1) both;
 }
 
