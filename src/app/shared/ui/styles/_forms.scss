@@ -112,14 +112,14 @@
   border-color: var(--inv-danger, #ffaeb7);
 }
 
-:where(.ui-v2-screen, .ui-v2-dialog) :where(input, textarea, select):disabled {
+:where(.ui-v2-screen, .ui-v2-dialog) :where(input:not([type=checkbox]):not([type=radio]):not([type=file]):not([type=color]):not([type=range]):not([type=hidden]):not([type=button]):not([type=submit]):not([type=reset]):not([type=image]), textarea, select):disabled {
   background: color-mix(in srgb, var(--inv-input-bg, #111922) 72%, var(--inv-surface, #14212b));
   color: var(--inv-muted, #a9bac8);
   opacity: 1;
   cursor: not-allowed;
 }
 
-:where(.ui-v2-screen, .ui-v2-dialog) :where(input, textarea, select)[readonly] {
+:where(.ui-v2-screen, .ui-v2-dialog) :where(input:not([type=checkbox]):not([type=radio]):not([type=file]):not([type=color]):not([type=range]):not([type=hidden]):not([type=button]):not([type=submit]):not([type=reset]):not([type=image]), textarea, select)[readonly] {
   background: color-mix(in srgb, var(--inv-input-bg, #111922) 78%, var(--inv-surface, #14212b));
   cursor: default;
 }
