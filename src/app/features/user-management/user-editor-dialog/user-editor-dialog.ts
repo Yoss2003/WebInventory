@@ -14,6 +14,8 @@ import { ToastService } from '../../../shared/toast/toast.service';
 import { InventoryDialogMotionDirective } from '../../../shared/ui/directives/inv-dialog-motion.directive';
 import { UiButtonDirective } from '../../../shared/ui/directives/ui-button.directive';
 import { UiControlDirective } from '../../../shared/ui/directives/ui-control.directive';
+import { ModalShellComponent } from '../../../shared/ui/components/modal-shell/modal-shell.component';
+import type { ModalActionId, ModalFooterAction, ModalSection } from '../../../shared/ui/models/modal-standard.model';
 
 export interface UserEditorDialogData {
   user?: ManagedUser;
@@ -31,7 +33,7 @@ export type UserEditorDialogResult =
   selector: 'app-user-editor-dialog',
   standalone: true,
   imports: [CommonModule, FormsModule, MatIconModule, MatFormFieldModule,
-    MatSelectModule, InventoryDialogMotionDirective, UiButtonDirective, UiControlDirective],
+    MatSelectModule, InventoryDialogMotionDirective, UiButtonDirective, UiControlDirective, ModalShellComponent],
   templateUrl: './user-editor-dialog.html',
   styleUrl: './user-editor-dialog.scss'
 })
@@ -103,6 +105,58 @@ export class UserEditorDialogComponent implements OnInit {
   get motionWidth(): string {
     const width = this.step === 1 ? 800 : this.step === 2 ? 630 : (this.isEdit ? 760 : 650);
     return 'min(' + width + 'px, calc(100vw - 24px))';
+  }
+
+  get modalSections(): ModalSection[] {
+    return [
+      { id: 'personal', label: 'Datos personales', completed: this.step > 1 && this.personalValid, disabled: this.saving },
+      { id: 'role', label: 'Rol y acceso', completed: this.step > 2 && this.roleValid, disabled: this.saving || !this.personalValid },
+      { id: 'security', label: this.isEdit ? 'Permisos' : 'Seguridad', disabled: this.saving || !this.personalValid || !this.roleValid }
+    ];
+  }
+
+  get modalFooterActions(): ModalFooterAction[] {
+    const actions: ModalFooterAction[] = [];
+    if (this.step > 1) actions.push({ id: 'previous', label: 'Anterior', tone: 'secondary', icon: 'arrow_back', order: 0 });
+    actions.push({ id: 'cancel', label: 'Cancelar', tone: 'secondary', order: 1, disabled: this.saving });
+    if (this.step < 3) {
+      actions.push({
+        id: 'next',
+        label: this.step === 1 ? 'Siguiente: Rol y acceso' : (this.isEdit ? 'Siguiente: Permisos' : 'Siguiente: Seguridad'),
+        tone: 'primary',
+        icon: 'arrow_forward',
+        order: 2,
+        disabled: this.step === 1 ? !this.personalValid : !this.roleValid
+      });
+    } else {
+      actions.push({
+        id: 'primary',
+        label: this.isEdit ? 'Guardar cambios' : 'Crear usuario',
+        tone: 'primary',
+        icon: this.isEdit ? 'save' : 'person_add',
+        order: 2,
+        disabled: !this.canSubmit
+      });
+    }
+    return actions;
+  }
+
+  handleModalAction(action: ModalActionId): void {
+    switch (action) {
+      case 'previous':
+        this.goStep(this.step - 1);
+        break;
+      case 'cancel':
+      case 'close':
+        this.close();
+        break;
+      case 'next':
+        this.goStep(this.step + 1);
+        break;
+      case 'primary':
+        this.save();
+        break;
+    }
   }
 
   ngOnInit(): void {
