@@ -169,16 +169,22 @@
   .modal-shell__section-tab { transition: none; }
 }
 
-.modal-shell__content {
+ .modal-shell__content {
   display: flex;
   flex: 1 1 auto;
   flex-direction: column;
   min-width: 0;
   min-height: 0;
-  overflow: auto;
+  overflow-x: hidden;
+  overflow-y: auto;
   overscroll-behavior: contain;
+  scrollbar-width: thin;
+  scrollbar-color: var(--inv-brand) transparent;
 }
 .modal-shell__content--contained { overflow: hidden; }
+.modal-shell__content::-webkit-scrollbar { width: 7px; height: 7px; }
+.modal-shell__content::-webkit-scrollbar-track { background: transparent; }
+.modal-shell__content::-webkit-scrollbar-thumb { background: var(--inv-brand); border-radius: 8px; }
 
 .modal-shell__footer {
   display: flex;
