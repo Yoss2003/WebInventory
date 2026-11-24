@@ -54,6 +54,12 @@
 .user-dialog__fixed-role strong{display:flex;align-items:center;gap:8px;padding:10px;border:1px solid #536f82;border-radius:9px;background:#1c3241}
 .user-dialog__fixed-role small{color:#acc3d2;font-size:11px}
 .user-dialog__hint{margin:13px 0 0;color:#b1c5d3;line-height:1.5}
+.user-dialog__individual-permissions{margin-top:20px;padding-top:17px;border-top:1px solid #40596a}
+.user-dialog__permissions-heading{display:flex;align-items:center;gap:9px;margin:0 0 12px}
+.user-dialog__permissions-heading>mat-icon{display:grid;place-items:center;flex:none;width:30px;height:30px;
+  padding:5px;border-radius:8px;background:#233a48;color:var(--inv-company-accent,#a2d149)}
+.user-dialog__permissions-heading h4{font-size:13px;margin:0 0 3px;font-weight:750}
+.user-dialog__permissions-heading p{color:#b1c5d4;font-size:11px;margin:0;line-height:1.4}
 .user-dialog__flags{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
 .user-dialog__flags label{display:flex;align-items:center;gap:9px;border:1px solid #496374;
   background:#172a36;padding:12px;border-radius:9px;cursor:pointer}
