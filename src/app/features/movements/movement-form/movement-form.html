@@ -1,7 +1,7 @@
 <div class="movement-modal ui-v2-dialog ui-v2-dialog--simple">
   <header class="movement-header"><span class="movement-icon"><mat-icon>inventory</mat-icon></span>
     <div><h2>{{ data.actionId === 1 ? 'Nueva entrada de stock' : 'Nueva salida de stock' }}</h2><p>Registra un movimiento real en el inventario</p></div>
-    <button type="button" appUiButton="close" class="close" (click)="dialogRef.close()" aria-label="Cerrar"><mat-icon>close</mat-icon></button>
+    
   </header>
   <app-loading-indicator *ngIf="loading" message="Cargando artículos del inventario..." />
   <form *ngIf="!loading" [formGroup]="form" (ngSubmit)="onSubmit()" autocomplete="off">
@@ -26,13 +26,19 @@
             {{amountStep === 1 ? 'Ingresa un número entero positivo.' : 'Ingresa una cantidad positiva con máximo dos decimales.'}}
           </small>
         </div>
-        <div class="stock-panel">
-          <small>Stock disponible</small><strong>{{ selected?.stock ?? '—' }}</strong>
-          <small>{{ selected?.measurementUnit || 'Selecciona un artículo' }}</small>
-          <ng-container *ngIf="isEntry && selected && !ruleError">
-            <small>Este ingreso suma</small>
-            <strong class="stock-added">{{stockIncrement | number:'1.0-2'}} {{saleUnit}}</strong>
-          </ng-container>
+        <div class="stock-panel" aria-live="polite">
+          <div class="stock-panel__metric">
+            <small>Stock disponible</small>
+            <strong>{{ selected?.stock ?? '—' }}</strong>
+            <small>{{ selected?.measurementUnit || 'Selecciona un artículo' }}</small>
+          </div>
+          <div class="stock-panel__metric stock-panel__metric--projected">
+            <small>{{isEntry ? 'Este ingreso suma' : 'Esta salida resta'}}</small>
+            <strong class="stock-added">
+              {{selected && !ruleError ? (isEntry ? (stockIncrement | number:'1.0-2') : (form.controls.amount.value | number:'1.0-2')) : '—'}}
+            </strong>
+            <small>{{selected && !ruleError ? saleUnit : ' '}}</small>
+          </div>
         </div>
       </div>
       <div class="field" *ngIf="needsConversion && fixedFactor === null">

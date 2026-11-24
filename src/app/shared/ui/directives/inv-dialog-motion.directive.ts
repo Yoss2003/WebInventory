@@ -73,6 +73,7 @@ export class InventoryDialogMotionDirective implements AfterViewInit, OnChanges,
         this.opened = false;
         this.pane?.classList.remove('inv-dialog-size-ready');
         this.host.classList.add('inv-dialog-closing');
+        this.host.classList.remove('inv-dialog-height-transitioning');
         this.heightAnimation?.cancel();
         this.heightAnimation = null;
       }));
@@ -127,9 +128,13 @@ export class InventoryDialogMotionDirective implements AfterViewInit, OnChanges,
   private animateHeight(from: number, to: number): void {
     if (!Number.isFinite(from) || !Number.isFinite(to) || Math.abs(to - from) < 3) {
       this.currentHeight = to;
+      if (!this.heightAnimation) this.host.classList.remove('inv-dialog-height-transitioning');
       return;
     }
     this.currentHeight = to;
+    // Ocultar el overflow del cuerpo durante el cambio natural de altura evita
+    // que aparezca/desaparezca una barra de scroll durante unos fotogramas.
+    this.host.classList.add('inv-dialog-height-transitioning');
     // Animación de altura real: sin scaleY (los controles no se deforman).
     const animation = this.host.animate(
       [{ height: `${from}px` }, { height: `${to}px` }],
@@ -139,8 +144,15 @@ export class InventoryDialogMotionDirective implements AfterViewInit, OnChanges,
     animation.finished.then(() => {
       if (this.heightAnimation !== animation) return;
       this.heightAnimation = null;
+      this.host.classList.remove('inv-dialog-height-transitioning');
       if (this.host.isConnected) this.currentHeight = this.host.getBoundingClientRect().height;
-    }).catch(() => { /* Navegación rápida: la animación anterior se canceló. */ });
+    }).catch(() => {
+      // Solo la animación vigente puede liberar el estado: una anterior pudo
+      // cancelarse porque el usuario cambió rápidamente a otra sección.
+      if (this.heightAnimation !== animation) return;
+      this.heightAnimation = null;
+      this.host.classList.remove('inv-dialog-height-transitioning');
+    });
   }
 
   ngOnDestroy(): void {
@@ -148,6 +160,7 @@ export class InventoryDialogMotionDirective implements AfterViewInit, OnChanges,
     if (!this.browser) return;
     if (this.pendingFrame) window.cancelAnimationFrame(this.pendingFrame);
     this.heightAnimation?.cancel();
+    this.host.classList.remove('inv-dialog-height-transitioning');
     this.resizeObserver?.disconnect();
     this.pane?.classList.remove('inv-dialog-size-ready', 'inv-dialog-motion-pane');
   }

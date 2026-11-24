@@ -226,3 +226,21 @@
   overflow-x: hidden;
   overflow-y: auto;
 }
+
+/* El cuerpo no permite overflow horizontal. El scroll vertical se reserva
+   para contenido mayor que el viewport y se oculta mientras anima la altura. */
+.modal-shell__content {
+  overflow-x: hidden;
+  overflow-y: auto;
+}
+
+:host(.inv-modal-adaptive-height) .modal-shell__sections {
+  flex-wrap: wrap;
+  max-width: 100%;
+  overflow: visible;
+}
+
+:host(.inv-modal-adaptive-height.inv-dialog-height-transitioning) .modal-shell__content {
+  overflow: hidden !important;
+  scrollbar-width: none;
+}

@@ -2,7 +2,7 @@ import { CleanArticleNamePipe } from '../../../shared/clean-article-name.pipe';
 import { ToastService } from '../../../shared/toast/toast.service';
 import { InventoryContextService } from '../../../core/services/inventory-context';
 import { InventoryDialogMotionDirective } from '../../../shared/ui/directives/inv-dialog-motion.directive';
-import { Component, OnInit, inject } from '@angular/core';
+import { Component, OnDestroy, OnInit, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { MatDialogRef, MatDialogModule } from '@angular/material/dialog';
@@ -17,6 +17,10 @@ import { Article } from '../../../core/models/article.model';
 import { SerialUnitsService, SerialUnit } from '../../../core/services/serial-units';
 import { UiButtonDirective } from '../../../shared/ui/directives/ui-button.directive';
 import { UiControlDirective } from '../../../shared/ui/directives/ui-control.directive';
+import { ModalStandardService } from '../../../shared/ui/services/modal-standard.service';
+import { SerialUnitPickerDialogComponent } from '../../../shared/serial-unit-picker-dialog/serial-unit-picker-dialog';
+import { ExternalConsultasService } from '../../../core/services/external-consultas';
+import { Subscription, timeout } from 'rxjs';
 import { ModalShellComponent } from '../../../shared/ui/components/modal-shell/modal-shell.component';
 import type { ModalActionId, ModalFooterAction, ModalSection } from '../../../shared/ui/models/modal-standard.model';
 
@@ -27,7 +31,7 @@ import type { ModalActionId, ModalFooterAction, ModalSection } from '../../../sh
   templateUrl: './traspaso-form.html',
   styleUrl: './traspaso-form.scss'
 })
-export class TraspasoFormComponent implements OnInit {
+export class TraspasoFormComponent implements OnInit, OnDestroy {
   private readonly fb = inject(FormBuilder);
   private readonly articlesApi = inject(ArticleService);
   private readonly inventoryContext = inject(InventoryContextService);
@@ -35,18 +39,27 @@ export class TraspasoFormComponent implements OnInit {
   private readonly movementsApi = inject(MovementService);
   private readonly assignmentsApi = inject(AssignmentService);
   private readonly toast = inject(ToastService);
+  private readonly modalStandards = inject(ModalStandardService);
+  private readonly externalConsultas = inject(ExternalConsultasService);
   readonly dialogRef = inject(MatDialogRef<TraspasoFormComponent>);
   articles: Article[] = [];
   step = 1;
   get selectedArticle():Article|undefined {return this.articles.find(a=>a.id===Number(this.form.controls.articleId.value));}
   get selectedInventoryLabel(): string {
-    const id = Number(this.selectedArticle?.inventoryId);
+    if (!this.selectedArticle) return '—';
+    const id = Number(this.selectedArticle.inventoryId);
     const inventory = this.inventoryContext.options.find(i => i.id === id);
-    return inventory?.alias?.trim() || inventory?.inventoryName || (id > 0 ? `Inventario #${id}` : 'Selecciona un artículo');
+    return inventory?.alias?.trim() || inventory?.inventoryName || (id > 0 ? `Inventario #${id}` : '—');
   }
   availableSerials:SerialUnit[]=[];
   selectedSerialIds:number[]=[];
   serialError='';
+  serialUnitsLoading = false;
+  recipientDocumentType: 'DNI' | 'RUC' = 'DNI';
+  recipientDocument = '';
+  recipientLookupLoading = false;
+  recipientLookupError = '';
+  private recipientLookup?: Subscription;
   get isSerialized():boolean {return !!this.selectedArticle &&
     (Number(this.selectedArticle.tracking)===1 || /^(serialized|serializado|1)$/i.test(String(this.selectedArticle.trackingMode??'')));}
   toggleSerial(id:number,checked:boolean):void {
@@ -54,6 +67,100 @@ export class TraspasoFormComponent implements OnInit {
     this.form.controls.amount.setValue(this.selectedSerialIds.length);
   }
   selectedSerial(id:number):boolean{return this.selectedSerialIds.includes(id);}
+  openSerialPicker(): void {
+    if (!this.isSerialized || this.serialUnitsLoading || !this.availableSerials.length || this.operationType === 'Baja') return;
+    this.modalStandards.open(SerialUnitPickerDialogComponent, 'selector', {
+      panelClass: ['inv-seven-modal'],
+      width: 'min(560px, calc(100vw - 24px))',
+      maxWidth: 'calc(100vw - 24px)',
+      maxHeight: 'calc(100dvh - 28px)',
+      autoFocus: false,
+      data: {
+        units: this.availableSerials,
+        selectedIds: this.selectedSerialIds,
+        articleName: this.selectedArticle?.name || ''
+      }
+    }).afterClosed().subscribe((ids: number[] | undefined) => {
+      if (!Array.isArray(ids)) return;
+      this.selectedSerialIds = ids.map(Number);
+      this.form.controls.amount.setValue(this.selectedSerialIds.length);
+    });
+  }
+
+  setRecipientDocumentType(type: 'DNI' | 'RUC'): void {
+    if (this.recipientDocumentType === type) return;
+    this.recipientDocumentType = type;
+    this.recipientDocument = '';
+    this.recipientLookup?.unsubscribe();
+    this.recipientLookup = undefined;
+    this.recipientLookupLoading = false;
+    this.recipientLookupError = '';
+  }
+
+  onRecipientDocumentInput(event: Event): void {
+    const input = event.target as HTMLInputElement;
+    const maxLength = this.recipientDocumentType === 'DNI' ? 8 : 11;
+    this.recipientDocument = input.value.replace(/[^0-9]/g, '').slice(0, maxLength);
+    input.value = this.recipientDocument;
+    this.recipientLookup?.unsubscribe();
+    this.recipientLookup = undefined;
+    this.recipientLookupLoading = false;
+    this.recipientLookupError = '';
+  }
+
+  consultRecipientIdentity(): void {
+    const type = this.recipientDocumentType;
+    const document = this.recipientDocument.trim();
+    const expectedLength = type === 'DNI' ? 8 : 11;
+    if (document.length !== expectedLength || !/^[0-9]+$/.test(document) || this.recipientLookupLoading) {
+      this.recipientLookupError = type + ' debe contener ' + expectedLength + ' dígitos.';
+      return;
+    }
+
+    this.recipientLookup?.unsubscribe();
+    this.recipientLookupLoading = true;
+    this.recipientLookupError = '';
+
+    const onFailure = (error: { error?: { error?: string }; status?: number }) => {
+      this.recipientLookupLoading = false;
+      this.recipientLookupError = String(error?.error?.error ||
+        (error?.status === 0 ? 'No se pudo conectar con la API.' : 'No fue posible consultar el ' + type + '.'));
+    };
+
+    if (type === 'DNI') {
+      this.recipientLookup = this.externalConsultas.dni(document).pipe(timeout(20000)).subscribe({
+        next: result => {
+          this.recipientLookupLoading = false;
+          const fullName = [result.first_name, result.first_last_name, result.second_last_name]
+            .map(value => String(value ?? '').trim()).filter(Boolean).join(' ');
+          if (!fullName) {
+            this.recipientLookupError = 'RENIEC no devolvió un nombre completo. Puedes ingresarlo manualmente.';
+            return;
+          }
+          this.form.controls.recipientUserId.setValue(null);
+          this.form.controls.recipientName.setValue(fullName);
+          this.form.controls.recipientName.markAsDirty();
+        },
+        error: onFailure
+      });
+    } else {
+      this.recipientLookup = this.externalConsultas.ruc(document).pipe(timeout(20000)).subscribe({
+        next: result => {
+          this.recipientLookupLoading = false;
+          const businessName = String(result.businessName ?? '').trim();
+          if (!businessName) {
+            this.recipientLookupError = 'SUNAT no devolvió una razón social. Puedes ingresarla manualmente.';
+            return;
+          }
+          this.form.controls.recipientUserId.setValue(null);
+          this.form.controls.recipientName.setValue(businessName);
+          this.form.controls.recipientName.markAsDirty();
+        },
+        error: onFailure
+      });
+    }
+  }
+
 
   get canAdvanceOperation():boolean {
     const qty=Number(this.form.controls.amount.value);
@@ -164,11 +271,26 @@ export class TraspasoFormComponent implements OnInit {
     this.form.controls.articleId.valueChanges.subscribe(id => {
       this.selectedArticleStock = Number(this.articles.find(a => a.id === Number(id))?.stock ?? 0);
       this.adjustQuantity();
-      this.availableSerials=[];this.selectedSerialIds=[];this.serialError='';
-      const article=this.articles.find(a=>a.id===Number(id));
-      if(article && (Number(article.tracking)===1 || /^(serialized|serializado|1)$/i.test(String(article.trackingMode??''))))
-        this.serialsApi.available(article.id).subscribe({next:rows=>this.availableSerials=rows,
-          error:()=>this.serialError='No se pudieron cargar las series disponibles.'});
+      this.availableSerials = [];
+      this.selectedSerialIds = [];
+      this.serialError = '';
+      this.serialUnitsLoading = false;
+      const article = this.articles.find(a => a.id === Number(id));
+      if (article && (Number(article.tracking) === 1 || /^(serialized|serializado|1)$/i.test(String(article.trackingMode ?? '')))) {
+        this.serialUnitsLoading = true;
+        this.serialsApi.available(article.id).subscribe({
+          next: rows => {
+            if (Number(this.form.controls.articleId.value) !== article.id) return;
+            this.serialUnitsLoading = false;
+            this.availableSerials = rows;
+          },
+          error: () => {
+            if (Number(this.form.controls.articleId.value) !== article.id) return;
+            this.serialUnitsLoading = false;
+            this.serialError = 'No se pudieron cargar las series disponibles.';
+          }
+        });
+      }
     });
     this.form.controls.retireType.valueChanges.subscribe(() => this.adjustQuantity());
     this.form.controls.recipientUserId.valueChanges.subscribe(id => {
@@ -255,5 +377,9 @@ export class TraspasoFormComponent implements OnInit {
   private failed(err: any): void {
     this.isSaving = false;
     this.toast.error(String(err?.error?.error ?? `No se pudo registrar (HTTP ${err?.status ?? '?'}).`));
+  }
+
+  ngOnDestroy(): void {
+    this.recipientLookup?.unsubscribe();
   }
 }

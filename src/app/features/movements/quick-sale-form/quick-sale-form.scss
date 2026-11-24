@@ -1524,3 +1524,119 @@
   overflow: visible;
   overflow-x: hidden;
 }
+
+/* Resumen y selector de series conservan su espacio al cambiar de artículo.
+   La lista detallada vive en un diálogo secundario con scroll propio. */
+.sale-dialog .article-summary {
+  min-height: 88px;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.sale-dialog .article-summary > div {
+  min-width: 0;
+}
+
+.sale-dialog .article-summary strong {
+  min-height: 16px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.serial-picker-card {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  min-height: 70px;
+  margin-top: 10px;
+  padding: 10px 13px;
+  border: 1px solid #43586a;
+  border-radius: 10px;
+  background: #142531;
+}
+
+.serial-picker-card__copy {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  min-width: 0;
+}
+
+.serial-picker-card__copy strong {
+  color: #edf4fa;
+  font-size: 12px;
+}
+
+.serial-picker-card__copy small {
+  color: #a8bacb;
+  font-size: 10px;
+  line-height: 1.35;
+}
+
+.serial-picker-card__copy .serial-picker-card__status {
+  display: block;
+  min-height: 13px;
+  max-width: 100%;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.serial-picker-card > button {
+  flex: none;
+  min-height: 36px;
+}
+
+@media (max-width: 550px) {
+  .serial-picker-card {
+    align-items: stretch;
+    flex-direction: column;
+  }
+  .serial-picker-card > button { width: 100%; }
+}
+
+/* Resumen del artículo y selector serializado siempre ocupan el mismo espacio
+   al cambiar de artículo o al terminar de cargar las series. */
+.sale-dialog .article-summary {
+  height: 88px;
+  min-height: 88px;
+  max-height: 88px;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  overflow: hidden;
+}
+
+.serial-picker-card {
+  height: 70px;
+  min-height: 70px;
+  max-height: 70px;
+  overflow: hidden;
+}
+
+.serial-picker-card__copy { flex: 1 1 auto; }
+.serial-picker-card__copy small {
+  display: block;
+  min-height: 13px;
+  max-width: 100%;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+@media (max-width: 550px) {
+  .serial-picker-card {
+    flex-direction: row;
+    flex-wrap: nowrap;
+    align-items: center;
+  }
+
+  .serial-picker-card > button {
+    width: auto;
+    max-width: 142px;
+    padding-inline: 8px;
+    font-size: 10px;
+    white-space: nowrap;
+  }
+
+  .serial-picker-card__copy small { font-size: 9px; }
+}

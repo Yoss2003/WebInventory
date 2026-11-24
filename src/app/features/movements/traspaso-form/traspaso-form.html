@@ -34,17 +34,24 @@
         </div>
         <div class="field"><label>Cantidad a retirar <span class="required">*</span></label>
           <input type="number" min="0.01" step="0.01" appUiControl formControlName="amount" />
-          <small *ngIf="selectedArticle">Disponible: {{selectedArticleStock|number:'1.0-2'}} {{selectedArticle.measurementUnit}}</small>
-          <span class="transfer-error" *ngIf="selectedArticle && quantityExceedsStock">Cantidad superior al stock disponible.</span>
+          <small class="transfer-availability">Disponible: {{selectedArticle ? (selectedArticleStock|number:'1.0-2') + ' ' + selectedArticle.measurementUnit : '—'}}</small>
+          <small class="transfer-error transfer-validation-slot" [class.is-empty]="!selectedArticle || !quantityExceedsStock">{{selectedArticle && quantityExceedsStock ? 'Cantidad superior al stock disponible.' : ' '}}</small>
         </div>
-        <div class="field info-block" *ngIf="selectedArticle"><label>Almacén de origen</label><strong>{{selectedInventoryLabel}}</strong></div>
+        <div class="field info-block"><label>Almacén de origen</label><strong>{{selectedInventoryLabel}}</strong></div>
       </div>
-      <div class="serial-selection" *ngIf="isSerialized">
-        <strong>Series disponibles · selecciona las unidades exactas</strong>
-        <label *ngFor="let unit of availableSerials"><input type="checkbox" [checked]="selectedSerial(unit.id)" (change)="toggleSerial(unit.id, $any($event.target).checked)" /> {{unit.serialNumber}} · #{{unit.id}}</label>
-        <small *ngIf="!availableSerials.length">No hay unidades disponibles. Registra primero sus series.</small>
-        <p class="transfer-error" *ngIf="operationType==='Baja'">El retiro definitivo de serializados debe registrarse como operación con serie e historial; usa Asignar para entregar custodia.</p>
-        <p class="transfer-error" *ngIf="serialError">{{serialError}}</p>
+      <div class="serial-selection-card">
+        <div class="serial-selection-card__copy">
+          <strong>Series de la operación</strong>
+          <small>{{!isSerialized ? 'No aplica a este artículo.' : serialUnitsLoading ? 'Cargando series disponibles...' : selectedSerialIds.length + ' seleccionadas · ' + availableSerials.length + ' disponibles'}}</small>
+          <small class="serial-selection-card__status" role="status">
+            {{serialError || (isSerialized && operationType==='Baja' ? 'Para artículos serializados usa Asignación de custodia.' : isSerialized && !serialUnitsLoading && !availableSerials.length ? 'No hay series disponibles.' : 'La selección se administra en una ventana independiente.')}}
+          </small>
+        </div>
+        <button type="button" appUiButton="secondary" (click)="openSerialPicker()"
+          [disabled]="!isSerialized || serialUnitsLoading || !availableSerials.length || operationType==='Baja' || isSaving">
+          <mat-icon aria-hidden="true">checklist</mat-icon>
+          {{selectedSerialIds.length ? 'Modificar selección' : 'Seleccionar series'}}
+        </button>
       </div>
     </section>
     <section class="form-card wizard-page" *ngIf="step===2">
@@ -56,6 +63,30 @@
         </div>
         <div class="field wide"><label>Persona o entidad {{operationType==='Asignar'?'*':'(opcional)'}}</label>
           <input type="text" formControlName="recipientName" appUiControl maxlength="180" placeholder="Nombre del responsable o entidad" />
+        </div>
+        <div class="recipient-identity-lookup field wide">
+          <div class="recipient-identity-lookup__heading">
+            <strong>Consultar nombre</strong>
+            <small>La consulta solo completa el nombre; no guarda el número de documento.</small>
+          </div>
+          <div class="recipient-identity-lookup__types" role="group" aria-label="Tipo de documento">
+            <button type="button" [class.is-active]="recipientDocumentType==='DNI'"
+              [attr.aria-pressed]="recipientDocumentType==='DNI'" (click)="setRecipientDocumentType('DNI')">DNI · RENIEC</button>
+            <button type="button" [class.is-active]="recipientDocumentType==='RUC'"
+              [attr.aria-pressed]="recipientDocumentType==='RUC'" (click)="setRecipientDocumentType('RUC')">RUC · SUNAT</button>
+          </div>
+          <div class="recipient-identity-lookup__row">
+            <input type="text" appUiControl inputmode="numeric" autocomplete="off"
+              [attr.maxlength]="recipientDocumentType==='DNI' ? 8 : 11"
+              [placeholder]="recipientDocumentType==='DNI' ? 'DNI de 8 dígitos' : 'RUC de 11 dígitos'"
+              [value]="recipientDocument" (input)="onRecipientDocumentInput($event)" />
+            <button type="button" appUiButton="secondary" (click)="consultRecipientIdentity()"
+              [disabled]="recipientLookupLoading || recipientDocument.length !== (recipientDocumentType==='DNI' ? 8 : 11) || isSaving">
+              <mat-icon aria-hidden="true">manage_search</mat-icon>
+              {{recipientLookupLoading ? 'Consultando...' : 'Consultar'}}
+            </button>
+          </div>
+          <p class="transfer-error" *ngIf="recipientLookupError" role="alert">{{recipientLookupError}}</p>
         </div>
         <div class="field wide"><label>Motivo / observaciones <span class="required">*</span></label>
           <textarea formControlName="observation" rows="3" maxlength="2000" appUiControl placeholder="Describe la entrega y su propósito"></textarea>
