@@ -1,20 +1,5 @@
-<!-- FASE 4.1.2 — Modal de solo lectura de proveedores -->
-<div class="supplier-detail-modal ui-v2-dialog ui-v2-dialog--simple" role="document">
-  <header class="detail-head">
-    <div class="detail-heading">
-      <span class="detail-symbol"><mat-icon aria-hidden="true">storefront</mat-icon></span>
-      <div class="detail-title">
-        <h2>Detalle del proveedor</h2>
-        <p>Datos comerciales y situación fiscal registrada</p>
-      </div>
-    </div>
-    <button type="button" appUiButton="close" (click)="close()"
-            aria-label="Cerrar detalle de proveedor" title="Cerrar">
-      <mat-icon aria-hidden="true">close</mat-icon>
-    </button>
-  </header>
-
-  <div class="detail-content">
+<app-modal-shell type="detail" title="Detalle del proveedor" subtitle="Datos comerciales y situación fiscal registrada" icon="storefront" [infoVisible]="false" [closeVisible]="true" [footerVisible]="false" (closeRequested)="close()">
+<div class="detail-content">
     <section class="detail-section">
       <h3><mat-icon aria-hidden="true">badge</mat-icon> Identificación</h3>
       <p class="business-name">{{item.businessName}}</p>
@@ -91,8 +76,5 @@
       Este proveedor todavía no tiene una instantánea fiscal avanzada guardada. Puedes consultar su RUC desde el formulario de edición y guardar los cambios.
     </p>
   </div>
-  <footer class="detail-footer">
-    <span class="detail-footer-note"><mat-icon aria-hidden="true">lock_outline</mat-icon> Solo lectura</span>
-    <button type="button" appUiButton="secondary" (click)="close()">Cerrar</button>
-  </footer>
-</div>
+  
+</app-modal-shell>
