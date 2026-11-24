@@ -111,6 +111,60 @@ $bg: #11161d; $panel: #19232e; $panel-light: #202d39; $line: #334353; $text: #ed
 .igv-details { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 6px 12px; margin: 0 11px 10px; padding-top: 8px; border-top: 1px solid #496052; >div { display: flex; flex-wrap: wrap; align-items: baseline; justify-content: space-between; gap: 5px 9px; min-width: 0; font-size: 10px; } span { color: #b8c9bc; } strong { color: #eff8e9; white-space: nowrap; } .igv-total { grid-column: 1/-1; border-top: 1px solid #496052; padding-top: 7px; } }
 .finance-info-button { margin-left: auto; }
 .article-parameter-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 12px; margin-top: 16px; .field-tile { min-width: 0; } .field-tile > label { display: block; margin: 0 0 6px; color: $muted; font-size: 12px; font-weight: 650; } }
+.exchange-rate-card {
+  display: grid;
+  gap: 10px;
+  margin-top: 12px;
+  padding: 12px 14px;
+  border: 1px solid color-mix(in srgb, var(--inv-company-accent, #A2D149) 38%, #40566a);
+  border-radius: 10px;
+  background: linear-gradient(115deg, rgba(24, 43, 54, .94), rgba(17, 31, 43, .92));
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, .035);
+}
+
+.exchange-header {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  color: #dce8f1;
+  font-size: 11px;
+  font-weight: 700;
+  line-height: 1.35;
+
+  mat-icon {
+    flex: 0 0 18px;
+    width: 18px;
+    height: 18px;
+    color: var(--inv-company-accent, #A2D149);
+    font-size: 18px;
+  }
+}
+
+.exchange-rates {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+
+  > span {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    min-height: 28px;
+    padding: 5px 9px;
+    border: 1px solid #3a5265;
+    border-radius: 7px;
+    background: rgba(7, 17, 27, .42);
+    color: #aebfce;
+    font-size: 11px;
+  }
+
+  strong {
+    color: #f0f6fb;
+    font-size: 11px;
+    font-variant-numeric: tabular-nums;
+  }
+}
+
 .exchange-rate-note { margin: 10px 0 0; color: #a9c3d0; font-size: 11px; line-height: 1.5; }
 .exchange-rate-warning { margin: 8px 0 0; color: #f0c47c; font-size: 11px; line-height: 1.5; }
 .serial-series-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; margin-top: 16px; padding: 16px; border: 1px solid #526b7d; border-radius: 12px; background: #12212d; }
