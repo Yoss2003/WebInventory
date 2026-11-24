@@ -187,7 +187,7 @@
 .inv-admin-page.dev-page .company-inventories small strong { color: #edf5fc; }
 .inv-admin-page.dev-page .company-master-status {
   display: inline-flex; align-items: center; gap: 5px; max-width: 100%;
-  color: #afe5bd; font-weight: 700;
+  color: var(--core-accent, var(--inv-company-accent)); font-weight: 700;
 }
 .inv-admin-page.dev-page .company-master-status mat-icon {
   width: 16px; height: 16px; font-size: 16px; flex: 0 0 16px;
@@ -218,7 +218,7 @@
 }
 .inv-admin-page.dev-page .table-actions > button mat-icon { flex: none; width: 19px; height: 19px; font-size: 19px; line-height: 19px; }
 .inv-admin-page.dev-page .table-actions > button.danger-button { color: #ffacb4; }
-.inv-admin-page.dev-page .table-actions > button.action-reactivate { color: #b0e6bc; }
+.inv-admin-page.dev-page .table-actions > button.action-reactivate { color: var(--core-accent, var(--inv-company-accent)); }
 .inv-admin-page.dev-page .table-actions > button:hover:not(:disabled) {
   background: var(--core-accent-soft);
   border-color: color-mix(in srgb, var(--core-accent) 45%, var(--core-border));
