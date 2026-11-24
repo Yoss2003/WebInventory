@@ -1,91 +1,79 @@
-<div class="first-admin-modal ui-v2-dialog ui-v2-dialog--simple" role="document">
-  <header class="first-admin-header">
-    <div class="first-admin-heading">
-      <span class="first-admin-symbol">
-        <mat-icon aria-hidden="true">{{isFirstAdmin ? 'admin_panel_settings' : 'person_add'}}</mat-icon>
-      </span>
-      <div class="first-admin-heading__text">
-        <h2 mat-dialog-title>{{isFirstAdmin ? 'Primer administrador' : 'Registrar nuevo usuario'}}</h2>
-        <p>{{data.companyName}} · Empresa #{{data.companyId}}</p>
-      </div>
-    </div>
-    <button type="button" appUiButton="close" (click)="close()"
-      [disabled]="saving" title="Cerrar" aria-label="Cerrar modal">
-      <mat-icon aria-hidden="true">close</mat-icon>
-    </button>
-  </header>
+<app-modal-shell
+  type="mainForm"
+  [title]="isFirstAdmin ? 'Primer administrador' : 'Registrar nuevo usuario'"
+  [subtitle]="data.companyName + ' · Empresa #' + data.companyId"
+  [icon]="isFirstAdmin ? 'admin_panel_settings' : 'person_add'"
+  [infoVisible]="true"
+  infoTooltip="Se creará automáticamente un inventario personal. La contraseña temporal se enviará al correo del usuario y deberá cambiarla al iniciar sesión."
+  [closeVisible]="false"
+  [footerActions]="modalFooterActions"
+  [busyActionId]="saving ? 'primary' : null"
+  (actionClicked)="handleModalAction($event)"
+  (closeRequested)="close()">
+  <div class="first-admin-modal">
+    <div class="first-admin-body">
+      <p class="first-admin-help">
+        Se creará automáticamente un inventario personal. El maestro de la empresa se conserva.
+        El sistema generará una contraseña temporal que solo se enviará al correo del usuario.
+      </p>
+      <div class="first-admin-fields">
+        <label><span>Nombre <b>*</b></span>
+          <input appUiControl [(ngModel)]="firstName" (ngModelChange)="onNamesChanged()"
+            maxlength="100" autocomplete="off" placeholder="Nombre(s)" />
+        </label>
+        <label><span>Apellidos <b>*</b></span>
+          <input appUiControl [(ngModel)]="lastName" (ngModelChange)="onNamesChanged()"
+            maxlength="100" autocomplete="off" placeholder="Apellidos" />
+        </label>
 
-  <mat-dialog-content class="first-admin-body">
-    <p class="first-admin-help">
-      Se creará automáticamente un inventario personal. El maestro de la empresa se conserva.
-      El sistema generará una contraseña temporal que solo se enviará al correo del usuario.
-    </p>
-    <div class="first-admin-fields">
-      <label><span>Nombre <b>*</b></span>
-        <input appUiControl [(ngModel)]="firstName" (ngModelChange)="onNamesChanged()"
-          maxlength="100" autocomplete="off" placeholder="Nombre(s)" />
-      </label>
-      <label><span>Apellidos <b>*</b></span>
-        <input appUiControl [(ngModel)]="lastName" (ngModelChange)="onNamesChanged()"
-          maxlength="100" autocomplete="off" placeholder="Apellidos" />
-      </label>
+        <label><span>Nombre de usuario <b>*</b></span>
+          <div class="first-admin-readonly">
+            <input appUiControl [value]="username" readonly tabindex="-1"
+              placeholder="Se genera con el nombre y apellidos"/>
+            <mat-icon aria-hidden="true">lock_outline</mat-icon>
+          </div>
+        </label>
+        <label><span>Correo electrónico <b>*</b></span>
+          <input appUiControl [(ngModel)]="email" type="email" maxlength="254"
+            autocomplete="off" placeholder="correo@ejemplo.com" />
+        </label>
 
-      <label><span>Nombre de usuario <b>*</b></span>
-        <div class="first-admin-readonly">
-          <input appUiControl [value]="username" readonly tabindex="-1"
-            placeholder="Se genera con el nombre y apellidos"/>
-          <mat-icon aria-hidden="true">lock_outline</mat-icon>
+        <label class="first-admin-dni-field"><span>DNI (opcional)</span>
+          <div class="first-admin-dni-control">
+            <input appUiControl [(ngModel)]="dni" maxlength="8" inputmode="numeric"
+              autocomplete="off" placeholder="8 dígitos" />
+            <button type="button" appUiButton="secondary" (click)="consultDni()"
+              [disabled]="saving || lookingUpDni || dni.length !== 8"
+              title="Consultar DNI mediante RENIEC">
+              <mat-icon aria-hidden="true">{{lookingUpDni ? 'hourglass_top' : 'manage_search'}}</mat-icon>
+              {{lookingUpDni ? 'Consultando' : 'Consultar'}}
+            </button>
+          </div>
+          <small *ngIf="dniMessage" class="first-admin-dni-note">{{dniMessage}}</small>
+        </label>
+        <label *ngIf="!isFirstAdmin"><span>Rol del usuario <b>*</b></span>
+          <mat-form-field appearance="outline" class="inventory-select">
+            <mat-select [(ngModel)]="roleId" [ngModelOptions]="{standalone:true}"
+              panelClass="inventory-select-options" aria-label="Rol del usuario">
+              <mat-option *ngFor="let role of availableRoles" [value]="role.id">{{role.name}}</mat-option>
+            </mat-select>
+          </mat-form-field>
+        </label>
+        <div *ngIf="isFirstAdmin" class="first-admin-role-fixed">
+          <span>Rol asignado</span>
+          <strong><mat-icon aria-hidden="true">shield</mat-icon> Administrador</strong>
         </div>
-      </label>
-      <label><span>Correo electrónico <b>*</b></span>
-        <input appUiControl [(ngModel)]="email" type="email" maxlength="254"
-          autocomplete="off" placeholder="correo@ejemplo.com" />
-      </label>
+      </div>
 
-      <label class="first-admin-dni-field"><span>DNI (opcional)</span>
-        <div class="first-admin-dni-control">
-          <input appUiControl [(ngModel)]="dni" maxlength="8" inputmode="numeric"
-            autocomplete="off" placeholder="8 dígitos" />
-          <button type="button" appUiButton="secondary" (click)="consultDni()"
-            [disabled]="saving || lookingUpDni || dni.length !== 8 || !isFirstAdmin && !dni"
-            title="Consultar DNI mediante RENIEC">
-            <mat-icon aria-hidden="true">{{lookingUpDni ? 'hourglass_top' : 'manage_search'}}</mat-icon>
-            {{lookingUpDni ? 'Consultando' : 'Consultar'}}
-          </button>
+      <div class="first-admin-secret-note">
+        <mat-icon aria-hidden="true">mark_email_read</mat-icon>
+        <div>
+          <strong>Credenciales automáticas y privadas</strong>
+          <p>La contraseña se genera en la API, no aparece aquí y debe cambiarse en el primer ingreso.
+            Revisa que el correo sea correcto antes de registrar.</p>
         </div>
-        <small *ngIf="dniMessage" class="first-admin-dni-note">{{dniMessage}}</small>
-      </label>
-      <label *ngIf="!isFirstAdmin"><span>Rol del usuario <b>*</b></span>
-        <mat-form-field appearance="outline" class="inventory-select">
-          <mat-select [(ngModel)]="roleId" [ngModelOptions]="{standalone:true}"
-            panelClass="inventory-select-options"
-            aria-label="Rol del usuario">
-            <mat-option *ngFor="let role of availableRoles" [value]="role.id">{{role.name}}</mat-option>
-          </mat-select>
-        </mat-form-field>
-      </label>
-      <div *ngIf="isFirstAdmin" class="first-admin-role-fixed">
-        <span>Rol asignado</span>
-        <strong><mat-icon aria-hidden="true">shield</mat-icon> Administrador</strong>
       </div>
+      <p class="first-admin-error" *ngIf="error" role="alert">{{error}}</p>
     </div>
-
-    <div class="first-admin-secret-note">
-      <mat-icon aria-hidden="true">mark_email_read</mat-icon>
-      <div>
-        <strong>Credenciales automáticas y privadas</strong>
-        <p>La contraseña se genera en la API, no aparece aquí y debe cambiarse en el primer ingreso.
-          Revisa que el correo sea correcto antes de registrar.</p>
-      </div>
-    </div>
-    <p class="first-admin-error" *ngIf="error" role="alert">{{error}}</p>
-  </mat-dialog-content>
-
-  <mat-dialog-actions class="first-admin-actions">
-    <button type="button" appUiButton="secondary" (click)="close()" [disabled]="saving">Cancelar</button>
-    <button type="button" appUiButton="primary" (click)="save()" [disabled]="!valid">
-      <mat-icon aria-hidden="true">{{saving ? 'hourglass_top' : 'person_add'}}</mat-icon>
-      {{saving ? 'Registrando y enviando correo...' : isFirstAdmin ? 'Crear administrador' : 'Crear usuario'}}
-    </button>
-  </mat-dialog-actions>
-</div>
+  </div>
+</app-modal-shell>
