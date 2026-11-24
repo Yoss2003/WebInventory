@@ -34,6 +34,8 @@ import {
 } from '../../../shared/ui/directives/inv-dialog-motion.directive';
 import { UiButtonDirective } from '../../../shared/ui/directives/ui-button.directive';
 import { UiControlDirective } from '../../../shared/ui/directives/ui-control.directive';
+import { ModalShellComponent } from '../../../shared/ui/components/modal-shell/modal-shell.component';
+import type { ModalActionId, ModalFooterAction, ModalSection } from '../../../shared/ui/models/modal-standard.model';
 
 @Component({
   selector: 'app-quick-sale-form',
@@ -47,7 +49,8 @@ import { UiControlDirective } from '../../../shared/ui/directives/ui-control.dir
     MatFormFieldModule,
     InventoryDialogMotionDirective,
     UiButtonDirective,
-    UiControlDirective
+    UiControlDirective,
+    ModalShellComponent
   ],
   templateUrl: './quick-sale-form.html',
   styleUrl: './quick-sale-form.scss'
@@ -159,6 +162,62 @@ export class QuickSaleFormComponent implements OnInit, OnDestroy {
       this.canAdvanceArticle &&
       this.canAdvanceCustomer &&
       this.paymentConfigurationValid;
+  }
+
+  get modalSections(): ModalSection[] {
+    return [
+      { id: 'articles', label: 'Artículos', completed: this.step > 1 && this.canAdvanceArticle },
+      { id: 'customer', label: 'Comprador', completed: this.step > 2 && this.canAdvanceCustomer, disabled: this.submitting || !this.canAdvanceArticle },
+      { id: 'payment', label: 'Pago', disabled: this.submitting || !this.canAdvanceArticle || !this.canAdvanceCustomer }
+    ];
+  }
+
+  get modalFooterActions(): ModalFooterAction[] {
+    const actions: ModalFooterAction[] = [];
+    if (this.step > 1) actions.push({ id: 'previous', label: 'Anterior', tone: 'secondary', icon: 'arrow_back', order: 0 });
+    actions.push({ id: 'cancel', label: 'Cancelar', tone: 'secondary', order: 1 });
+    if (this.step < 3) {
+      actions.push({
+        id: 'next',
+        label: this.step === 1 ? 'Siguiente: Comprador' : 'Siguiente: Pago',
+        tone: 'primary',
+        icon: 'arrow_forward',
+        order: 2,
+        disabled: this.step === 1 ? !this.canAdvanceArticle : !this.canAdvanceCustomer
+      });
+    } else {
+      actions.push({
+        id: 'primary',
+        label: 'Confirmar venta',
+        tone: 'primary',
+        icon: 'save',
+        order: 2,
+        disabled: !this.canSubmit
+      });
+    }
+    return actions;
+  }
+
+  handleModalAction(action: ModalActionId): void {
+    switch (action) {
+      case 'previous':
+        this.goStep(this.step - 1);
+        break;
+      case 'cancel':
+      case 'close':
+        this.close();
+        break;
+      case 'next':
+        this.goStep(this.step + 1);
+        break;
+      case 'primary':
+        this.onSubmit();
+        break;
+    }
+  }
+
+  close(): void {
+    if (!this.submitting) this.dialogRef.close();
   }
 
   get total(): number {
