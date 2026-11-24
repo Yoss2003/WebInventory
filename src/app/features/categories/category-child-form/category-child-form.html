@@ -11,7 +11,7 @@
   [footerActions]="modalFooterActions"
   [busyActionId]="isSaving ? 'primary' : null"
   [closeVisible]="false"
-  [contentScrollable]="true"
+  [contentScrollable]="false"
   [invDialogMotion]="categoryMotionStep"
   [invDialogMotionWidth]="categoryMotionStep === 2 && modalSections.length === 3 ? 'min(1060px, calc(100vw - 32px))' : 'min(900px, calc(100vw - 32px))'"
   (sectionChange)="goToStep($event)"
