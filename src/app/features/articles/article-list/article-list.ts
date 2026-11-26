@@ -8,7 +8,6 @@ import { CommonModule } from '@angular/common';
 import { MoneyPipe } from '../../../shared/money.pipe';
 import { FormsModule } from '@angular/forms';
 import { MatIconModule } from '@angular/material/icon';
-import { MatDialog } from '@angular/material/dialog';
 import { forkJoin, filter, take } from 'rxjs';
 import { ConfirmationDialogService } from '../../../shared/confirm-dialog/confirmation-dialog.service';
 import { ArticleService } from '../../../core/services/articles';
@@ -33,7 +32,6 @@ export class ArticleListComponent implements OnInit {
   private readonly inventoryContext=inject(InventoryContextService);
   private readonly categories=inject(CategoryService);
   private readonly brands=inject(BrandService);
-  private readonly dialog=inject(MatDialog);
   private readonly modalStandards=inject(ModalStandardService);
   private readonly confirms=inject(ConfirmationDialogService);
   private readonly cdr=inject(ChangeDetectorRef);

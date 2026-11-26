@@ -1,4 +1,3 @@
-import { MatDialog, MatDialogModule } from '@angular/material/dialog';
 import { ModalStandardService } from '../../shared/ui/services/modal-standard.service';
 import { WorkerPickerDialogComponent } from '../inventory-management/worker-picker-dialog/worker-picker-dialog.component';
 import { InventoryShareRecipient } from '../../core/services/inventories';
@@ -22,7 +21,7 @@ import { finalize, timeout } from 'rxjs';
 
 @Component({
   selector: 'app-inventory-sharing', standalone: true,
-  imports: [MatDialogModule, UiControlDirective, UiPageHeadingComponent, UiButtonDirective, UiTableActionDirective, CommonModule, FormsModule, MatIconModule, MatTooltipModule, MatFormFieldModule, MatSelectModule, LoadingIndicatorComponent],
+  imports: [UiControlDirective, UiPageHeadingComponent, UiButtonDirective, UiTableActionDirective, CommonModule, FormsModule, MatIconModule, MatTooltipModule, MatFormFieldModule, MatSelectModule, LoadingIndicatorComponent],
   templateUrl: './inventory-sharing.html', styleUrl: './inventory-sharing.scss'
 })
 export class InventorySharingComponent implements OnInit {
@@ -30,7 +29,6 @@ export class InventorySharingComponent implements OnInit {
   private readonly access = inject(AccessService);
   private readonly toast = inject(ToastService);
   private readonly confirms = inject(ConfirmationDialogService);
-  private readonly dialog = inject(MatDialog);
   private readonly modalStandards = inject(ModalStandardService);
   private readonly cdr = inject(ChangeDetectorRef);
   myUserId = 0;

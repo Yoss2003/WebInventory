@@ -12,7 +12,7 @@ import { ConfirmationDialogService } from '../../../shared/confirm-dialog/confir
 import { LoadingIndicatorComponent } from '../../../shared/loading/loading-indicator';
 import { UiTableActionDirective } from '../../../shared/ui/directives/ui-table-action.directive';
 import { UiButtonDirective } from '../../../shared/ui/directives/ui-button.directive';
-import { MatSnackBar } from '@angular/material/snack-bar';
+import { ToastService } from '../../../shared/toast/toast.service';
 import { BarcodeFormat, BrowserMultiFormatReader } from '@zxing/browser';
 import { DecodeHintType } from '@zxing/library';
 import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
@@ -41,7 +41,7 @@ export class ArticleDetailDialogComponent implements OnInit, OnDestroy {
   private readonly destroyRef = inject(DestroyRef);
   private readonly serials = inject(SerialUnitsService);
   private readonly confirms = inject(ConfirmationDialogService);
-  private readonly snackBar = inject(MatSnackBar);
+  private readonly toast = inject(ToastService);
   private readonly sanitizer = inject(DomSanitizer);
   private readonly codeReader = new BrowserMultiFormatReader();
   private scanControls: any = null;
@@ -180,13 +180,13 @@ export class ArticleDetailDialogComponent implements OnInit, OnDestroy {
     }));
 
     if (rows.length > 1000 || rows.some(row => !row.serialNumber || row.serialNumber.length > 150)) {
-      this.snackBar.open('Atención: todas las unidades necesitan un número de serie de hasta 150 caracteres.', 'Cerrar', { duration: 4000 });
+      this.toast.warning('Todas las unidades necesitan un número de serie de hasta 150 caracteres.');
       return;
     }
 
     const serials = rows.map(row => row.serialNumber.toLocaleUpperCase('es-PE'));
     if (new Set(serials).size !== serials.length) {
-      this.snackBar.open('Atención: el lote contiene números de serie duplicados. Revisa las filas.', 'Cerrar', { duration: 4000 });
+      this.toast.warning('El lote contiene números de serie duplicados. Revisa las filas.');
       return;
     }
 
@@ -196,7 +196,7 @@ export class ArticleDetailDialogComponent implements OnInit, OnDestroy {
         this.registeringBatch = false;
         this.hasChanges = true;
         this.batchRows = [{ serialNumber: '' }];
-        this.snackBar.open(`Se registraron ${result.added} unidades serializadas. Stock actual: ${result.stock}.`, 'Cerrar', { duration: 4000 });
+        this.toast.success(`Se registraron ${result.added} unidades serializadas. Stock actual: ${result.stock}.`);
         this.reloadArticle();
       },
       error: err => {
@@ -205,7 +205,7 @@ export class ArticleDetailDialogComponent implements OnInit, OnDestroy {
         const msg = raw
           ? (/error|fall[oó]|no se pud|rechazad|inv[aá]lid/i.test(raw) ? raw : `No se pudo registrar el lote: ${raw}`)
           : 'No se pudo registrar el lote.';
-        this.snackBar.open(msg, 'Cerrar', { duration: 5500 });
+        this.toast.error(msg);
         this.refreshView();
       }
     });
@@ -219,7 +219,7 @@ export class ArticleDetailDialogComponent implements OnInit, OnDestroy {
     if (!article || !article.isActive || ids.length === 0 || this.decommissioning) return;
 
     if (reason.length < 5 || reason.length > 500) {
-      this.snackBar.open('Atención: debes escribir un motivo de baja de entre 5 y 500 caracteres.', 'Cerrar', { duration: 4000 });
+      this.toast.warning('Debes escribir un motivo de baja de entre 5 y 500 caracteres.');
       return;
     }
 
@@ -254,13 +254,13 @@ export class ArticleDetailDialogComponent implements OnInit, OnDestroy {
         }
 
         if (failCount === 0) {
-          this.snackBar.open(`Se retiraron ${okCount} ${okCount === 1 ? 'unidad' : 'unidades'} correctamente.`, 'Cerrar', { duration: 4000 });
+          this.toast.success(`Se retiraron ${okCount} ${okCount === 1 ? 'unidad' : 'unidades'} correctamente.`);
         } else if (okCount > 0) {
-          this.snackBar.open(`Atención: se retiraron ${okCount} unidades, pero ${failCount} quedaron pendientes por restricciones.`, 'Cerrar', { duration: 5000 });
+          this.toast.warning(`Se retiraron ${okCount} unidades, pero ${failCount} quedaron pendientes por restricciones.`);
         } else {
           const raw = (results[0] as { error: string }).error || 'No se pudo dar de baja las unidades seleccionadas.';
           const msg = /error|fall[oó]|no se pud|rechazad|inv[aá]lid/i.test(raw) ? raw : `No se pudo dar de baja: ${raw}`;
-          this.snackBar.open(msg, 'Cerrar', { duration: 5500 });
+          this.toast.error(msg);
         }
         this.refreshView();
       });
@@ -271,7 +271,7 @@ export class ArticleDetailDialogComponent implements OnInit, OnDestroy {
     this.api.getArticle(this.data.id).subscribe({
       next: article => { this.article = article; this.refreshView(); },
       error: () => {
-        this.snackBar.open('Atención: no se actualizó la vista automáticamente; vuelve a abrir la ficha para ver el estado reciente.', 'Cerrar', { duration: 4500 });
+        this.toast.warning('No se actualizó la vista automáticamente; vuelve a abrir la ficha para ver el estado reciente.');
         this.refreshView();
       }
     });
@@ -331,7 +331,7 @@ export class ArticleDetailDialogComponent implements OnInit, OnDestroy {
 
             if (existingSerials.includes(normalized) || batchSerials.includes(normalized)) {
               lastScannedCode = text;
-              this.snackBar.open(`Atención: la serie ${text} ya está registrada.`, 'Cerrar', { duration: 2200 });
+              this.toast.warning(`La serie ${text} ya está registrada.`);
               return;
             }
 
@@ -340,7 +340,7 @@ export class ArticleDetailDialogComponent implements OnInit, OnDestroy {
             if (this.scanTargetIndex >= 0) {
               // Modo individual: llena la fila y cierra
               this.batchRows[this.scanTargetIndex].serialNumber = text;
-              this.snackBar.open(`Serie #${this.scanTargetIndex + 1} detectada: ${text}`, 'Cerrar', { duration: 2000 });
+              this.toast.info(`Serie #${this.scanTargetIndex + 1} detectada: ${text}`);
               this.stopBatchScanner();
               return;
             } else {
@@ -348,12 +348,12 @@ export class ArticleDetailDialogComponent implements OnInit, OnDestroy {
               const emptyIdx = this.batchRows.findIndex(r => !r.serialNumber.trim());
               if (emptyIdx !== -1) {
                 this.batchRows[emptyIdx].serialNumber = text;
-                this.snackBar.open(`Serie #${emptyIdx + 1} agregada: ${text}`, 'Cerrar', { duration: 1800 });
+                this.toast.info(`Serie #${emptyIdx + 1} agregada: ${text}`);
               } else if (this.batchRows.length < 1000) {
                 this.batchRows = [...this.batchRows, { serialNumber: text }];
-                this.snackBar.open(`Serie #${this.batchRows.length} agregada: ${text}`, 'Cerrar', { duration: 1800 });
+                this.toast.info(`Serie #${this.batchRows.length} agregada: ${text}`);
               } else {
-                this.snackBar.open('Atención: se alcanzó el límite máximo de 1000 unidades.', 'Cerrar', { duration: 3000 });
+                this.toast.warning('Se alcanzó el límite máximo de 1000 unidades.');
                 this.stopBatchScanner();
                 return;
               }
@@ -368,7 +368,7 @@ export class ArticleDetailDialogComponent implements OnInit, OnDestroy {
           }
         });
       } catch {
-        this.snackBar.open('No se pudo acceder a la cámara. Revisa los permisos.', 'Cerrar', { duration: 4000 });
+        this.toast.error('No se pudo acceder a la cámara. Revisa los permisos.');
         this.stopBatchScanner();
       }
     }, 50);
