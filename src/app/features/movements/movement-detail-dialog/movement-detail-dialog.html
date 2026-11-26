@@ -1,16 +1,23 @@
 <app-modal-shell type="detail" title="Detalle del movimiento" [subtitle]="'Movimiento #' + data.movement.id" icon="receipt_long" [infoVisible]="true" [closeVisible]="true" [footerVisible]="false" [contentScrollable]="false" (closeRequested)="dialogRef.close()">
   <div class="movement-dialog ui-v2-dialog ui-v2-dialog--simple">
-    <main><div class="record-grid">
-    <div><label>Artículo</label><strong>{{data.articleName | cleanArticleName}}</strong></div><div><label>Código</label><strong>{{data.articleCode}}</strong></div>
-    <div><label>Acción</label><strong>{{data.movement.actionId===1?'Entrada':data.movement.actionId===2?'Salida':'Custodia / traspaso'}}</strong></div>
-    <div><label>Fecha</label><strong>{{data.movement.movementDate | date:'dd/MM/yyyy HH:mm'}}</strong></div>
-    <div><label>Cantidad</label><strong>{{data.movement.amount | number:'1.0-2'}}</strong></div>
-    <div><label>Destinatario</label><strong>{{data.movement.recipient || '—'}}</strong></div>
-    <div><label>Precio unitario</label><strong>{{data.movement.salePrice | money:'PEN'}}</strong></div>
-    <div><label>Tipo de venta / pago</label><strong>{{ isCreditSale ? 'Venta a cuotas' : (data.movement.paymentMethod || '—') }}</strong></div>
-    <div><label>Documento</label><strong>{{data.movement.documentNumber || '—'}}</strong></div>
-    <div><label>Responsable</label><strong>{{ responsibleName }}</strong></div>
-  </div><section class="credit-details" *ngIf="isCreditSale">
+    <main>
+      <div class="movement-detail-layout" [class.movement-detail-layout--credit]="isCreditSale">
+        <section class="movement-primary-card">
+          <header class="movement-card-heading"><span class="movement-card-icon"><mat-icon aria-hidden="true">receipt_long</mat-icon></span><div><h3>Información del movimiento</h3><p>Datos principales de la operación</p></div></header>
+          <div class="movement-detail-fields">
+      <div><label>Artículo</label><strong>{{data.articleName | cleanArticleName}}</strong></div>
+      <div><label>Código</label><strong>{{data.articleCode}}</strong></div>
+      <div><label>Acción</label><strong>{{data.movement.actionId===1?'Entrada':data.movement.actionId===2?'Salida':'Custodia / traspaso'}}</strong></div>
+      <div><label>Fecha</label><strong>{{data.movement.movementDate | date:'dd/MM/yyyy HH:mm'}}</strong></div>
+      <div><label>Cantidad</label><strong>{{data.movement.amount | number:'1.0-2'}}</strong></div>
+      <div><label>Destinatario</label><strong>{{data.movement.recipient || '—'}}</strong></div>
+      <div><label>Precio unitario</label><strong>{{data.movement.salePrice | money:'PEN'}}</strong></div>
+      <div><label>Tipo de venta / pago</label><strong>{{ isCreditSale ? 'Venta a cuotas' : (data.movement.paymentMethod || '—') }}</strong></div>
+      <div><label>Documento</label><strong>{{data.movement.documentNumber || '—'}}</strong></div>
+      <div><label>Responsable</label><strong>{{ responsibleName }}</strong></div>
+    </div>
+        </section>
+        <section class="credit-details" *ngIf="isCreditSale">
       <h3>Financiamiento y cronograma de cuotas</h3>
       <p *ngIf="creditLoading">Consultando saldos y vencimientos…</p>
       <p class="credit-error" *ngIf="creditError" role="alert">{{creditError}}</p>
@@ -49,7 +56,8 @@
         </div>
       </ng-container>
     </section>
-    <section><label>Observaciones</label><p>{{data.movement.observation || 'Sin observaciones'}}</p></section>
-  </main>
+      </div>
+      <section class="movement-observation-card"><label>Observaciones</label><p>{{data.movement.observation || 'Sin observaciones'}}</p></section>
+    </main>
   </div>
 </app-modal-shell>
