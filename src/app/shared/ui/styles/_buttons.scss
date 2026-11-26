@@ -171,6 +171,9 @@ button.ui-v2-button--loading {
   position: relative;
   pointer-events: none;
   cursor: progress;
+  --ui-button-loading-color: var(--inv-text, #edf5fc);
+  /* Oculta también los nodos de texto directos; opacity solo afectaría elementos hijos. */
+  color: transparent !important;
 
   > * {
     opacity: 0 !important;
@@ -184,7 +187,7 @@ button.ui-v2-button--loading {
     width: 14px;
     height: 14px;
     box-sizing: border-box;
-    border: 2px solid currentColor;
+    border: 2px solid var(--ui-button-loading-color);
     border-right-color: transparent;
     border-radius: 50%;
     transform: translateY(-50%);
@@ -198,10 +201,18 @@ button.ui-v2-button--loading {
     display: grid;
     place-items: center;
     padding-left: 16px;
-    color: inherit;
+    color: var(--ui-button-loading-color);
     font: inherit;
     white-space: nowrap;
   }
+}
+
+button.ui-v2-button--primary.ui-v2-button--loading {
+  --ui-button-loading-color: var(--inv-company-on-accent, #12202b);
+}
+
+button.ui-v2-button--danger.ui-v2-button--loading {
+  --ui-button-loading-color: var(--inv-danger, #ffb5ba);
 }
 
 @keyframes inv-button-spin {
