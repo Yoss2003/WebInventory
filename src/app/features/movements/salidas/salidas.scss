@@ -12,3 +12,6 @@
 .outputs-table--scroll{max-height:264px!important}
 .outputs-table--scroll table{min-width:1030px}
 @media(max-width:760px){.outputs-filters{flex-basis:100%}.outputs-filters label{flex:1 1 145px}.outputs-filter-control{width:100%}}
+
+.outputs-table tbody td{white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.outputs-table tbody td.inv-core-action-cell{overflow:visible}
