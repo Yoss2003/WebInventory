@@ -33,3 +33,9 @@
 .movement-observation-card p{margin:8px 0 0;color:#dce7ef;font-size:12px;line-height:1.5;overflow-wrap:anywhere}
 @media(max-width:900px){.movement-detail-layout--credit{grid-template-columns:1fr}}
 @media(max-width:560px){.movement-dialog main{padding:12px}.movement-primary-card,.movement-dialog .credit-details,.movement-observation-card{padding:12px}.movement-detail-fields{grid-template-columns:1fr}}
+
+.movement-record-loading{display:grid;justify-items:center;gap:14px;padding:20px;border:1px solid #3c5264;border-radius:13px;background:#172632}
+.movement-record-skeleton{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px;width:100%}
+.movement-record-skeleton span{height:42px;border-radius:8px;background:linear-gradient(90deg,#1b2b37 20%,#2a3d4b 45%,#1b2b37 70%);background-size:220% 100%;animation:movement-record-shimmer 1.35s ease-in-out infinite}
+@keyframes movement-record-shimmer{to{background-position:-220% 0}}
+@media(prefers-reduced-motion:reduce){.movement-record-skeleton span{animation:none;background:#263744}}
