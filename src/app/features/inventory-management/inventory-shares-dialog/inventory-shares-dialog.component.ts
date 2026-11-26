@@ -11,6 +11,7 @@ import { UiButtonDirective } from '../../../shared/ui/directives/ui-button.direc
 import { UiTableActionDirective } from '../../../shared/ui/directives/ui-table-action.directive';
 import { LoadingIndicatorComponent } from '../../../shared/loading/loading-indicator';
 import { ModalShellComponent } from '../../../shared/ui/components/modal-shell/modal-shell.component';
+import { UiPaginationComponent } from '../../../shared/ui/components/ui-pagination/ui-pagination.component';
 import { finalize, timeout } from 'rxjs';
 
 export interface InventorySharesDialogData {
@@ -23,7 +24,7 @@ export interface InventorySharesDialogData {
 @Component({
   selector: 'app-inventory-shares-dialog',
   standalone: true,
-  imports: [CommonModule, MatIconModule, UiButtonDirective, UiTableActionDirective, LoadingIndicatorComponent, ModalShellComponent],
+  imports: [CommonModule, MatIconModule, UiButtonDirective, UiTableActionDirective, LoadingIndicatorComponent, ModalShellComponent, UiPaginationComponent],
   templateUrl: './inventory-shares-dialog.component.html',
   styleUrl: './inventory-shares-dialog.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush
@@ -37,6 +38,9 @@ export class InventorySharesDialogComponent implements OnInit {
   private readonly cdr = inject(ChangeDetectorRef);
 
   shares: InventoryShare[] = [];
+  page = 1;
+  pageSize = 10;
+  get paginatedShares(): InventoryShare[] { const start = (this.page - 1) * this.pageSize; return this.shares.slice(start, start + this.pageSize); }
   loading = false;
   refreshing = false;
   error = '';
