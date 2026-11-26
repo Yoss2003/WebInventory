@@ -5,11 +5,15 @@ import { UiButtonDirective } from '../../../shared/ui/directives/ui-button.direc
 import { UiPageHeadingComponent } from '../../../shared/ui/components/ui-page-heading.component';
 import { cleanArticleDisplayName } from '../../../shared/clean-article-name.pipe';
 import { ToastService } from '../../../shared/toast/toast.service';
-import { ChangeDetectorRef, Component, OnInit, inject } from '@angular/core';
+import { ChangeDetectorRef, Component, OnInit, TemplateRef, ViewChild, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { MoneyPipe } from '../../../shared/money.pipe';
 import { MatIconModule } from '@angular/material/icon';
+import { MatDatepickerModule } from '@angular/material/datepicker';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatInputModule } from '@angular/material/input';
+import { provideNativeDateAdapter, MAT_DATE_LOCALE } from '@angular/material/core';
 import { MatTabsModule } from '@angular/material/tabs';
 import { TabViewTransitionDirective } from '../../../shared/ui/directives/tab-view-transition.directive';
 import { MatDialog } from '@angular/material/dialog';
@@ -29,8 +33,10 @@ import { MovementDetailDialogComponent } from '../movement-detail-dialog/movemen
 import { LoadingIndicatorComponent } from '../../../shared/loading/loading-indicator';
 
 import { UiSearchComponent } from '../../../shared/ui/components/ui-search.component';
+import { ModalShellComponent } from '../../../shared/ui/components/modal-shell/modal-shell.component';
+import type { ModalActionId, ModalFooterAction } from '../../../shared/ui/models/modal-standard.model';
 
-@Component({selector:'app-salidas',standalone:true,imports:[FormsModule, MoneyPipe, UiEmptyStateComponent, UiStatusComponent, UiTableActionDirective, UiButtonDirective, UiPageHeadingComponent, CommonModule,MatIconModule,MatTabsModule,TabViewTransitionDirective,LoadingIndicatorComponent,UiSearchComponent],templateUrl:'./salidas.html',styleUrl:'./salidas.scss'})
+@Component({selector:'app-salidas',standalone:true,imports:[FormsModule, MoneyPipe, UiEmptyStateComponent, UiStatusComponent, UiTableActionDirective, UiButtonDirective, UiPageHeadingComponent, CommonModule,MatIconModule,MatTabsModule,MatDatepickerModule,MatFormFieldModule,MatInputModule,TabViewTransitionDirective,LoadingIndicatorComponent,UiSearchComponent,ModalShellComponent],providers:[provideNativeDateAdapter(),{provide:MAT_DATE_LOCALE,useValue:'es-PE'}],templateUrl:'./salidas.html',styleUrl:'./salidas.scss'})
 export class SalidasComponent implements OnInit {
   private readonly movementsApi=inject(MovementService);
   private readonly salesApi=inject(SalesService);
@@ -41,23 +47,57 @@ export class SalidasComponent implements OnInit {
   private readonly confirms=inject(ConfirmationDialogService);
   private readonly cdr=inject(ChangeDetectorRef);
   private readonly toast = inject(ToastService);
+  @ViewChild('advancedFiltersDialog') private advancedFiltersTemplate?: TemplateRef<unknown>;
+  private advancedFiltersRef?: import('@angular/material/dialog').MatDialogRef<unknown>;
   private readonly router=inject(Router);
   traspasos:Movement[]=[]; ventas:Movement[]=[];
   private articles=new Map<number,Article>();
   cancelledIds=new Set<number>();cancelledSaleIds=new Set<number>();
   loading=false;hasLoaded=false;error='';
   search='';
-  dateFrom = '';
-  dateTo = '';
+  dateFromDate: Date | null = null;
+  dateToDate: Date | null = null;
   quantityMin: number | null = null;
   quantityMax: number | null = null;
-  get hasActiveFilters(): boolean { return !!(this.dateFrom || this.dateTo || this.quantityMin !== null || this.quantityMax !== null); }
-  clearFilters(): void { this.dateFrom = ''; this.dateTo = ''; this.quantityMin = null; this.quantityMax = null; }
+  get hasActiveFilters(): boolean {
+    return !!(this.dateFromDate || this.dateToDate || this.quantityMin !== null || this.quantityMax !== null);
+  }
+  get activeFilterCount(): number {
+    return [this.dateFromDate, this.dateToDate, this.quantityMin, this.quantityMax].filter(value => value !== null).length;
+  }
+  get filterModalActions(): ModalFooterAction[] {
+    return [{ id: 'close', label: 'Aplicar filtros', tone: 'primary', order: 0 }];
+  }
+  setDateFrom(value: Date | null): void { this.dateFromDate = value; }
+  setDateTo(value: Date | null): void { this.dateToDate = value; }
+  clearFilters(): void {
+    this.dateFromDate = null;
+    this.dateToDate = null;
+    this.quantityMin = null;
+    this.quantityMax = null;
+  }
+  openAdvancedFilters(): void {
+    if (!this.advancedFiltersTemplate || this.advancedFiltersRef) return;
+    const ref = this.dialog.open(this.advancedFiltersTemplate, this.modalStandards.createDialogConfig('filters', {
+      panelClass: ['inv-seven-modal', 'fx-history-modal', 'outputs-advanced-filter-modal'],
+      width: 'min(620px, calc(100vw - 24px))',
+      maxWidth: 'calc(100vw - 24px)',
+      maxHeight: 'calc(100dvh - 24px)',
+      autoFocus: false,
+      restoreFocus: true
+    }));
+    this.advancedFiltersRef = ref;
+    ref.afterClosed().subscribe(() => { if (this.advancedFiltersRef === ref) this.advancedFiltersRef = undefined; });
+  }
+  handleFilterModalAction(action: ModalActionId): void {
+    if (action === 'close' || action === 'cancel') this.closeAdvancedFilters();
+  }
+  closeAdvancedFilters(): void { this.advancedFiltersRef?.close(); }
   private matchesQuery(m: Movement): boolean {
     const q = this.search.trim().toLocaleLowerCase('es');
     const movementDate = new Date(m.movementDate);
-    if (this.dateFrom && movementDate < new Date(this.dateFrom + 'T00:00:00')) return false;
-    if (this.dateTo && movementDate > new Date(this.dateTo + 'T23:59:59.999')) return false;
+    if (this.dateFromDate) { const from = new Date(this.dateFromDate); from.setHours(0, 0, 0, 0); if (movementDate < from) return false; }
+    if (this.dateToDate) { const to = new Date(this.dateToDate); to.setHours(23, 59, 59, 999); if (movementDate > to) return false; }
     const amount = Number(m.amount);
     if (this.quantityMin !== null && Number.isFinite(this.quantityMin) && amount < this.quantityMin) return false;
     if (this.quantityMax !== null && Number.isFinite(this.quantityMax) && amount > this.quantityMax) return false;
