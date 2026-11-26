@@ -106,7 +106,7 @@
         </div>
       </div>
 
-      <div class="current-access-table-wrap" [class.has-overflow]="totalAccessCount > 2">
+      <div class="current-access-table-wrap" [class.has-overflow]="totalAccessCount > 2" appUiTablePaging="share-inventory-current-access">
         <table class="current-access-table">
           <thead>
             <tr><th scope="col">Usuario</th><th scope="col">Rol de acceso</th><th scope="col">Fecha</th></tr>
@@ -150,7 +150,7 @@
           </tbody>
         </table>
       </div>
-      <app-ui-pagination *ngIf="shares.length" [totalItems]="shares.length" [page]="sharesPage" [pageSize]="sharesPageSize" (pageChange)="sharesPage=$event" (pageSizeChange)="sharesPageSize=$event;sharesPage=1" label="colaboradores" />
+      <app-ui-pagination *ngIf="shares.length" [totalItems]="shares.length" [page]="sharesPage" [pageSize]="sharesPageSize" (pageChange)="sharesPage=$event" (pageSizeChange)="sharesPageSize=$event;sharesPage=1" label="colaboradores" loadingId="share-inventory-current-access" />
       <p *ngIf="!loadingShares && !sharesError && !shares.length" class="current-access-empty-note">
         Este inventario todavía no tiene colaboradores adicionales. El titular conserva el acceso propietario.
       </p>
