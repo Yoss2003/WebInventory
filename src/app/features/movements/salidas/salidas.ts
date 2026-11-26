@@ -46,8 +46,20 @@ export class SalidasComponent implements OnInit {
   cancelledIds=new Set<number>();cancelledSaleIds=new Set<number>();
   loading=false;hasLoaded=false;error='';
   search='';
+  dateFrom = '';
+  dateTo = '';
+  quantityMin: number | null = null;
+  quantityMax: number | null = null;
+  get hasActiveFilters(): boolean { return !!(this.dateFrom || this.dateTo || this.quantityMin !== null || this.quantityMax !== null); }
+  clearFilters(): void { this.dateFrom = ''; this.dateTo = ''; this.quantityMin = null; this.quantityMax = null; }
   private matchesQuery(m: Movement): boolean {
     const q = this.search.trim().toLocaleLowerCase('es');
+    const movementDate = new Date(m.movementDate);
+    if (this.dateFrom && movementDate < new Date(this.dateFrom + 'T00:00:00')) return false;
+    if (this.dateTo && movementDate > new Date(this.dateTo + 'T23:59:59.999')) return false;
+    const amount = Number(m.amount);
+    if (this.quantityMin !== null && Number.isFinite(this.quantityMin) && amount < this.quantityMin) return false;
+    if (this.quantityMax !== null && Number.isFinite(this.quantityMax) && amount > this.quantityMax) return false;
     return !q || [
       this.articleName(m.articleId), this.articleCode(m.articleId),
       m.recipient, m.documentNumber, m.observation, m.paymentMethod
