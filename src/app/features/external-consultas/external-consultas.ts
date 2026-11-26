@@ -135,6 +135,7 @@ export class ExternalConsultasComponent implements OnInit {
 
   loadHistoryRates():void {
     if(this.loadingHistory)return;
+    this.historyPage = 1;
     this.historyError=''; this.historyRequested=false;
     if(!/^\d{4}-\d{2}-\d{2}$/.test(this.ratesFrom) || !/^\d{4}-\d{2}-\d{2}$/.test(this.ratesTo)){
       this.historyError='Selecciona ambas fechas para consultar el historial.';this.cdr.markForCheck();return;
