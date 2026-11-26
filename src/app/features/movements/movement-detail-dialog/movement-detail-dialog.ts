@@ -7,7 +7,6 @@ import { MatDialogModule, MatDialogRef, MAT_DIALOG_DATA } from '@angular/materia
 import { MatIconModule } from '@angular/material/icon';
 import { Movement } from '../../../core/models/movement.model';
 import { SalesService, SaleInstallmentsSummary } from '../../../core/services/sales';
-import { UiButtonDirective } from '../../../shared/ui/directives/ui-button.directive';
 import { ModalShellComponent } from '../../../shared/ui/components/modal-shell/modal-shell.component';
 
 @Component({
@@ -19,7 +18,6 @@ import { ModalShellComponent } from '../../../shared/ui/components/modal-shell/m
     CommonModule,
     MatDialogModule,
     MatIconModule,
-    UiButtonDirective,
     ModalShellComponent
   ],
   templateUrl: './movement-detail-dialog.html',
