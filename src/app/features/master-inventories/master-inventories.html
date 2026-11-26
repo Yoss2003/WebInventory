@@ -20,7 +20,7 @@
     </div>
 
     <div class="inv-core-toolbar">
-      <app-ui-search [(value)]="query" placeholder="Filtrar empresa o inventario"
+      <app-ui-search [value]="query" (valueChange)="query=$event;page=1" placeholder="Filtrar empresa o inventario"
         label="Buscar inventarios maestros" />
     </div>
 
