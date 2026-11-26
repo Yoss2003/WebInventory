@@ -416,8 +416,9 @@ export class MasterCatalogsComponent implements OnInit {
   editSupplier(item: SupplierRecord): void {
     if (!this.canManage) return;
     this.advancedInfo = null;
-    this.consultedRuc = '';
     this.supplier = { ...item };
+    // Los datos fiscales guardados pertenecen a este RUC; habilita el mismo flujo informativo que tras consultar.
+    this.consultedRuc = String(item.ruc ?? '').trim();
     this.editingSupplierId = item.id;
     this.tab = 'suppliers';
   }
