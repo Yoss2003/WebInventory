@@ -66,7 +66,7 @@
                [disabled]="isLoading || isSaving" />
       </label>
 
-      <div class="table-scroll" aria-live="polite">
+      <div class="table-scroll" aria-live="polite" appUiTablePaging="brands-list">
         <div class="brand-loading" *ngIf="isLoading" role="status">
           <app-loading-indicator message="Cargando marcas..." />
         </div>
@@ -120,7 +120,7 @@
             </tr>
           </tbody>
         </table>
-        <app-ui-pagination *ngIf="filteredBrands.length" [totalItems]="filteredBrands.length" [page]="page" [pageSize]="pageSize" (pageChange)="page=$event" (pageSizeChange)="pageSize=$event;page=1" label="marcas" />
+        <app-ui-pagination *ngIf="filteredBrands.length" [totalItems]="filteredBrands.length" [page]="page" [pageSize]="pageSize" (pageChange)="page=$event" (pageSizeChange)="pageSize=$event;page=1" label="marcas" loadingId="brands-list" />
       </div>
       <p class="list-hint">Para asignar una marca al artículo, selecciónala en el ComboBox del formulario.</p>
     </section>
