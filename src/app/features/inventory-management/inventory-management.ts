@@ -18,6 +18,7 @@ import { InventoryService, InventorySummary } from '../../core/services/inventor
 import { UserManagementService, ManagedUser } from '../../core/services/user-management';
 import { LoadingIndicatorComponent } from '../../shared/loading/loading-indicator';
 import { UiPaginationComponent } from '../../shared/ui/components/ui-pagination/ui-pagination.component';
+import { UiTablePagingDirective } from '../../../shared/ui/directives/ui-table-paging.directive';
 import { InventoryEditDialogComponent } from './inventory-edit-dialog/inventory-edit-dialog.component';
 import { InventoryCreateDialogComponent } from './inventory-create-dialog/inventory-create-dialog.component';
 import { ShareInventoryDialogComponent } from './share-inventory-dialog/share-inventory-dialog.component';
@@ -31,7 +32,7 @@ import { UiEmptyStateComponent } from '../../shared/ui/components/ui-empty-state
     UiEmptyStateComponent, UiStatusComponent,
     CommonModule, FormsModule, MatIconModule, MatSelectModule, MatFormFieldModule,
     RouterLink, UiPageHeadingComponent, UiButtonDirective,
-    UiTableActionDirective, LoadingIndicatorComponent, UiPaginationComponent
+    UiTableActionDirective, LoadingIndicatorComponent, UiTablePagingDirective, UiPaginationComponent
   ],
   templateUrl: './inventory-management.html',
   styleUrl: './inventory-management.scss',
