@@ -10,6 +10,7 @@ import { LoadingIndicatorComponent } from '../../shared/loading/loading-indicato
 import { UiPageHeadingComponent } from '../../shared/ui/components/ui-page-heading.component';
 import { UiSearchComponent } from '../../shared/ui/components/ui-search.component';
 import { UiPaginationComponent } from '../../shared/ui/components/ui-pagination/ui-pagination.component';
+import { UiTablePagingDirective } from '../../shared/ui/directives/ui-table-paging.directive';
 import { UiEmptyStateComponent } from '../../shared/ui/components/ui-empty-state.component';
 import { UiButtonDirective } from '../../shared/ui/directives/ui-button.directive';
 import { UiTableActionDirective } from '../../shared/ui/directives/ui-table-action.directive';
@@ -25,7 +26,7 @@ import { ResendCredentialsDialogComponent } from './resend-credentials-dialog/re
   selector: 'app-user-management',
   standalone: true,
   imports: [CommonModule, FormsModule, MatIconModule, LoadingIndicatorComponent,
-    UiPageHeadingComponent, UiSearchComponent, UiEmptyStateComponent, UiButtonDirective, UiTableActionDirective, UiPaginationComponent],
+    UiPageHeadingComponent, UiSearchComponent, UiEmptyStateComponent, UiButtonDirective, UiTableActionDirective, UiTablePagingDirective, UiPaginationComponent],
   templateUrl: './user-management.html',
   styleUrl: './user-management.scss'
 })
