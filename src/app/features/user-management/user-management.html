@@ -4,11 +4,8 @@
       subtitle="Cuentas, inventarios personales, roles y permisos de la empresa de tu sesión."></app-ui-page-heading>
     <div class="inv-core-header-actions">
       <button type="button" appUiButton="secondary" (click)="reload()"
-        [disabled]="loading" [attr.aria-busy]="loading">
-        <app-loading-indicator *ngIf="loading; else usersRefreshIcon"
-          [compact]="true" [message]="''" />
-        <ng-template #usersRefreshIcon><mat-icon aria-hidden="true">refresh</mat-icon></ng-template>
-        <span>Actualizar</span>
+        [disabled]="loading" [uiButtonLoading]="loading" [uiButtonLoadingText]="'Cargando...'">
+        <mat-icon aria-hidden="true">refresh</mat-icon><span>Actualizar</span>
       </button>
       <button *ngIf="canEditUsers" type="button" appUiButton="primary" (click)="openNewUser()">
         <mat-icon aria-hidden="true">person_add</mat-icon> Nuevo usuario
