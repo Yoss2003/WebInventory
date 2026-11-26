@@ -133,7 +133,7 @@
                 <td><span class="current-access-role owner">Propietario</span></td>
                 <td><span class="access-date-muted">—</span></td>
               </tr>
-              <tr *ngFor="let share of orderedShares">
+              <tr *ngFor="let share of paginatedOrderedShares">
                 <td>
                   <strong>{{ displayShareName(share) }}</strong>
                   <small *ngIf="share.username">@{{ share.username }}</small>
@@ -149,6 +149,7 @@
             </ng-container>
           </tbody>
         </table>
+        <app-ui-pagination *ngIf="shares.length" [totalItems]="shares.length" [page]="sharesPage" [pageSize]="sharesPageSize" (pageChange)="sharesPage=$event" (pageSizeChange)="sharesPageSize=$event;sharesPage=1" label="colaboradores" />
       </div>
       <p *ngIf="!loadingShares && !sharesError && !shares.length" class="current-access-empty-note">
         Este inventario todavía no tiene colaboradores adicionales. El titular conserva el acceso propietario.
