@@ -51,6 +51,17 @@ export class CategoryListComponent implements OnInit {
   dataSource=new MatTableDataSource<Category>();
   page = 1;
   pageSize = 10;
+  private readonly subcategoryPages = new Map<number, number>();
+  private readonly subcategoryPageSizes = new Map<number, number>();
+  getSubcategoryPage(id: number): number { return this.subcategoryPages.get(id) ?? 1; }
+  getSubcategoryPageSize(id: number): number { return this.subcategoryPageSizes.get(id) ?? 10; }
+  paginatedSubcategories(category: Category): Category[] {
+    const rows = category.subcategorias ?? [];
+    const start = (this.getSubcategoryPage(category.id) - 1) * this.getSubcategoryPageSize(category.id);
+    return rows.slice(start, start + this.getSubcategoryPageSize(category.id));
+  }
+  setSubcategoryPage(id: number, page: number): void { this.subcategoryPages.set(id, page); }
+  setSubcategoryPageSize(id: number, size: number): void { this.subcategoryPageSizes.set(id, size); this.subcategoryPages.set(id, 1); }
   get paginatedCategories(): Category[] { const start = (this.page - 1) * this.pageSize; return this.dataSource.filteredData.slice(start, start + this.pageSize); }
   expandedElement:Category|null=null;
   mostrarInactivos=false;
