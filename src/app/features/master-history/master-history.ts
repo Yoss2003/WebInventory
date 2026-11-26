@@ -1,5 +1,6 @@
 import { UiButtonDirective } from '../../shared/ui/directives/ui-button.directive';
 import { UiPageHeadingComponent } from '../../shared/ui/components/ui-page-heading.component';
+import { UiPaginationComponent } from '../../shared/ui/components/ui-pagination/ui-pagination.component';
 import { CleanArticleNamePipe } from '../../shared/clean-article-name.pipe';
 import { CommonModule } from '@angular/common';
 import { ChangeDetectorRef, Component, OnInit, inject } from '@angular/core';
@@ -59,6 +60,7 @@ interface HistoryUser {
   imports: [
     UiButtonDirective,
     UiPageHeadingComponent,
+    UiPaginationComponent,
     CleanArticleNamePipe,
     CommonModule,
     FormsModule,
@@ -84,7 +86,7 @@ export class MasterHistoryComponent implements OnInit {
   total = 0;
   loading = false;
   page = 1;
-  pageSize = 30;
+  pageSize = 10;
   inventoryId = '';
   userId = '';
   actorUserId = '';
@@ -167,6 +169,8 @@ export class MasterHistoryComponent implements OnInit {
     }
   }
 
+  changePage(page: number): void { if (this.loading || page < 1 || page === this.page) return; this.page = page; this.load(); }
+  changePageSize(size: number): void { if (![10, 20, 50, 100].includes(size) || size === this.pageSize) return; this.pageSize = size; this.page = 1; this.load(); }
   previous(): void {
     if (this.page > 1) {
       this.page--;
