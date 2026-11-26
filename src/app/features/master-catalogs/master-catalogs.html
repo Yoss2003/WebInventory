@@ -48,7 +48,7 @@
           </div>
         </div>
       </header>
-      <div class="inv-core-toolbar"><app-ui-search [(value)]="supplierSearch" placeholder="Buscar proveedor, RUC o contacto" label="Buscar proveedores" /></div>
+      <div class="inv-core-toolbar"><app-ui-search [value]="supplierSearch" (valueChange)="supplierSearch=$event;supplierPage=1" placeholder="Buscar proveedor, RUC o contacto" label="Buscar proveedores" /></div>
       <div class="supplier-table-viewport inv-core-table-wrap" [class.supplier-table-viewport--scroll]="suppliers.length > 2"><table class="supplier-table" [class.supplier-table-readonly]="!canManage">
         <thead><tr>
           <th scope="col">RUC</th>
@@ -57,7 +57,7 @@
           <th scope="col" *ngIf="canManage" class="supplier-actions-col">Acciones</th>
         </tr></thead>
         <tbody>
-          <tr *ngFor="let item of filteredSuppliers" class="supplier-row-detail" role="button" tabindex="0"
+          <tr *ngFor="let item of paginatedSuppliers" class="supplier-row-detail" role="button" tabindex="0"
               [attr.aria-label]="'Ver detalle del proveedor ' + item.businessName"
               (click)="showSupplierDetail(item)"
               (keydown.enter)="showSupplierDetail(item)"
@@ -90,6 +90,7 @@
           </tr>
         </tbody>
       </table></div>
+      <app-ui-pagination *ngIf="filteredSuppliers.length" [totalItems]="filteredSuppliers.length" [page]="supplierPage" [pageSize]="supplierPageSize" (pageChange)="supplierPage=$event" (pageSizeChange)="supplierPageSize=$event;supplierPage=1" label="proveedores" />
       <app-ui-empty-state
         *ngIf="!filteredSuppliers.length"
         icon="inventory_2"
@@ -146,8 +147,8 @@
     <div class="list">
       <h2>Parámetros visibles ({{parameters.length}})</h2>
       <div class="inv-core-toolbar parameter-toolbar">
-        <app-ui-search [(value)]="parameterSearch" placeholder="Buscar parámetro" label="Buscar parámetros" />
-        <mat-form-field appearance="outline" class="inventory-select parameter-type-filter"><mat-label>Filtrar por tipo</mat-label><mat-select id="parameter-type-filter" [(ngModel)]="parameterTypeFilter" name="parameterTypeFilter" panelClass="inventory-select-options"><mat-option value="">Todos los tipos</mat-option><mat-option *ngFor="let type of parameterFilterOptions" [value]="type">{{parameterTypeLabel(type)}}</mat-option></mat-select></mat-form-field>
+        <app-ui-search [value]="parameterSearch" (valueChange)="parameterSearch=$event;parameterPage=1" placeholder="Buscar parámetro" label="Buscar parámetros" />
+        <mat-form-field appearance="outline" class="inventory-select parameter-type-filter"><mat-label>Filtrar por tipo</mat-label><mat-select id="parameter-type-filter" [(ngModel)]="parameterTypeFilter" (ngModelChange)="parameterPage=1" name="parameterTypeFilter" panelClass="inventory-select-options"><mat-option value="">Todos los tipos</mat-option><mat-option *ngFor="let type of parameterFilterOptions" [value]="type">{{parameterTypeLabel(type)}}</mat-option></mat-select></mat-form-field>
       </div>
       <div class="parameter-table-viewport inv-core-table-wrap">
         <table>
@@ -160,7 +161,7 @@
             </tr>
           </thead>
           <tbody>
-            <tr *ngFor="let item of filteredParameters">
+            <tr *ngFor="let item of paginatedParameters">
               <td>{{item.parameterType}}</td>
               <td>{{item.name}}</td>
               <td>{{item.description||'—'}}</td>
@@ -176,6 +177,7 @@
           </tbody>
         </table>
       </div>
+      <app-ui-pagination *ngIf="filteredParameters.length" [totalItems]="filteredParameters.length" [page]="parameterPage" [pageSize]="parameterPageSize" (pageChange)="parameterPage=$event" (pageSizeChange)="parameterPageSize=$event;parameterPage=1" label="parámetros" />
       <app-ui-empty-state
         *ngIf="!filteredParameters.length"
         icon="tune"

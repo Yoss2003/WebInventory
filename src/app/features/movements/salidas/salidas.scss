@@ -1,17 +1,15 @@
 /* Los estilos de Salidas estan centralizados en
    src/app/shared/ui/core-pages/_four-list-pages.scss.
    Sin reglas locales duplicadas. */
-
-.outputs-toolbar{align-items:flex-start!important;gap:12px!important}
-.outputs-filters{display:flex;align-items:center;flex-wrap:wrap;gap:8px;min-width:0;flex:1 1 520px}
-.outputs-filters label{display:flex;align-items:center;gap:6px;color:var(--inv-muted,#aebfce);font-size:10px;font-weight:700;white-space:nowrap}
-.outputs-filter-control{box-sizing:border-box;width:132px;min-width:0;height:36px;padding:0 9px;border:1px solid var(--inv-line,#4c6172);border-radius:9px;background:var(--inv-input-bg,#101a23);color:var(--inv-text,#edf4fc);font:inherit;font-size:11px}
-.outputs-filter-control--number{width:88px}
-.outputs-filter-clear{height:36px;padding:0 11px;border:1px solid var(--inv-line,#4c6172);border-radius:9px;background:var(--inv-panel-head,#20303e);color:var(--inv-text,#edf4fc);font-size:11px;font-weight:700;cursor:pointer}
-.outputs-filter-clear:disabled{opacity:.45;cursor:not-allowed}
+.outputs-toolbar{align-items:center!important;gap:12px!important}
+.outputs-advanced-trigger{display:inline-flex;align-items:center;justify-content:center;gap:8px;min-height:40px;white-space:nowrap}
+.outputs-advanced-trigger mat-icon{width:18px;height:18px;font-size:18px}
+.outputs-filter-count{display:inline-grid;place-items:center;min-width:19px;height:19px;padding:0 5px;border-radius:20px;background:var(--inv-brand-soft,#314338);color:var(--inv-company-accent,#a2d149);font-size:10px;font-weight:800}
+.outputs-filter-hint{margin:10px 0 0;padding:9px 11px;border:1px solid #405669;border-radius:8px;background:#142430;color:#aebfce;font-size:11px;line-height:1.45}
 .outputs-table--scroll{max-height:264px!important}
 .outputs-table--scroll table{min-width:1030px}
-@media(max-width:760px){.outputs-filters{flex-basis:100%}.outputs-filters label{flex:1 1 145px}.outputs-filter-control{width:100%}}
-
 .outputs-table tbody td{white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .outputs-table tbody td.inv-core-action-cell{overflow:visible}
+.outputs-advanced-dialog .fx-unified-content{display:grid;gap:12px;padding:16px 18px 18px}
+.outputs-advanced-dialog .rate-date-field>input{min-height:39px;width:100%;box-sizing:border-box}
+@media(max-width:760px){.outputs-toolbar{align-items:stretch!important}.outputs-advanced-trigger{width:100%}}

@@ -36,7 +36,7 @@
           <div class="registered-suppliers__tools">
             <label class="registered-suppliers__search">
               <mat-icon aria-hidden="true">search</mat-icon>
-              <input type="search" [(ngModel)]="supplierSearch" maxlength="120"
+              <input type="search" [(ngModel)]="supplierSearch" (ngModelChange)="supplierPage=1" maxlength="120"
                      placeholder="Buscar nombre, RUC o contacto"
                      aria-label="Buscar proveedores" appUiControl />
             </label>
@@ -59,7 +59,7 @@
                 </tr>
               </thead>
               <tbody>
-                <tr *ngFor="let supplier of filteredSuppliers">
+                <tr *ngFor="let supplier of paginatedSuppliers">
                   <td class="registered-suppliers__business-cell">
                     <strong [title]="supplier.businessName || ''">{{ supplier.businessName || 'Proveedor sin razón social' }}</strong>
                     <small>RUC {{ supplier.ruc || 'no registrado' }}</small>
@@ -92,6 +92,7 @@
               </tbody>
             </table>
           </div>
+          <app-ui-pagination *ngIf="filteredSuppliers.length" [totalItems]="filteredSuppliers.length" [page]="supplierPage" [pageSize]="supplierPageSize" (pageChange)="supplierPage=$event" (pageSizeChange)="supplierPageSize=$event;supplierPage=1" label="proveedores" />
           <p class="registered-suppliers__state" *ngIf="!suppliersLoading && !suppliersError && suppliersLoaded && !filteredSuppliers.length">
             {{ supplierSearch ? 'No hay proveedores que coincidan con tu búsqueda.' : 'No tienes proveedores activos registrados.' }}
           </p>
@@ -217,7 +218,7 @@
                   </thead>
 
                   <tbody>
-                    <tr *ngFor="let rate of historyRates">
+                    <tr *ngFor="let rate of paginatedHistoryRates">
                       <td>{{ rate.date.slice(0,10) | date:'dd/MM/yyyy':'UTC' }}</td>
                       <td>{{ rate.baseCurrency }} / PEN</td>
                       <td>{{ rate.buyPrice | money:'PEN':3 }}</td>
@@ -232,6 +233,7 @@
                   </tbody>
                 </table>
               </div>
+              <app-ui-pagination *ngIf="historyRates.length" [totalItems]="historyRates.length" [page]="historyPage" [pageSize]="historyPageSize" (pageChange)="historyPage=$event" (pageSizeChange)="historyPageSize=$event;historyPage=1" label="cotizaciones" />
 
               <p *ngIf="loadingHistory" role="status" class="fx-loading">
                 Consultando el historial almacenado...

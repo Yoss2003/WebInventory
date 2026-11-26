@@ -9,6 +9,7 @@ import { UiSearchComponent } from '../../shared/ui/components/ui-search.componen
 import { UiEmptyStateComponent } from '../../shared/ui/components/ui-empty-state.component';
 import { UiButtonDirective } from '../../shared/ui/directives/ui-button.directive';
 import { UiTableActionDirective } from '../../shared/ui/directives/ui-table-action.directive';
+import { UiPaginationComponent } from '../../shared/ui/components/ui-pagination/ui-pagination.component';
 import { ToastService } from '../../shared/toast/toast.service';
 import { AccessService } from '../../core/services/access';
 import { ModalStandardService } from '../../shared/ui/services/modal-standard.service';
@@ -35,7 +36,8 @@ interface MasterInventory {
     UiSearchComponent,
     UiEmptyStateComponent,
     UiButtonDirective,
-    UiTableActionDirective
+    UiTableActionDirective,
+    UiPaginationComponent
   ],
   templateUrl: './master-inventories.html',
   styleUrl: './master-inventories.scss'
@@ -53,6 +55,9 @@ export class MasterInventoriesComponent implements OnInit {
   companyId = 0;
   query = '';
   masters: MasterInventory[] = [];
+  page = 1;
+  pageSize = 10;
+  get paginatedMasters(): MasterInventory[] { const start = (this.page - 1) * this.pageSize; return this.filtered.slice(start, start + this.pageSize); }
   error = '';
 
   get filtered(): MasterInventory[] {

@@ -28,8 +28,9 @@ import { MovementDetailDialogComponent } from '../movement-detail-dialog/movemen
 import { LoadingIndicatorComponent } from '../../../shared/loading/loading-indicator';
 
 import { UiSearchComponent } from '../../../shared/ui/components/ui-search.component';
+import { UiPaginationComponent } from '../../../shared/ui/components/ui-pagination/ui-pagination.component';
 
-@Component({selector:'app-entradas',standalone:true,imports:[MoneyPipe, UiEmptyStateComponent, UiTableActionDirective, UiButtonDirective, UiPageHeadingComponent, CommonModule,MatIconModule,MatTabsModule,TabViewTransitionDirective,LoadingIndicatorComponent,UiSearchComponent],templateUrl:'./entradas.html',styleUrl:'./entradas.scss'})
+@Component({selector:'app-entradas',standalone:true,imports:[MoneyPipe, UiEmptyStateComponent, UiTableActionDirective, UiButtonDirective, UiPageHeadingComponent, CommonModule,MatIconModule,MatTabsModule,TabViewTransitionDirective,LoadingIndicatorComponent,UiSearchComponent,UiPaginationComponent],templateUrl:'./entradas.html',styleUrl:'./entradas.scss'})
 export class EntradasComponent implements OnInit {
   private readonly dialog=inject(MatDialog);
   private readonly modalStandards = inject(ModalStandardService);
@@ -50,6 +51,17 @@ export class EntradasComponent implements OnInit {
   private brandMap = new Map<number, string>();
   loading=false;hasLoaded=false;error='';
   search='';
+  standardPage = 1; standardPageSize = 10;
+  bulkPage = 1; bulkPageSize = 10;
+  serializedPage = 1; serializedPageSize = 10;
+  movementPage = 1; movementPageSize = 10;
+  get paginatedStandard(): Article[] { const start = (this.standardPage - 1) * this.standardPageSize; return this.filteredStandard.slice(start, start + this.standardPageSize); }
+  get paginatedBulk(): Article[] { const start = (this.bulkPage - 1) * this.bulkPageSize; return this.filteredBulk.slice(start, start + this.bulkPageSize); }
+  get paginatedSerialized(): Article[] { const start = (this.serializedPage - 1) * this.serializedPageSize; return this.filteredSerialized.slice(start, start + this.serializedPageSize); }
+  get paginatedMovements(): Movement[] { const start = (this.movementPage - 1) * this.movementPageSize; return this.filteredMovements.slice(start, start + this.movementPageSize); }
+  setArticlePage(kind: 'standard' | 'bulk' | 'serialized', page: number): void { if (kind === 'standard') this.standardPage = page; else if (kind === 'bulk') this.bulkPage = page; else this.serializedPage = page; }
+  setArticlePageSize(kind: 'standard' | 'bulk' | 'serialized', size: number): void { if (kind === 'standard') { this.standardPageSize = size; this.standardPage = 1; } else if (kind === 'bulk') { this.bulkPageSize = size; this.bulkPage = 1; } else { this.serializedPageSize = size; this.serializedPage = 1; } }
+  resetPages(): void { this.standardPage = this.bulkPage = this.serializedPage = this.movementPage = 1; }
 
   private matchesQuery(values: unknown[]): boolean {
     const q = this.search.trim().toLocaleLowerCase('es');

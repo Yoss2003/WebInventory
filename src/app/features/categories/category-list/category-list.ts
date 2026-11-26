@@ -24,10 +24,11 @@ import { LoadingIndicatorComponent } from '../../../shared/loading/loading-indic
 import { ToastService } from '../../../shared/toast/toast.service';
 
 import { UiSearchComponent } from '../../../shared/ui/components/ui-search.component';
+import { UiPaginationComponent } from '../../../shared/ui/components/ui-pagination/ui-pagination.component';
 
 @Component({
   selector:'app-category-list',standalone:true,
-  imports:[UiEmptyStateComponent, UiStatusComponent, UiTableActionDirective, UiButtonDirective, UiPageHeadingComponent, MatTableModule,MatCardModule,MatButtonModule,MatIconModule,MatInputModule,MatCheckboxModule,FormsModule,CommonModule,LoadingIndicatorComponent,UiSearchComponent],
+  imports:[UiEmptyStateComponent, UiStatusComponent, UiTableActionDirective, UiButtonDirective, UiPageHeadingComponent, MatTableModule,MatCardModule,MatButtonModule,MatIconModule,MatInputModule,MatCheckboxModule,FormsModule,CommonModule,LoadingIndicatorComponent,UiSearchComponent,UiPaginationComponent],
   templateUrl:'./category-list.html',styleUrl:'./category-list.scss',
   animations:[trigger('detailExpand',[
     state('collapsed,void',style({height:'0px',minHeight:'0'})),
@@ -48,6 +49,20 @@ export class CategoryListComponent implements OnInit {
   private readonly toast=inject(ToastService);
   columnsToDisplay=['expand','name','description','isActive','actions'];
   dataSource=new MatTableDataSource<Category>();
+  page = 1;
+  pageSize = 10;
+  private readonly subcategoryPages = new Map<number, number>();
+  private readonly subcategoryPageSizes = new Map<number, number>();
+  getSubcategoryPage(id: number): number { return this.subcategoryPages.get(id) ?? 1; }
+  getSubcategoryPageSize(id: number): number { return this.subcategoryPageSizes.get(id) ?? 10; }
+  paginatedSubcategories(category: Category): Category[] {
+    const rows = category.subcategorias ?? [];
+    const start = (this.getSubcategoryPage(category.id) - 1) * this.getSubcategoryPageSize(category.id);
+    return rows.slice(start, start + this.getSubcategoryPageSize(category.id));
+  }
+  setSubcategoryPage(id: number, page: number): void { this.subcategoryPages.set(id, page); }
+  setSubcategoryPageSize(id: number, size: number): void { this.subcategoryPageSizes.set(id, size); this.subcategoryPages.set(id, 1); }
+  get paginatedCategories(): Category[] { const start = (this.page - 1) * this.pageSize; return this.dataSource.filteredData.slice(start, start + this.pageSize); }
   expandedElement:Category|null=null;
   mostrarInactivos=false;
   loading=false;hasLoaded=false;error='';
@@ -77,8 +92,8 @@ export class CategoryListComponent implements OnInit {
     this.dataSource.data=parents.sort((a,b)=>a.isActive===b.isActive?0:a.isActive?-1:1);
     this.cdr.markForCheck();
   }
-  toggleInactivos():void{this.processData();}
-  applyFilterText(text:string):void{this.dataSource.filter=text.trim().toLocaleLowerCase('es');}
+  toggleInactivos():void{this.page=1;this.processData();}
+  applyFilterText(text:string):void{this.page=1;this.dataSource.filter=text.trim().toLocaleLowerCase('es');}
   nuevaCategoriaPadre(categoriaEdit?:Category):void{
     const ref=this.modalStandards.open(CategoryParentFormComponent,'mainForm',{panelClass:'inv-seven-modal',enterAnimationDuration:260,exitAnimationDuration:220,width:'min(540px,calc(100vw - 24px))',maxWidth:'calc(100vw - 24px)',data:categoriaEdit||null});
     ref.afterClosed().subscribe(ok=>{if(ok)this.loadData();});

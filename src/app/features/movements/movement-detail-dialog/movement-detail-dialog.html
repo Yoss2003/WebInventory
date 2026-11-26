@@ -36,7 +36,7 @@
           <table class="credit-table">
             <thead><tr><th>Cuota</th><th>Vencimiento</th><th>Importe</th><th>Abonado</th><th>Saldo</th><th>Estado</th></tr></thead>
             <tbody>
-              <tr *ngFor="let row of details.installments">
+              <tr *ngFor="let row of paginatedInstallments">
                 <td>#{{row.installmentNumber}}</td>
                 <td>{{row.dueDate | date:'dd/MM/yyyy'}}</td>
                 <td>{{row.installmentAmount | money:'PEN'}}</td>
@@ -47,6 +47,7 @@
             </tbody>
           </table>
         </div>
+        <app-ui-pagination *ngIf="details.installments.length" [totalItems]="details.installments.length" [page]="installmentPage" [pageSize]="installmentPageSize" (pageChange)="installmentPage=$event" (pageSizeChange)="installmentPageSize=$event;installmentPage=1" label="cuotas" />
         <div class="credit-receipts" *ngIf="(details.amountReceived || 0) > (details.downPayment || 0)">
           <strong>Abonos registrados</strong>
           <ng-container *ngFor="let row of details.installments">

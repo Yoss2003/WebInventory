@@ -1,0 +1,21 @@
+<nav class="ui-pagination" *ngIf="totalItems > 0" aria-label="Paginación de la tabla">
+  <div class="ui-pagination__summary">
+    Mostrando <strong>{{ startItem }}–{{ endItem }}</strong> de <strong>{{ totalItems }}</strong> {{ label }}
+  </div>
+  <label class="ui-pagination__size">
+    <span>Mostrar</span>
+    <select [value]="pageSize" (change)="changePageSize($event)" aria-label="Cantidad de registros por página">
+      <option *ngFor="let size of pageSizeOptions" [value]="size">{{ size }}</option>
+    </select>
+    <span>por página</span>
+  </label>
+  <div class="ui-pagination__controls">
+    <button type="button" (click)="goTo(page - 1)" [disabled]="page <= 1" aria-label="Página anterior" title="Página anterior">
+      <mat-icon aria-hidden="true">chevron_left</mat-icon>
+    </button>
+    <span class="ui-pagination__current">Página <strong>{{ page }}</strong> de {{ totalPages }}</span>
+    <button type="button" (click)="goTo(page + 1)" [disabled]="page >= totalPages" aria-label="Página siguiente" title="Página siguiente">
+      <mat-icon aria-hidden="true">chevron_right</mat-icon>
+    </button>
+  </div>
+</nav>

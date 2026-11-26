@@ -9,6 +9,7 @@ import { Movement } from '../../../core/models/movement.model';
 import { SalesService, SaleInstallmentsSummary } from '../../../core/services/sales';
 import { ModalShellComponent } from '../../../shared/ui/components/modal-shell/modal-shell.component';
 import { LoadingIndicatorComponent } from '../../../shared/loading/loading-indicator';
+import { UiPaginationComponent } from '../../../shared/ui/components/ui-pagination/ui-pagination.component';
 
 @Component({
   selector: 'app-movement-detail-dialog',
@@ -20,7 +21,8 @@ import { LoadingIndicatorComponent } from '../../../shared/loading/loading-indic
     MatDialogModule,
     MatIconModule,
     ModalShellComponent,
-    LoadingIndicatorComponent
+    LoadingIndicatorComponent,
+    UiPaginationComponent
   ],
   templateUrl: './movement-detail-dialog.html',
   styleUrl: './movement-detail-dialog.scss'
@@ -36,6 +38,9 @@ export class MovementDetailDialogComponent implements OnInit {
   credit: SaleInstallmentsSummary | null = null;
   creditLoading = false;
   creditError = '';
+  installmentPage = 1;
+  installmentPageSize = 10;
+  get paginatedInstallments() { const rows = this.credit?.installments ?? []; const start = (this.installmentPage - 1) * this.installmentPageSize; return rows.slice(start, start + this.installmentPageSize); }
   detailLoading = false;
   private detailRequestsPending = 0;
   private finishDetailRequest(): void {

@@ -13,7 +13,7 @@
     <div class="worker-dialog-search-bar">
       <div class="search-input-wrap">
         <mat-icon aria-hidden="true">search</mat-icon>
-        <input type="search" [(ngModel)]="search" placeholder="Buscar por DNI, nombre o nombre de usuario..." aria-label="Buscar por DNI, nombre o nombre de usuario" appUiControl />
+        <input type="search" [(ngModel)]="search" (ngModelChange)="page=1" placeholder="Buscar por DNI, nombre o nombre de usuario..." aria-label="Buscar por DNI, nombre o nombre de usuario" appUiControl />
         <button *ngIf="search" type="button" class="clear-search" (click)="search = ''" aria-label="Limpiar búsqueda"><mat-icon aria-hidden="true">close</mat-icon></button>
       </div>
       <div class="search-count" *ngIf="!loading">{{ filteredEmployees.length }} {{ filteredEmployees.length === 1 ? 'empleado' : 'empleados' }}</div>
@@ -30,7 +30,7 @@
         <table class="worker-table">
           <thead><tr><th scope="col">DNI</th><th scope="col">Nombre</th><th scope="col">Nombre de usuario</th><th scope="col" class="action-col">Acción</th></tr></thead>
           <tbody>
-            <tr *ngFor="let employee of filteredEmployees">
+            <tr *ngFor="let employee of paginatedEmployees">
               <td><span class="dni-chip">{{ employee.dni || 'Sin DNI' }}</span></td>
               <td><strong>{{ (employee.firstName || '') + ' ' + (employee.lastName || '') | titlecase }}</strong></td>
               <td><span class="user-chip">{{ employee.username || 'Usuario vinculado' }}</span></td>
@@ -39,6 +39,7 @@
           </tbody>
         </table>
       </div>
+      <app-ui-pagination [totalItems]="filteredEmployees.length" [page]="page" [pageSize]="pageSize" (pageChange)="page=$event" (pageSizeChange)="pageSize=$event;page=1" label="empleados" />
       <div class="empty-results" *ngIf="!loading && !error && !filteredEmployees.length"><mat-icon aria-hidden="true">person_search</mat-icon><strong>No se encontraron destinatarios</strong><p>{{ search ? 'No hay resultados que coincidan con tu búsqueda.' : 'No tienes empleados activos vinculados a cuentas disponibles para este inventario.' }}</p></div>
     </div>
   </div>

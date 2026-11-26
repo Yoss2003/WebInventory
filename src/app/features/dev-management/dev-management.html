@@ -14,7 +14,7 @@
       <div>
         <h2>Empresas registradas <span class="count-chip">{{companies.length}}</span></h2>
         <small>Administración de organizaciones, accesos y vigencia de licencias.</small>
-      </div>      <app-ui-search [(value)]="companySearch" placeholder="Buscar empresa, RUC o plan" label="Filtrar empresas" />
+      </div>      <app-ui-search [value]="companySearch" (valueChange)="companySearch=$event;companiesPage=1" placeholder="Buscar empresa, RUC o plan" label="Filtrar empresas" />
     </div>
     <p *ngIf="companiesError" class="inline-alert inline-alert--error" role="alert"><mat-icon>error_outline</mat-icon>{{companiesError}}</p>
     <button *ngIf="companiesError" type="button" appUiButton="secondary" (click)="loadCompanies()" [disabled]="loadingCompanies">Reintentar empresas</button>
@@ -23,7 +23,7 @@
       <table>
         <thead><tr><th>Empresa</th><th>Usuarios</th><th>Inventarios</th><th>Licencia</th><th>Vencimiento</th><th>Estado</th><th>Acciones</th></tr></thead>
         <tbody>
-          <tr *ngFor="let c of filteredCompanies; trackBy: trackCompany" [class.selected-row]="selectedId === c.id">
+          <tr *ngFor="let c of paginatedCompanies; trackBy: trackCompany" [class.selected-row]="selectedId === c.id">
             <td class="company-cell"><div class="company-identity"><span class="company-mark" [style.borderColor]="c.primaryColorHex || '#54687b'">
               <ng-container *ngIf="getCompanyLogoUrl(c) as logo; else companyFallbackIcon">
                 <img [src]="logo" [alt]="'Logo de ' + c.businessName" loading="lazy" (error)="onCompanyLogoError(c)" />
@@ -72,6 +72,7 @@
         </tbody>
       </table>
     </div>
+    <app-ui-pagination *ngIf="filteredCompanies.length" [totalItems]="filteredCompanies.length" [page]="companiesPage" [pageSize]="companiesPageSize" (pageChange)="companiesPage=$event" (pageSizeChange)="companiesPageSize=$event;companiesPage=1" label="empresas" />
     <app-ui-empty-state
       *ngIf="companies.length && filteredCompanies.length === 0"
       icon="search_off"
@@ -215,7 +216,7 @@
     <div *ngIf="pending.length" class="overflow recovery-table inv-core-table-wrap"><table>
       <thead><tr><th>Usuario</th><th>Empresa</th><th>Fecha de solicitud</th><th>Estado</th><th>Acciones</th></tr></thead>
       <tbody>
-        <tr *ngFor="let r of pending; trackBy: trackPending">
+        <tr *ngFor="let r of paginatedPending; trackBy: trackPending">
           <td class="company-cell"><strong>{{r.username}}</strong><small>ID {{r.userId}}</small></td>
           <td>{{r.company}}</td>
           <td>{{r.requestedAt | date:'dd/MM/yyyy HH:mm'}}</td>
@@ -224,6 +225,7 @@
         </tr>
       </tbody>
     </table></div>
+    <app-ui-pagination *ngIf="pending.length" [totalItems]="pending.length" [page]="pendingPage" [pageSize]="pendingPageSize" (pageChange)="pendingPage=$event" (pageSizeChange)="pendingPageSize=$event;pendingPage=1" label="solicitudes" />
     <app-ui-empty-state
       *ngIf="!pending.length && !loadingPending"
       icon="task_alt"

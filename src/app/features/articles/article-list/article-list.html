@@ -6,7 +6,7 @@
       </button>
     </div>
   </header>
-  <div class="inv-core-toolbar"><app-ui-search [(value)]="search" placeholder="Buscar artículo, marca, código…" label="Buscar artículos" /><label class="check"><input type="checkbox" [(ngModel)]="showInactive" /> Mostrar inactivos</label></div>
+  <div class="inv-core-toolbar"><app-ui-search [value]="search" (valueChange)="search=$event;page=1" placeholder="Buscar artículo, marca, código…" label="Buscar artículos" /><label class="check"><input type="checkbox" [(ngModel)]="showInactive" (ngModelChange)="page=1" /> Mostrar inactivos</label></div>
   <app-ui-empty-state *ngIf="!hasOperationalInventory" message="No hay inventario operativo para mostrar artículos. El inventario general almacena catálogos, no existencias. Registra un usuario en esta empresa para generar su inventario personal." />
   <div class="catalog-state" *ngIf="loading && !hasLoaded"><app-loading-indicator message="Cargando artículos y catálogos..." /></div>
   <div class="catalog-state err" *ngIf="error" role="alert">{{error}}</div>
@@ -17,6 +17,7 @@
         <td>{{a.stock | number:'1.0-2'}}</td><td>{{a.measurementUnit}}</td><td>{{(a.salePrice ?? 0) | money:a.saleCurrency}}</td><td><app-ui-status [tone]="a.isActive ? 'success' : 'danger'" [label]="a.isActive ? 'Activo' : 'Inactivo'"></app-ui-status></td>
         <td class="inv-core-action-cell"><button type="button" title="Editar artículo" [disabled]="!a.isActive" (click)="edit(a,$event)" appUiTableAction="normal"><mat-icon>edit</mat-icon></button><button type="button" class="danger" title="Dar de baja artículo" [disabled]="!a.isActive" (click)="delete(a,$event)" appUiTableAction="danger"><mat-icon>delete_outline</mat-icon></button></td>
       </tr></tbody></table>
-    <app-ui-empty-state *ngIf="visible.length===0" message="No hay registros que coincidan con los filtros."></app-ui-empty-state>
   </div>
+  <app-ui-pagination [totalItems]="filtered.length" [page]="page" [pageSize]="pageSize" (pageChange)="page=$event" (pageSizeChange)="pageSize=$event;page=1" label="artículos" />
+    <app-ui-empty-state *ngIf="filtered.length===0" message="No hay registros que coincidan con los filtros."></app-ui-empty-state>
 </section>

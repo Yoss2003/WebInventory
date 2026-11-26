@@ -19,8 +19,9 @@ import { ToastService } from '../../shared/toast/toast.service';
 import { ModalStandardService } from '../../shared/ui/services/modal-standard.service';
 import { ModalShellComponent } from '../../shared/ui/components/modal-shell/modal-shell.component';
 import type { ModalActionId, ModalFooterAction } from '../../shared/ui/models/modal-standard.model';
+import { UiPaginationComponent } from '../../shared/ui/components/ui-pagination/ui-pagination.component';
 
-@Component({selector:'app-external-consultas',standalone:true,imports:[MoneyPipe, UiControlDirective, UiTableActionDirective, UiButtonDirective, UiPageHeadingComponent, CommonModule,FormsModule,LoadingIndicatorComponent,MatIconModule,MatDatepickerModule,MatFormFieldModule,MatInputModule,ModalShellComponent],providers:[provideNativeDateAdapter(),{provide:MAT_DATE_LOCALE,useValue:'es-PE'}],templateUrl:'./external-consultas.html',styleUrl:'./external-consultas.scss'})
+@Component({selector:'app-external-consultas',standalone:true,imports:[MoneyPipe, UiControlDirective, UiTableActionDirective, UiButtonDirective, UiPageHeadingComponent, CommonModule,FormsModule,LoadingIndicatorComponent,MatIconModule,MatDatepickerModule,MatFormFieldModule,MatInputModule,ModalShellComponent,UiPaginationComponent],providers:[provideNativeDateAdapter(),{provide:MAT_DATE_LOCALE,useValue:'es-PE'}],templateUrl:'./external-consultas.html',styleUrl:'./external-consultas.scss'})
 export class ExternalConsultasComponent implements OnInit {
   private readonly api=inject(ExternalConsultasService);
   private readonly cdr=inject(ChangeDetectorRef);
@@ -35,6 +36,8 @@ export class ExternalConsultasComponent implements OnInit {
   private pendingRates=0;
   ratesFrom=''; ratesTo=''; loadingHistory=false; historyRequested=false;
   historyError=''; historyRates:ExchangeRate[]=[];
+  historyPage = 1; historyPageSize = 10;
+  get paginatedHistoryRates(): ExchangeRate[] { const start = (this.historyPage - 1) * this.historyPageSize; return this.historyRates.slice(start, start + this.historyPageSize); }
   // PROVEEDORES_CONSULTAS_V1: catálogo de lectura dentro de Consultas SUNAT.
   @ViewChild('rucLookupPanel') private rucLookupPanel?: ElementRef<HTMLElement>;
   suppliersOpen = false;
@@ -42,6 +45,8 @@ export class ExternalConsultasComponent implements OnInit {
   suppliersLoading = false;
   suppliersError = '';
   supplierSearch = '';
+  supplierPage = 1; supplierPageSize = 10;
+  get paginatedSuppliers(): SupplierContact[] { const start = (this.supplierPage - 1) * this.supplierPageSize; return this.filteredSuppliers.slice(start, start + this.supplierPageSize); }
   suppliers: SupplierContact[] = [];
 
   get filteredSuppliers(): SupplierContact[] {
@@ -130,6 +135,7 @@ export class ExternalConsultasComponent implements OnInit {
 
   loadHistoryRates():void {
     if(this.loadingHistory)return;
+    this.historyPage = 1;
     this.historyError=''; this.historyRequested=false;
     if(!/^\d{4}-\d{2}-\d{2}$/.test(this.ratesFrom) || !/^\d{4}-\d{2}-\d{2}$/.test(this.ratesTo)){
       this.historyError='Selecciona ambas fechas para consultar el historial.';this.cdr.markForCheck();return;

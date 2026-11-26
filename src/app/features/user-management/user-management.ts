@@ -9,6 +9,7 @@ import { forkJoin } from 'rxjs';
 import { LoadingIndicatorComponent } from '../../shared/loading/loading-indicator';
 import { UiPageHeadingComponent } from '../../shared/ui/components/ui-page-heading.component';
 import { UiSearchComponent } from '../../shared/ui/components/ui-search.component';
+import { UiPaginationComponent } from '../../shared/ui/components/ui-pagination/ui-pagination.component';
 import { UiEmptyStateComponent } from '../../shared/ui/components/ui-empty-state.component';
 import { UiButtonDirective } from '../../shared/ui/directives/ui-button.directive';
 import { UiTableActionDirective } from '../../shared/ui/directives/ui-table-action.directive';
@@ -24,7 +25,7 @@ import { ResendCredentialsDialogComponent } from './resend-credentials-dialog/re
   selector: 'app-user-management',
   standalone: true,
   imports: [CommonModule, FormsModule, MatIconModule, LoadingIndicatorComponent,
-    UiPageHeadingComponent, UiSearchComponent, UiEmptyStateComponent, UiButtonDirective, UiTableActionDirective],
+    UiPageHeadingComponent, UiSearchComponent, UiEmptyStateComponent, UiButtonDirective, UiTableActionDirective, UiPaginationComponent],
   templateUrl: './user-management.html',
   styleUrl: './user-management.scss'
 })
@@ -47,6 +48,9 @@ export class UserManagementComponent implements OnInit {
   error = '';
   filter = '';
   users: ManagedUser[] = [];
+  page = 1;
+  pageSize = 10;
+  get paginatedUsers(): ManagedUser[] { const start = (this.page - 1) * this.pageSize; return this.filtered.slice(start, start + this.pageSize); }
   roles: ManagedRole[] = [];
 
   get canManageIndividualPermissions(): boolean {

@@ -92,7 +92,7 @@
             </tr>
           </thead>
           <tbody>
-            <tr *ngFor="let brand of filteredBrands; trackBy: trackByBrandId" [class.inactive-row]="!brand.isActive">
+            <tr *ngFor="let brand of paginatedBrands; trackBy: trackByBrandId" [class.inactive-row]="!brand.isActive">
               <td class="brand-name">{{ brand.name }}</td>
               <td *ngIf="showInactive">
                 <span class="state-tag" [class.is-inactive]="!brand.isActive">
@@ -120,6 +120,7 @@
             </tr>
           </tbody>
         </table>
+        <app-ui-pagination *ngIf="filteredBrands.length" [totalItems]="filteredBrands.length" [page]="page" [pageSize]="pageSize" (pageChange)="page=$event" (pageSizeChange)="pageSize=$event;page=1" label="marcas" />
       </div>
       <p class="list-hint">Para asignar una marca al artículo, selecciónala en el ComboBox del formulario.</p>
     </section>

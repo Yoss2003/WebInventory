@@ -13,9 +13,10 @@ import { AssignmentHistoryDialogComponent } from '../assignment-history-dialog/a
 import { LoadingIndicatorComponent } from '../../shared/loading/loading-indicator';
 
 import { UiSearchComponent } from '../../shared/ui/components/ui-search.component';
+import { UiPaginationComponent } from '../../shared/ui/components/ui-pagination/ui-pagination.component';
 
 @Component({selector:'app-assignment-history',standalone:true,
-  imports:[UiButtonDirective, UiPageHeadingComponent, CleanArticleNamePipe, CommonModule,FormsModule,MatIconModule,LoadingIndicatorComponent,UiSearchComponent],
+  imports:[UiButtonDirective, UiPageHeadingComponent, CleanArticleNamePipe, CommonModule,FormsModule,MatIconModule,LoadingIndicatorComponent,UiSearchComponent,UiPaginationComponent],
   templateUrl:'./assignment-history.html',styleUrl:'./assignment-history.scss'})
 export class AssignmentHistoryComponent implements OnInit {
   private readonly api=inject(AssignmentService);
@@ -24,6 +25,8 @@ export class AssignmentHistoryComponent implements OnInit {
   private readonly cdr=inject(ChangeDetectorRef);
   outgoing:AssignedArticle[]=[];received:AssignedArticle[]=[];
   currentTab:'history'|'received'='history';search='';
+  page = 1;
+  pageSize = 10;
   loading=false;hasLoaded=false;errorMessage='';
   get rows():AssignedArticle[]{return this.currentTab==='received'?this.received:this.outgoing;}
   get filteredRows():AssignedArticle[]{
@@ -32,6 +35,7 @@ export class AssignmentHistoryComponent implements OnInit {
     return this.rows.filter(r=>[r.articleName,r.articleCode,r.recipientName,r.observation||'',String(r.id)]
       .some(v=>v.toLocaleLowerCase('es').includes(query)));
   }
+  get paginatedRows(): AssignedArticle[] { const start = (this.page - 1) * this.pageSize; return this.filteredRows.slice(start, start + this.pageSize); }
   get pendingQuantity():number{return this.outgoing.reduce((n,a)=>n+Number(a.remainingQuantity),0);}
   get activeAssignments():number{return this.outgoing.filter(a=>a.remainingQuantity>0).length;}
   get distinctArticles():number{return new Set(this.outgoing.map(r=>r.articleId)).size;}

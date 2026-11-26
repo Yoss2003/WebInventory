@@ -46,7 +46,7 @@
           </tr>
         </thead>
         <tbody>
-          <tr *ngFor="let row of operational">
+          <tr *ngFor="let row of paginatedOperational">
             <td>
               <strong>{{ row.alias || row.inventoryName }}</strong>
               <small>{{ row.inventoryName }} · ID {{ row.id }}</small>
@@ -77,6 +77,8 @@
         </tbody>
       </table>
     </div>
+
+    <app-ui-pagination *ngIf="operational.length" [totalItems]="operational.length" [page]="page" [pageSize]="pageSize" (pageChange)="page=$event" (pageSizeChange)="pageSize=$event;page=1" label="inventarios" />
 
     <app-ui-empty-state
       *ngIf="!loading && !operational.length && !error"

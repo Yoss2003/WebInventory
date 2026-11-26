@@ -17,6 +17,7 @@ import { AccessService } from '../../core/services/access';
 import { InventoryService, InventorySummary } from '../../core/services/inventories';
 import { UserManagementService, ManagedUser } from '../../core/services/user-management';
 import { LoadingIndicatorComponent } from '../../shared/loading/loading-indicator';
+import { UiPaginationComponent } from '../../shared/ui/components/ui-pagination/ui-pagination.component';
 import { InventoryEditDialogComponent } from './inventory-edit-dialog/inventory-edit-dialog.component';
 import { InventoryCreateDialogComponent } from './inventory-create-dialog/inventory-create-dialog.component';
 import { ShareInventoryDialogComponent } from './share-inventory-dialog/share-inventory-dialog.component';
@@ -30,7 +31,7 @@ import { UiEmptyStateComponent } from '../../shared/ui/components/ui-empty-state
     UiEmptyStateComponent, UiStatusComponent,
     CommonModule, FormsModule, MatIconModule, MatSelectModule, MatFormFieldModule,
     RouterLink, UiPageHeadingComponent, UiButtonDirective,
-    UiTableActionDirective, LoadingIndicatorComponent
+    UiTableActionDirective, LoadingIndicatorComponent, UiPaginationComponent
   ],
   templateUrl: './inventory-management.html',
   styleUrl: './inventory-management.scss',
@@ -59,6 +60,9 @@ export class InventoryManagementComponent implements OnInit {
   error = '';
   rows: InventorySummary[] = [];
   users: ManagedUser[] = [];
+  page = 1;
+  pageSize = 10;
+  get paginatedOperational(): InventorySummary[] { const start = (this.page - 1) * this.pageSize; return this.operational.slice(start, start + this.pageSize); }
 
   get operational(): InventorySummary[] {
     return this.rows.filter(r => !r.isMaster);
