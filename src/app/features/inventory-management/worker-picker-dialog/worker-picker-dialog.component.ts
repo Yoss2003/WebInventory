@@ -9,6 +9,7 @@ import { UiControlDirective } from '../../../shared/ui/directives/ui-control.dir
 import { InventoryService, InventoryShareRecipient } from '../../../core/services/inventories';
 import { LoadingIndicatorComponent } from '../../../shared/loading/loading-indicator';
 import { ModalShellComponent } from '../../../shared/ui/components/modal-shell/modal-shell.component';
+import { UiPaginationComponent } from '../../../shared/ui/components/ui-pagination/ui-pagination.component';
 import { finalize, timeout } from 'rxjs';
 
 export interface WorkerPickerDialogData {
@@ -19,7 +20,7 @@ export interface WorkerPickerDialogData {
 @Component({
   selector: 'app-worker-picker-dialog',
   standalone: true,
-  imports: [CommonModule, FormsModule, MatDialogModule, MatIconModule, MatTooltipModule, UiButtonDirective, UiControlDirective, LoadingIndicatorComponent, ModalShellComponent],
+  imports: [CommonModule, FormsModule, MatDialogModule, MatIconModule, MatTooltipModule, UiButtonDirective, UiControlDirective, LoadingIndicatorComponent, ModalShellComponent, UiPaginationComponent],
   templateUrl: './worker-picker-dialog.component.html',
   styleUrl: './worker-picker-dialog.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush
@@ -36,6 +37,9 @@ export class WorkerPickerDialogComponent implements OnInit {
   error = '';
   search = '';
   employees: InventoryShareRecipient[] = [];
+  page = 1;
+  pageSize = 10;
+  get paginatedEmployees(): InventoryShareRecipient[] { const start = (this.page - 1) * this.pageSize; return this.filteredEmployees.slice(start, start + this.pageSize); }
 
   get filteredEmployees(): InventoryShareRecipient[] {
     const term = this.search.trim().toLowerCase();
