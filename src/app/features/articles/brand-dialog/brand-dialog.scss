@@ -208,7 +208,7 @@ p {
 }
 
 .success {
-  color: #c9ed8b;
+  color: var(--inv-company-accent, #A2D149);
 }
 
 .feedback button {
