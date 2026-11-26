@@ -49,7 +49,7 @@
       <tr mat-row *matRowDef="let element;columns:columnsToDisplay" class="parent-row" [class.inactive]="!element.isActive" (click)="expandedElement=expandedElement===element?null:element"></tr>
       <tr mat-row *matRowDef="let row;columns:['expandedDetail']" class="detail-row"></tr>
     </table>
-    <app-ui-pagination *ngIf="dataSource.filteredData.length" [totalItems]="dataSource.filteredData.length" [page]="page" [pageSize]="pageSize" (pageChange)="page=$event" (pageSizeChange)="pageSize=$event;page=1" label="categorías" />
-    <app-ui-empty-state *ngIf="dataSource.filteredData.length===0" message="No hay categorías que coincidan con la búsqueda."></app-ui-empty-state>
   </div>
+  <app-ui-pagination *ngIf="dataSource.filteredData.length" [totalItems]="dataSource.filteredData.length" [page]="page" [pageSize]="pageSize" (pageChange)="page=$event" (pageSizeChange)="pageSize=$event;page=1" label="categorías" />
+    <app-ui-empty-state *ngIf="dataSource.filteredData.length===0" message="No hay categorías que coincidan con la búsqueda."></app-ui-empty-state>
 </section>
