@@ -164,11 +164,12 @@
         </section>
       </div>
 
-      <section *ngIf="photo || voucher">
+      <section *ngIf="photo || voucher || photoLoading || voucherLoading">
         <h3>Archivos asociados</h3>
         <div class="record-media">
-          <button *ngIf="photo" type="button" class="media-card" (click)="openMediaPreview('photo')">
-            <img *ngIf="!photoIsPdf" [src]="photo" alt="Foto del artículo" />
+          <button *ngIf="photo || photoLoading" type="button" class="media-card" [class.media-card--loading]="photoLoading" (click)="openMediaPreview('photo')">
+            <div class="media-card-loading" *ngIf="photoLoading" role="status"><app-loading-indicator [compact]="true" message="Cargando imagen..." /></div>
+            <img *ngIf="photo && !photoIsPdf" [src]="photo" (load)="onPhotoLoaded()" (error)="onPhotoLoaded()" alt="Foto del artículo" />
             <div *ngIf="photoIsPdf" class="media-pdf-thumb">
               <mat-icon>picture_as_pdf</mat-icon>
               <span>Documento PDF</span>
@@ -176,8 +177,9 @@
             <span class="media-card-label"><mat-icon>zoom_in</mat-icon> Ver foto</span>
           </button>
 
-          <button *ngIf="voucher" type="button" class="media-card" (click)="openMediaPreview('voucher')">
-            <img *ngIf="!voucherIsPdf" [src]="voucher" alt="Comprobante" />
+          <button *ngIf="voucher || voucherLoading" type="button" class="media-card" [class.media-card--loading]="voucherLoading" (click)="openMediaPreview('voucher')">
+            <div class="media-card-loading" *ngIf="voucherLoading" role="status"><app-loading-indicator [compact]="true" message="Cargando imagen..." /></div>
+            <img *ngIf="voucher && !voucherIsPdf" [src]="voucher" (load)="onVoucherLoaded()" (error)="onVoucherLoaded()" alt="Comprobante" />
             <div *ngIf="voucherIsPdf" class="media-pdf-thumb">
               <mat-icon>picture_as_pdf</mat-icon>
               <span>Comprobante PDF</span>

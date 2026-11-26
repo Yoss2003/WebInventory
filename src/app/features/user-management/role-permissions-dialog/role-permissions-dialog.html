@@ -17,7 +17,7 @@
       El desarrollador tiene permisos fijos. Puedes configurar la visualización y edición
       del administrador, así como los permisos del personal.
     </p>
-    <div *ngIf="loading" class="roles-modal__status" role="status">Cargando permisos...</div>
+    <div *ngIf="loading" class="roles-modal__status" role="status"><app-loading-indicator message="Consultando permisos del rol..." /></div>
     <div *ngIf="error" class="roles-modal__error" role="alert">{{error}}</div>
     <label *ngIf="!loading" class="roles-modal__selector">
       <span>Rol a configurar</span>

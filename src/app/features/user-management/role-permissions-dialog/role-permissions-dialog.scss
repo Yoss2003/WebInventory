@@ -94,3 +94,5 @@
 @media (prefers-reduced-motion: reduce) {
   .roles-modal__permission { transition: none !important; }
 }
+
+:host ::ng-deep .modal-shell__content{background:#162736!important}

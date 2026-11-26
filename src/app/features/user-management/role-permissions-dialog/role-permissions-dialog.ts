@@ -9,13 +9,14 @@ import { forkJoin } from 'rxjs';
 import {  ManagedRole, PermissionItem, UserManagementService } from '../../../core/services/user-management';
 import { ConfirmationDialogService } from '../../../shared/confirm-dialog/confirmation-dialog.service';
 import { ModalShellComponent } from '../../../shared/ui/components/modal-shell/modal-shell.component';
+import { LoadingIndicatorComponent } from '../../../shared/loading/loading-indicator';
 import type { ModalActionId, ModalFooterAction } from '../../../shared/ui/models/modal-standard.model';
 
 @Component({
   selector: 'app-role-permissions-dialog',
   standalone: true,
   imports: [CommonModule, FormsModule, MatDialogModule, MatIconModule,
-    MatFormFieldModule, MatSelectModule, ModalShellComponent],
+    MatFormFieldModule, MatSelectModule, ModalShellComponent, LoadingIndicatorComponent],
   templateUrl: './role-permissions-dialog.html',
   styleUrl: './role-permissions-dialog.scss'
 })

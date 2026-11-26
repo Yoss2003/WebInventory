@@ -36,7 +36,7 @@
                     placeholder="Ej.: distribuidor habitual de equipos y accesorios" appUiControl></textarea>
         </label>
       </div>
-      <div class="actions"><button type="submit" appUiButton="primary" [uiButtonLoading]="saving" [disabled]="saving">{{editingSupplierId ? 'Guardar cambios' : 'Registrar proveedor'}}</button><button type="button" appUiButton="secondary" (click)="newSupplier()" [disabled]="saving || !hasSupplierFormData"><mat-icon aria-hidden="true">cleaning_services</mat-icon>Limpiar campos</button><button *ngIf="editingSupplierId" type="button" appUiButton="secondary" (click)="newSupplier()">Cancelar edición</button></div>
+      <div class="actions"><button type="submit" appUiButton="primary" [uiButtonLoading]="saving" [disabled]="saving">{{editingSupplierId ? 'Guardar cambios' : 'Registrar proveedor'}}</button><button type="button" appUiButton="secondary" (click)="newSupplier()" [disabled]="saving || !hasSupplierFormData"><mat-icon aria-hidden="true">{{editingSupplierId ? "close" : "cleaning_services"}}</mat-icon>{{editingSupplierId ? "Cancelar edición" : "Limpiar campos"}}</button></div>
     </form>
     <div class="list supplier-list" aria-label="Proveedores de la empresa">
       <header class="supplier-list-heading">

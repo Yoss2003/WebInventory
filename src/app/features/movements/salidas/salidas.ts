@@ -7,6 +7,7 @@ import { cleanArticleDisplayName } from '../../../shared/clean-article-name.pipe
 import { ToastService } from '../../../shared/toast/toast.service';
 import { ChangeDetectorRef, Component, OnInit, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { FormsModule } from '@angular/forms';
 import { MoneyPipe } from '../../../shared/money.pipe';
 import { MatIconModule } from '@angular/material/icon';
 import { MatTabsModule } from '@angular/material/tabs';
@@ -29,7 +30,7 @@ import { LoadingIndicatorComponent } from '../../../shared/loading/loading-indic
 
 import { UiSearchComponent } from '../../../shared/ui/components/ui-search.component';
 
-@Component({selector:'app-salidas',standalone:true,imports:[MoneyPipe, UiEmptyStateComponent, UiStatusComponent, UiTableActionDirective, UiButtonDirective, UiPageHeadingComponent, CommonModule,MatIconModule,MatTabsModule,TabViewTransitionDirective,LoadingIndicatorComponent,UiSearchComponent],templateUrl:'./salidas.html',styleUrl:'./salidas.scss'})
+@Component({selector:'app-salidas',standalone:true,imports:[FormsModule, MoneyPipe, UiEmptyStateComponent, UiStatusComponent, UiTableActionDirective, UiButtonDirective, UiPageHeadingComponent, CommonModule,MatIconModule,MatTabsModule,TabViewTransitionDirective,LoadingIndicatorComponent,UiSearchComponent],templateUrl:'./salidas.html',styleUrl:'./salidas.scss'})
 export class SalidasComponent implements OnInit {
   private readonly movementsApi=inject(MovementService);
   private readonly salesApi=inject(SalesService);
@@ -46,8 +47,20 @@ export class SalidasComponent implements OnInit {
   cancelledIds=new Set<number>();cancelledSaleIds=new Set<number>();
   loading=false;hasLoaded=false;error='';
   search='';
+  dateFrom = '';
+  dateTo = '';
+  quantityMin: number | null = null;
+  quantityMax: number | null = null;
+  get hasActiveFilters(): boolean { return !!(this.dateFrom || this.dateTo || this.quantityMin !== null || this.quantityMax !== null); }
+  clearFilters(): void { this.dateFrom = ''; this.dateTo = ''; this.quantityMin = null; this.quantityMax = null; }
   private matchesQuery(m: Movement): boolean {
     const q = this.search.trim().toLocaleLowerCase('es');
+    const movementDate = new Date(m.movementDate);
+    if (this.dateFrom && movementDate < new Date(this.dateFrom + 'T00:00:00')) return false;
+    if (this.dateTo && movementDate > new Date(this.dateTo + 'T23:59:59.999')) return false;
+    const amount = Number(m.amount);
+    if (this.quantityMin !== null && Number.isFinite(this.quantityMin) && amount < this.quantityMin) return false;
+    if (this.quantityMax !== null && Number.isFinite(this.quantityMax) && amount > this.quantityMax) return false;
     return !q || [
       this.articleName(m.articleId), this.articleCode(m.articleId),
       m.recipient, m.documentNumber, m.observation, m.paymentMethod
@@ -94,7 +107,8 @@ export class SalidasComponent implements OnInit {
     ref.afterClosed().subscribe(ok=>{if(ok)this.loadRealData();});
   }
   showDetail(m:Movement):void{
-    this.modalStandards.open(MovementDetailDialogComponent,'detail',{panelClass:'inv-seven-modal',enterAnimationDuration:260,exitAnimationDuration:220,data:{movement:m,articleName:this.articleName(m.articleId),articleCode:this.articleCode(m.articleId)},width:'min(650px,calc(100vw - 24px))'});
+    const creditSale = String(m.paymentMethod ?? '').trim().toLowerCase() === 'cuotas' && /^VENTA-\d+$/.test(String(m.documentNumber ?? ''));
+    this.modalStandards.open(MovementDetailDialogComponent,'detail',{panelClass:'inv-seven-modal',enterAnimationDuration:260,exitAnimationDuration:220,data:{movement:m,articleName:this.articleName(m.articleId),articleCode:this.articleCode(m.articleId)},width:creditSale?'min(1120px,calc(100vw - 24px))':'min(760px,calc(100vw - 24px))'});
   }
   openAssignments(event:Event):void{event.stopPropagation();void this.router.navigate(['/dashboard/asignaciones']);}
   cancelMovement(m:Movement,event:Event):void{
