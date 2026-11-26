@@ -53,9 +53,9 @@
             <!-- Botón único de baja definitiva -->
             <button *ngIf="a.tracking === 1 && a.isActive" type="button" appUiButton="danger" class="record-series-retire"
               [disabled]="decommissioning || selectedDecommissionIds.size === 0"
+              [uiButtonLoading]="decommissioning" [uiButtonLoadingText]="'Procesando...'"
               (click)="decommissionSelected()">
-              <app-loading-indicator *ngIf="decommissioning; else retireLabel" [compact]="true" message="Procesando..." />
-              <ng-template #retireLabel><mat-icon>remove_circle</mat-icon> Dar de baja</ng-template>
+              <mat-icon>remove_circle</mat-icon> Dar de baja
             </button>
           </div>
 
@@ -156,9 +156,9 @@
           <div class="serial-batch-footer">
             <small>{{ batchRows.length }} de 1000 unidades preparadas.</small>
             <button type="button" class="serial-register-batch" appUiButton="primary" [disabled]="!canRegisterBatch"
+              [uiButtonLoading]="registeringBatch" [uiButtonLoadingText]="'Registrando lote...'"
               (click)="registerBatch()">
-              <app-loading-indicator *ngIf="registeringBatch; else batchLabel" [compact]="true" message="Registrando lote..." />
-              <ng-template #batchLabel><mat-icon>save</mat-icon> Registrar lote</ng-template>
+              <mat-icon>save</mat-icon> Registrar lote
             </button>
           </div>
         </section>
