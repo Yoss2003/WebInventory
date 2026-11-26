@@ -63,6 +63,8 @@ export class ArticleDetailDialogComponent implements OnInit, OnDestroy {
   error = '';
   photo: string | null = null;
   voucher: string | null = null;
+  photoLoading = false;
+  voucherLoading = false;
   photoIsPdf = false;
   voucherIsPdf = false;
   previewMedia: { url: string; title: string; isPdf: boolean } | null = null;
@@ -113,21 +115,27 @@ export class ArticleDetailDialogComponent implements OnInit, OnDestroy {
         this.loading = false;
         this.refreshView();
         if (article.mainPhotoPath) {
+          this.photoLoading = true;
           this.api.getMedia(article.id, 'photo').subscribe({
             next: b => {
               this.photo = URL.createObjectURL(b);
               this.photoIsPdf = b.type === 'application/pdf';
+              if (this.photoIsPdf) this.photoLoading = false;
               this.refreshView();
-            }
+            },
+            error: () => { this.photoLoading = false; this.refreshView(); }
           });
         }
         if (article.mainVoucherPath) {
+          this.voucherLoading = true;
           this.api.getMedia(article.id, 'voucher').subscribe({
             next: b => {
               this.voucher = URL.createObjectURL(b);
               this.voucherIsPdf = b.type === 'application/pdf';
+              if (this.voucherIsPdf) this.voucherLoading = false;
               this.refreshView();
-            }
+            },
+            error: () => { this.voucherLoading = false; this.refreshView(); }
           });
         }
       },
@@ -138,6 +146,9 @@ export class ArticleDetailDialogComponent implements OnInit, OnDestroy {
       }
     });
   }
+
+  onPhotoLoaded(): void { this.photoLoading = false; this.refreshView(); }
+  onVoucherLoaded(): void { this.voucherLoading = false; this.refreshView(); }
 
   toggleDecommissionSelection(detailId: number, event: Event): void {
     const checked = (event.target as HTMLInputElement).checked;
