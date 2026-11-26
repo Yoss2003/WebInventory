@@ -43,7 +43,7 @@
           </tr>
         </thead>
         <tbody>
-          <tr *ngFor="let share of shares">
+          <tr *ngFor="let share of paginatedShares">
             <td>
               <strong>{{ getShareName(share) }}</strong>
               <small *ngIf="share.username">@{{ share.username }}</small>
@@ -69,6 +69,7 @@
           </tr>
         </tbody>
       </table>
+      <app-ui-pagination [totalItems]="shares.length" [page]="page" [pageSize]="pageSize" (pageChange)="page=$event" (pageSizeChange)="pageSize=$event;page=1" label="colaboradores" />
     </div>
 
     <div class="shares-dialog-empty" *ngIf="!loading && !error && !shares.length">
