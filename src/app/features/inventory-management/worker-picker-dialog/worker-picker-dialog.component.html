@@ -17,9 +17,8 @@
         <button *ngIf="search" type="button" class="clear-search" (click)="search = ''" aria-label="Limpiar búsqueda"><mat-icon aria-hidden="true">close</mat-icon></button>
       </div>
       <div class="search-count" *ngIf="!loading">{{ filteredEmployees.length }} {{ filteredEmployees.length === 1 ? 'empleado' : 'empleados' }}</div>
-      <button type="button" appUiButton="secondary" (click)="refresh()" [disabled]="loading || refreshing">
-        <app-loading-indicator *ngIf="refreshing; else workerRefreshLabel" [compact]="true" message="Cargando" />
-        <ng-template #workerRefreshLabel><mat-icon aria-hidden="true">refresh</mat-icon> Actualizar</ng-template>
+      <button type="button" appUiButton="secondary" (click)="refresh()" [disabled]="loading || refreshing" [uiButtonLoading]="refreshing" [uiButtonLoadingText]="'Cargando...'">
+        <mat-icon aria-hidden="true">refresh</mat-icon> Actualizar
       </button>
     </div>
     <div class="worker-dialog-content">
