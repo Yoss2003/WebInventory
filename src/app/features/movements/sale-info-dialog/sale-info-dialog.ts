@@ -3,6 +3,7 @@ import { Component, inject } from '@angular/core';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { ModalShellComponent } from '../../../shared/ui/components/modal-shell/modal-shell.component';
 import { UiPaginationComponent } from '../../../shared/ui/components/ui-pagination/ui-pagination.component';
+import { UiTablePagingDirective } from '../../../shared/ui/directives/ui-table-paging.directive';
 
 export interface SaleInfoDialogData {
   kind: 'schedule' | 'summary';
@@ -24,7 +25,7 @@ export interface SaleInfoDialogData {
 @Component({
   selector: 'app-sale-info-dialog',
   standalone: true,
-  imports: [CommonModule, ModalShellComponent, UiPaginationComponent],
+  imports: [CommonModule, ModalShellComponent, UiTablePagingDirective, UiPaginationComponent],
   templateUrl: './sale-info-dialog.html',
   styleUrl: './sale-info-dialog.scss'
 })
