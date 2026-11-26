@@ -65,8 +65,13 @@ export class UiTablePagingDirective implements OnChanges, OnDestroy {
     this.renderer.setAttribute(overlay, 'aria-label', 'Cargando registros de la tabla');
 
     for (let index = 0; index < 4; index++) {
-      const row = this.renderer.createElement('span');
+      const row = this.renderer.createElement('div');
       this.renderer.addClass(row, 'ui-table-paging-skeleton__row');
+      for (let cellIndex = 0; cellIndex < 5; cellIndex++) {
+        const cell = this.renderer.createElement('span');
+        this.renderer.addClass(cell, 'ui-table-paging-skeleton__cell');
+        this.renderer.appendChild(row, cell);
+      }
       this.renderer.appendChild(overlay, row);
     }
 

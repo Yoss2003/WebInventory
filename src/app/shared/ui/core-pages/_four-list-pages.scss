@@ -7,7 +7,7 @@
   --core-muted: #b2c5d4;
   --core-gap: 12px;
   --core-row-height: 57px;
-  --core-table-max-height: 440px;
+  --core-table-max-height: min(560px, max(140px, calc(100dvh - var(--ui-table-reserved-height, 390px))));
   --core-accent: var(--inv-company-accent, #a2d149);
   --core-accent-text: var(--inv-company-on-accent, #12202b);
   --core-accent-soft: color-mix(in srgb, var(--core-accent) 16%, #14212b);

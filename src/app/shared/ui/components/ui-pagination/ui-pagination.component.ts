@@ -6,6 +6,7 @@ import { UiTablePagingLoadingService } from '../../services/ui-table-paging-load
 @Component({
   selector: 'app-ui-pagination',
   standalone: true,
+  host: { class: 'ui-pagination-host' },
   imports: [CommonModule, MatIconModule],
   templateUrl: './ui-pagination.component.html',
   styleUrl: './ui-pagination.component.scss'

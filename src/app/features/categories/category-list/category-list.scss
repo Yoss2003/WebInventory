@@ -10,7 +10,21 @@
 .inv-core-page .row-meta,
 .inv-core-page .cell-muted { color: #a7bdcb; font-size: 11px; }
 .inv-core-page .expanded-detail { overflow: hidden; background: #15232d; }
-.inv-core-page .subcategories-wrap { padding: 14px 16px 17px; overflow: auto; }
+.inv-core-page .subcategories-wrap {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  min-width: 0;
+  padding: 14px 16px 17px;
+  overflow: hidden;
+}
+.inv-core-page .subcategories-table-viewport {
+  min-width: 0;
+  max-height: min(260px, 32dvh);
+  overflow: auto;
+  border: 1px solid #3b5263;
+  border-radius: 8px;
+}
 .inv-core-page .subcategories-table {
   width: 100%; min-width: 690px; border-collapse: collapse;
   font-size: 12px; background: #15232d;
