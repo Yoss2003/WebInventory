@@ -7,6 +7,7 @@ import { cleanArticleDisplayName } from '../../../shared/clean-article-name.pipe
 import { ToastService } from '../../../shared/toast/toast.service';
 import { ChangeDetectorRef, Component, OnInit, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { FormsModule } from '@angular/forms';
 import { MoneyPipe } from '../../../shared/money.pipe';
 import { MatIconModule } from '@angular/material/icon';
 import { MatTabsModule } from '@angular/material/tabs';
@@ -29,7 +30,7 @@ import { LoadingIndicatorComponent } from '../../../shared/loading/loading-indic
 
 import { UiSearchComponent } from '../../../shared/ui/components/ui-search.component';
 
-@Component({selector:'app-salidas',standalone:true,imports:[MoneyPipe, UiEmptyStateComponent, UiStatusComponent, UiTableActionDirective, UiButtonDirective, UiPageHeadingComponent, CommonModule,MatIconModule,MatTabsModule,TabViewTransitionDirective,LoadingIndicatorComponent,UiSearchComponent],templateUrl:'./salidas.html',styleUrl:'./salidas.scss'})
+@Component({selector:'app-salidas',standalone:true,imports:[FormsModule, MoneyPipe, UiEmptyStateComponent, UiStatusComponent, UiTableActionDirective, UiButtonDirective, UiPageHeadingComponent, CommonModule,MatIconModule,MatTabsModule,TabViewTransitionDirective,LoadingIndicatorComponent,UiSearchComponent],templateUrl:'./salidas.html',styleUrl:'./salidas.scss'})
 export class SalidasComponent implements OnInit {
   private readonly movementsApi=inject(MovementService);
   private readonly salesApi=inject(SalesService);
