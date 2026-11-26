@@ -10,6 +10,7 @@ import { SalesService, SaleInstallmentsSummary } from '../../../core/services/sa
 import { ModalShellComponent } from '../../../shared/ui/components/modal-shell/modal-shell.component';
 import { LoadingIndicatorComponent } from '../../../shared/loading/loading-indicator';
 import { UiPaginationComponent } from '../../../shared/ui/components/ui-pagination/ui-pagination.component';
+import { UiTablePagingDirective } from '../../../shared/ui/directives/ui-table-paging.directive';
 
 @Component({
   selector: 'app-movement-detail-dialog',
@@ -22,7 +23,7 @@ import { UiPaginationComponent } from '../../../shared/ui/components/ui-paginati
     MatIconModule,
     ModalShellComponent,
     LoadingIndicatorComponent,
-    UiPaginationComponent
+    UiTablePagingDirective, UiPaginationComponent
   ],
   templateUrl: './movement-detail-dialog.html',
   styleUrl: './movement-detail-dialog.scss'
