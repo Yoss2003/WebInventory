@@ -13,6 +13,7 @@ import { InventorySharesDialogComponent } from '../inventory-shares-dialog/inven
 import { ToastService } from '../../../shared/toast/toast.service';
 import { ModalShellComponent } from '../../../shared/ui/components/modal-shell/modal-shell.component';
 import { UiPaginationComponent } from '../../../shared/ui/components/ui-pagination/ui-pagination.component';
+import { UiTablePagingDirective } from '../../../shared/ui/directives/ui-table-paging.directive';
 import type { ModalActionId, ModalFooterAction, ModalSection } from '../../../shared/ui/models/modal-standard.model';
 import { WorkerPickerDialogComponent, WorkerPickerDialogData } from '../worker-picker-dialog/worker-picker-dialog.component';
 import { finalize, timeout } from 'rxjs';
@@ -29,7 +30,7 @@ export interface ShareInventoryDialogData {
   standalone: true,
   imports: [
     CommonModule, FormsModule, MatIconModule, InventoryDialogMotionDirective,
-    UiButtonDirective, LoadingIndicatorComponent, ModalShellComponent, UiPaginationComponent
+    UiButtonDirective, LoadingIndicatorComponent, ModalShellComponent, UiTablePagingDirective, UiPaginationComponent
   ],
   templateUrl: './share-inventory-dialog.component.html',
   styleUrl: './share-inventory-dialog.component.scss',
