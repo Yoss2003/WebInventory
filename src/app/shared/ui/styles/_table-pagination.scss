@@ -82,11 +82,21 @@
 .inv-admin-page.master-history { --ui-table-reserved-height: 500px; }
 
 .inv-core-page .inv-core-table-wrap:not(.registered-suppliers__table-viewport):not(.supplier-table-viewport):not(.history-rates-scroll),
-.inv-core-page .overflow,
-.inv-core-page .subcategories-table-viewport,
+.inv-core-page .overflow {
+  max-height: var(--core-table-max-height, min(560px, max(140px, calc(100dvh - var(--ui-table-reserved-height, 390px))))) !important;
+  min-height: 0;
+  overflow: auto;
+}
+
+.inv-core-page .subcategories-table-viewport {
+  max-height: min(260px, 32dvh, var(--core-table-max-height, 560px)) !important;
+  min-height: 0;
+  overflow: auto;
+}
+
 .inv-secondary-page .assignment-table-wrap,
 .inv-secondary-page .sharing-table-wrap {
-  max-height: min(560px, max(140px, calc(100dvh - var(--ui-table-reserved-height, 390px)))) !important;
+  max-height: var(--core-table-max-height, min(560px, max(140px, calc(100dvh - var(--ui-table-reserved-height, 390px))))) !important;
   min-height: 0;
   overflow: auto;
 }
