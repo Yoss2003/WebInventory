@@ -176,7 +176,7 @@ export class ShareInventoryDialogComponent implements OnInit {
 
   openSharesDialog(): void {
     this.modalStandards.open(InventorySharesDialogComponent, 'detail', {
-      width: 'min(820px, calc(100vw - 24px))',
+      width: 'min(620px, calc(100vw - 24px))',
       maxWidth: 'calc(100vw - 24px)',
       maxHeight: 'calc(100dvh - 28px)',
       panelClass: ['inv-v2-dialog-panel', 'inv-seven-modal'],
