@@ -2,6 +2,7 @@ import { ModalStandardService } from '../../shared/ui/services/modal-standard.se
 import { WorkerPickerDialogComponent } from '../inventory-management/worker-picker-dialog/worker-picker-dialog.component';
 import { InventoryShareRecipient } from '../../core/services/inventories';
 import { UiControlDirective } from '../../shared/ui/directives/ui-control.directive';
+import { UiPaginationComponent } from '../../shared/ui/components/ui-pagination/ui-pagination.component';
 import { UiPageHeadingComponent } from '../../shared/ui/components/ui-page-heading.component';
 import { UiButtonDirective } from '../../shared/ui/directives/ui-button.directive';
 import { UiTableActionDirective } from '../../shared/ui/directives/ui-table-action.directive';
@@ -21,7 +22,7 @@ import { finalize, timeout } from 'rxjs';
 
 @Component({
   selector: 'app-inventory-sharing', standalone: true,
-  imports: [UiControlDirective, UiPageHeadingComponent, UiButtonDirective, UiTableActionDirective, CommonModule, FormsModule, MatIconModule, MatTooltipModule, MatFormFieldModule, MatSelectModule, LoadingIndicatorComponent],
+  imports: [UiControlDirective, UiPageHeadingComponent, UiButtonDirective, UiTableActionDirective, CommonModule, FormsModule, MatIconModule, MatTooltipModule, MatFormFieldModule, MatSelectModule, LoadingIndicatorComponent, UiPaginationComponent],
   templateUrl: './inventory-sharing.html', styleUrl: './inventory-sharing.scss'
 })
 export class InventorySharingComponent implements OnInit {
@@ -36,6 +37,9 @@ export class InventorySharingComponent implements OnInit {
   inventories: InventorySummary[] = [];
   currentInventoryId: number | null = null;
   shares: InventoryShare[] = [];
+  page = 1;
+  pageSize = 10;
+  get paginatedShares(): InventoryShare[] { const start = (this.page - 1) * this.pageSize; return this.shares.slice(start, start + this.pageSize); }
   identifier = '';
   recipientUserId: number | null = null;
   accessLevel: 1 | 2 = 1;
