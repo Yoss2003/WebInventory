@@ -658,3 +658,5 @@
     padding: 11px 14px;
   }
 }
+.assignment-dialog .custody-evidence-preview{position:relative;overflow:hidden}
+.assignment-dialog .custody-evidence-image-loading{position:absolute;inset:0;z-index:2;display:grid;place-items:center;background:rgba(14,25,35,.78);border-radius:inherit}
