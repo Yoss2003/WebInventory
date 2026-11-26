@@ -17,6 +17,7 @@ import { InventoryContextService } from '../../core/services/inventory-context';
 import { MasterCatalogsService } from '../../core/services/master-catalogs';
 import { ToastService } from '../../shared/toast/toast.service';
 import { UiSearchComponent } from '../../shared/ui/components/ui-search.component';
+import { UiPaginationComponent } from '../../shared/ui/components/ui-pagination/ui-pagination.component';
 import { UiEmptyStateComponent } from '../../shared/ui/components/ui-empty-state.component';
 import { UiStatusComponent } from '../../shared/ui/components/ui-status.component';
 import { LoadingIndicatorComponent } from '../../shared/loading/loading-indicator';
@@ -82,7 +83,8 @@ interface ParameterRecord {
     MatFormFieldModule,
     MatSelectModule,
     MatTooltipModule,
-    UiSearchComponent
+    UiSearchComponent,
+    UiPaginationComponent
   ],
   templateUrl: './master-catalogs.html',
   styleUrl: './master-catalogs.scss'
@@ -99,6 +101,12 @@ export class MasterCatalogsComponent implements OnInit {
   tab: 'suppliers' | 'parameters' = 'suppliers';
   suppliers: SupplierRecord[] = [];
   parameters: ParameterRecord[] = [];
+  supplierPage = 1;
+  supplierPageSize = 10;
+  parameterPage = 1;
+  parameterPageSize = 10;
+  get paginatedSuppliers(): SupplierRecord[] { const start = (this.supplierPage - 1) * this.supplierPageSize; return this.filteredSuppliers.slice(start, start + this.supplierPageSize); }
+  get paginatedParameters(): ParameterRecord[] { const start = (this.parameterPage - 1) * this.parameterPageSize; return this.filteredParameters.slice(start, start + this.parameterPageSize); }
   supplierSearch = '';
   parameterSearch = '';
 
