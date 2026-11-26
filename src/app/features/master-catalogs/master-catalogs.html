@@ -177,6 +177,7 @@
           </tbody>
         </table>
       </div>
+      <app-ui-pagination *ngIf="filteredParameters.length" [totalItems]="filteredParameters.length" [page]="parameterPage" [pageSize]="parameterPageSize" (pageChange)="parameterPage=$event" (pageSizeChange)="parameterPageSize=$event;parameterPage=1" label="parámetros" />
       <app-ui-empty-state
         *ngIf="!filteredParameters.length"
         icon="tune"
