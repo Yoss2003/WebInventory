@@ -5,14 +5,13 @@ import { MatDialogModule, MatDialogRef, MAT_DIALOG_DATA } from '@angular/materia
 import { MatIconModule } from '@angular/material/icon';
 import { ManagedUser, UserManagementService } from '../../../core/services/user-management';
 import { ToastService } from '../../../shared/toast/toast.service';
-import { UiButtonDirective } from '../../../shared/ui/directives/ui-button.directive';
 import { ModalShellComponent } from '../../../shared/ui/components/modal-shell/modal-shell.component';
 import type { ModalActionId, ModalFooterAction } from '../../../shared/ui/models/modal-standard.model';
 
 @Component({
   selector: 'app-resend-credentials-dialog',
   standalone: true,
-  imports: [CommonModule, FormsModule, MatDialogModule, MatIconModule, UiButtonDirective, ModalShellComponent],
+  imports: [CommonModule, FormsModule, MatDialogModule, MatIconModule, ModalShellComponent],
   templateUrl: './resend-credentials-dialog.html',
   styleUrl: './resend-credentials-dialog.scss'
 })
