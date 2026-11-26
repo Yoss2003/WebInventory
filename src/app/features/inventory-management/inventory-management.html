@@ -78,6 +78,8 @@
       </table>
     </div>
 
+    <app-ui-pagination *ngIf="operational.length" [totalItems]="operational.length" [page]="page" [pageSize]="pageSize" (pageChange)="page=$event" (pageSizeChange)="pageSize=$event;page=1" label="inventarios" />
+
     <app-ui-empty-state
       *ngIf="!loading && !operational.length && !error"
       icon="warehouse"
