@@ -10,11 +10,12 @@ import { isPlatformBrowser } from '@angular/common';
 import { ToastService } from '../../../shared/toast/toast.service';
 import { ConfirmationDialogService } from '../../../shared/confirm-dialog/confirmation-dialog.service';
 import { CatalogSimilarDialogComponent, CatalogSimilarChoice } from '../../../shared/catalog-similar-dialog/catalog-similar-dialog';
-import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
+import { LoadingIndicatorComponent } from '../../../shared/loading/loading-indicator';
 import { MatIconModule } from '@angular/material/icon';
 import { Brand } from '../../../core/models/brand.model';
 import { BrandService } from '../../../core/services/brands';
 import { UiButtonDirective } from '../../../shared/ui/directives/ui-button.directive';
+import { UiControlDirective } from '../../../shared/ui/directives/ui-control.directive';
 import { UiTableActionDirective } from '../../../shared/ui/directives/ui-table-action.directive';
 import { ModalShellComponent } from '../../../shared/ui/components/modal-shell/modal-shell.component';
 import type { ModalActionId, ModalFooterAction } from '../../../shared/ui/models/modal-standard.model';
@@ -29,7 +30,7 @@ export interface BrandDialogData {
 @Component({
   selector: 'app-brand-dialog',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule, MatDialogModule, MatIconModule, MatProgressSpinnerModule, UiButtonDirective, UiTableActionDirective, ModalShellComponent],
+  imports: [CommonModule, ReactiveFormsModule, MatDialogModule, MatIconModule, LoadingIndicatorComponent, UiButtonDirective, UiControlDirective, UiTableActionDirective, ModalShellComponent],
   templateUrl: './brand-dialog.html',
   styleUrls: ['./brand-dialog.scss']
 })
