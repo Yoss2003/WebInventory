@@ -29,7 +29,7 @@ export interface ShareInventoryDialogData {
   standalone: true,
   imports: [
     CommonModule, FormsModule, MatIconModule, InventoryDialogMotionDirective,
-    UiButtonDirective, LoadingIndicatorComponent, ModalShellComponent
+    UiButtonDirective, LoadingIndicatorComponent, ModalShellComponent, UiPaginationComponent
   ],
   templateUrl: './share-inventory-dialog.component.html',
   styleUrl: './share-inventory-dialog.component.scss',
