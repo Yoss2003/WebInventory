@@ -91,8 +91,8 @@
                 </tr>
               </tbody>
             </table>
-            <app-ui-pagination *ngIf="filteredSuppliers.length" [totalItems]="filteredSuppliers.length" [page]="supplierPage" [pageSize]="supplierPageSize" (pageChange)="supplierPage=$event" (pageSizeChange)="supplierPageSize=$event;supplierPage=1" label="proveedores" />
           </div>
+          <app-ui-pagination *ngIf="filteredSuppliers.length" [totalItems]="filteredSuppliers.length" [page]="supplierPage" [pageSize]="supplierPageSize" (pageChange)="supplierPage=$event" (pageSizeChange)="supplierPageSize=$event;supplierPage=1" label="proveedores" />
           <p class="registered-suppliers__state" *ngIf="!suppliersLoading && !suppliersError && suppliersLoaded && !filteredSuppliers.length">
             {{ supplierSearch ? 'No hay proveedores que coincidan con tu búsqueda.' : 'No tienes proveedores activos registrados.' }}
           </p>
@@ -232,8 +232,8 @@
                     </tr>
                   </tbody>
                 </table>
-                <app-ui-pagination *ngIf="historyRates.length" [totalItems]="historyRates.length" [page]="historyPage" [pageSize]="historyPageSize" (pageChange)="historyPage=$event" (pageSizeChange)="historyPageSize=$event;historyPage=1" label="cotizaciones" />
               </div>
+              <app-ui-pagination *ngIf="historyRates.length" [totalItems]="historyRates.length" [page]="historyPage" [pageSize]="historyPageSize" (pageChange)="historyPage=$event" (pageSizeChange)="historyPageSize=$event;historyPage=1" label="cotizaciones" />
 
               <p *ngIf="loadingHistory" role="status" class="fx-loading">
                 Consultando el historial almacenado...
