@@ -19,6 +19,7 @@ import { UiControlDirective } from '../../../shared/ui/directives/ui-control.dir
 import { UiTableActionDirective } from '../../../shared/ui/directives/ui-table-action.directive';
 import { ModalShellComponent } from '../../../shared/ui/components/modal-shell/modal-shell.component';
 import { UiPaginationComponent } from '../../../shared/ui/components/ui-pagination/ui-pagination.component';
+import { UiTablePagingDirective } from '../../../shared/ui/directives/ui-table-paging.directive';
 import type { ModalActionId, ModalFooterAction } from '../../../shared/ui/models/modal-standard.model';
 
 export interface BrandDialogData {
@@ -31,7 +32,7 @@ export interface BrandDialogData {
 @Component({
   selector: 'app-brand-dialog',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule, MatDialogModule, MatIconModule, LoadingIndicatorComponent, UiButtonDirective, UiControlDirective, UiTableActionDirective, ModalShellComponent, UiPaginationComponent],
+  imports: [CommonModule, ReactiveFormsModule, MatDialogModule, MatIconModule, LoadingIndicatorComponent, UiButtonDirective, UiControlDirective, UiTableActionDirective, ModalShellComponent, UiTablePagingDirective, UiPaginationComponent],
   templateUrl: './brand-dialog.html',
   styleUrls: ['./brand-dialog.scss']
 })
