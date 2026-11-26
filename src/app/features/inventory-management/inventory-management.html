@@ -46,7 +46,7 @@
           </tr>
         </thead>
         <tbody>
-          <tr *ngFor="let row of operational">
+          <tr *ngFor="let row of paginatedOperational">
             <td>
               <strong>{{ row.alias || row.inventoryName }}</strong>
               <small>{{ row.inventoryName }} · ID {{ row.id }}</small>
