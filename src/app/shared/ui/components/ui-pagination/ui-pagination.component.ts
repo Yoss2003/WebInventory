@@ -1,7 +1,6 @@
 import { CommonModule } from '@angular/common';
-import { Component, EventEmitter, Input, OnChanges, Output, SimpleChanges } from '@angular/core';
+import { Component, EventEmitter, Input, OnChanges, Output, SimpleChanges, inject } from '@angular/core';
 import { MatIconModule } from '@angular/material/icon';
-import { inject } from '@angular/core';
 import { UiTablePagingLoadingService } from '../../services/ui-table-paging-loading.service';
 
 @Component({
