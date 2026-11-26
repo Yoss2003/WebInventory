@@ -109,6 +109,7 @@ export class BrandDialogComponent implements OnInit {
 
   onShowInactiveChange(event: Event): void {
     this.showInactive = (event.target as HTMLInputElement).checked;
+    this.page = 1;
   }
 
   loadBrands(refresh = false): void {
@@ -268,6 +269,7 @@ export class BrandDialogComponent implements OnInit {
 
   onSearch(event: Event): void {
     this.query = (event.target as HTMLInputElement).value;
+    this.page = 1;
   }
 
   private normalize(value: string): string {
