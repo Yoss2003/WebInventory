@@ -871,3 +871,5 @@
     align-items: flex-start;
   }
 }
+.media-card--loading{position:relative;overflow:hidden}
+.media-card-loading{position:absolute;inset:0;z-index:2;display:grid;place-items:center;background:rgba(13,24,34,.82);border-radius:inherit}
