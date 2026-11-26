@@ -1,0 +1,64 @@
+.ui-pagination-host {
+  display: block;
+  box-sizing: border-box;
+  width: 100%;
+  max-width: 100%;
+  min-width: 0;
+  padding-top: 10px;
+}
+
+.ui-table-paging-host {
+  position: relative;
+  isolation: isolate;
+}
+
+.ui-table-paging-skeleton {
+  position: absolute;
+  z-index: 8;
+  inset: 0;
+  display: grid;
+  align-content: start;
+  gap: 8px;
+  box-sizing: border-box;
+  min-width: 0;
+  padding: 12px;
+  overflow: hidden;
+  border-radius: inherit;
+  background: color-mix(in srgb, var(--inv-panel-bg, #14232f) 92%, transparent);
+}
+
+.ui-table-paging-skeleton__row {
+  display: block;
+  width: 100%;
+  max-width: 100%;
+  min-width: 0;
+  height: 34px;
+  border: 1px solid color-mix(in srgb, var(--inv-line, #40586a) 48%, transparent);
+  border-radius: 7px;
+  background: linear-gradient(90deg, #1c2e39 20%, #2c4351 45%, #1c2e39 70%);
+  background-size: 220% 100%;
+  animation: ui-table-paging-shimmer 1.35s ease-in-out infinite;
+}
+
+.ui-table-paging-skeleton__row:nth-child(2) { width: 96%; }
+.ui-table-paging-skeleton__row:nth-child(3) { width: 92%; }
+.ui-table-paging-skeleton__row:nth-child(4) { width: 87%; }
+
+@keyframes ui-table-paging-shimmer {
+  to { background-position: -220% 0; }
+}
+
+.ui-pagination-host > app-ui-pagination {
+  display: block;
+  box-sizing: border-box;
+  width: 100%;
+  max-width: 100%;
+  min-width: 0;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .ui-table-paging-skeleton__row {
+    animation: none;
+    background: #263b48;
+  }
+}
