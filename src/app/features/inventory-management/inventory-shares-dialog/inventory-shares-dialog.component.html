@@ -69,8 +69,8 @@
           </tr>
         </tbody>
       </table>
-      <app-ui-pagination [totalItems]="shares.length" [page]="page" [pageSize]="pageSize" (pageChange)="page=$event" (pageSizeChange)="pageSize=$event;page=1" label="colaboradores" />
     </div>
+    <app-ui-pagination [totalItems]="shares.length" [page]="page" [pageSize]="pageSize" (pageChange)="page=$event" (pageSizeChange)="pageSize=$event;page=1" label="colaboradores" />
 
     <div class="shares-dialog-empty" *ngIf="!loading && !error && !shares.length">
       <mat-icon aria-hidden="true">group_off</mat-icon>
