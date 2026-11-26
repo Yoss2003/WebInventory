@@ -22,9 +22,8 @@
             <input appUiControl formControlName="ruc" maxlength="11" inputmode="numeric" placeholder="11 dígitos" />
             <small *ngIf="form.controls.ruc.touched && form.controls.ruc.invalid">El RUC debe contener exactamente 11 dígitos.</small>
           </label>
-          <button type="button" appUiButton="secondary" class="supplier-modal__lookup" (click)="lookupRuc()" [disabled]="lookingUpRuc || saving || form.controls.ruc.invalid">
-            <app-loading-indicator *ngIf="lookingUpRuc; else rucLookupLabel" [compact]="true" message="Consultando..." />
-            <ng-template #rucLookupLabel><mat-icon>manage_search</mat-icon>Consultar RUC</ng-template>
+          <button type="button" appUiButton="secondary" class="supplier-modal__lookup" (click)="lookupRuc()" [uiButtonLoading]="lookingUpRuc" [uiButtonLoadingText]="'Consultando...'" [disabled]="lookingUpRuc || saving || form.controls.ruc.invalid">
+            <mat-icon>manage_search</mat-icon>Consultar RUC
           </button>
         </div>
         <label class="supplier-modal__field">

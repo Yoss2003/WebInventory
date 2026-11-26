@@ -19,9 +19,8 @@
         <strong>Colaboradores autorizados</strong>
         <small>Administra los permisos de acceso a este almacén.</small>
       </div>
-      <button type="button" appUiButton="secondary" (click)="load()" [disabled]="loading || refreshing">
-        <app-loading-indicator *ngIf="refreshing; else refreshSharesLabel" [compact]="true" message="Cargando" />
-        <ng-template #refreshSharesLabel><mat-icon aria-hidden="true">refresh</mat-icon> Actualizar</ng-template>
+      <button type="button" appUiButton="secondary" (click)="load()" [disabled]="loading || refreshing" [uiButtonLoading]="refreshing" [uiButtonLoadingText]="'Cargando...'">
+        <mat-icon aria-hidden="true">refresh</mat-icon> Actualizar
       </button>
     </div>
 

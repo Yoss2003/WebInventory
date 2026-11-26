@@ -151,15 +151,6 @@ p {
 .brand-form-row input {
   flex: 1 1 auto;
   min-width: 0;
-  height: 42px;
-  padding: 9px 11px;
-  border: 1px solid #526879;
-  border-radius: 8px;
-  background: #101820;
-  color: #f3f7fb;
-  font: inherit;
-  font-size: 12px;
-  outline: none;
 }
 
 .brand-form-row input:focus,
@@ -217,7 +208,7 @@ p {
 }
 
 .success {
-  color: #c9ed8b;
+  color: var(--inv-company-accent, #A2D149);
 }
 
 .feedback button {
@@ -527,10 +518,6 @@ p {
   font-size: 12px;
 }
 
-.brand-loading mat-spinner,
-.refresh-button mat-spinner {
-  --mdc-circular-progress-active-indicator-color: var(--inv-company-accent, #A2D149);
-}
 
 .brand-footer {
   display: flex;

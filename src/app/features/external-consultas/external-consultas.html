@@ -7,9 +7,8 @@
       <h2>Consultar RUC</h2>
       <div class="lookup-inline">
         <input [(ngModel)]="ruc" maxlength="11" inputmode="numeric" placeholder="Número RUC (11 dígitos)" aria-label="Número de RUC" appUiControl />
-        <button type="button" appUiButton="primary" (click)="searchRuc()" [disabled]="loadingRuc">
-          <app-loading-indicator *ngIf="loadingRuc; else rucButtonLabel" [compact]="true" message="Cargando..." />
-          <ng-template #rucButtonLabel><mat-icon>search</mat-icon> Consultar</ng-template>
+        <button type="button" appUiButton="primary" (click)="searchRuc()" [disabled]="loadingRuc" [uiButtonLoading]="loadingRuc" [uiButtonLoadingText]="'Consultando...'">
+          <mat-icon>search</mat-icon> Consultar
         </button>
         <button type="button" appUiButton="secondary" class="lookup-clear" (click)="clearRuc()" [disabled]="loadingRuc || (!ruc && !sunat && !error)"><mat-icon>close</mat-icon><span>Limpiar</span></button>
       </div>

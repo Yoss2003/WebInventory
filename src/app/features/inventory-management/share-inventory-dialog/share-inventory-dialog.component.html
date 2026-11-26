@@ -96,10 +96,8 @@
         </div>
         <div class="current-access-actions">
           <button type="button" appUiButton="secondary" class="access-refresh-button"
-            (click)="loadShares(true)" [disabled]="loadingShares || refreshingShares">
-            <app-loading-indicator *ngIf="refreshingShares; else accessRefreshLabel"
-              [compact]="true" message="Cargando" />
-            <ng-template #accessRefreshLabel><mat-icon aria-hidden="true">refresh</mat-icon> Actualizar</ng-template>
+            (click)="loadShares(true)" [disabled]="loadingShares || refreshingShares" [uiButtonLoading]="refreshingShares" [uiButtonLoadingText]="'Cargando...'">
+            <mat-icon aria-hidden="true">refresh</mat-icon> Actualizar
           </button>
           <button type="button" appUiButton="secondary" class="access-manage-button"
             (click)="openSharesDialog()" [disabled]="loadingShares">

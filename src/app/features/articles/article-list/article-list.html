@@ -1,9 +1,8 @@
 <section class="catalog-page inv-core-page">
   <header class="inv-core-header"><app-ui-page-heading icon="inventory_2" title="Maestro de artículos" subtitle="Información relevante de productos e inventarios. Pulsa una fila para abrir su ficha completa."></app-ui-page-heading>
     <div class="inv-core-header-actions"><button type="button" class="create-item" (click)="create()" [disabled]="!hasOperationalInventory" [title]="hasOperationalInventory ? 'Registrar artículo' : 'Primero debe existir un inventario personal'" appUiButton="primary"><mat-icon>add</mat-icon>Nuevo artículo</button>
-      <button type="button" class="reload" (click)="load()" [disabled]="loading || !hasOperationalInventory" appUiButton="secondary">
-        <app-loading-indicator *ngIf="loading; else articleRefresh" [compact]="true" message="Cargando..." />
-        <ng-template #articleRefresh><mat-icon>refresh</mat-icon>Actualizar</ng-template>
+      <button type="button" class="reload" (click)="load()" [disabled]="loading || !hasOperationalInventory" [uiButtonLoading]="loading" [uiButtonLoadingText]="'Cargando...'" appUiButton="secondary">
+        <mat-icon>refresh</mat-icon>Actualizar
       </button>
     </div>
   </header>

@@ -3,11 +3,11 @@ import { Component, inject } from '@angular/core';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { MatDialogModule, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { MatIconModule } from '@angular/material/icon';
-import { MatSnackBar } from '@angular/material/snack-bar';
+import { ToastService } from '../../../shared/toast/toast.service';
+import type { ToastType } from '../../../shared/toast/toast.service';
 import {
   ArticleReferenceDataService, ArticleSupplierReference
 } from '../../../core/services/article-reference-data';
-import { LoadingIndicatorComponent } from '../../../shared/loading/loading-indicator';
 import { UiButtonDirective } from '../../../shared/ui/directives/ui-button.directive';
 import { UiControlDirective } from '../../../shared/ui/directives/ui-control.directive';
 import { ModalShellComponent } from '../../../shared/ui/components/modal-shell/modal-shell.component';
@@ -21,14 +21,14 @@ export interface ArticleSupplierDialogData {
 @Component({
   selector: 'app-article-supplier-dialog',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule, MatDialogModule, MatIconModule, LoadingIndicatorComponent, UiButtonDirective, UiControlDirective, ModalShellComponent],
+  imports: [CommonModule, ReactiveFormsModule, MatDialogModule, MatIconModule, UiButtonDirective, UiControlDirective, ModalShellComponent],
   templateUrl: './article-supplier-dialog.html',
   styleUrl: './article-supplier-dialog.scss'
 })
 export class ArticleSupplierDialogComponent {
   private readonly fb = inject(FormBuilder);
   private readonly api = inject(ArticleReferenceDataService);
-  private readonly snack = inject(MatSnackBar);
+  private readonly toasts = inject(ToastService);
   readonly dialogRef = inject(MatDialogRef<ArticleSupplierDialogComponent, ArticleSupplierReference | undefined>);
   readonly data: ArticleSupplierDialogData = inject(MAT_DIALOG_DATA);
 
@@ -48,6 +48,10 @@ export class ArticleSupplierDialogComponent {
   });
 
   get editing(): boolean { return !!this.data.supplier?.id; }
+
+  private notify(message: string, type: ToastType, title: string, durationMs = 5000): void {
+    this.toasts.show(message, type, title, durationMs);
+  }
 
   constructor() {
     const current = this.data.supplier;
@@ -93,14 +97,14 @@ export class ArticleSupplierDialogComponent {
         this.fiscalStatus = result.estado || null;
         this.fiscalCondition = result.condicion || null;
         if (result.lookupFromCache) {
-          this.snack.open('La consulta usó datos guardados previamente en esta empresa.', 'Cerrar', { duration: 4500 });
+          this.notify('La consulta usó datos guardados previamente en esta empresa.', 'info', 'Consulta fiscal', 4500);
         } else {
-          this.snack.open('Datos fiscales consultados. Revisa y completa el contacto.', 'Cerrar', { duration: 3500 });
+          this.notify('Datos fiscales consultados. Revisa y completa el contacto.', 'success', 'Consulta fiscal', 3500);
         }
       },
       error: error => {
         this.lookingUpRuc = false;
-        this.snack.open(String(error?.error?.error || 'No se pudo consultar el RUC. Puedes completar los datos manualmente.'), 'Cerrar', { duration: 5500 });
+        this.notify(String(error?.error?.error || 'No se pudo consultar el RUC. Puedes completar los datos manualmente.'), 'error', 'Consulta de RUC', 5500);
       }
     });
   }
@@ -110,7 +114,7 @@ export class ArticleSupplierDialogComponent {
     this.form.markAllAsTouched();
     if (this.form.invalid) return;
     if (!this.editing && this.data.masterInventoryId <= 0) {
-      this.snack.open('No se encontró el inventario maestro de la empresa.', 'Cerrar', { duration: 4500 });
+      this.notify('No se encontró el inventario maestro de la empresa.', 'warning', 'Inventario maestro', 4500);
       return;
     }
 
@@ -136,12 +140,12 @@ export class ArticleSupplierDialogComponent {
       this.api.updateSupplier(existing.id, supplier).subscribe({
         next: () => {
           this.saving = false;
-          this.snack.open('Proveedor actualizado.', 'Cerrar', { duration: 3000 });
+          this.notify('Proveedor actualizado.', 'success', 'Proveedor actualizado', 3000);
           this.dialogRef.close({ ...existing, ...supplier, id: existing.id } as ArticleSupplierReference);
         },
         error: error => {
           this.saving = false;
-          this.snack.open(String(error?.error?.error || 'No se pudo actualizar el proveedor.'), 'Cerrar', { duration: 5500 });
+          this.notify(String(error?.error?.error || 'No se pudo actualizar el proveedor.'), 'error', 'Actualización de proveedor', 5500);
         }
       });
       return;
@@ -150,12 +154,12 @@ export class ArticleSupplierDialogComponent {
     this.api.createSupplier({ ...supplier, inventoryId: this.data.masterInventoryId }).subscribe({
       next: result => {
         this.saving = false;
-        this.snack.open(result.reused ? 'El proveedor ya existía; se reutilizó su registro.' : 'Proveedor registrado en el catálogo maestro.', 'Cerrar', { duration: 3500 });
+        this.notify(result.reused ? 'El proveedor ya existía; se reutilizó su registro.' : 'Proveedor registrado en el catálogo maestro.', result.reused ? 'info' : 'success', result.reused ? 'Proveedor existente' : 'Proveedor registrado', 3500);
         this.dialogRef.close(result);
       },
       error: error => {
         this.saving = false;
-        this.snack.open(String(error?.error?.error || 'No se pudo registrar el proveedor.'), 'Cerrar', { duration: 5500 });
+        this.notify(String(error?.error?.error || 'No se pudo registrar el proveedor.'), 'error', 'Registro de proveedor', 5500);
       }
     });
   }

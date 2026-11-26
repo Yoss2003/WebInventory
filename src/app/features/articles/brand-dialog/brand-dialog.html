@@ -23,7 +23,7 @@
       <form [formGroup]="brandForm" (ngSubmit)="saveBrand()" class="brand-form">
         <label for="brand-name">Nombre de la marca</label>
         <div class="brand-form-row">
-          <input id="brand-name" formControlName="name" type="text" maxlength="255"
+          <input id="brand-name" appUiControl formControlName="name" type="text" maxlength="255"
                  placeholder="Ej. Lenovo" autocomplete="off" [readonly]="isSaving" />
           <button type="submit" appUiButton="primary" [uiButtonLoading]="isSaving"
             [disabled]="isSaving || brandForm.invalid">
@@ -47,10 +47,9 @@
       <div class="section-row">
         <h3>Marcas registradas <span *ngIf="!isLoading">({{ visibleBrandCount }})</span></h3>
         <button type="button" appUiButton="secondary" (click)="loadBrands(true)"
-                [disabled]="isLoading || isRefreshing || isSaving" [attr.aria-busy]="isRefreshing">
-          <mat-spinner *ngIf="isRefreshing" [diameter]="16" aria-label="Actualizando marcas"></mat-spinner>
-          <mat-icon *ngIf="!isRefreshing">refresh</mat-icon>
-          {{ isRefreshing ? 'Actualizando...' : 'Actualizar' }}
+                [disabled]="isLoading || isRefreshing || isSaving" [uiButtonLoading]="isRefreshing"
+                [uiButtonLoadingText]="'Actualizando...'" [attr.aria-busy]="isRefreshing">
+          <mat-icon>refresh</mat-icon>Actualizar
         </button>
       </div>
 
@@ -69,8 +68,7 @@
 
       <div class="table-scroll" aria-live="polite">
         <div class="brand-loading" *ngIf="isLoading" role="status">
-          <mat-spinner [diameter]="27" aria-label="Cargando marcas"></mat-spinner>
-          <span>Cargando marcas...</span>
+          <app-loading-indicator message="Cargando marcas..." />
         </div>
         <div *ngIf="errorMessage && !isLoading" class="feedback error list-error" role="alert">
           {{ errorMessage }}

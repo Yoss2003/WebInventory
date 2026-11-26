@@ -1,8 +1,7 @@
 <section class="outputs-page inv-core-page">
   <header class="inv-core-header"><app-ui-page-heading icon="remove_circle" title="Salidas, asignaciones y ventas" subtitle="Operaciones registradas con control de stock e historial."></app-ui-page-heading><div class="inv-core-header-actions">
-    <button type="button" (click)="loadRealData()" [disabled]="loading" appUiButton="secondary">
-      <app-loading-indicator *ngIf="loading; else outputRefresh" [compact]="true" message="Cargando..." />
-      <ng-template #outputRefresh><mat-icon>refresh</mat-icon>Actualizar</ng-template>
+    <button type="button" (click)="loadRealData()" [disabled]="loading" [uiButtonLoading]="loading" [uiButtonLoadingText]="'Cargando...'" appUiButton="secondary">
+      <mat-icon>refresh</mat-icon>Actualizar
     </button>
     <button type="button" (click)="newTransfer()" appUiButton="primary"><mat-icon>swap_horiz</mat-icon>Nuevo traspaso / retiro</button><button type="button" (click)="newSale()" appUiButton="primary"><mat-icon>point_of_sale</mat-icon>Nueva venta (POS)</button>
   </div></header>

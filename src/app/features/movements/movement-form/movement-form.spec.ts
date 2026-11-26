@@ -1,7 +1,6 @@
 
 import { TestBed } from '@angular/core/testing';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
-import { MatSnackBar } from '@angular/material/snack-bar';
 import { of } from 'rxjs';
 
 import { MovementForm } from './movement-form';
@@ -34,12 +33,6 @@ describe('MovementForm', () => {
             createMovement: () => of({})
           }
         },
-        {
-          provide: MatSnackBar,
-          useValue: {
-            open: () => {}
-          }
-        }
       ]
     }).compileComponents();
   });

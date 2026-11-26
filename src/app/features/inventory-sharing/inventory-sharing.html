@@ -20,11 +20,8 @@
             <p>Selecciona el almacén cuyo acceso deseas administrar.</p>
           </div>
           <button type="button" appUiButton="secondary" (click)="refresh()"
-            [disabled]="loading" aria-label="Actualizar inventarios">
-            <ng-container *ngIf="loading; else sharingRefresh">
-              <app-loading-indicator [compact]="true" message="Cargando..." />
-            </ng-container>
-            <ng-template #sharingRefresh><mat-icon>refresh</mat-icon> Actualizar</ng-template>
+            [disabled]="loading" [uiButtonLoading]="loading" [uiButtonLoadingText]="'Cargando...'" aria-label="Actualizar inventarios">
+            <mat-icon>refresh</mat-icon> Actualizar
           </button>
         </div>
 

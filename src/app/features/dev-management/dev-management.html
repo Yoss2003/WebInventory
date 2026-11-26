@@ -4,9 +4,8 @@
       <small>ACCESO EXCLUSIVO · ROL DESARROLLADOR</small>
       <app-ui-page-heading icon="admin_panel_settings" title="Gestión Dev" subtitle="Empresas, licencias y recuperaciones pendientes."></app-ui-page-heading>
     </div>
-    <button type="button" (click)="reload()" [disabled]="loading" appUiButton="secondary">
-      <app-loading-indicator *ngIf="loading; else refreshCaption" [compact]="true" message="Cargando..." />
-      <ng-template #refreshCaption><mat-icon>refresh</mat-icon> Actualizar</ng-template>
+    <button type="button" (click)="reload()" [disabled]="loading" [uiButtonLoading]="loading" [uiButtonLoadingText]="'Cargando...'" appUiButton="secondary">
+      <mat-icon>refresh</mat-icon> Actualizar
     </button>
   </header>
 
@@ -102,10 +101,8 @@
             <input name="ruc" [(ngModel)]="form.ruc" (ngModelChange)="onRucChanged()" type="text" inputmode="numeric" maxlength="11" minlength="11" pattern="[0-9]{11}" required
               [readonly]="isSelectedProtected" placeholder="11 dígitos"  appUiControl />
           </label>
-          <div class="ruc-lookup"><button type="button" appUiButton="secondary" (click)="lookupRuc()" [disabled]="lookingUpRuc || form.ruc.length !== 11">
-              <mat-icon *ngIf="!lookingUpRuc">manage_search</mat-icon>
-              <app-loading-indicator *ngIf="lookingUpRuc" [compact]="true" message="Consultando..." />
-              <span *ngIf="!lookingUpRuc">Consultar RUC</span>
+          <div class="ruc-lookup"><button type="button" appUiButton="secondary" (click)="lookupRuc()" [disabled]="lookingUpRuc || form.ruc.length !== 11" [uiButtonLoading]="lookingUpRuc" [uiButtonLoadingText]="'Consultando...'">
+              <mat-icon>manage_search</mat-icon>Consultar RUC
             </button></div></div>
           <div *ngIf="rucResult" class="ruc-feedback ruc-feedback--ok" role="status"><mat-icon>verified</mat-icon><span><strong>Consulta exitosa</strong> · {{rucResult.estado || 'Estado no informado'}} · {{rucResult.condicion || 'Condición no informada'}}</span></div>
           <div *ngIf="rucLookupError" class="ruc-feedback ruc-feedback--error" role="alert"><mat-icon>{{rucNeedsConfiguration ? 'settings' : 'info_outline'}}</mat-icon><span>{{rucLookupError}}</span></div>
@@ -199,9 +196,8 @@
           </mat-select>
         </mat-form-field>
         <button type="button" appUiButton="primary" (click)="renewLicense()"
-          [disabled]="renewing || saving || isSelectedProtected || !selectedCompany?.isActive">
-          <app-loading-indicator *ngIf="renewing; else renewText" [compact]="true" message="Renovando..." />
-          <ng-template #renewText><mat-icon>event_repeat</mat-icon> Renovar {{renewDurationLabel}}</ng-template>
+          [disabled]="renewing || saving || isSelectedProtected || !selectedCompany?.isActive" [uiButtonLoading]="renewing" [uiButtonLoadingText]="'Renovando...'">
+          <mat-icon>event_repeat</mat-icon> Renovar {{renewDurationLabel}}
         </button>
       </div>
       <small *ngIf="isSelectedProtected">La renovación de la empresa administradora está bloqueada por la API.</small>
@@ -210,7 +206,9 @@
 
   <section class="dev-card" aria-label="Solicitudes de recuperación">
     <div class="section-head section-head--table"><div><h2>Solicitudes de recuperación <span class="count-chip">{{pending.length}}</span></h2><small>Revisa las solicitudes antes de aprobar o rechazar el acceso.</small></div>
-      <button type="button" appUiButton="secondary" (click)="loadPending()" [disabled]="loadingPending"><app-loading-indicator *ngIf="loadingPending; else refreshPending" [compact]="true" message="Cargando..." /><ng-template #refreshPending><mat-icon>refresh</mat-icon> Actualizar</ng-template></button>
+      <button type="button" appUiButton="secondary" (click)="loadPending()" [disabled]="loadingPending" [uiButtonLoading]="loadingPending" [uiButtonLoadingText]="'Cargando...'">
+            <mat-icon>refresh</mat-icon> Actualizar
+          </button>
     </div>
     <p *ngIf="pendingError" class="inline-alert inline-alert--error" role="alert"><mat-icon>error_outline</mat-icon>{{pendingError}}</p>
     <app-loading-indicator *ngIf="loadingPending && !pending.length" message="Cargando recuperaciones..." />

@@ -3,11 +3,9 @@
     <app-ui-page-heading icon="inventory_2" title="Directorio de maestros"
       subtitle="Catálogos generales por empresa. No almacenan existencias ni movimientos."></app-ui-page-heading>
     <button type="button" appUiButton="secondary" class="master-refresh"
-      (click)="load()" [disabled]="loading" [attr.aria-busy]="loading"
+      (click)="load()" [disabled]="loading" [uiButtonLoading]="loading" [uiButtonLoadingText]="'Cargando...'"
       aria-label="Actualizar inventarios maestros" title="Volver a consultar los inventarios maestros">
-      <app-loading-indicator *ngIf="loading; else masterRefreshIcon"
-        [compact]="true" [message]="''" />
-      <ng-template #masterRefreshIcon><mat-icon aria-hidden="true">refresh</mat-icon></ng-template>
+      <mat-icon aria-hidden="true">refresh</mat-icon>
       <span>Actualizar</span>
     </button>
   </header>
