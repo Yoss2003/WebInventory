@@ -18,6 +18,7 @@ import { UiButtonDirective } from '../../../shared/ui/directives/ui-button.direc
 import { UiControlDirective } from '../../../shared/ui/directives/ui-control.directive';
 import { UiTableActionDirective } from '../../../shared/ui/directives/ui-table-action.directive';
 import { ModalShellComponent } from '../../../shared/ui/components/modal-shell/modal-shell.component';
+import { UiPaginationComponent } from '../../../shared/ui/components/ui-pagination/ui-pagination.component';
 import type { ModalActionId, ModalFooterAction } from '../../../shared/ui/models/modal-standard.model';
 
 export interface BrandDialogData {
@@ -30,7 +31,7 @@ export interface BrandDialogData {
 @Component({
   selector: 'app-brand-dialog',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule, MatDialogModule, MatIconModule, LoadingIndicatorComponent, UiButtonDirective, UiControlDirective, UiTableActionDirective, ModalShellComponent],
+  imports: [CommonModule, ReactiveFormsModule, MatDialogModule, MatIconModule, LoadingIndicatorComponent, UiButtonDirective, UiControlDirective, UiTableActionDirective, ModalShellComponent, UiPaginationComponent],
   templateUrl: './brand-dialog.html',
   styleUrls: ['./brand-dialog.scss']
 })
@@ -52,6 +53,9 @@ export class BrandDialogComponent implements OnInit {
   readonly data: BrandDialogData = inject(MAT_DIALOG_DATA);
 
   brands: Brand[] = [];
+  page = 1;
+  pageSize = 10;
+  get paginatedBrands(): Brand[] { const start = (this.page - 1) * this.pageSize; return this.filteredBrands.slice(start, start + this.pageSize); }
   isLoading = true;
   isRefreshing = false;
   isSaving = false;
