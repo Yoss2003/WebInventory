@@ -43,6 +43,7 @@ export class AssignmentHistoryDialogComponent implements OnInit, OnDestroy {
   errorMessage = '';
   evidenceUrl: string | null = null;
   evidenceImageLoading = false;
+  evidenceLoading = false;
   evidenceStatus = '';
 
   get canReturn(): boolean { return Number(this.amount) > 0 && Number(this.amount) <= Number(this.data.remainingQuantity) && !this.isSaving && !this.serialLoading &&
@@ -97,6 +98,7 @@ export class AssignmentHistoryDialogComponent implements OnInit, OnDestroy {
       next: () => {
         this.data.hasEvidence = true;
 
+        this.evidenceLoading = true;
         this.api.getEvidence(this.data.id).subscribe({
           next: blob => {
             if (this.evidenceUrl) {
@@ -104,12 +106,14 @@ export class AssignmentHistoryDialogComponent implements OnInit, OnDestroy {
             }
 
             this.evidenceUrl = URL.createObjectURL(blob);
+            this.evidenceLoading = false;
             this.evidenceImageLoading = true;
             this.evidenceStatus = '';
             this.evidenceUploading = false;
             this.cdr.markForCheck();
           },
           error: () => {
+            this.evidenceLoading = false;
             this.evidenceUploading = false;
             this.evidenceStatus =
               'La fotografía se guardó, pero no pudo recargarse. Vuelve a abrir la custodia.';
@@ -133,8 +137,10 @@ export class AssignmentHistoryDialogComponent implements OnInit, OnDestroy {
     this.serialsApi.assigned(this.data.id).subscribe({next:rows=>{this.assignedSerials=rows;this.serialLoading=false; this.cdr.markForCheck();},
       error:()=>{this.serialLoading=false;this.errorMessage='No se pudieron consultar las series asignadas.'; this.cdr.markForCheck();}});
     // UX_FINAL_EVIDENCIA_CUSTODIA: consultar incluso custodias históricas.
+    this.evidenceLoading = true;
     this.api.getEvidence(this.data.id).subscribe({
         next: file => {
+            this.evidenceLoading = false;
             if (this.evidenceUrl)
                 URL.revokeObjectURL(this.evidenceUrl);
 
@@ -144,6 +150,7 @@ export class AssignmentHistoryDialogComponent implements OnInit, OnDestroy {
             this.cdr.markForCheck();
         },
         error: err => {
+            this.evidenceLoading = false;
             this.evidenceStatus = err?.status === 404
                 ? 'No se encontró la fotografía de esta custodia.'
                 : 'No se pudo cargar la fotografía.';
