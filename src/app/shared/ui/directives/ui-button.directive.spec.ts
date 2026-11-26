@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, signal } from '@angular/core';
 import { TestBed } from '@angular/core/testing';
 import { UiButtonDirective } from './ui-button.directive';
 
@@ -7,12 +7,12 @@ import { UiButtonDirective } from './ui-button.directive';
   imports: [UiButtonDirective],
   template: `
     <button appUiButton="primary"
-      [uiButtonLoading]="loading"
+      [uiButtonLoading]="loading()"
       [uiButtonLoadingText]="loadingText">Guardar</button>
   `
 })
 class UiButtonDirectiveHost {
-  loading = true;
+  loading = signal(true);
   loadingText = 'Cargando...';
 }
 
@@ -27,7 +27,7 @@ describe('UiButtonDirective loading state', () => {
     expect(button.getAttribute('aria-busy')).toBe('true');
     expect(button.getAttribute('data-loading-label')).toBe('Cargando...');
 
-    fixture.componentInstance.loading = false;
+    fixture.componentInstance.loading.set(false);
     fixture.detectChanges();
 
     expect(button.classList.contains('ui-v2-button--loading')).toBe(false);
