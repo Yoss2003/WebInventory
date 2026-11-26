@@ -108,7 +108,7 @@ export class SalidasComponent implements OnInit {
   }
   showDetail(m:Movement):void{
     const creditSale = String(m.paymentMethod ?? '').trim().toLowerCase() === 'cuotas' && /^VENTA-\d+$/.test(String(m.documentNumber ?? ''));
-    this.modalStandards.open(MovementDetailDialogComponent,'detail',{panelClass:'inv-seven-modal',enterAnimationDuration:260,exitAnimationDuration:220,data:{movement:m,articleName:this.articleName(m.articleId),articleCode:this.articleCode(m.articleId)},width:creditSale?'min(1120px,calc(100vw - 24px))':'min(760px,calc(100vw - 24px))'});
+    this.modalStandards.open(MovementDetailDialogComponent,'detail',{panelClass:'inv-seven-modal',enterAnimationDuration:260,exitAnimationDuration:220,data:{movement:m,articleName:this.articleName(m.articleId),articleCode:this.articleCode(m.articleId)},width:creditSale?'min(1460px,calc(100vw - 24px))':'min(760px,calc(100vw - 24px))'});
   }
   openAssignments(event:Event):void{event.stopPropagation();void this.router.navigate(['/dashboard/asignaciones']);}
   cancelMovement(m:Movement,event:Event):void{
