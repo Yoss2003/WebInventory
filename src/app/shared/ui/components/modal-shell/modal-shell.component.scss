@@ -9,6 +9,9 @@
 }
 
 .modal-shell {
+  overflow: hidden;
+  border-radius: inherit;
+  background: var(--inv-panel-bg, #111a23);
   display: flex;
   flex: 1 1 auto;
   flex-direction: column;
