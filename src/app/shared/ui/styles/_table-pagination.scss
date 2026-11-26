@@ -1,10 +1,14 @@
 .ui-pagination-host {
-  display: block;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex: 0 0 auto;
   box-sizing: border-box;
   width: 100%;
   max-width: 100%;
   min-width: 0;
-  padding-top: 10px;
+  margin-block-start: 2px;
+  padding: 8px 0 2px;
 }
 
 .ui-table-paging-host {
@@ -28,21 +32,33 @@
 }
 
 .ui-table-paging-skeleton__row {
+  display: grid;
+  grid-template-columns: minmax(72px, 1.05fr) minmax(100px, 2fr) minmax(70px, 1.2fr) minmax(48px, .75fr) minmax(36px, .5fr);
+  align-items: center;
+  gap: clamp(7px, 1.6vw, 18px);
+  box-sizing: border-box;
+  width: 100%;
+  min-width: 0;
+  height: 35px;
+  padding: 0 10px;
+  border-bottom: 1px solid color-mix(in srgb, var(--inv-line, #40586a) 48%, transparent);
+}
+
+.ui-table-paging-skeleton__cell {
   display: block;
   width: 100%;
   max-width: 100%;
   min-width: 0;
-  height: 34px;
-  border: 1px solid color-mix(in srgb, var(--inv-line, #40586a) 48%, transparent);
-  border-radius: 7px;
-  background: linear-gradient(90deg, #1c2e39 20%, #2c4351 45%, #1c2e39 70%);
+  height: 9px;
+  border-radius: 5px;
+  background: linear-gradient(90deg, #1c2e39 20%, #385362 45%, #1c2e39 70%);
   background-size: 220% 100%;
   animation: ui-table-paging-shimmer 1.35s ease-in-out infinite;
 }
 
-.ui-table-paging-skeleton__row:nth-child(2) { width: 96%; }
-.ui-table-paging-skeleton__row:nth-child(3) { width: 92%; }
-.ui-table-paging-skeleton__row:nth-child(4) { width: 87%; }
+.ui-table-paging-skeleton__row:nth-child(2) .ui-table-paging-skeleton__cell:nth-child(2) { width: 88%; }
+.ui-table-paging-skeleton__row:nth-child(3) .ui-table-paging-skeleton__cell:nth-child(1) { width: 82%; }
+.ui-table-paging-skeleton__row:nth-child(4) .ui-table-paging-skeleton__cell:nth-child(3) { width: 74%; }
 
 @keyframes ui-table-paging-shimmer {
   to { background-position: -220% 0; }
@@ -56,8 +72,40 @@
   min-width: 0;
 }
 
-@media (prefers-reduced-motion: reduce) {
+/* La vista define el espacio reservado por cabeceras, filtros y selectores. */
+.inv-core-page { --ui-table-reserved-height: 390px; }
+.inv-core-page.entries-page,
+.inv-core-page.outputs-page { --ui-table-reserved-height: 430px; }
+.inv-secondary-page.assignment-page { --ui-table-reserved-height: 500px; }
+.inv-secondary-page.sharing-page { --ui-table-reserved-height: 470px; }
+.inv-secondary-page.catalog-page { --ui-table-reserved-height: 620px; }
+.inv-admin-page.master-history { --ui-table-reserved-height: 500px; }
+
+.inv-core-page .inv-core-table-wrap:not(.registered-suppliers__table-viewport):not(.supplier-table-viewport):not(.history-rates-scroll),
+.inv-core-page .overflow,
+.inv-core-page .subcategories-table-viewport,
+.inv-secondary-page .assignment-table-wrap,
+.inv-secondary-page .sharing-table-wrap {
+  max-height: min(560px, max(140px, calc(100dvh - var(--ui-table-reserved-height, 390px)))) !important;
+  min-height: 0;
+  overflow: auto;
+}
+
+@media (max-width: 700px) {
+  .inv-core-page,
+  .inv-secondary-page { --ui-table-reserved-height: 420px; }
+  .inv-secondary-page.catalog-page { --ui-table-reserved-height: 650px; }
+}
+
+@media (max-width: 560px) {
   .ui-table-paging-skeleton__row {
+    grid-template-columns: minmax(55px, 1fr) minmax(75px, 1.6fr) minmax(48px, .8fr);
+  }
+  .ui-table-paging-skeleton__cell:nth-child(n + 4) { display: none; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .ui-table-paging-skeleton__cell {
     animation: none;
     background: #263b48;
   }
