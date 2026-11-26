@@ -1,9 +1,8 @@
 <section class="assignment-page inv-core-page inv-secondary-page">
   <header class="inv-core-header">
     <app-ui-page-heading icon="assignment_ind" title="Artículos fuera de stock" subtitle="Custodias y devoluciones vinculadas a usuarios y entidades."></app-ui-page-heading>
-    <button type="button" class="action-secondary" [disabled]="loading" (click)="loadHistory()" appUiButton="secondary">
-      <app-loading-indicator *ngIf="loading; else assignedRefresh" [compact]="true" message="Cargando..." />
-      <ng-template #assignedRefresh><mat-icon>refresh</mat-icon>Actualizar</ng-template>
+    <button type="button" class="action-secondary" [disabled]="loading" [uiButtonLoading]="loading" [uiButtonLoadingText]="'Cargando...'" (click)="loadHistory()" appUiButton="secondary">
+      <mat-icon>refresh</mat-icon>Actualizar
     </button>
   </header>
   <div class="assignment-stats">
