@@ -31,5 +31,5 @@
     </table>
     <p *ngIf="!items.length" class="status">No existen movimientos para estos filtros.</p>
   </div>
-  <footer><span>{{total}} movimientos encontrados</span><div><button type="button" appUiButton="secondary" (click)="previous()" [disabled]="page<=1||loading">Anterior</button><strong>Página {{page}}</strong><button type="button" appUiButton="secondary" (click)="next()" [disabled]="page*pageSize>=total||loading">Siguiente</button></div></footer>
+  <app-ui-pagination [totalItems]="total" [page]="page" [pageSize]="pageSize" (pageChange)="changePage($event)" (pageSizeChange)="changePageSize($event)" label="movimientos" />
 </section>
