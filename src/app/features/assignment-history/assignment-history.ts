@@ -14,9 +14,10 @@ import { LoadingIndicatorComponent } from '../../shared/loading/loading-indicato
 
 import { UiSearchComponent } from '../../shared/ui/components/ui-search.component';
 import { UiPaginationComponent } from '../../shared/ui/components/ui-pagination/ui-pagination.component';
+import { UiTablePagingDirective } from '../../shared/ui/directives/ui-table-paging.directive';
 
 @Component({selector:'app-assignment-history',standalone:true,
-  imports:[UiButtonDirective, UiPageHeadingComponent, CleanArticleNamePipe, CommonModule,FormsModule,MatIconModule,LoadingIndicatorComponent,UiSearchComponent,UiPaginationComponent],
+  imports:[UiButtonDirective, UiPageHeadingComponent, CleanArticleNamePipe, CommonModule,FormsModule,MatIconModule,LoadingIndicatorComponent,UiSearchComponent,UiTablePagingDirective, UiPaginationComponent],
   templateUrl:'./assignment-history.html',styleUrl:'./assignment-history.scss'})
 export class AssignmentHistoryComponent implements OnInit {
   private readonly api=inject(AssignmentService);
