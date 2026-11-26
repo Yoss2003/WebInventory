@@ -46,8 +46,8 @@
               </tr>
             </tbody>
           </table>
-          <app-ui-pagination *ngIf="details.installments.length" [totalItems]="details.installments.length" [page]="installmentPage" [pageSize]="installmentPageSize" (pageChange)="installmentPage=$event" (pageSizeChange)="installmentPageSize=$event;installmentPage=1" label="cuotas" />
         </div>
+        <app-ui-pagination *ngIf="details.installments.length" [totalItems]="details.installments.length" [page]="installmentPage" [pageSize]="installmentPageSize" (pageChange)="installmentPage=$event" (pageSizeChange)="installmentPageSize=$event;installmentPage=1" label="cuotas" />
         <div class="credit-receipts" *ngIf="(details.amountReceived || 0) > (details.downPayment || 0)">
           <strong>Abonos registrados</strong>
           <ng-container *ngFor="let row of details.installments">
