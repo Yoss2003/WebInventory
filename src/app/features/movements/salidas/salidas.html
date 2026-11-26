@@ -7,13 +7,11 @@
   </div></header>
   <div class="inv-core-toolbar outputs-toolbar">
     <app-ui-search [(value)]="search" placeholder="Buscar artículo, cliente o documento" label="Buscar en salidas" />
-    <div class="outputs-filters" aria-label="Filtros de salidas y ventas">
-      <label>Desde <input type="date" class="outputs-filter-control" [(ngModel)]="dateFrom" name="outputsDateFrom" /></label>
-      <label>Hasta <input type="date" class="outputs-filter-control" [(ngModel)]="dateTo" name="outputsDateTo" /></label>
-      <label>Cantidad mín. <input type="number" class="outputs-filter-control outputs-filter-control--number" [(ngModel)]="quantityMin" name="outputsQuantityMin" min="0" step="any" /></label>
-      <label>Cantidad máx. <input type="number" class="outputs-filter-control outputs-filter-control--number" [(ngModel)]="quantityMax" name="outputsQuantityMax" min="0" step="any" /></label>
-      <button type="button" class="outputs-filter-clear" (click)="clearFilters()" [disabled]="!hasActiveFilters">Limpiar filtros</button>
-    </div>
+    <button type="button" appUiButton="secondary" class="outputs-advanced-trigger" (click)="openAdvancedFilters()"
+      [attr.aria-label]="hasActiveFilters ? 'Filtros avanzados activos' : 'Abrir filtros avanzados'">
+      <mat-icon aria-hidden="true">tune</mat-icon>Filtros avanzados
+      <span class="outputs-filter-count" *ngIf="activeFilterCount">{{activeFilterCount}}</span>
+    </button>
   </div>
   <app-loading-indicator *ngIf="loading && !hasLoaded" message="Consultando movimientos y ventas..." />
   <p class="outputs-empty" *ngIf="error" role="alert">{{error}}</p>
@@ -26,3 +24,51 @@
     </tbody></table><app-ui-empty-state *ngIf="!loading && !filteredSales.length" [message]="search ? 'Sin coincidencias en ventas.' : 'Todavía no hay ventas.'"></app-ui-empty-state></div></mat-tab>
   </mat-tab-group>
 </section>
+
+<ng-template #advancedFiltersDialog>
+  <app-modal-shell type="filters" title="Filtros avanzados" subtitle="Filtra salidas, traspasos y ventas POS" icon="tune"
+    [infoVisible]="false" [closeVisible]="false" [footerActions]="filterModalActions"
+    (actionClicked)="handleFilterModalAction($event)" (closeRequested)="closeAdvancedFilters()">
+    <div class="fx-history-dialog fx-unified-dialog outputs-advanced-dialog">
+      <div class="fx-unified-content">
+        <section class="fx-history-filters">
+          <h3>Rango de fecha y cantidades</h3>
+          <div class="fx-history-controls">
+            <div class="rate-date-field">
+              <label id="outputs-from-label">Desde</label>
+              <mat-form-field appearance="outline" class="fx-mat-date" subscriptSizing="dynamic">
+                <input matInput [matDatepicker]="outputsFromPicker" [value]="dateFromDate"
+                  (dateChange)="setDateFrom($event.value)" [max]="dateToDate" aria-labelledby="outputs-from-label" readonly />
+                <mat-datepicker-toggle matIconSuffix [for]="outputsFromPicker"></mat-datepicker-toggle>
+                <mat-datepicker #outputsFromPicker></mat-datepicker>
+              </mat-form-field>
+            </div>
+            <div class="rate-date-field">
+              <label id="outputs-to-label">Hasta</label>
+              <mat-form-field appearance="outline" class="fx-mat-date" subscriptSizing="dynamic">
+                <input matInput [matDatepicker]="outputsToPicker" [value]="dateToDate"
+                  (dateChange)="setDateTo($event.value)" [min]="dateFromDate" aria-labelledby="outputs-to-label" readonly />
+                <mat-datepicker-toggle matIconSuffix [for]="outputsToPicker"></mat-datepicker-toggle>
+                <mat-datepicker #outputsToPicker></mat-datepicker>
+              </mat-form-field>
+            </div>
+            <div class="rate-date-field">
+              <label for="outputs-quantity-min">Cantidad mínima</label>
+              <input id="outputs-quantity-min" appUiControl type="number" min="0" step="any"
+                [(ngModel)]="quantityMin" name="outputsQuantityMin" placeholder="Sin mínimo" />
+            </div>
+            <div class="rate-date-field">
+              <label for="outputs-quantity-max">Cantidad máxima</label>
+              <input id="outputs-quantity-max" appUiControl type="number" min="0" step="any"
+                [(ngModel)]="quantityMax" name="outputsQuantityMax" placeholder="Sin máximo" />
+            </div>
+            <button type="button" appUiButton="secondary" (click)="clearFilters()" [disabled]="!hasActiveFilters">
+              <mat-icon aria-hidden="true">filter_alt_off</mat-icon>Limpiar filtros
+            </button>
+          </div>
+        </section>
+        <p class="outputs-filter-hint" *ngIf="hasActiveFilters">Los filtros se aplican a las pestañas de Traspasos y bajas y Ventas (POS).</p>
+      </div>
+    </div>
+  </app-modal-shell>
+</ng-template>
