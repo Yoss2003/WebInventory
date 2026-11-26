@@ -1,6 +1,8 @@
 <app-modal-shell type="detail" title="Detalle del movimiento" [subtitle]="'Movimiento #' + data.movement.id" icon="receipt_long" [infoVisible]="true" [closeVisible]="true" [footerVisible]="false" [contentScrollable]="false" (closeRequested)="dialogRef.close()">
   <div class="movement-dialog ui-v2-dialog ui-v2-dialog--simple">
     <main>
+      <div class="movement-record-loading" *ngIf="detailLoading" role="status"><app-loading-indicator message="Consultando información del movimiento..." /><div class="movement-record-skeleton" aria-hidden="true"><span></span><span></span><span></span><span></span><span></span><span></span></div></div>
+      <ng-container *ngIf="!detailLoading">
       <div class="movement-detail-layout" [class.movement-detail-layout--credit]="isCreditSale">
         <section class="movement-primary-card">
           <header class="movement-card-heading"><span class="movement-card-icon"><mat-icon aria-hidden="true">receipt_long</mat-icon></span><div><h3>Información del movimiento</h3><p>Datos principales de la operación</p></div></header>
@@ -58,6 +60,7 @@
     </section>
       </div>
       <section class="movement-observation-card"><label>Observaciones</label><p>{{data.movement.observation || 'Sin observaciones'}}</p></section>
+      </ng-container>
     </main>
   </div>
 </app-modal-shell>
