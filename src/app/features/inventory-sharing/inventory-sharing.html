@@ -111,7 +111,7 @@
             <tr><th>Usuario</th><th>Permiso</th><th>Desde</th><th>Acciones</th></tr>
           </thead>
           <tbody>
-            <tr *ngFor="let item of shares">
+            <tr *ngFor="let item of paginatedShares">
               <td>{{ item.username || ('Usuario #' + item.userId) }}</td>
               <td>{{ item.accessLevel === 2 ? 'Editor' : 'Lector' }}</td>
               <td>{{ item.sharedDate | date:'dd/MM/yyyy' }}</td>
@@ -134,6 +134,7 @@
           </tbody>
         </table>
       </div>
+      <app-ui-pagination *ngIf="shares.length" [totalItems]="shares.length" [page]="page" [pageSize]="pageSize" (pageChange)="page=$event" (pageSizeChange)="pageSize=$event;page=1" label="colaboradores" />
     </section>
   </div>
 </section>
