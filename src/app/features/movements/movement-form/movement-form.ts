@@ -1,4 +1,3 @@
-import { UiButtonDirective } from '../../../shared/ui/directives/ui-button.directive';
 import { UiControlDirective } from '../../../shared/ui/directives/ui-control.directive';
 import { ModalShellComponent } from '../../../shared/ui/components/modal-shell/modal-shell.component';
 import type { ModalActionId, ModalFooterAction } from '../../../shared/ui/models/modal-standard.model';
@@ -18,7 +17,7 @@ import { isUnitConversion, fixedUnitFactor, isMeasuredUnit, validPieces, validQu
 
 @Component({
   selector: 'app-movement-form', standalone: true,
-  imports: [UiButtonDirective, UiControlDirective, CommonModule, ReactiveFormsModule, MatIconModule, MatSelectModule, MatFormFieldModule, LoadingIndicatorComponent, ModalShellComponent],
+  imports: [UiControlDirective, CommonModule, ReactiveFormsModule, MatIconModule, MatSelectModule, MatFormFieldModule, LoadingIndicatorComponent, ModalShellComponent],
   templateUrl: './movement-form.html', styleUrl: './movement-form.scss'
 })
 export class MovementForm implements OnInit {

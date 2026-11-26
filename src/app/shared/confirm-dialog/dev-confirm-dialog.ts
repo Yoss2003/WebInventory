@@ -3,7 +3,6 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { MAT_DIALOG_DATA, MatDialogModule, MatDialogRef } from '@angular/material/dialog';
 import { MatIconModule } from '@angular/material/icon';
-import { UiButtonDirective } from '../ui/directives/ui-button.directive';
 import { UiControlDirective } from '../ui/directives/ui-control.directive';
 import { ModalShellComponent } from '../ui/components/modal-shell/modal-shell.component';
 import type { ModalActionId, ModalFooterAction } from '../ui/models/modal-standard.model';
@@ -24,7 +23,7 @@ export interface DevConfirmDialogData {
 @Component({
   selector: 'app-dev-confirm-dialog',
   standalone: true,
-  imports: [CommonModule, MatDialogModule, MatIconModule, FormsModule, UiButtonDirective, UiControlDirective, ModalShellComponent],
+  imports: [CommonModule, MatDialogModule, MatIconModule, FormsModule, UiControlDirective, ModalShellComponent],
   templateUrl: './dev-confirm-dialog.html',
   styleUrl: './dev-confirm-dialog.scss'
 })

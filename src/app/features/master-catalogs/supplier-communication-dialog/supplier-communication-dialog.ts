@@ -2,7 +2,6 @@ import { Component, inject } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { MatIconModule } from '@angular/material/icon';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
-import { UiButtonDirective } from '../../../shared/ui/directives/ui-button.directive';
 import { UiControlDirective } from '../../../shared/ui/directives/ui-control.directive';
 import { ModalShellComponent } from '../../../shared/ui/components/modal-shell/modal-shell.component';
 import type { ModalActionId, ModalFooterAction } from '../../../shared/ui/models/modal-standard.model';
@@ -16,7 +15,7 @@ export interface SupplierCommunicationData {
 @Component({
   selector: 'app-supplier-communication-dialog',
   standalone: true,
-  imports: [FormsModule, MatIconModule, UiButtonDirective, UiControlDirective, ModalShellComponent],
+  imports: [FormsModule, MatIconModule, UiControlDirective, ModalShellComponent],
   templateUrl: './supplier-communication-dialog.html',
   styleUrl: './supplier-communication-dialog.scss'
 })

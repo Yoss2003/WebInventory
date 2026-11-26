@@ -8,7 +8,6 @@ import { MatSelectModule } from '@angular/material/select';
 import { forkJoin } from 'rxjs';
 import {  ManagedRole, PermissionItem, UserManagementService } from '../../../core/services/user-management';
 import { ConfirmationDialogService } from '../../../shared/confirm-dialog/confirmation-dialog.service';
-import { UiButtonDirective } from '../../../shared/ui/directives/ui-button.directive';
 import { ModalShellComponent } from '../../../shared/ui/components/modal-shell/modal-shell.component';
 import type { ModalActionId, ModalFooterAction } from '../../../shared/ui/models/modal-standard.model';
 
@@ -16,7 +15,7 @@ import type { ModalActionId, ModalFooterAction } from '../../../shared/ui/models
   selector: 'app-role-permissions-dialog',
   standalone: true,
   imports: [CommonModule, FormsModule, MatDialogModule, MatIconModule,
-    MatFormFieldModule, MatSelectModule, UiButtonDirective, ModalShellComponent],
+    MatFormFieldModule, MatSelectModule, ModalShellComponent],
   templateUrl: './role-permissions-dialog.html',
   styleUrl: './role-permissions-dialog.scss'
 })
