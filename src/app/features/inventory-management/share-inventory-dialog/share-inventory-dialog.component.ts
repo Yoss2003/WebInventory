@@ -12,6 +12,7 @@ import { ManagedUser } from '../../../core/services/user-management';
 import { InventorySharesDialogComponent } from '../inventory-shares-dialog/inventory-shares-dialog.component';
 import { ToastService } from '../../../shared/toast/toast.service';
 import { ModalShellComponent } from '../../../shared/ui/components/modal-shell/modal-shell.component';
+import { UiPaginationComponent } from '../../../shared/ui/components/ui-pagination/ui-pagination.component';
 import type { ModalActionId, ModalFooterAction, ModalSection } from '../../../shared/ui/models/modal-standard.model';
 import { WorkerPickerDialogComponent, WorkerPickerDialogData } from '../worker-picker-dialog/worker-picker-dialog.component';
 import { finalize, timeout } from 'rxjs';
@@ -50,6 +51,9 @@ export class ShareInventoryDialogComponent implements OnInit {
   error = '';
 
   shares: InventoryShare[] = [];
+  sharesPage = 1;
+  sharesPageSize = 10;
+  get paginatedOrderedShares(): InventoryShare[] { const start = (this.sharesPage - 1) * this.sharesPageSize; return this.orderedShares.slice(start, start + this.sharesPageSize); }
   loadingShares = false;
   refreshingShares = false;
   sharesError = '';
