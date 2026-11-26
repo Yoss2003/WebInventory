@@ -92,7 +92,7 @@
 
     <!-- EVIDENCIA -->
     <section
-      *ngIf="evidenceUrl || evidenceStatus || canManageEvidence"
+      *ngIf="evidenceUrl || evidenceStatus || canManageEvidence || data.hasEvidence || evidenceLoading"
       class="assignment-dialog__block custody-card">
 
       <h3>
@@ -102,7 +102,7 @@
 
       <div class="custody-evidence-layout">
         <div class="custody-evidence-preview">
-          <div class="custody-evidence-image-loading" *ngIf="evidenceImageLoading" role="status"><app-loading-indicator [compact]="true" message="Cargando imagen..." /></div>
+          <div class="custody-evidence-image-loading" *ngIf="evidenceImageLoading || evidenceLoading" role="status"><app-loading-indicator [compact]="true" message="Cargando imagen..." /></div>
           <img
             *ngIf="evidenceUrl; else noEvidence"
             class="custody-evidence-image"
