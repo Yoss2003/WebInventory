@@ -24,11 +24,12 @@ import { UiEmptyStateComponent } from '../../shared/ui/components/ui-empty-state
 import { UiStatusComponent } from '../../shared/ui/components/ui-status.component';
 import { UiSearchComponent } from '../../shared/ui/components/ui-search.component';
 import { UiPaginationComponent } from '../../shared/ui/components/ui-pagination/ui-pagination.component';
+import { UiTablePagingDirective } from '../../shared/ui/directives/ui-table-paging.directive';
 
 @Component({
   selector: 'app-dev-management',
   standalone: true,
-  imports: [UiControlDirective, UiButtonDirective, UiTableActionDirective, UiPageHeadingComponent, UiEmptyStateComponent, UiStatusComponent, CommonModule, FormsModule, MatFormFieldModule, MatSelectModule, MatIconModule, LoadingIndicatorComponent,UiSearchComponent,UiPaginationComponent],
+  imports: [UiControlDirective, UiButtonDirective, UiTableActionDirective, UiPageHeadingComponent, UiEmptyStateComponent, UiStatusComponent, CommonModule, FormsModule, MatFormFieldModule, MatSelectModule, MatIconModule, LoadingIndicatorComponent,UiSearchComponent,UiTablePagingDirective, UiPaginationComponent],
   templateUrl: './dev-management.html',
   styleUrl: './dev-management.scss'
 })

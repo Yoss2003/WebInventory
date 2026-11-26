@@ -1,6 +1,7 @@
 import { CommonModule } from '@angular/common';
-import { Component, EventEmitter, Input, OnChanges, Output, SimpleChanges } from '@angular/core';
+import { Component, EventEmitter, Input, OnChanges, Output, SimpleChanges, inject } from '@angular/core';
 import { MatIconModule } from '@angular/material/icon';
+import { UiTablePagingLoadingService } from '../../services/ui-table-paging-loading.service';
 
 @Component({
   selector: 'app-ui-pagination',
@@ -15,6 +16,8 @@ export class UiPaginationComponent implements OnChanges {
   @Input() pageSize = 10;
   @Input() pageSizeOptions: number[] = [10, 20, 50, 100];
   @Input() label = 'registros';
+  @Input() loadingId: string | null = null;
+  private readonly tableLoading = inject(UiTablePagingLoadingService);
   @Output() pageChange = new EventEmitter<number>();
   @Output() pageSizeChange = new EventEmitter<number>();
 
@@ -39,12 +42,16 @@ export class UiPaginationComponent implements OnChanges {
 
   goTo(page: number): void {
     const next = Math.min(this.totalPages, Math.max(1, page));
-    if (next !== this.page) this.pageChange.emit(next);
+    if (next !== this.page) {
+      this.tableLoading.flash(this.loadingId);
+      this.pageChange.emit(next);
+    }
   }
 
   changePageSize(event: Event): void {
     const value = Number((event.target as HTMLSelectElement).value);
     if (!this.pageSizeOptions.includes(value) || value === this.pageSize) return;
+    this.tableLoading.flash(this.loadingId);
     this.pageSizeChange.emit(value);
     this.pageChange.emit(1);
   }

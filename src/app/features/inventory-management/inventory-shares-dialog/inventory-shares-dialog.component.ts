@@ -12,6 +12,7 @@ import { UiTableActionDirective } from '../../../shared/ui/directives/ui-table-a
 import { LoadingIndicatorComponent } from '../../../shared/loading/loading-indicator';
 import { ModalShellComponent } from '../../../shared/ui/components/modal-shell/modal-shell.component';
 import { UiPaginationComponent } from '../../../shared/ui/components/ui-pagination/ui-pagination.component';
+import { UiTablePagingDirective } from '../../../shared/ui/directives/ui-table-paging.directive';
 import { finalize, timeout } from 'rxjs';
 
 export interface InventorySharesDialogData {
@@ -24,7 +25,7 @@ export interface InventorySharesDialogData {
 @Component({
   selector: 'app-inventory-shares-dialog',
   standalone: true,
-  imports: [CommonModule, MatIconModule, UiButtonDirective, UiTableActionDirective, LoadingIndicatorComponent, ModalShellComponent, UiPaginationComponent],
+  imports: [CommonModule, MatIconModule, UiButtonDirective, UiTableActionDirective, LoadingIndicatorComponent, ModalShellComponent, UiTablePagingDirective, UiPaginationComponent],
   templateUrl: './inventory-shares-dialog.component.html',
   styleUrl: './inventory-shares-dialog.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush

@@ -20,8 +20,9 @@ import { ModalStandardService } from '../../shared/ui/services/modal-standard.se
 import { ModalShellComponent } from '../../shared/ui/components/modal-shell/modal-shell.component';
 import type { ModalActionId, ModalFooterAction } from '../../shared/ui/models/modal-standard.model';
 import { UiPaginationComponent } from '../../shared/ui/components/ui-pagination/ui-pagination.component';
+import { UiTablePagingDirective } from '../../shared/ui/directives/ui-table-paging.directive';
 
-@Component({selector:'app-external-consultas',standalone:true,imports:[MoneyPipe, UiControlDirective, UiTableActionDirective, UiButtonDirective, UiPageHeadingComponent, CommonModule,FormsModule,LoadingIndicatorComponent,MatIconModule,MatDatepickerModule,MatFormFieldModule,MatInputModule,ModalShellComponent,UiPaginationComponent],providers:[provideNativeDateAdapter(),{provide:MAT_DATE_LOCALE,useValue:'es-PE'}],templateUrl:'./external-consultas.html',styleUrl:'./external-consultas.scss'})
+@Component({selector:'app-external-consultas',standalone:true,imports:[MoneyPipe, UiControlDirective, UiTableActionDirective, UiButtonDirective, UiPageHeadingComponent, CommonModule,FormsModule,LoadingIndicatorComponent,MatIconModule,MatDatepickerModule,MatFormFieldModule,MatInputModule,ModalShellComponent,UiTablePagingDirective, UiPaginationComponent],providers:[provideNativeDateAdapter(),{provide:MAT_DATE_LOCALE,useValue:'es-PE'}],templateUrl:'./external-consultas.html',styleUrl:'./external-consultas.scss'})
 export class ExternalConsultasComponent implements OnInit {
   private readonly api=inject(ExternalConsultasService);
   private readonly cdr=inject(ChangeDetectorRef);

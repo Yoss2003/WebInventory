@@ -15,7 +15,7 @@
   <div role="alert" *ngIf="optionsError" class="error">{{optionsError}}</div>
   <div role="status" *ngIf="loading" class="status">Consultando movimientos...</div>
   <div role="alert" *ngIf="error" class="error">{{error}}</div>
-  <div class="table-wrapper inv-core-table-wrap" *ngIf="!loading && !error">
+  <div class="table-wrapper inv-core-table-wrap" appUiTablePaging="master-history" [uiTablePagingLoading]="loading" *ngIf="!error && (items.length > 0 || loading)">
     <table>
       <thead><tr><th>Fecha</th><th>Tipo</th><th>Inventario</th><th>Propietario</th><th>Responsable</th><th>Artículo</th><th>Cantidad</th><th>Observación</th></tr></thead>
       <tbody><tr *ngFor="let row of items">
@@ -29,7 +29,7 @@
         <td>{{row.observation || '—'}}</td>
       </tr></tbody>
     </table>
-    <p *ngIf="!items.length" class="status">No existen movimientos para estos filtros.</p>
+    <p *ngIf="!items.length && !loading" class="status">No existen movimientos para estos filtros.</p>
   </div>
-  <app-ui-pagination [totalItems]="total" [page]="page" [pageSize]="pageSize" (pageChange)="changePage($event)" (pageSizeChange)="changePageSize($event)" label="movimientos" />
+  <app-ui-pagination [totalItems]="total" [page]="page" [pageSize]="pageSize" (pageChange)="changePage($event)" (pageSizeChange)="changePageSize($event)" label="movimientos" loadingId="master-history" />
 </section>

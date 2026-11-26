@@ -35,7 +35,7 @@
       <span>{{ error }}</span>
     </p>
 
-    <div class="inv-core-table-wrap inv-manage-table" *ngIf="!loading && operational.length > 0">
+    <div class="inv-core-table-wrap inv-manage-table" appUiTablePaging="inventory-directory" *ngIf="!loading && operational.length > 0">
       <table>
         <thead>
           <tr>
@@ -78,7 +78,7 @@
       </table>
     </div>
 
-    <app-ui-pagination *ngIf="operational.length" [totalItems]="operational.length" [page]="page" [pageSize]="pageSize" (pageChange)="page=$event" (pageSizeChange)="pageSize=$event;page=1" label="inventarios" />
+    <app-ui-pagination *ngIf="operational.length" [totalItems]="operational.length" [page]="page" [pageSize]="pageSize" (pageChange)="page=$event" (pageSizeChange)="pageSize=$event;page=1" label="inventarios" loadingId="inventory-directory" />
 
     <app-ui-empty-state
       *ngIf="!loading && !operational.length && !error"

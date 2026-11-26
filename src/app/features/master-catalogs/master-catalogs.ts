@@ -18,6 +18,7 @@ import { MasterCatalogsService } from '../../core/services/master-catalogs';
 import { ToastService } from '../../shared/toast/toast.service';
 import { UiSearchComponent } from '../../shared/ui/components/ui-search.component';
 import { UiPaginationComponent } from '../../shared/ui/components/ui-pagination/ui-pagination.component';
+import { UiTablePagingDirective } from '../../shared/ui/directives/ui-table-paging.directive';
 import { UiEmptyStateComponent } from '../../shared/ui/components/ui-empty-state.component';
 import { UiStatusComponent } from '../../shared/ui/components/ui-status.component';
 import { LoadingIndicatorComponent } from '../../shared/loading/loading-indicator';
@@ -84,7 +85,7 @@ interface ParameterRecord {
     MatSelectModule,
     MatTooltipModule,
     UiSearchComponent,
-    UiPaginationComponent
+    UiTablePagingDirective, UiPaginationComponent
   ],
   templateUrl: './master-catalogs.html',
   styleUrl: './master-catalogs.scss'

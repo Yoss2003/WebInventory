@@ -26,7 +26,7 @@
         <span></span><span></span><span></span><span></span>
       </div>
       <p *ngIf="error && !loading" class="error-notice" role="alert"><mat-icon aria-hidden="true">error_outline</mat-icon><span>{{ error }}</span><button type="button" appUiButton="secondary" (click)="refresh()">Reintentar</button></p>
-      <div class="inv-core-table-wrap worker-table-wrap" *ngIf="!loading && !error && filteredEmployees.length">
+      <div class="inv-core-table-wrap worker-table-wrap" appUiTablePaging="worker-picker" *ngIf="!loading && !error && filteredEmployees.length">
         <table class="worker-table">
           <thead><tr><th scope="col">DNI</th><th scope="col">Nombre</th><th scope="col">Nombre de usuario</th><th scope="col" class="action-col">Acción</th></tr></thead>
           <tbody>
@@ -39,7 +39,7 @@
           </tbody>
         </table>
       </div>
-      <app-ui-pagination [totalItems]="filteredEmployees.length" [page]="page" [pageSize]="pageSize" (pageChange)="page=$event" (pageSizeChange)="pageSize=$event;page=1" label="empleados" />
+      <app-ui-pagination [totalItems]="filteredEmployees.length" [page]="page" [pageSize]="pageSize" (pageChange)="page=$event" (pageSizeChange)="pageSize=$event;page=1" label="empleados" loadingId="worker-picker" />
       <div class="empty-results" *ngIf="!loading && !error && !filteredEmployees.length"><mat-icon aria-hidden="true">person_search</mat-icon><strong>No se encontraron destinatarios</strong><p>{{ search ? 'No hay resultados que coincidan con tu búsqueda.' : 'No tienes empleados activos vinculados a cuentas disponibles para este inventario.' }}</p></div>
     </div>
   </div>
