@@ -23,9 +23,10 @@ import { ModalStandardService } from '../../../shared/ui/services/modal-standard
 
 interface ArticleRow extends Article { categoryName: string; brandName: string; }
 import { UiSearchComponent } from '../../../shared/ui/components/ui-search.component';
+import { UiPaginationComponent } from '../../../shared/ui/components/ui-pagination/ui-pagination.component';
 
 @Component({selector:'app-article-list',standalone:true,
-  imports:[MoneyPipe, UiEmptyStateComponent, UiStatusComponent, UiTableActionDirective, UiButtonDirective, UiPageHeadingComponent, CommonModule,FormsModule,MatIconModule,LoadingIndicatorComponent,UiSearchComponent],
+  imports:[MoneyPipe, UiEmptyStateComponent, UiStatusComponent, UiTableActionDirective, UiButtonDirective, UiPageHeadingComponent, CommonModule,FormsModule,MatIconModule,LoadingIndicatorComponent,UiSearchComponent,UiPaginationComponent],
   templateUrl:'./article-list.html',styleUrl:'./article-list.scss'})
 export class ArticleListComponent implements OnInit {
   private readonly articles=inject(ArticleService);
@@ -38,12 +39,15 @@ export class ArticleListComponent implements OnInit {
   private readonly toast = inject(ToastService);
   dataSource:ArticleRow[]=[];
   search='';showInactive=false;loading=false;hasLoaded=false;error='';
+  page = 1;
+  pageSize = 10;
   get hasOperationalInventory(): boolean { return this.inventoryContext.activeInventoryId !== null; }
-  get visible():ArticleRow[]{
+  get filtered():ArticleRow[]{
     const q=this.search.trim().toLocaleLowerCase('es');
     return this.dataSource.filter(a=>(this.showInactive||a.isActive)&&
       (!q||[a.code,a.name,a.model,a.categoryName,a.brandName,a.barcode??''].some(s=>String(s).toLocaleLowerCase('es').includes(q))));
   }
+  get visible(): ArticleRow[] { const start = (this.page - 1) * this.pageSize; return this.filtered.slice(start, start + this.pageSize); }
   ngOnInit():void{this.inventoryContext.activeInventoryId$.pipe(filter(id=>id!==null),take(1)).subscribe(()=>this.load());}
   load():void{
     if(this.loading)return;
