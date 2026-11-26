@@ -1,9 +1,8 @@
 <section class="entries-page inv-core-page">
   <header class="inv-core-header"><app-ui-page-heading icon="add_circle" title="Entradas y existencias" subtitle="Artículos disponibles y movimientos de ingreso confirmados."></app-ui-page-heading>
     <div class="inv-core-header-actions">
-      <button type="button" (click)="loadRealData()" [disabled]="loading" appUiButton="secondary">
-        <app-loading-indicator *ngIf="loading; else entryRefresh" [compact]="true" message="Cargando..." />
-        <ng-template #entryRefresh><mat-icon>refresh</mat-icon>Actualizar</ng-template>
+      <button type="button" (click)="loadRealData()" [disabled]="loading" [uiButtonLoading]="loading" [uiButtonLoadingText]="'Cargando...'" appUiButton="secondary">
+        <mat-icon>refresh</mat-icon>Actualizar
       </button>
       <button type="button" (click)="newEntry()" appUiButton="primary"><mat-icon>add_circle</mat-icon>Registrar entrada</button>
       <button type="button" (click)="newArticle()" appUiButton="primary"><mat-icon>add</mat-icon>Nuevo artículo</button>
