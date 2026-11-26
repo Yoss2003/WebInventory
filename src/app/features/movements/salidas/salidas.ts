@@ -33,10 +33,11 @@ import { MovementDetailDialogComponent } from '../movement-detail-dialog/movemen
 import { LoadingIndicatorComponent } from '../../../shared/loading/loading-indicator';
 
 import { UiSearchComponent } from '../../../shared/ui/components/ui-search.component';
+import { UiPaginationComponent } from '../../../shared/ui/components/ui-pagination/ui-pagination.component';
 import { ModalShellComponent } from '../../../shared/ui/components/modal-shell/modal-shell.component';
 import type { ModalActionId, ModalFooterAction } from '../../../shared/ui/models/modal-standard.model';
 
-@Component({selector:'app-salidas',standalone:true,imports:[FormsModule, MoneyPipe, UiEmptyStateComponent, UiStatusComponent, UiTableActionDirective, UiButtonDirective, UiPageHeadingComponent, CommonModule,MatIconModule,MatTabsModule,MatDatepickerModule,MatFormFieldModule,MatInputModule,TabViewTransitionDirective,LoadingIndicatorComponent,UiSearchComponent,ModalShellComponent],providers:[provideNativeDateAdapter(),{provide:MAT_DATE_LOCALE,useValue:'es-PE'}],templateUrl:'./salidas.html',styleUrl:'./salidas.scss'})
+@Component({selector:'app-salidas',standalone:true,imports:[FormsModule, MoneyPipe, UiEmptyStateComponent, UiStatusComponent, UiTableActionDirective, UiButtonDirective, UiPageHeadingComponent, CommonModule,MatIconModule,MatTabsModule,MatDatepickerModule,MatFormFieldModule,MatInputModule,TabViewTransitionDirective,LoadingIndicatorComponent,UiSearchComponent,ModalShellComponent,UiPaginationComponent],providers:[provideNativeDateAdapter(),{provide:MAT_DATE_LOCALE,useValue:'es-PE'}],templateUrl:'./salidas.html',styleUrl:'./salidas.scss'})
 export class SalidasComponent implements OnInit {
   private readonly movementsApi=inject(MovementService);
   private readonly salesApi=inject(SalesService);
@@ -55,6 +56,10 @@ export class SalidasComponent implements OnInit {
   cancelledIds=new Set<number>();cancelledSaleIds=new Set<number>();
   loading=false;hasLoaded=false;error='';
   search='';
+  pageTransfers = 1;
+  pageSales = 1;
+  pageSizeTransfers = 10;
+  pageSizeSales = 10;
   dateFromDate: Date | null = null;
   dateToDate: Date | null = null;
   quantityMin: number | null = null;
@@ -68,13 +73,17 @@ export class SalidasComponent implements OnInit {
   get filterModalActions(): ModalFooterAction[] {
     return [{ id: 'close', label: 'Aplicar filtros', tone: 'primary', order: 0 }];
   }
-  setDateFrom(value: Date | null): void { this.dateFromDate = value; }
-  setDateTo(value: Date | null): void { this.dateToDate = value; }
+  setDateFrom(value: Date | null): void { this.dateFromDate = value; this.resetPages(); }
+  setDateTo(value: Date | null): void { this.dateToDate = value; this.resetPages(); }
+  resetPages(): void { this.pageTransfers = 1; this.pageSales = 1; }
+  get paginatedTransfers(): Movement[] { const start = (this.pageTransfers - 1) * this.pageSizeTransfers; return this.filteredTransfers.slice(start, start + this.pageSizeTransfers); }
+  get paginatedSales(): Movement[] { const start = (this.pageSales - 1) * this.pageSizeSales; return this.filteredSales.slice(start, start + this.pageSizeSales); }
   clearFilters(): void {
     this.dateFromDate = null;
     this.dateToDate = null;
     this.quantityMin = null;
     this.quantityMax = null;
+    this.resetPages();
   }
   openAdvancedFilters(): void {
     if (!this.advancedFiltersTemplate || this.advancedFiltersRef) return;
