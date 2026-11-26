@@ -1,25 +1,35 @@
-:host {display:block;color:#edf4f9;}.movement-dialog {background:#121b24;border:1px solid #526677;border-radius:17px;overflow:hidden;max-height:calc(100dvh - 24px);display:flex;flex-direction:column;}
-.movement-dialog header {background:#20303e;display:flex;align-items:center;justify-content:space-between;gap:10px;padding:16px 20px;}
-.movement-dialog h2{margin:0;font-size:17px}
-.movement-dialog main {overflow:auto;padding:18px 20px}.record-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:13px;}.record-grid>div{display:flex;flex-direction:column;gap:4px;min-width:0}.record-grid label,.movement-dialog section label{color:#aab9ca;font-size:11px}.record-grid strong{font-size:13px;overflow-wrap:anywhere}.movement-dialog section{border-top:1px solid #445668;margin-top:15px;padding-top:12px}.movement-dialog section p{color:#dce7ef;font-size:13px}
-.movement-dialog footer{background:#20303e;padding:11px 20px;display:flex;justify-content:flex-end}
-@media(max-width:520px){.record-grid{grid-template-columns:1fr}}
-
-
-/* Detalle financiero de ventas financiadas; no altera el resto de movimientos. */
-.movement-dialog .credit-details { margin-top: 18px; padding-top: 16px; border-top: 1px solid #445668; }
-.movement-dialog .credit-details h3 { font-size: 14px; color: #edf4fa; margin: 0 0 14px; }
-.movement-dialog .credit-details .credit-error { color: #ffb7bd; }
-.movement-dialog .credit-summary-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 10px; margin-bottom: 14px; }
-.movement-dialog .credit-summary-grid > div { display: flex; flex-direction: column; gap: 6px; min-width: 0; padding: 10px; border-radius: 9px; border: 1px solid #40556a; background: #192a36; }
-.movement-dialog .credit-summary-grid span { color: #aab9ca; font-size: 11px; }
-.movement-dialog .credit-summary-grid strong { color: #edf4fa; font-size: 13px; overflow-wrap: anywhere; }
-.movement-dialog .credit-table-scroll { max-height: 260px; overflow: auto; border: 1px solid #40556a; border-radius: 9px; scrollbar-width: thin; }
-.movement-dialog .credit-table { width: 100%; border-collapse: collapse; font-size: 11px; white-space: nowrap; }
-.movement-dialog .credit-table th, .movement-dialog .credit-table td { padding: 10px; text-align: left; border-bottom: 1px solid #344a5c; }
-.movement-dialog .credit-table th { background: #203544; color: #d5e1ef; position: sticky; top: 0; }
-.movement-dialog .credit-table td { color: #e4eef8; }
-.movement-dialog .credit-receipts { margin-top: 15px; }
-.movement-dialog .credit-receipts > strong { color: #dce8f2; font-size: 12px; }
-.movement-dialog .credit-receipts p { margin: 7px 0 0; font-size: 11px; color: #c4d3df; }
-@media(max-width: 650px) { .movement-dialog .credit-summary-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+:host{display:block;width:100%;min-width:0;color:#edf4f9;font-family:Roboto,'Segoe UI',sans-serif}
+.movement-dialog{width:100%;max-height:calc(100dvh - 24px);background:#111b25;border:1px solid color-mix(in srgb,var(--inv-company-accent,#a2d149) 42%,#536a7c);border-radius:17px;overflow:hidden;display:flex;flex-direction:column;box-shadow:0 16px 40px #0005}
+.movement-dialog main{overflow:auto;min-height:0;padding:18px;background:#111b25}
+.movement-detail-layout{display:grid;grid-template-columns:minmax(0,1fr);gap:14px;align-items:stretch}
+.movement-detail-layout--credit{grid-template-columns:minmax(0,1.05fr) minmax(0,1fr)}
+.movement-primary-card,.movement-dialog .credit-details,.movement-observation-card{min-width:0;margin:0;padding:16px;border:1px solid #3c5264;border-radius:13px;background:linear-gradient(145deg,#1a2a37,#15232e);box-shadow:inset 0 1px 0 #ffffff08}
+.movement-card-heading{display:flex;align-items:center;gap:10px;margin-bottom:15px;padding-bottom:13px;border-bottom:1px solid #3b5061}
+.movement-card-icon{display:grid;place-items:center;flex:none;width:36px;height:36px;border:1px solid var(--inv-brand-border);border-radius:10px;background:var(--inv-brand-soft);color:var(--inv-brand)}
+.movement-card-icon mat-icon{width:20px;height:20px;font-size:20px}
+.movement-card-heading h3{margin:0;color:#edf5fb;font-size:14px;font-weight:750}
+.movement-card-heading p{margin:4px 0 0;color:#9fb3c4;font-size:10px}
+.movement-detail-fields{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
+.movement-detail-fields>div{display:flex;flex-direction:column;gap:5px;min-width:0;padding:10px;border:1px solid #344a5b;border-radius:9px;background:#111e29}
+.movement-detail-fields label,.movement-observation-card label{color:#9fb4c5;font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.035em}
+.movement-detail-fields strong{color:#eaf3fb;font-size:12px;line-height:1.4;overflow-wrap:anywhere}
+.movement-dialog .credit-details{display:flex;flex-direction:column;gap:12px}
+.movement-dialog .credit-details h3{margin:0;color:var(--inv-company-accent,#a2d149);font-size:14px;line-height:1.35}
+.movement-dialog .credit-details>p{margin:0;color:#b6c8d7;font-size:11px}
+.movement-dialog .credit-details .credit-error{color:#ffb7bd}
+.movement-dialog .credit-summary-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px;margin:0}
+.movement-dialog .credit-summary-grid>div{display:flex;flex-direction:column;gap:5px;min-width:0;padding:9px;border:1px solid #40556a;border-radius:9px;background:#192a36}
+.movement-dialog .credit-summary-grid span{color:#aab9ca;font-size:10px}
+.movement-dialog .credit-summary-grid strong{color:#edf4fa;font-size:12px;overflow-wrap:anywhere}
+.movement-dialog .credit-table-scroll{max-height:250px;overflow:auto;border:1px solid #40556a;border-radius:9px;scrollbar-width:thin}
+.movement-dialog .credit-table{width:100%;border-collapse:collapse;font-size:10px;white-space:nowrap}
+.movement-dialog .credit-table th,.movement-dialog .credit-table td{padding:9px;text-align:left;border-bottom:1px solid #344a5c}
+.movement-dialog .credit-table th{background:#203544;color:#d5e1ef;position:sticky;top:0;z-index:1}
+.movement-dialog .credit-table td{color:#e4eef8}
+.movement-dialog .credit-receipts{margin-top:0}
+.movement-dialog .credit-receipts>strong{color:#dce8f2;font-size:11px}
+.movement-dialog .credit-receipts p{margin:7px 0 0;font-size:10px;color:#c4d3df}
+.movement-observation-card{margin-top:14px}
+.movement-observation-card p{margin:8px 0 0;color:#dce7ef;font-size:12px;line-height:1.5;overflow-wrap:anywhere}
+@media(max-width:900px){.movement-detail-layout--credit{grid-template-columns:1fr}}
+@media(max-width:560px){.movement-dialog main{padding:12px}.movement-primary-card,.movement-dialog .credit-details,.movement-observation-card{padding:12px}.movement-detail-fields{grid-template-columns:1fr}}
