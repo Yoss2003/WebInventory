@@ -4,10 +4,15 @@
   min-width: 0;
 }
 
-.edit-dialog-form {
+ .edit-dialog-form {
   display: grid;
   gap: 16px;
+  margin: 16px;
   padding: 18px 20px 20px;
+  border: 1px solid #405669;
+  border-radius: 14px;
+  background: linear-gradient(145deg, #192a37, #14222d);
+  box-shadow: inset 0 1px 0 #ffffff08;
 }
 
 .field {
@@ -49,5 +54,5 @@
 }
 
 @media (max-width: 520px) {
-  .edit-dialog-form { padding: 14px; }
+  .edit-dialog-form { margin: 10px; padding: 14px; }
 }
