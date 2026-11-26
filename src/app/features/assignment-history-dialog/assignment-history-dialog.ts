@@ -9,10 +9,11 @@ import { AssignmentService, AssignedArticle, AssignmentEvent } from '../../core/
 import { SerialUnitsService, SerialUnit } from '../../core/services/serial-units';
 import { UiButtonDirective } from '../../shared/ui/directives/ui-button.directive';
 import { ModalShellComponent } from '../../shared/ui/components/modal-shell/modal-shell.component';
+import { LoadingIndicatorComponent } from '../../shared/loading/loading-indicator';
 
 @Component({
   selector: 'app-assignment-history-dialog', standalone: true,
-  imports: [CleanArticleNamePipe, CommonModule, FormsModule, MatDialogModule, MatIconModule, UiButtonDirective, ModalShellComponent],
+  imports: [CleanArticleNamePipe, CommonModule, FormsModule, MatDialogModule, MatIconModule, UiButtonDirective, ModalShellComponent, LoadingIndicatorComponent],
   templateUrl: './assignment-history-dialog.html', styleUrl: './assignment-history-dialog.scss',
   encapsulation: ViewEncapsulation.None
 })
@@ -41,6 +42,7 @@ export class AssignmentHistoryDialogComponent implements OnInit, OnDestroy {
   }
   errorMessage = '';
   evidenceUrl: string | null = null;
+  evidenceImageLoading = false;
   evidenceStatus = '';
 
   get canReturn(): boolean { return Number(this.amount) > 0 && Number(this.amount) <= Number(this.data.remainingQuantity) && !this.isSaving && !this.serialLoading &&
@@ -102,6 +104,7 @@ export class AssignmentHistoryDialogComponent implements OnInit, OnDestroy {
             }
 
             this.evidenceUrl = URL.createObjectURL(blob);
+            this.evidenceImageLoading = true;
             this.evidenceStatus = '';
             this.evidenceUploading = false;
             this.cdr.markForCheck();
@@ -136,6 +139,7 @@ export class AssignmentHistoryDialogComponent implements OnInit, OnDestroy {
                 URL.revokeObjectURL(this.evidenceUrl);
 
             this.evidenceUrl = URL.createObjectURL(file);
+            this.evidenceImageLoading = true;
             this.evidenceStatus = '';
             this.cdr.markForCheck();
         },
@@ -148,6 +152,8 @@ export class AssignmentHistoryDialogComponent implements OnInit, OnDestroy {
         }
     });
   }
+  onEvidenceImageLoaded(): void { this.evidenceImageLoading = false; this.cdr.markForCheck(); }
+  onEvidenceImageError(): void { this.evidenceImageLoading = false; this.evidenceStatus = 'No se pudo mostrar la fotografía de la custodia.'; this.cdr.markForCheck(); }
   ngOnDestroy(): void { if (this.evidenceUrl) URL.revokeObjectURL(this.evidenceUrl); }
   returnArticle(): void {
     if (!this.canReturn) return;
