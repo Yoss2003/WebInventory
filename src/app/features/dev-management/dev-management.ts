@@ -23,11 +23,12 @@ import { ToastService } from '../../shared/toast/toast.service';
 import { UiEmptyStateComponent } from '../../shared/ui/components/ui-empty-state.component';
 import { UiStatusComponent } from '../../shared/ui/components/ui-status.component';
 import { UiSearchComponent } from '../../shared/ui/components/ui-search.component';
+import { UiPaginationComponent } from '../../shared/ui/components/ui-pagination/ui-pagination.component';
 
 @Component({
   selector: 'app-dev-management',
   standalone: true,
-  imports: [UiControlDirective, UiButtonDirective, UiTableActionDirective, UiPageHeadingComponent, UiEmptyStateComponent, UiStatusComponent, CommonModule, FormsModule, MatFormFieldModule, MatSelectModule, MatIconModule, LoadingIndicatorComponent,UiSearchComponent],
+  imports: [UiControlDirective, UiButtonDirective, UiTableActionDirective, UiPageHeadingComponent, UiEmptyStateComponent, UiStatusComponent, CommonModule, FormsModule, MatFormFieldModule, MatSelectModule, MatIconModule, LoadingIndicatorComponent,UiSearchComponent,UiPaginationComponent],
   templateUrl: './dev-management.html',
   styleUrl: './dev-management.scss'
 })
@@ -48,6 +49,8 @@ export class DevManagementComponent implements OnInit, OnDestroy {
   readonly trackPending = (_index: number, row: ResetPending): number => row.id;
 
   companies: DevCompany[] = [];
+  companiesPage = 1; companiesPageSize = 10;
+  pendingPage = 1; pendingPageSize = 10;
   private readonly unavailableLogos = new Set<string>();
   pending: ResetPending[] = [];
   selectedId: number | null = null;
@@ -75,6 +78,8 @@ export class DevManagementComponent implements OnInit, OnDestroy {
   private remainingDaysById = new Map<number, number | null>();
 
   get loading(): boolean { return this.loadingCompanies || this.loadingPending; }
+  get paginatedCompanies(): DevCompany[] { const start = (this.companiesPage - 1) * this.companiesPageSize; return this.filteredCompanies.slice(start, start + this.companiesPageSize); }
+  get paginatedPending(): ResetPending[] { const start = (this.pendingPage - 1) * this.pendingPageSize; return this.pending.slice(start, start + this.pendingPageSize); }
   get filteredCompanies(): DevCompany[] {
     const q = this.companySearch.trim().toLocaleLowerCase('es');
     if (!q) return this.companies;
