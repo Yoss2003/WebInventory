@@ -57,7 +57,7 @@
           <th scope="col" *ngIf="canManage" class="supplier-actions-col">Acciones</th>
         </tr></thead>
         <tbody>
-          <tr *ngFor="let item of filteredSuppliers" class="supplier-row-detail" role="button" tabindex="0"
+          <tr *ngFor="let item of paginatedSuppliers" class="supplier-row-detail" role="button" tabindex="0"
               [attr.aria-label]="'Ver detalle del proveedor ' + item.businessName"
               (click)="showSupplierDetail(item)"
               (keydown.enter)="showSupplierDetail(item)"
@@ -90,6 +90,7 @@
           </tr>
         </tbody>
       </table></div>
+      <app-ui-pagination *ngIf="filteredSuppliers.length" [totalItems]="filteredSuppliers.length" [page]="supplierPage" [pageSize]="supplierPageSize" (pageChange)="supplierPage=$event" (pageSizeChange)="supplierPageSize=$event;supplierPage=1" label="proveedores" />
       <app-ui-empty-state
         *ngIf="!filteredSuppliers.length"
         icon="inventory_2"
@@ -160,7 +161,7 @@
             </tr>
           </thead>
           <tbody>
-            <tr *ngFor="let item of filteredParameters">
+            <tr *ngFor="let item of paginatedParameters">
               <td>{{item.parameterType}}</td>
               <td>{{item.name}}</td>
               <td>{{item.description||'—'}}</td>
