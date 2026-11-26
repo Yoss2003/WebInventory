@@ -105,7 +105,7 @@
         <button type="button" appUiButton="secondary" (click)="loadShares()">Reintentar</button>
       </p>
 
-      <div class="sharing-table-wrap inv-core-table-wrap" *ngIf="!loadingShares || sharesLoaded">
+      <div class="sharing-table-wrap inv-core-table-wrap" appUiTablePaging="inventory-shares" *ngIf="!loadingShares || sharesLoaded">
         <table>
           <thead>
             <tr><th>Usuario</th><th>Permiso</th><th>Desde</th><th>Acciones</th></tr>
@@ -134,7 +134,7 @@
           </tbody>
         </table>
       </div>
-      <app-ui-pagination *ngIf="shares.length" [totalItems]="shares.length" [page]="page" [pageSize]="pageSize" (pageChange)="page=$event" (pageSizeChange)="pageSize=$event;page=1" label="colaboradores" />
+      <app-ui-pagination *ngIf="shares.length" [totalItems]="shares.length" [page]="page" [pageSize]="pageSize" (pageChange)="page=$event" (pageSizeChange)="pageSize=$event;page=1" label="colaboradores" loadingId="inventory-shares" />
     </section>
   </div>
 </section>
