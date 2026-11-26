@@ -8,6 +8,7 @@ import { MatIconModule } from '@angular/material/icon';
 import { Movement } from '../../../core/models/movement.model';
 import { SalesService, SaleInstallmentsSummary } from '../../../core/services/sales';
 import { ModalShellComponent } from '../../../shared/ui/components/modal-shell/modal-shell.component';
+import { LoadingIndicatorComponent } from '../../../shared/loading/loading-indicator';
 
 @Component({
   selector: 'app-movement-detail-dialog',
@@ -18,7 +19,8 @@ import { ModalShellComponent } from '../../../shared/ui/components/modal-shell/m
     CommonModule,
     MatDialogModule,
     MatIconModule,
-    ModalShellComponent
+    ModalShellComponent,
+    LoadingIndicatorComponent
   ],
   templateUrl: './movement-detail-dialog.html',
   styleUrl: './movement-detail-dialog.scss'
@@ -34,6 +36,13 @@ export class MovementDetailDialogComponent implements OnInit {
   credit: SaleInstallmentsSummary | null = null;
   creditLoading = false;
   creditError = '';
+  detailLoading = false;
+  private detailRequestsPending = 0;
+  private finishDetailRequest(): void {
+    this.detailRequestsPending = Math.max(0, this.detailRequestsPending - 1);
+    this.detailLoading = this.detailRequestsPending > 0;
+    this.cdr.markForCheck();
+  }
 
   get creditSaleId(): number | null {
     const found = String(this.data.movement.documentNumber ?? '').match(/^VENTA-(\d+)$/);
@@ -62,19 +71,21 @@ export class MovementDetailDialogComponent implements OnInit {
       next: details => {
         this.credit = details;
         this.creditLoading = false;
-        this.cdr.markForCheck();
+        this.finishDetailRequest();
       },
       error: err => {
         this.creditError = String(err?.error?.error || 'No se pudo consultar el cronograma de la venta.');
         this.creditLoading = false;
-        this.cdr.markForCheck();
+        this.finishDetailRequest();
       }
     });
   }
 
   ngOnInit(): void {
-    this.loadCredit();
     const id = Number(this.data.movement.employeeId);
+    this.detailRequestsPending = (this.isCreditSale ? 1 : 0) + (id > 0 ? 1 : 0);
+    this.detailLoading = this.detailRequestsPending > 0;
+    this.loadCredit();
     if (!id || id <= 0) {
       this.responsibleName = 'Sin responsable asociado';
       return;
@@ -86,11 +97,11 @@ export class MovementDetailDialogComponent implements OnInit {
           .map(p => String(p ?? '').trim())
           .filter(Boolean)
           .join(' ') || 'Nombre no registrado';
-        this.cdr.markForCheck();
+        this.finishDetailRequest();
       },
       error: () => {
         this.responsibleName = 'Responsable no disponible';
-        this.cdr.markForCheck();
+        this.finishDetailRequest();
       }
     });
   }
