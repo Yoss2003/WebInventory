@@ -1,7 +1,6 @@
 import { TestBed } from '@angular/core/testing';
 import { of } from 'rxjs';
 import { MatDialog } from '@angular/material/dialog';
-import { MatSnackBar } from '@angular/material/snack-bar';
 import { EntradasComponent } from './entradas';
 import { ArticleService } from '../../../core/services/articles';
 import { MovementService } from '../../../core/services/movement';
@@ -14,7 +13,6 @@ describe('EntradasComponent', () => {
         {provide: ArticleService,useValue:{getArticles:()=>of([])}},
         {provide: MovementService,useValue:{getMovements:()=>of([])}},
         {provide: MatDialog,useValue:{open:()=>({afterClosed:()=>of(false)})}},
-        {provide: MatSnackBar,useValue:{open:()=>null}}
       ]
     }).compileComponents();
     const fixture=TestBed.createComponent(EntradasComponent);
