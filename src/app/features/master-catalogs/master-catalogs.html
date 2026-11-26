@@ -48,7 +48,7 @@
           </div>
         </div>
       </header>
-      <div class="inv-core-toolbar"><app-ui-search [(value)]="supplierSearch" placeholder="Buscar proveedor, RUC o contacto" label="Buscar proveedores" /></div>
+      <div class="inv-core-toolbar"><app-ui-search [value]="supplierSearch" (valueChange)="supplierSearch=$event;supplierPage=1" placeholder="Buscar proveedor, RUC o contacto" label="Buscar proveedores" /></div>
       <div class="supplier-table-viewport inv-core-table-wrap" [class.supplier-table-viewport--scroll]="suppliers.length > 2"><table class="supplier-table" [class.supplier-table-readonly]="!canManage">
         <thead><tr>
           <th scope="col">RUC</th>
@@ -147,8 +147,8 @@
     <div class="list">
       <h2>Parámetros visibles ({{parameters.length}})</h2>
       <div class="inv-core-toolbar parameter-toolbar">
-        <app-ui-search [(value)]="parameterSearch" placeholder="Buscar parámetro" label="Buscar parámetros" />
-        <mat-form-field appearance="outline" class="inventory-select parameter-type-filter"><mat-label>Filtrar por tipo</mat-label><mat-select id="parameter-type-filter" [(ngModel)]="parameterTypeFilter" name="parameterTypeFilter" panelClass="inventory-select-options"><mat-option value="">Todos los tipos</mat-option><mat-option *ngFor="let type of parameterFilterOptions" [value]="type">{{parameterTypeLabel(type)}}</mat-option></mat-select></mat-form-field>
+        <app-ui-search [value]="parameterSearch" (valueChange)="parameterSearch=$event;parameterPage=1" placeholder="Buscar parámetro" label="Buscar parámetros" />
+        <mat-form-field appearance="outline" class="inventory-select parameter-type-filter"><mat-label>Filtrar por tipo</mat-label><mat-select id="parameter-type-filter" [(ngModel)]="parameterTypeFilter" (ngModelChange)="parameterPage=1" name="parameterTypeFilter" panelClass="inventory-select-options"><mat-option value="">Todos los tipos</mat-option><mat-option *ngFor="let type of parameterFilterOptions" [value]="type">{{parameterTypeLabel(type)}}</mat-option></mat-select></mat-form-field>
       </div>
       <div class="parameter-table-viewport inv-core-table-wrap">
         <table>
