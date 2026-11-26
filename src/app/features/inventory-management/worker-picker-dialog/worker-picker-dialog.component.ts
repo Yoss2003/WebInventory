@@ -10,6 +10,7 @@ import { InventoryService, InventoryShareRecipient } from '../../../core/service
 import { LoadingIndicatorComponent } from '../../../shared/loading/loading-indicator';
 import { ModalShellComponent } from '../../../shared/ui/components/modal-shell/modal-shell.component';
 import { UiPaginationComponent } from '../../../shared/ui/components/ui-pagination/ui-pagination.component';
+import { UiTablePagingDirective } from '../../../shared/ui/directives/ui-table-paging.directive';
 import { finalize, timeout } from 'rxjs';
 
 export interface WorkerPickerDialogData {
@@ -20,7 +21,7 @@ export interface WorkerPickerDialogData {
 @Component({
   selector: 'app-worker-picker-dialog',
   standalone: true,
-  imports: [CommonModule, FormsModule, MatDialogModule, MatIconModule, MatTooltipModule, UiButtonDirective, UiControlDirective, LoadingIndicatorComponent, ModalShellComponent, UiPaginationComponent],
+  imports: [CommonModule, FormsModule, MatDialogModule, MatIconModule, MatTooltipModule, UiButtonDirective, UiControlDirective, LoadingIndicatorComponent, ModalShellComponent, UiTablePagingDirective, UiPaginationComponent],
   templateUrl: './worker-picker-dialog.component.html',
   styleUrl: './worker-picker-dialog.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush
