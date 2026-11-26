@@ -27,7 +27,7 @@
 
 <ng-template #advancedFiltersDialog>
   <app-modal-shell type="filters" title="Filtros avanzados" subtitle="Filtra salidas, traspasos y ventas POS" icon="tune"
-    [infoVisible]="false" [closeVisible]="false" [footerActions]="filterModalActions"
+    [infoVisible]="false" [closeVisible]="true" [footerActions]="filterModalActions"
     (actionClicked)="handleFilterModalAction($event)" (closeRequested)="closeAdvancedFilters()">
     <div class="fx-history-dialog fx-unified-dialog outputs-advanced-dialog">
       <div class="fx-unified-content">
