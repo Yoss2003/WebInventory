@@ -25,10 +25,11 @@ import { ToastService } from '../../../shared/toast/toast.service';
 
 import { UiSearchComponent } from '../../../shared/ui/components/ui-search.component';
 import { UiPaginationComponent } from '../../../shared/ui/components/ui-pagination/ui-pagination.component';
+import { UiTablePagingDirective } from '../../../shared/ui/directives/ui-table-paging.directive';
 
 @Component({
   selector:'app-category-list',standalone:true,
-  imports:[UiEmptyStateComponent, UiStatusComponent, UiTableActionDirective, UiButtonDirective, UiPageHeadingComponent, MatTableModule,MatCardModule,MatButtonModule,MatIconModule,MatInputModule,MatCheckboxModule,FormsModule,CommonModule,LoadingIndicatorComponent,UiSearchComponent,UiPaginationComponent],
+  imports:[UiEmptyStateComponent, UiStatusComponent, UiTableActionDirective, UiButtonDirective, UiPageHeadingComponent, MatTableModule,MatCardModule,MatButtonModule,MatIconModule,MatInputModule,MatCheckboxModule,FormsModule,CommonModule,LoadingIndicatorComponent,UiSearchComponent,UiTablePagingDirective, UiPaginationComponent],
   templateUrl:'./category-list.html',styleUrl:'./category-list.scss',
   animations:[trigger('detailExpand',[
     state('collapsed,void',style({height:'0px',minHeight:'0'})),
