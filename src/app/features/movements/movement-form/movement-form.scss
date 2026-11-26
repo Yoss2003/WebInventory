@@ -45,10 +45,15 @@
   border-radius: 11px;
 }
 
-.movement-body {
+ .movement-body {
+  margin: 16px;
   padding: 22px;
   display: grid;
   gap: 17px;
+  border: 1px solid #405669;
+  border-radius: 14px;
+  background: linear-gradient(145deg, #192a37, #14222d);
+  box-shadow: inset 0 1px 0 #ffffff08;
 }
 
 .field {
@@ -174,6 +179,7 @@
 }
 
 @media (max-width: 520px) {
+  .movement-body { margin: 10px; padding: 14px; }
   .stock-panel { gap: 8px; padding: 9px; }
   .stock-panel__metric + .stock-panel__metric { padding-left: 8px; }
   .stock-panel__metric strong { font-size: 16px; }
