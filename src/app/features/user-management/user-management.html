@@ -22,7 +22,7 @@
     </div>
     <p *ngIf="loading && !hasLoaded" class="users-message" role="status">Cargando usuarios y roles...</p>
     <p *ngIf="error" class="users-error" role="alert">{{error}}</p>
-    <div class="inv-core-table-wrap users-table" *ngIf="filtered.length">
+    <div class="inv-core-table-wrap users-table" appUiTablePaging="user-directory" *ngIf="filtered.length">
       <table>
         <thead><tr>
           <th>Usuario</th><th>Rol</th><th>Inventario</th><th>Estado</th><th>Acciones</th>
@@ -60,7 +60,7 @@
         </tbody>
       </table>
     </div>
-    <app-ui-pagination *ngIf="filtered.length" [totalItems]="filtered.length" [page]="page" [pageSize]="pageSize" (pageChange)="page=$event" (pageSizeChange)="pageSize=$event;page=1" label="usuarios" />
+    <app-ui-pagination *ngIf="filtered.length" [totalItems]="filtered.length" [page]="page" [pageSize]="pageSize" (pageChange)="page=$event" (pageSizeChange)="pageSize=$event;page=1" label="usuarios" loadingId="user-directory" />
     <app-ui-empty-state *ngIf="hasLoaded && !users.length && !error"
       icon="group" message="Aún no hay usuarios registrados."
       hint="Crea el primer administrador desde Gestión Dev." />
