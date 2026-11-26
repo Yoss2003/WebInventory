@@ -38,8 +38,8 @@
             </tr>
           </tbody>
         </table>
-        <app-ui-pagination [totalItems]="filteredEmployees.length" [page]="page" [pageSize]="pageSize" (pageChange)="page=$event" (pageSizeChange)="pageSize=$event;page=1" label="empleados" />
       </div>
+      <app-ui-pagination [totalItems]="filteredEmployees.length" [page]="page" [pageSize]="pageSize" (pageChange)="page=$event" (pageSizeChange)="pageSize=$event;page=1" label="empleados" />
       <div class="empty-results" *ngIf="!loading && !error && !filteredEmployees.length"><mat-icon aria-hidden="true">person_search</mat-icon><strong>No se encontraron destinatarios</strong><p>{{ search ? 'No hay resultados que coincidan con tu búsqueda.' : 'No tienes empleados activos vinculados a cuentas disponibles para este inventario.' }}</p></div>
     </div>
   </div>
