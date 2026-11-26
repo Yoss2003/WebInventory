@@ -43,8 +43,8 @@
             </tr>
           </tbody>
         </table>
-        <app-ui-pagination *ngIf="data.schedule?.length" [totalItems]="data.schedule.length" [page]="page" [pageSize]="pageSize" (pageChange)="page=$event" (pageSizeChange)="pageSize=$event;page=1" label="cuotas" />
       </div>
+      <app-ui-pagination *ngIf="data.schedule?.length" [totalItems]="data.schedule.length" [page]="page" [pageSize]="pageSize" (pageChange)="page=$event" (pageSizeChange)="pageSize=$event;page=1" label="cuotas" />
       <p class="sale-info-dialog__note">Este cronograma es una proyección calculada con la frecuencia y el número de cuotas configurados.</p>
     </ng-container>
 
