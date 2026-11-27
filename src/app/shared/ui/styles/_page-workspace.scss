@@ -223,6 +223,14 @@
   min-height: 0;
 }
 
+ .inv-secondary-page.assignment-page .assignment-section .assignment-table-wrap {
+  margin: 0;
+  width: 100%;
+  max-height: none !important;
+  min-height: 0;
+  flex: 1 1 auto;
+}
+
 .inv-secondary-page.assignment-page .assignment-tab-content > app-ui-table-panel {
   flex: 1 1 auto;
   min-height: 0;
