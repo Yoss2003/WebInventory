@@ -39,6 +39,7 @@ export class UiSelectComponent implements ControlValueAccessor {
   @Input() placeholder = '';
   @Input() disabled = false;
   @Input() required = false;
+  @Input() invalid = false;
   @Input() multiple = false;
   @Input() allowEmpty = false;
   @Input() emptyLabel = 'Todos';
