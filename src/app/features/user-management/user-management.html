@@ -16,7 +16,7 @@
     </div>
   </header>
 
-  <section class="users-panel">
+  <section class="users-panel inv-page-workspace">
     <div class="users-panel__head">
       <div><h2>Usuarios registrados <span class="users-count">{{users.length}}</span></h2>
         <p>Desactivar una cuenta no elimina su inventario ni su historial.</p></div>
@@ -65,10 +65,10 @@
     </div>
     <app-ui-pagination *ngIf="filtered.length" [totalItems]="filtered.length" [page]="page" [pageSize]="pageSize" (pageChange)="page=$event" (pageSizeChange)="pageSize=$event;page=1" label="usuarios" loadingId="user-directory" />
     </app-ui-table-panel>
-    <app-ui-empty-state *ngIf="hasLoaded && !users.length && !error"
+    <app-ui-empty-state *ngIf="hasLoaded && !loading && !users.length && !error"
       icon="group" message="Aún no hay usuarios registrados."
       hint="Crea el primer administrador desde Gestión Dev." />
-    <app-ui-empty-state *ngIf="hasLoaded && users.length > 0 && !filtered.length"
+    <app-ui-empty-state *ngIf="hasLoaded && !loading && users.length > 0 && !filtered.length"
       icon="search_off" message="Sin resultados para tu búsqueda."
       hint="Prueba con otro nombre de usuario o correo." />
   </section>

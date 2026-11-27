@@ -5,12 +5,14 @@
       <mat-icon>refresh</mat-icon>Actualizar
     </button>
   </header>
+
   <div class="assignment-stats">
     <div class="assignment-stat"><span>Asignaciones vigentes</span><strong>{{!hasLoaded?'…':activeAssignments}}</strong><small>Entregas con cantidad pendiente</small></div>
     <div class="assignment-stat"><span>Artículos asignados</span><strong>{{!hasLoaded?'…':distinctArticles}}</strong><small>Referencias diferentes</small></div>
     <div class="assignment-stat"><span>Cantidad fuera de stock</span><strong>{{!hasLoaded?'…':(pendingQuantity|number:'1.0-2')}}</strong><small>Saldo pendiente de devolución</small></div>
   </div>
-  <div class="assignment-section">
+
+  <section class="assignment-section inv-page-workspace inv-page-workspace--flush">
     <div class="inv-core-toolbar assignment-search-row"><app-ui-search [value]="search" (valueChange)="search=$event;page=1" placeholder="Buscar artículo o destinatario" label="Buscar asignaciones" /></div>
     <nav class="assignment-tabs inv-secondary-tabs" aria-label="Vistas de asignaciones">
       <button type="button" [class.active]="currentTab==='history'" (click)="switchAssignmentTab('history');search='';page=1" [attr.aria-pressed]="currentTab==='history'"><mat-icon>outbox</mat-icon>Entregados</button>
@@ -18,13 +20,23 @@
     </nav>
     <div class="assignment-tab-content">
       <div *ngIf="errorMessage" class="assignment-state assignment-state--error" role="alert"><mat-icon>error_outline</mat-icon>{{errorMessage}}</div>
-      <div class="assignment-table-wrap inv-core-table-wrap" appUiTablePaging="assignments-history" [uiTablePagingLoading]="loading" *ngIf="loading || (hasLoaded && filteredRows.length)" [class.assignment-table-wrap--scroll]="filteredRows.length > pageSize">
-        <table class="assignment-table"><thead><tr><th>Artículo</th><th>Responsable / entidad</th><th>Fecha</th><th>Entregado</th><th>Pendiente</th><th>Estado</th><th class="assignment-table__end">Detalle</th></tr></thead>
-          <tbody><tr *ngFor="let row of paginatedRows" (click)="openDetail(row)" (keydown.enter)="openDetail(row)" tabindex="0" role="button" [attr.aria-label]="'Ver asignación de '+row.articleName"><td><strong>{{row.articleName | cleanArticleName}}</strong><small>{{row.articleCode}}</small></td><td>{{row.recipientName}}</td><td>{{row.assignedAt|date:'dd/MM/yyyy HH:mm'}}</td><td>{{row.quantity|number:'1.0-2'}}</td><td>{{row.remainingQuantity|number:'1.0-2'}}</td><td><span class="assignment-tag">{{row.status}}</span></td><td class="assignment-table__end"><mat-icon>chevron_right</mat-icon></td></tr></tbody>
-        </table>
-      </div>
-      <app-ui-pagination *ngIf="filteredRows.length" [totalItems]="filteredRows.length" [page]="page" [pageSize]="pageSize" (pageChange)="page=$event" (pageSizeChange)="pageSize=$event;page=1" label="asignaciones" loadingId="assignments-history" />
-      <div class="assignment-state" *ngIf="hasLoaded && !filteredRows.length && !errorMessage"><mat-icon>inventory_2</mat-icon><strong>{{search?'No hay resultados':'No hay asignaciones registradas'}}</strong><span>{{search?'Prueba otra búsqueda.':'Las asignaciones registradas con el nuevo flujo aparecerán aquí.'}}</span></div> 
+      <app-ui-table-panel class="inv-page-table-panel assignment-table-panel"
+        *ngIf="loading || (hasLoaded && filteredRows.length)"
+        mode="fill" [loading]="loading" label="asignaciones">
+        <div uiTablePanelContent class="assignment-table-wrap inv-core-table-wrap" appUiTablePaging="assignments-history">
+          <table class="assignment-table">
+            <thead><tr><th>Artículo</th><th>Responsable / entidad</th><th>Fecha</th><th>Entregado</th><th>Pendiente</th><th>Estado</th><th class="assignment-table__end">Detalle</th></tr></thead>
+            <tbody><tr *ngFor="let row of paginatedRows" (click)="openDetail(row)" (keydown.enter)="openDetail(row)" tabindex="0" role="button" [attr.aria-label]="'Ver asignación de '+row.articleName">
+              <td><strong>{{row.articleName | cleanArticleName}}</strong><small>{{row.articleCode}}</small></td>
+              <td>{{row.recipientName}}</td><td>{{row.assignedAt|date:'dd/MM/yyyy HH:mm'}}</td>
+              <td>{{row.quantity|number:'1.0-2'}}</td><td>{{row.remainingQuantity|number:'1.0-2'}}</td>
+              <td><span class="assignment-tag">{{row.status}}</span></td><td class="assignment-table__end"><mat-icon>chevron_right</mat-icon></td>
+            </tr></tbody>
+          </table>
+        </div>
+        <app-ui-pagination *ngIf="filteredRows.length" [totalItems]="filteredRows.length" [page]="page" [pageSize]="pageSize" (pageChange)="page=$event" (pageSizeChange)="pageSize=$event;page=1" label="asignaciones" loadingId="assignments-history" />
+      </app-ui-table-panel>
+      <div class="assignment-state" *ngIf="hasLoaded && !loading && !filteredRows.length && !errorMessage"><mat-icon>inventory_2</mat-icon><strong>{{search?'No hay resultados':'No hay asignaciones registradas'}}</strong><span>{{search?'Prueba otra búsqueda.':'Las asignaciones registradas con el nuevo flujo aparecerán aquí.'}}</span></div>
     </div>
-  </div>
+  </section>
 </section>

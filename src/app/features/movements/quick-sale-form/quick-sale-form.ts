@@ -7,10 +7,10 @@ import {
   inject
 } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { UiSelectComponent } from '../../../shared/ui/components/ui-select/ui-select.component';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { MatDialogRef } from '@angular/material/dialog';
 import { MatIconModule } from '@angular/material/icon';
-import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatSelectModule } from '@angular/material/select';
 import { MatInputModule } from '@angular/material/input';
 import { ToastService } from '../../../shared/toast/toast.service';
@@ -38,13 +38,12 @@ import type { ModalActionId, ModalFooterAction, ModalSection } from '../../../sh
 @Component({
   selector: 'app-quick-sale-form',
   standalone: true,
-  imports: [
+  imports: [UiSelectComponent, 
     CommonModule,
     ReactiveFormsModule,
     MatIconModule,
     MatSelectModule,
     MatInputModule,
-    MatFormFieldModule,
     InventoryDialogMotionDirective,
     UiButtonDirective,
     UiControlDirective,

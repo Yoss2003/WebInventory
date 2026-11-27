@@ -77,12 +77,10 @@
                     <ng-template #categoryStandard>{{ isInvalid('identity','categoryId') ? 'Selecciona una categoría.' : isLoadingCategories ? 'Cargando categorías...' : currentTrackingMode ? 'Rastreo: ' + currentTrackingMode : 'Elige una categoría hija.' }}</ng-template>
                   </span>
                 </div>
-                <mat-form-field appearance="outline" class="inventory-select" [class.invalid]="isInvalid('identity', 'categoryId')">
-                  <mat-select id="article-category" formControlName="categoryId" placeholder="Seleccionar categoría" [panelClass]="articleSelectPanelClass" (openedChange)="$event && resetFieldMessage('identity','categoryId')">
+                <app-ui-select id="article-category" formControlName="categoryId" placeholder="Seleccionar categoría" [panelClass]="articleSelectPanelClass" (openedChange)="$event && resetFieldMessage('identity','categoryId')" [invalid]="isInvalid('identity', 'categoryId')" class="inventory-select">
                     <mat-option [value]="null">Seleccionar categoría</mat-option>
                     <mat-option *ngFor="let cat of categoriasHijas" [value]="cat.id">{{ cat.name }}</mat-option>
-                  </mat-select>
-                </mat-form-field>
+                  </app-ui-select>
               </div>
 
               <div class="form-group">
@@ -92,14 +90,12 @@
                     <ng-template #brandStandard>{{ isInvalid('identity','brandId') ? 'Selecciona una marca.' : !selectedCategory ? 'Selecciona primero una categoría hija.' : isLoadingBrands ? 'Cargando marcas...' : !marcasFiltradas.length ? 'No hay marcas; pulsa + para crear una.' : 'Elige una marca de la lista.' }}</ng-template>
                   </span></div>
                 <div class="field-with-button">
-                  <mat-form-field appearance="outline" class="inventory-select" [class.invalid]="isInvalid('identity', 'brandId')">
-                    <mat-select id="article-brand" formControlName="brandId" placeholder="Seleccionar marca"
+                  <app-ui-select id="article-brand" formControlName="brandId" placeholder="Seleccionar marca"
                                 [disabled]="!selectedCategory || isLoadingBrands"
-                                [panelClass]="articleSelectPanelClass" (openedChange)="$event && resetFieldMessage('identity','brandId')">
+                                [panelClass]="articleSelectPanelClass" (openedChange)="$event && resetFieldMessage('identity','brandId')" [invalid]="isInvalid('identity', 'brandId')" class="inventory-select">
                       <mat-option [value]="null">Seleccionar marca</mat-option>
                       <mat-option *ngFor="let marca of marcasFiltradas" [value]="marca.id">{{ marca.name }}</mat-option>
-                    </mat-select>
-                  </mat-form-field>
+                    </app-ui-select>
                   <button type="button" appUiButton="primary" class="article-icon-btn" (click)="agregarNuevaMarca()" [disabled]="!selectedCategory" title="Ver y registrar marcas de esta categoría" aria-label="Gestionar marcas">
                     <mat-icon>add</mat-icon>
                   </button>
@@ -114,14 +110,12 @@
                   </span>
                 </div>
                 <div class="field-with-button supplier-select-row">
-                  <mat-form-field appearance="outline" class="inventory-select">
-                    <mat-select id="article-supplier" formControlName="supplierId" placeholder="Sin proveedor asociado" [panelClass]="articleSelectPanelClass">
+                  <app-ui-select id="article-supplier" formControlName="supplierId" placeholder="Sin proveedor asociado" [panelClass]="articleSelectPanelClass" class="inventory-select">
                       <mat-option [value]="null">Sin proveedor asociado</mat-option>
                       <mat-option *ngFor="let supplier of proveedores" [value]="supplier.id">
                         {{supplier.businessName}} · RUC {{supplier.ruc}}
                       </mat-option>
-                    </mat-select>
-                  </mat-form-field>
+                    </app-ui-select>
                   <button *ngIf="canManageSuppliers" type="button" appUiButton="primary" class="article-icon-btn"
                     (click)="manageSupplier(false)" [disabled]="masterInventoryId <= 0 || isLoadingReferences"
                     title="Registrar proveedor" aria-label="Registrar proveedor">
@@ -321,22 +315,18 @@
           <div class="tile-grid" [class.has-conversion]="requiresUnitConversion" [class.fixed-conversion]="requiresUnitConversion && fixedFactor !== null">
             <div class="field-tile">
               <div class="tile-label"><mat-icon>local_shipping</mat-icon><label for="acq-unit">Se compra por <span class="required">*</span></label></div>
-              <mat-form-field appearance="outline" class="inventory-select">
-                <mat-select id="acq-unit" formControlName="acqUnit" [panelClass]="articleSelectPanelClass">
+              <app-ui-select id="acq-unit" formControlName="acqUnit" [panelClass]="articleSelectPanelClass" class="inventory-select">
                   <mat-option *ngFor="let u of unidades" [value]="u">{{u}}</mat-option>
-                </mat-select>
-              </mat-form-field>
+                </app-ui-select>
             </div>
             <div class="field-tile">
               <div class="tile-label"><mat-icon>shopping_cart</mat-icon>
                 <label for="sale-unit">Se vende por <span class="required">*</span></label>
                 <mat-icon class="unit-lock" *ngIf="isPhysicalPurchase" title="Igual que compra; sin conversión">lock</mat-icon>
               </div>
-              <mat-form-field appearance="outline" class="inventory-select">
-                <mat-select id="sale-unit" formControlName="saleUnit" [panelClass]="articleSelectPanelClass">
+              <app-ui-select id="sale-unit" formControlName="saleUnit" [panelClass]="articleSelectPanelClass" class="inventory-select">
                   <mat-option *ngFor="let u of saleUnits" [value]="u">{{u}}</mat-option>
-                </mat-select>
-              </mat-form-field>
+                </app-ui-select>
             </div>
             <div class="field-tile" *ngIf="requiresUnitConversion">
               <div class="tile-label"><mat-icon>inventory_2</mat-icon>
@@ -377,30 +367,24 @@
           <div class="article-parameter-grid">
             <div class="field-tile">
               <label for="article-status">Estado</label>
-              <mat-form-field appearance="outline" class="inventory-select">
-                <mat-select id="article-status" formControlName="statusId" placeholder="Sin especificar" [panelClass]="articleSelectPanelClass">
+              <app-ui-select id="article-status" formControlName="statusId" placeholder="Sin especificar" [panelClass]="articleSelectPanelClass" class="inventory-select">
                   <mat-option [value]="null">Sin especificar</mat-option>
                   <mat-option *ngFor="let item of estados" [value]="item.id">{{item.name}}</mat-option>
-                </mat-select>
-              </mat-form-field>
+                </app-ui-select>
             </div>
             <div class="field-tile">
               <label for="article-condition">Condición física</label>
-              <mat-form-field appearance="outline" class="inventory-select">
-                <mat-select id="article-condition" formControlName="conditionId" placeholder="Sin especificar" [panelClass]="articleSelectPanelClass">
+              <app-ui-select id="article-condition" formControlName="conditionId" placeholder="Sin especificar" [panelClass]="articleSelectPanelClass" class="inventory-select">
                   <mat-option [value]="null">Sin especificar</mat-option>
                   <mat-option *ngFor="let item of condiciones" [value]="item.id">{{item.name}}</mat-option>
-                </mat-select>
-              </mat-form-field>
+                </app-ui-select>
             </div>
             <div class="field-tile">
               <label for="article-location">Ubicación</label>
-              <mat-form-field appearance="outline" class="inventory-select">
-                <mat-select id="article-location" formControlName="locationId" placeholder="Sin especificar" [panelClass]="articleSelectPanelClass">
+              <app-ui-select id="article-location" formControlName="locationId" placeholder="Sin especificar" [panelClass]="articleSelectPanelClass" class="inventory-select">
                   <mat-option [value]="null">Sin especificar</mat-option>
                   <mat-option *ngFor="let item of ubicaciones" [value]="item.id">{{item.name}}</mat-option>
-                </mat-select>
-              </mat-form-field>
+                </app-ui-select>
             </div>
           </div>
           <p class="units-load-error" *ngIf="parameterError" role="alert">{{parameterError}}</p>
@@ -421,11 +405,9 @@
               <div class="finance-label"><mat-icon>payments</mat-icon><label for="acq-price">Costo de adquisición</label></div>
               <div class="money-input">
                 <input id="acq-price" type="number" min="0" step="0.01" formControlName="acqPrice" appUiControl class="custom-input" placeholder="0.00" [class.invalid]="isInvalid('finance', 'acqPrice')" />
-                <mat-form-field appearance="outline" class="inventory-select" aria-label="Moneda de adquisición">
-                  <mat-select formControlName="acqCurrency" [panelClass]="articleSelectPanelClass">
+                <app-ui-select formControlName="acqCurrency" [panelClass]="articleSelectPanelClass" ariaLabel="Moneda de adquisición" class="inventory-select">
                     <mat-option *ngFor="let m of monedas" [value]="m.code">{{ m.code }}</mat-option>
-                  </mat-select>
-                </mat-form-field>
+                  </app-ui-select>
               </div>
             </div>
             
@@ -433,11 +415,9 @@
               <div class="finance-label"><mat-icon>sell</mat-icon><label for="sale-price">Precio de venta (por unidad)</label></div>
               <div class="money-input">
                 <input id="sale-price" type="number" min="0" step="0.01" formControlName="salePrice" appUiControl class="custom-input" placeholder="0.00" [class.invalid]="isInvalid('finance', 'salePrice')" />
-                <mat-form-field appearance="outline" class="inventory-select" aria-label="Moneda de venta">
-                  <mat-select formControlName="saleCurrency" [panelClass]="articleSelectPanelClass">
+                <app-ui-select formControlName="saleCurrency" [panelClass]="articleSelectPanelClass" ariaLabel="Moneda de venta" class="inventory-select">
                     <mat-option *ngFor="let m of monedas" [value]="m.code">{{ m.code }}</mat-option>
-                  </mat-select>
-                </mat-form-field>
+                  </app-ui-select>
               </div>
             </div>
             

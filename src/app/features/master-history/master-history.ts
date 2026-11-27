@@ -1,6 +1,9 @@
 import { UiButtonDirective } from '../../shared/ui/directives/ui-button.directive';
 import { UiPageHeadingComponent } from '../../shared/ui/components/ui-page-heading.component';
 import { UiPaginationComponent } from '../../shared/ui/components/ui-pagination/ui-pagination.component';
+import { UiEmptyStateComponent } from '../../shared/ui/components/ui-empty-state.component';
+import { UiTablePanelComponent } from '../../shared/ui/components/ui-table-panel/ui-table-panel.component';
+import { UiSelectComponent, UiSelectOption, UiSelectValue } from '../../shared/ui/components/ui-select/ui-select.component';
 import { UiTablePagingDirective } from '../../shared/ui/directives/ui-table-paging.directive';
 import { CleanArticleNamePipe } from '../../shared/clean-article-name.pipe';
 import { CommonModule } from '@angular/common';
@@ -11,7 +14,6 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
-import { MatSelectModule } from '@angular/material/select';
 import { provideNativeDateAdapter, MAT_DATE_LOCALE } from '@angular/material/core';
 import { MasterHistoryService } from '../../core/services/master-history';
 import { ToastService } from '../../shared/toast/toast.service';
@@ -61,6 +63,9 @@ interface HistoryUser {
   imports: [
     UiButtonDirective,
     UiPageHeadingComponent,
+    UiSelectComponent,
+    UiTablePanelComponent,
+    UiEmptyStateComponent,
     UiTablePagingDirective, UiPaginationComponent,
     CleanArticleNamePipe,
     CommonModule,
@@ -69,7 +74,6 @@ interface HistoryUser {
     MatDatepickerModule,
     MatFormFieldModule,
     MatInputModule,
-    MatSelectModule
   ],
   providers: [provideNativeDateAdapter(), { provide: MAT_DATE_LOCALE, useValue: 'es-PE' }],
   templateUrl: './master-history.html',
@@ -82,6 +86,26 @@ export class MasterHistoryComponent implements OnInit {
 
   inventoryOptions: HistoryInventory[] = [];
   userOptions: HistoryUser[] = [];
+  get inventorySelectOptions(): UiSelectOption[] {
+    return [{ value: '', label: 'Todos' }, ...this.inventoryOptions.map(item => ({
+      value: String(item.id), label: this.inventoryLabel(item)
+    }))];
+  }
+  get userSelectOptions(): UiSelectOption[] {
+    return [{ value: '', label: 'Todos' }, ...this.userOptions.map(item => ({
+      value: String(item.id), label: this.userLabel(item)
+    }))];
+  }
+  readonly actionSelectOptions: UiSelectOption[] = [
+    { value: '', label: 'Todos' },
+    { value: '1', label: 'Entradas' },
+    { value: '2', label: 'Salidas' },
+    { value: '3', label: 'Custodias' }
+  ];
+
+  updateFilter(field: 'inventoryId' | 'userId' | 'actorUserId' | 'actionId', value: UiSelectValue): void {
+    this[field] = value == null ? '' : String(value);
+  }
   optionsError = '';
   items: MasterMovementRow[] = [];
   total = 0;

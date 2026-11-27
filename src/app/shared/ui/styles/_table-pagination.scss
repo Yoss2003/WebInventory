@@ -76,10 +76,7 @@
 .inv-core-page { --ui-table-reserved-height: 390px; }
 .inv-core-page.entries-page,
 .inv-core-page.outputs-page { --ui-table-reserved-height: 430px; }
-.inv-secondary-page.assignment-page { --ui-table-reserved-height: 500px; }
 .inv-secondary-page.sharing-page { --ui-table-reserved-height: 470px; }
-.inv-secondary-page.catalog-page { --ui-table-reserved-height: 620px; }
-.inv-admin-page.master-history { --ui-table-reserved-height: 500px; }
 
 .inv-core-page .inv-core-table-wrap:not(.registered-suppliers__table-viewport):not(.supplier-table-viewport):not(.history-rates-scroll):not(.ui-table-panel__viewport > *),
 .inv-core-page .overflow {

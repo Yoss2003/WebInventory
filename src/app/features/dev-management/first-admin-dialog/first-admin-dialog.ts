@@ -1,10 +1,10 @@
 import { CommonModule } from '@angular/common';
+import { UiSelectComponent } from '../../../shared/ui/components/ui-select/ui-select.component';
 import { ChangeDetectorRef, Component, inject } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { DevManagementService } from '../../../core/services/dev-management';
 import { MAT_DIALOG_DATA, MatDialogModule, MatDialogRef } from '@angular/material/dialog';
 import { MatIconModule } from '@angular/material/icon';
-import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatSelectModule } from '@angular/material/select';
 import { ExternalConsultasService } from '../../../core/services/external-consultas';
 import { ManagedRole, UserManagementService } from '../../../core/services/user-management';
@@ -33,12 +33,11 @@ export interface FirstAdminCreated {
 @Component({
   selector: 'app-first-admin-dialog',
   standalone: true,
-  imports: [
+  imports: [UiSelectComponent, 
     CommonModule,
     FormsModule,
     MatDialogModule,
     MatIconModule,
-    MatFormFieldModule,
     MatSelectModule,
     UiButtonDirective,
     UiControlDirective,

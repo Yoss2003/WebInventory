@@ -1,4 +1,5 @@
 import { CleanArticleNamePipe } from '../../../shared/clean-article-name.pipe';
+import { UiSelectComponent } from '../../../shared/ui/components/ui-select/ui-select.component';
 import { ToastService } from '../../../shared/toast/toast.service';
 import { InventoryContextService } from '../../../core/services/inventory-context';
 import { InventoryDialogMotionDirective } from '../../../shared/ui/directives/inv-dialog-motion.directive';
@@ -10,7 +11,6 @@ import { MatInputModule } from '@angular/material/input';
 import { MatSelectModule } from '@angular/material/select';
 import { MatIconModule } from '@angular/material/icon';
 import { MatMenuModule } from '@angular/material/menu';
-import { MatFormFieldModule } from '@angular/material/form-field';
 import { ArticleService } from '../../../core/services/articles';
 import { MovementService } from '../../../core/services/movement';
 import { AssignmentService, AssignmentRecipient } from '../../../core/services/assignments';
@@ -28,7 +28,7 @@ import type { ModalActionId, ModalFooterAction, ModalSection } from '../../../sh
 @Component({
   selector: 'app-traspaso-form',
   standalone: true,
-  imports: [InventoryDialogMotionDirective, CleanArticleNamePipe, CommonModule, ReactiveFormsModule, MatDialogModule, MatInputModule, MatSelectModule, MatIconModule, MatMenuModule, MatFormFieldModule, UiButtonDirective, UiControlDirective, ModalShellComponent],
+  imports: [UiSelectComponent, InventoryDialogMotionDirective, CleanArticleNamePipe, CommonModule, ReactiveFormsModule, MatDialogModule, MatInputModule, MatSelectModule, MatIconModule, MatMenuModule, UiButtonDirective, UiControlDirective, ModalShellComponent],
   templateUrl: './traspaso-form.html',
   styleUrl: './traspaso-form.scss'
 })

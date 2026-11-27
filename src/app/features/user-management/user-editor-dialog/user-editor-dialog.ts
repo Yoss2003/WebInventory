@@ -3,8 +3,6 @@ import { ChangeDetectorRef, Component, OnInit, inject } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { MatIconModule } from '@angular/material/icon';
-import { MatFormFieldModule } from '@angular/material/form-field';
-import { MatSelectModule } from '@angular/material/select';
 import { Observable, concat } from 'rxjs';
 
 import { ExternalConsultasService } from '../../../core/services/external-consultas';
@@ -15,6 +13,7 @@ import { InventoryDialogMotionDirective } from '../../../shared/ui/directives/in
 import { UiButtonDirective } from '../../../shared/ui/directives/ui-button.directive';
 import { UiControlDirective } from '../../../shared/ui/directives/ui-control.directive';
 import { ModalShellComponent } from '../../../shared/ui/components/modal-shell/modal-shell.component';
+import { UiSelectComponent, UiSelectOption } from '../../../shared/ui/components/ui-select/ui-select.component';
 import type { ModalActionId, ModalFooterAction, ModalSection } from '../../../shared/ui/models/modal-standard.model';
 
 export interface UserEditorDialogData {
@@ -32,8 +31,8 @@ export type UserEditorDialogResult =
 @Component({
   selector: 'app-user-editor-dialog',
   standalone: true,
-  imports: [CommonModule, FormsModule, MatIconModule, MatFormFieldModule,
-    MatSelectModule, InventoryDialogMotionDirective, UiButtonDirective, UiControlDirective, ModalShellComponent],
+  imports: [CommonModule, FormsModule, MatIconModule,
+    InventoryDialogMotionDirective, UiButtonDirective, UiControlDirective, ModalShellComponent, UiSelectComponent],
   templateUrl: './user-editor-dialog.html',
   styleUrl: './user-editor-dialog.scss'
 })
@@ -75,6 +74,9 @@ export class UserEditorDialogComponent implements OnInit {
   get isEdit(): boolean { return !!this.data.user; }
   get availableRoles(): ManagedRole[] {
     return this.data.roles.filter(role => role.id > 2);
+  }
+  get roleSelectOptions(): UiSelectOption[] {
+    return this.availableRoles.map(role => ({ value: role.id, label: role.name }));
   }
   get canChangeRole(): boolean {
     const user = this.data.user;

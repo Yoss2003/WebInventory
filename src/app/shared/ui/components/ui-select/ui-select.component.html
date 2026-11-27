@@ -1,0 +1,23 @@
+<mat-form-field appearance="outline" class="inventory-select" [class.invalid]="invalid" subscriptSizing="dynamic">
+  <mat-label *ngIf="label">{{label}}</mat-label>
+  <mat-select
+    [id]="id"
+    [value]="value"
+    [disabled]="disabled"
+    [required]="required"
+    [multiple]="multiple"
+    [placeholder]="placeholder"
+    [attr.aria-label]="ariaLabel || label || placeholder || 'Seleccionar opción'"
+    [attr.aria-labelledby]="ariaLabelledby"
+    [panelClass]="panelClass"
+    (selectionChange)="select($event.value)"
+    (openedChange)="handleOpenedChange($event)">
+    <mat-option *ngIf="allowEmpty && !multiple" value="">{{emptyLabel}}</mat-option>
+    <mat-option *ngFor="let option of effectiveOptions" [value]="option.value" [disabled]="option.disabled">
+      {{option.label}}
+    </mat-option>
+  </mat-select>
+</mat-form-field>
+<div class="ui-select-option-source" aria-hidden="true">
+  <ng-content select="mat-option"></ng-content>
+</div>

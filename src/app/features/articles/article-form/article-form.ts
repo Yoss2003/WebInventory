@@ -1,4 +1,5 @@
 import { UiButtonDirective } from '../../../shared/ui/directives/ui-button.directive';
+import { UiSelectComponent } from '../../../shared/ui/components/ui-select/ui-select.component';
 import { ChangeDetectorRef, Component, ElementRef, OnDestroy, OnInit, ViewChild, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { InventoryDialogMotionDirective } from '../../../shared/ui/directives/inv-dialog-motion.directive';
@@ -10,7 +11,6 @@ import { catchError, forkJoin, of } from 'rxjs';
 import type { Observable } from 'rxjs';
 import { MatIconModule } from '@angular/material/icon';
 import { MatSelectModule } from '@angular/material/select';
-import { MatFormFieldModule } from '@angular/material/form-field';
 import { ToastService } from '../../../shared/toast/toast.service';
 import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
 import { BarcodeFormat, BrowserMultiFormatReader } from '@zxing/browser';
@@ -45,8 +45,8 @@ interface AttributeField {
   selector: 'app-article-form',
   standalone: true,
   imports: [
-    UiButtonDirective, UiControlDirective, CommonModule, ReactiveFormsModule, MatDialogModule,
-    MatIconModule, MatSelectModule, MatFormFieldModule, MatTooltipModule,
+    UiButtonDirective, UiSelectComponent, UiControlDirective, CommonModule, ReactiveFormsModule, MatDialogModule,
+    MatIconModule, MatSelectModule, MatTooltipModule,
     InventoryDialogMotionDirective, ModalShellComponent
   ],
   templateUrl: './article-form.html',

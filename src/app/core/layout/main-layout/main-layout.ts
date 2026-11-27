@@ -1,4 +1,5 @@
 import { Component, DestroyRef, PLATFORM_ID, inject, signal } from '@angular/core';
+import { UiSelectComponent } from '../../../shared/ui/components/ui-select/ui-select.component';
 import { CommonModule, isPlatformBrowser } from '@angular/common';
 import { Router, RouterModule, NavigationEnd } from '@angular/router';
 import { MatSidenavModule } from '@angular/material/sidenav';
@@ -33,7 +34,7 @@ interface SidebarGroup {
 }
 @Component({
   selector:'app-main-layout', standalone:true,
-  imports:[CommonModule,RouterModule,MatSidenavModule,MatToolbarModule,MatListModule,MatIconModule,MatButtonModule,MatSelectModule],
+  imports:[UiSelectComponent, CommonModule,RouterModule,MatSidenavModule,MatToolbarModule,MatListModule,MatIconModule,MatButtonModule,MatSelectModule],
   templateUrl:'./main-layout.html',styleUrl:'./main-layout.scss'
 })
 export class MainLayoutComponent {

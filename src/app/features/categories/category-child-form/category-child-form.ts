@@ -1,4 +1,5 @@
 import { UiButtonDirective } from '../../../shared/ui/directives/ui-button.directive';
+import { UiSelectComponent } from '../../../shared/ui/components/ui-select/ui-select.component';
 import { ModalShellComponent } from '../../../shared/ui/components/modal-shell/modal-shell.component';
 import type { ModalActionId, ModalFooterAction, ModalSection } from '../../../shared/ui/models/modal-standard.model';
 import { ChangeDetectorRef, Component, ElementRef, inject, OnInit, ViewChild } from '@angular/core';
@@ -30,7 +31,7 @@ import { UiControlDirective } from '../../../shared/ui/directives/ui-control.dir
 @Component({
     selector: 'app-category-child-form',
     standalone: true,
-    imports: [
+    imports: [UiSelectComponent, 
         UiButtonDirective, UiControlDirective, ModalShellComponent,
         ReactiveFormsModule, MatInputModule, MatButtonModule, MatDialogModule,
         MatSelectModule, MatStepperModule, MatSlideToggleModule, MatCheckboxModule,

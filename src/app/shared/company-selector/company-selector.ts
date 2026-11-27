@@ -1,23 +1,17 @@
 import { CommonModule } from '@angular/common';
 import { Component, computed, input, output } from '@angular/core';
-import { MatFormFieldModule } from '@angular/material/form-field';
-import { MatSelectModule } from '@angular/material/select';
 import { CompanyPublic } from '../../core/models/company-public.model';
+import { UiSelectComponent, UiSelectOption, UiSelectValue } from '../ui/components/ui-select/ui-select.component';
 
 @Component({
   selector: 'app-company-selector', standalone: true,
-  imports: [CommonModule, MatFormFieldModule, MatSelectModule],
+  imports: [CommonModule, UiSelectComponent],
   template: `
-    <mat-form-field appearance="outline" class="inventory-select" subscriptSizing="dynamic">
-      <mat-select [id]="selectId()" aria-label="Empresa / sucursal" [value]="value()"
-        [disabled]="disabled() || loading() || !companies().length"
-        [placeholder]="loading() ? 'Consultando empresas…' : 'Seleccionar empresa'"
-        panelClass="inventory-select-options" (selectionChange)="valueChange.emit($event.value)">
-        <mat-option *ngFor="let company of companies(); trackBy: trackCompany" [value]="company.id">
-          {{ company.businessName }}<span *ngIf="duplicate(company)"> (ID {{ company.id }})</span>
-        </mat-option>
-      </mat-select>
-    </mat-form-field>`,
+    <app-ui-select [id]="selectId()" ariaLabel="Empresa / sucursal" [value]="value()"
+      [options]="companySelectOptions()"
+      [disabled]="disabled() || loading() || !companies().length"
+      [placeholder]="loading() ? 'Consultando empresas…' : 'Seleccionar empresa'"
+      (valueChange)="selectCompany($event)" />`,
   styles: [':host { display: block; min-width: 0; } .inventory-select { width: 100%; }']
 })
 export class CompanySelectorComponent {
@@ -27,6 +21,17 @@ export class CompanySelectorComponent {
   readonly loading = input(false);
   readonly selectId = input('company-selector');
   readonly valueChange = output<number>();
+  readonly companySelectOptions = computed<UiSelectOption[]>(() => {
+    const duplicateNames = this.duplicateNames();
+    return this.companies().map(company => ({
+      value: company.id,
+      label: company.businessName + (duplicateNames.has(this.normalizeName(company.businessName)) ? ' (ID ' + company.id + ')' : '')
+    }));
+  });
+
+  selectCompany(value: UiSelectValue): void {
+    if (typeof value === 'number') this.valueChange.emit(value);
+  }
 
   private readonly duplicateNames = computed(() => {
     const counts = new Map<string, number>();
@@ -36,12 +41,6 @@ export class CompanySelectorComponent {
     }
     return new Set([...counts.entries()].filter(([, count]) => count > 1).map(([name]) => name));
   });
-
-  readonly trackCompany = (_index: number, company: CompanyPublic): number => company.id;
-
-  duplicate(company: CompanyPublic): boolean {
-    return this.duplicateNames().has(this.normalizeName(company.businessName));
-  }
 
   private normalizeName(value: string): string {
     return value.trim().toLocaleLowerCase('es');

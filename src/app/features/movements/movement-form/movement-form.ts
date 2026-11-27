@@ -1,4 +1,5 @@
 import { UiControlDirective } from '../../../shared/ui/directives/ui-control.directive';
+import { UiSelectComponent } from '../../../shared/ui/components/ui-select/ui-select.component';
 import { ModalShellComponent } from '../../../shared/ui/components/modal-shell/modal-shell.component';
 import type { ModalActionId, ModalFooterAction } from '../../../shared/ui/models/modal-standard.model';
 import { ChangeDetectorRef, Component, OnInit, inject } from '@angular/core';
@@ -6,7 +7,6 @@ import { CommonModule } from '@angular/common';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { MatIconModule } from '@angular/material/icon';
-import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatSelectModule } from '@angular/material/select';
 import { ToastService } from '../../../shared/toast/toast.service';
 import { ArticleService } from '../../../core/services/articles';
@@ -17,7 +17,7 @@ import { isUnitConversion, fixedUnitFactor, isMeasuredUnit, validPieces, validQu
 
 @Component({
   selector: 'app-movement-form', standalone: true,
-  imports: [UiControlDirective, CommonModule, ReactiveFormsModule, MatIconModule, MatSelectModule, MatFormFieldModule, LoadingIndicatorComponent, ModalShellComponent],
+  imports: [UiSelectComponent, UiControlDirective, CommonModule, ReactiveFormsModule, MatIconModule, MatSelectModule, LoadingIndicatorComponent, ModalShellComponent],
   templateUrl: './movement-form.html', styleUrl: './movement-form.scss'
 })
 export class MovementForm implements OnInit {

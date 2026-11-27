@@ -34,14 +34,11 @@
 
     <div class="field" *ngIf="data.isManager">
       <label for="new-inv-owner">Propietario / Titular <span class="required">*</span></label>
-      <mat-form-field appearance="outline" class="inventory-select">
-        <mat-select id="new-inv-owner" name="ownerId" [(ngModel)]="ownerId" required
-          panelClass="inventory-select-options">
+      <app-ui-select id="new-inv-owner" name="ownerId" [(ngModel)]="ownerId" [required]="true" panelClass="inventory-select-options">
           <mat-option *ngFor="let user of data.users" [value]="user.id">
             {{ user.firstName ? (user.firstName + ' ' + (user.lastName || '') + ' · ' + user.username) : user.username }}
           </mat-option>
-        </mat-select>
-      </mat-form-field>
+        </app-ui-select>
       <small class="field-hint">Usuario responsable que administrará este almacén.</small>
     </div>
 
