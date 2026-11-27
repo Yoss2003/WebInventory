@@ -5,38 +5,7 @@
     <button type="button" role="tab" [attr.aria-selected]="tab==='parameters'" [class.active]="tab==='parameters'" (click)="switchCatalogTab('parameters')">Parámetros generales</button>
   </div>
   <!-- FASE 4.1.1: PROVEEDORES UI -->
-  <div class="panel supplier-panel" *ngIf="tab==='suppliers'">
-    <form (ngSubmit)="saveSupplier()">
-      <!-- FASE 4.1 RUC AVANZADO -->
-      <h2>{{editingSupplierId ? 'Editar proveedor' : 'Nuevo proveedor'}}</h2>
-      <div class="fields">
-        <!-- FASE 4.1.2: botón compacto al lado del RUC -->
-        <div class="supplier-ruc-control">
-          <div class="supplier-ruc-label"><div class="supplier-ruc-heading"><label for="supplier-ruc">RUC</label><button type="button" class="inv-info-button" (click)="showFiscalInfo()" [disabled]="!hasCurrentRucConsultation" [matTooltip]="hasCurrentRucConsultation ? 'Ver información fiscal adicional' : 'Primero consulta el RUC'" matTooltipPosition="above" aria-label="Ver información fiscal adicional"><mat-icon aria-hidden="true">info_outline</mat-icon></button></div><input id="supplier-ruc" [(ngModel)]="supplier.ruc" name="ruc" maxlength="11" inputmode="numeric" required appUiControl /></div>
-          <button type="button" appUiButton="secondary" class="ruc-lookup supplier-lookup-compact" (click)="lookupRuc()"
-                  [disabled]="lookupRucLoading || saving || supplier.ruc.length !== 11" [uiButtonLoading]="lookupRucLoading"
-                  title="Consultar datos ante SUNAT" aria-label="Consultar RUC ante SUNAT">
-            <mat-icon aria-hidden="true">search</mat-icon>
-            <span>Consultar</span>
-          </button>
-          <button type="button" appUiButton="secondary" class="supplier-communication-trigger" (click)="openSupplierCommunication()" [disabled]="saving || !hasCurrentRucConsultation" [attr.title]="hasCurrentRucConsultation ? 'Agregar datos de comunicación' : 'Primero consulta el RUC'">
-            <mat-icon aria-hidden="true">contact_mail</mat-icon><span>Agregar comunicación</span>
-          </button>
-        </div>
-        <label>Razón social
-          <input [(ngModel)]="supplier.businessName" name="businessName" maxlength="250" required  appUiControl />
-        </label>
-        <label>Dirección <input [(ngModel)]="supplier.address" name="address"  appUiControl /></label>
-        <label>Estado SUNAT <input [(ngModel)]="supplier.estado" name="estado" readonly  appUiControl /></label>
-        <!-- FASE 4.1.2: nota comercial opcional, guardada con el proveedor -->
-        <label class="supplier-relationship-field">Relación con el proveedor
-          <textarea [(ngModel)]="supplier.relationshipDescription" name="relationshipDescription"
-                    maxlength="700" rows="1"
-                    placeholder="Ej.: distribuidor habitual de equipos y accesorios" appUiControl></textarea>
-        </label>
-      </div>
-      <div class="actions"><button type="submit" appUiButton="primary" [uiButtonLoading]="saving" [disabled]="saving">{{editingSupplierId ? 'Guardar cambios' : 'Registrar proveedor'}}</button><button type="button" appUiButton="secondary" (click)="newSupplier()" [disabled]="saving || !hasSupplierFormData"><mat-icon aria-hidden="true">{{editingSupplierId ? "close" : "cleaning_services"}}</mat-icon>{{editingSupplierId ? "Cancelar edición" : "Limpiar campos"}}</button></div>
-    </form>
+  <div class="panel supplier-panel inv-page-workspace" *ngIf="tab==='suppliers'">
     <div class="list supplier-list" aria-label="Proveedores de la empresa">
       <header class="supplier-list-heading">
         <div class="supplier-heading-title">
@@ -46,50 +15,39 @@
             <p>{{suppliers.length}} {{suppliers.length === 1 ? 'proveedor registrado' : 'proveedores registrados'}}</p>
           </div>
         </div>
+        <button *ngIf="canManage" type="button" appUiButton="primary" (click)="openNewSupplier()">
+          <mat-icon aria-hidden="true">add</mat-icon>Nuevo proveedor
+        </button>
       </header>
       <div class="inv-core-toolbar"><app-ui-search [value]="supplierSearch" (valueChange)="supplierSearch=$event;supplierPage=1" placeholder="Buscar proveedor, RUC o contacto" label="Buscar proveedores" /></div>
-      <div class="supplier-table-viewport inv-core-table-wrap" appUiTablePaging="master-suppliers" [uiTablePagingLoading]="initialLoading" [class.supplier-table-viewport--scroll]="suppliers.length > 2"><table class="supplier-table" [class.supplier-table-readonly]="!canManage">
-        <thead><tr>
-          <th scope="col">RUC</th>
-          <th scope="col">Razón social</th>
-          <th scope="col">Estado</th>
-          <th scope="col" *ngIf="canManage" class="supplier-actions-col">Acciones</th>
-        </tr></thead>
-        <tbody>
-          <tr *ngFor="let item of paginatedSuppliers" class="supplier-row-detail" role="button" tabindex="0"
-              [attr.aria-label]="'Ver detalle del proveedor ' + item.businessName"
-              (click)="showSupplierDetail(item)"
-              (keydown.enter)="showSupplierDetail(item)"
-              (keydown.space)="$event.preventDefault();showSupplierDetail(item)">
-            <td data-label="RUC" class="supplier-ruc">{{item.ruc}}</td>
-            <td data-label="Razón social"><strong class="supplier-name" [title]="item.businessName">{{item.businessName}}</strong></td>
-            <td data-label="Estado">
-              <div class="supplier-status-group">
-                <app-ui-status
-                  [label]="item.isActive ? 'Activo' : 'Inactivo'"
-                  [tone]="item.isActive ? 'success' : 'neutral'" />
-              </div>
-            </td>
-            <td data-label="Acciones" *ngIf="canManage" class="supplier-actions-col">
-              <div class="supplier-action-group">
-                <button type="button" class="supplier-icon-button supplier-edit"
-                        (click)="$event.stopPropagation();editSupplier(item)" [disabled]="!item.isActive"
-                        [attr.title]="'Editar ' + item.businessName"
-                        [attr.aria-label]="'Editar proveedor ' + item.businessName" appUiTableAction="normal">
-                  <mat-icon aria-hidden="true">edit</mat-icon>
-                </button>
-                <button type="button" class="supplier-icon-button supplier-disable"
-                        (click)="$event.stopPropagation();disableSupplier(item)" [disabled]="!item.isActive"
-                        [attr.title]="'Desactivar ' + item.businessName"
-                        [attr.aria-label]="'Desactivar proveedor ' + item.businessName" appUiTableAction="danger">
-                  <mat-icon aria-hidden="true">block</mat-icon>
-                </button>
-              </div>
-            </td>
-          </tr>
-        </tbody>
-      </table></div>
-      <app-ui-pagination *ngIf="filteredSuppliers.length" [totalItems]="filteredSuppliers.length" [page]="supplierPage" [pageSize]="supplierPageSize" (pageChange)="supplierPage=$event" (pageSizeChange)="supplierPageSize=$event;supplierPage=1" label="proveedores" loadingId="master-suppliers" />
+      <app-ui-table-panel class="catalog-table-panel supplier-table-panel"
+        *ngIf="filteredSuppliers.length || initialLoading" mode="fill" [loading]="initialLoading" label="proveedores">
+        <div uiTablePanelContent class="supplier-table-viewport inv-core-table-wrap"
+             appUiTablePaging="master-suppliers"
+             [class.supplier-table-viewport--scroll]="filteredSuppliers.length > 2">
+          <table class="supplier-table" [class.supplier-table-readonly]="!canManage">
+                  <thead><tr>
+                    <th scope="col">RUC</th>
+                    <th scope="col">Razón social</th>
+                    <th scope="col">Estado</th>
+                    <th scope="col" *ngIf="canManage" class="supplier-actions-col">Acciones</th>
+                  </tr></thead>
+                  <tbody>
+                    <tr *ngFor="let item of paginatedSuppliers" class="supplier-row-detail" role="button" tabindex="0"
+                        [attr.aria-label]="'Ver detalle del proveedor ' + item.businessName"
+                        (click)="showSupplierDetail(item)"
+                        (keydown.enter)="showSupplierDetail(item)"
+                        (keydown.space)="$event.preventDefault();showSupplierDetail(item)">
+                      <td data-label="RUC" class="supplier-ruc">{{item.ruc}}</td>
+                      <td data-label="Razón social"><strong class="supplier-name" [title]="item.businessName">{{item.businessName}}</strong></td>
+                      <td data-label="Estado">
+                        <div class="supplier-status-group">
+                          <app-ui-status
+                            [label]="item.isActive ? 'Activo' : 'Inactivo'"
+                            [tone]="item.isActive ? 'success' : 'neutral'" />
+                        </div>
+        </div>
+        </app-ui-table-panel>
       <app-ui-empty-state
         *ngIf="!filteredSuppliers.length"
         icon="inventory_2"
@@ -97,34 +55,139 @@
         [hint]="supplierSearch ? 'Prueba otra búsqueda de proveedor o RUC.' : 'Consulta un RUC y registra tu primer proveedor desde el formulario.'" />
     </div>
   </div>
-  <div class="panel" *ngIf="tab==='parameters'">
-    <form (ngSubmit)="saveParameter()">
+  <div class="panel parameter-panel inv-page-workspace" *ngIf="tab==='parameters'">
+    <div class="list parameter-list">
+      <header class="parameter-list-heading">
+        <h2>Parámetros visibles ({{parameters.length}})</h2>
+        <div class="parameter-list-heading__actions">
+          <button type="button" appUiButton="primary" (click)="openNewParameter()" *ngIf="canManage">
+            <mat-icon aria-hidden="true">add</mat-icon>Nuevo parámetro
+          </button>
+          <button type="button" class="inv-info-button"
+                  matTooltip="Los parámetros comunes permiten mantener áreas, tipos de contrato, posiciones y ubicaciones. Las contraseñas, tokens y claves de API tienen una gestión separada."
+                  matTooltipPosition="above" aria-label="Información sobre los parámetros generales">
+            <mat-icon aria-hidden="true">info_outline</mat-icon>
+          </button>
+        </div>
+      </header>
+      <div class="inv-core-toolbar parameter-toolbar">
+        <app-ui-search [value]="parameterSearch" (valueChange)="parameterSearch=$event;parameterPage=1" placeholder="Buscar parámetro" label="Buscar parámetros" />
+        <div class="parameter-type-filter"><app-ui-select [options]="parameterTypeFilterSelectOptions" [value]="parameterTypeFilter"
+          (valueChange)="parameterTypeFilter=String($event ?? '');parameterPage=1" ariaLabel="Filtrar por tipo" /></div>
+      </div>
+      <app-ui-table-panel class="catalog-table-panel parameter-table-panel"
+        *ngIf="filteredParameters.length || initialLoading" mode="fill" [loading]="initialLoading" label="parámetros generales">
+        <div uiTablePanelContent class="parameter-table-viewport inv-core-table-wrap" appUiTablePaging="master-parameters">
+          <table>
+                    <thead>
+                      <tr>
+                        <th scope="col">Tipo</th>
+                        <th scope="col">Nombre</th>
+                        <th scope="col">Valor / descripción</th>
+                        <th scope="col" *ngIf="canManage">Acciones</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr *ngFor="let item of paginatedParameters">
+                        <td>{{item.parameterType}}</td>
+                        <td>{{item.name}}</td>
+                        <td>{{item.description||'—'}}</td>
+                        <td *ngIf="canManage">
+                          <button type="button" appUiTableAction="normal" (click)="editParameter(item)" title="Editar parámetro" aria-label="Editar parámetro">
+                            <mat-icon aria-hidden="true">edit</mat-icon>
+                          </button>
+                          <button type="button" appUiTableAction="danger" (click)="deleteParameter(item)" title="Eliminar parámetro" aria-label="Eliminar parámetro">
+                            <mat-icon aria-hidden="true">delete_outline</mat-icon>
+                          </button>
+                        </td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+        </div>
+        </app-ui-table-panel>
+      <app-ui-empty-state
+        *ngIf="!filteredParameters.length"
+        icon="tune"
+        [message]="parameterSearch ? 'Sin resultados para la búsqueda.' : 'Sin parámetros generales visibles.'" />
+    </div>
+  </div>
+</section>
+
+<ng-template #supplierFormDialog>
+  <app-modal-shell class="catalog-form-modal supplier-form-modal" type="mainForm"
+    [title]="editingSupplierId ? 'Editar proveedor' : 'Nuevo proveedor'"
+    [subtitleVisible]="false" [infoVisible]="false" [sectionsVisible]="false"
+    [closeVisible]="true" [footerActions]="supplierModalActions"
+    [busyActionId]="saving ? 'primary' : null"
+    (actionClicked)="handleSupplierModalAction($event)" (closeRequested)="closeSupplierForm()">
+    <form class="catalog-modal-form" (ngSubmit)="saveSupplier()">
+      <div class="fields supplier-fields">
+        <div class="supplier-ruc-control">
+          <div class="supplier-ruc-label">
+            <div class="supplier-ruc-heading">
+              <label for="supplier-ruc">RUC</label>
+              <button type="button" class="inv-info-button" (click)="showFiscalInfo()" [disabled]="!hasCurrentRucConsultation"
+                [matTooltip]="hasCurrentRucConsultation ? 'Ver información fiscal adicional' : 'Primero consulta el RUC'"
+                matTooltipPosition="above" aria-label="Ver información fiscal adicional"><mat-icon aria-hidden="true">info_outline</mat-icon></button>
+            </div>
+            <input id="supplier-ruc" [(ngModel)]="supplier.ruc" name="ruc" maxlength="11" inputmode="numeric" required appUiControl />
+          </div>
+          <button type="button" appUiButton="secondary" class="ruc-lookup supplier-lookup-compact" (click)="lookupRuc()"
+            [disabled]="lookupRucLoading || saving || supplier.ruc.length !== 11" [uiButtonLoading]="lookupRucLoading"
+            title="Consultar datos ante SUNAT" aria-label="Consultar RUC ante SUNAT">
+            <mat-icon aria-hidden="true">search</mat-icon><span>Consultar</span>
+          </button>
+          <button type="button" appUiButton="secondary" class="supplier-communication-trigger" (click)="openSupplierCommunication()"
+            [disabled]="saving || !hasCurrentRucConsultation" [attr.title]="hasCurrentRucConsultation ? 'Agregar datos de comunicación' : 'Primero consulta el RUC'">
+            <mat-icon aria-hidden="true">contact_mail</mat-icon><span>Agregar comunicación</span>
+          </button>
+        </div>
+        <label>Razón social
+          <input [(ngModel)]="supplier.businessName" name="businessName" maxlength="250" required appUiControl />
+        </label>
+        <label>Dirección <input [(ngModel)]="supplier.address" name="address" appUiControl /></label>
+        <label>Estado SUNAT <input [(ngModel)]="supplier.estado" name="estado" readonly appUiControl /></label>
+        <label class="supplier-relationship-field">Relación con el proveedor
+          <textarea [(ngModel)]="supplier.relationshipDescription" name="relationshipDescription"
+            maxlength="700" rows="1" placeholder="Ej.: distribuidor habitual de equipos y accesorios" appUiControl></textarea>
+        </label>
+      </div>
+      <div class="catalog-modal-inline-actions" *ngIf="!editingSupplierId">
+        <button type="button" appUiButton="secondary" (click)="clearSupplierFields()" [disabled]="saving || !hasSupplierFormData">
+          <mat-icon aria-hidden="true">cleaning_services</mat-icon>Limpiar campos
+        </button>
+      </div>
+    </form>
+  </app-modal-shell>
+</ng-template>
+
+<ng-template #parameterFormDialog>
+  <app-modal-shell class="catalog-form-modal parameter-form-modal" type="mainForm"
+    [title]="editingParameterId ? 'Editar parámetro general' : 'Nuevo parámetro general'"
+    [subtitleVisible]="false" [infoVisible]="false" [sectionsVisible]="false"
+    [closeVisible]="true" [footerActions]="parameterModalActions"
+    [busyActionId]="saving ? 'primary' : null"
+    (actionClicked)="handleParameterModalAction($event)" (closeRequested)="closeParameterForm()">
+    <form class="catalog-modal-form" (ngSubmit)="saveParameter()">
       <div class="parameter-form-heading">
         <h2>{{editingParameterId ? 'Editar parámetro' : 'Nuevo parámetro general'}}</h2>
         <button type="button" class="inv-info-button"
-                matTooltip="Para parámetros comunes. Las contraseñas, tokens y claves de API tienen una gestión separada."
-                matTooltipPosition="above"
-                aria-label="Información sobre los parámetros generales">
+          matTooltip="Para parámetros comunes. Las contraseñas, tokens y claves de API tienen una gestión separada."
+          matTooltipPosition="above" aria-label="Información sobre los parámetros generales">
           <mat-icon aria-hidden="true">info_outline</mat-icon>
         </button>
       </div>
-      <div class="fields">
+      <div class="fields parameter-fields">
         <div class="parameter-type-field" *ngIf="!isSystemManagedParameter; else systemParameterType">
-          <label for="parameter-type">Tipo</label>
-          <mat-form-field appearance="outline" class="inventory-select">
-            <mat-select id="parameter-type" aria-label="Tipo" [(ngModel)]="parameter.parameterType"
-                        name="parameterType" required placeholder="Selecciona un tipo"
-                        panelClass="inventory-select-options">
-              <mat-option *ngFor="let type of parameterTypeOptions" [value]="type">
-                {{parameterTypeLabel(type)}}
-              </mat-option>
-            </mat-select>
-          </mat-form-field>
+          <label>Tipo</label>
+          <app-ui-select [options]="parameterTypeSelectOptions" [value]="parameter.parameterType"
+            (valueChange)="parameter.parameterType=String($event ?? '')"
+            ariaLabel="Tipo" placeholder="Selecciona un tipo" />
         </div>
         <ng-template #systemParameterType>
           <div class="parameter-type-locked">
-            <span>Tipo</span>
-            <strong>Moneda base · configuración del sistema</strong>
+            <span>Tipo</span><strong>Moneda base · configuración del sistema</strong>
           </div>
         </ng-template>
         <label>Nombre
@@ -134,55 +197,8 @@
           <textarea [(ngModel)]="parameter.description" name="description" rows="2" appUiControl></textarea>
         </label>
       </div>
-      <div class="actions">
-        <button type="submit" appUiButton="primary" [uiButtonLoading]="saving" [disabled]="saving">
-          {{editingParameterId ? 'Guardar cambios' : 'Registrar parámetro'}}
-        </button>
-        <button *ngIf="editingParameterId" type="button" appUiButton="secondary" (click)="newParameter()">
-          Cancelar edición
-        </button>
-      </div>
     </form>
-    <div class="list">
-      <h2>Parámetros visibles ({{parameters.length}})</h2>
-      <div class="inv-core-toolbar parameter-toolbar">
-        <app-ui-search [value]="parameterSearch" (valueChange)="parameterSearch=$event;parameterPage=1" placeholder="Buscar parámetro" label="Buscar parámetros" />
-        <mat-form-field appearance="outline" class="inventory-select parameter-type-filter"><mat-label>Filtrar por tipo</mat-label><mat-select id="parameter-type-filter" [(ngModel)]="parameterTypeFilter" (ngModelChange)="parameterPage=1" name="parameterTypeFilter" panelClass="inventory-select-options"><mat-option value="">Todos los tipos</mat-option><mat-option *ngFor="let type of parameterFilterOptions" [value]="type">{{parameterTypeLabel(type)}}</mat-option></mat-select></mat-form-field>
-      </div>
-      <div class="parameter-table-viewport inv-core-table-wrap" appUiTablePaging="master-parameters" [uiTablePagingLoading]="initialLoading">
-        <table>
-          <thead>
-            <tr>
-              <th scope="col">Tipo</th>
-              <th scope="col">Nombre</th>
-              <th scope="col">Valor / descripción</th>
-              <th scope="col" *ngIf="canManage">Acciones</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr *ngFor="let item of paginatedParameters">
-              <td>{{item.parameterType}}</td>
-              <td>{{item.name}}</td>
-              <td>{{item.description||'—'}}</td>
-              <td *ngIf="canManage">
-                <button type="button" appUiTableAction="normal" (click)="editParameter(item)" title="Editar parámetro" aria-label="Editar parámetro">
-                  <mat-icon aria-hidden="true">edit</mat-icon>
-                </button>
-                <button type="button" appUiTableAction="danger" (click)="deleteParameter(item)" title="Eliminar parámetro" aria-label="Eliminar parámetro">
-                  <mat-icon aria-hidden="true">delete_outline</mat-icon>
-                </button>
-              </td>
-            </tr>
-          </tbody>
-        </table>
-      </div>
-      <app-ui-pagination *ngIf="filteredParameters.length" [totalItems]="filteredParameters.length" [page]="parameterPage" [pageSize]="parameterPageSize" (pageChange)="parameterPage=$event" (pageSizeChange)="parameterPageSize=$event;parameterPage=1" label="parámetros" loadingId="master-parameters" />
-      <app-ui-empty-state
-        *ngIf="!filteredParameters.length"
-        icon="tune"
-        [message]="parameterSearch ? 'Sin resultados para la búsqueda.' : 'Sin parámetros generales visibles.'" />
-    </div>
-  </div>
-</section>
+  </app-modal-shell>
+</ng-template>
 
 <!-- /* FASE 4.1 */ -->
