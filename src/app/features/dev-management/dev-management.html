@@ -169,11 +169,9 @@
               <div class="fields-grid">
                 <div class="field">
                   <label class="field-label" for="dev-license-plan">Tipo de licencia <span class="required" *ngIf="!editing">*</span></label>
-                  <mat-form-field *ngIf="!editing; else currentPlan" appearance="outline" class="inventory-select dev-select">
-                    <mat-select id="dev-license-plan" name="plan" [(ngModel)]="form.plan" (selectionChange)="onPlanChanged()" panelClass="inventory-select-options">
+                  <app-ui-select *ngIf="!editing; else currentPlan" class="dev-select" id="dev-license-plan" name="plan" [(ngModel)]="form.plan" (selectionChange)="onPlanChanged()" panelClass="inventory-select-options">
                       <mat-option *ngFor="let plan of plans" [value]="plan">{{plan}}</mat-option>
-                    </mat-select>
-                  </mat-form-field>
+                    </app-ui-select>
                   <ng-template #currentPlan><input class="read-only" [value]="form.plan" readonly aria-label="Plan actual"  appUiControl /></ng-template>
                 </div>
                 <label class="field"><span class="field-label">Usuarios activos</span>
@@ -204,12 +202,9 @@
           <div *ngIf="editing" class="renew-box" aria-label="Renovar licencia">
             <div><h3>Renovación independiente</h3><p>Renovar añade tiempo al vencimiento actual si aún está vigente. Si venció, la nueva vigencia inicia hoy.</p></div>
             <div class="renew-controls">
-              <mat-form-field appearance="outline" class="inventory-select dev-select">
-                <mat-select [(ngModel)]="renewPlan" [ngModelOptions]="{standalone:true}" panelClass="inventory-select-options" aria-label="Plan para renovar"
-                  [disabled]="isSelectedProtected || !selectedCompany?.isActive || renewing || saving">
+              <app-ui-select class="dev-select" [(ngModel)]="renewPlan" [ngModelOptions]="{standalone:true}" panelClass="inventory-select-options" aria-label="Plan para renovar" [disabled]="isSelectedProtected || !selectedCompany?.isActive || renewing || saving">
                   <mat-option *ngFor="let plan of plans" [value]="plan">{{plan}}</mat-option>
-                </mat-select>
-              </mat-form-field>
+                </app-ui-select>
               <button type="button" appUiButton="primary" (click)="renewLicense()"
                 [disabled]="renewing || saving || isSelectedProtected || !selectedCompany?.isActive" [uiButtonLoading]="renewing" [uiButtonLoadingText]="'Renovando...'">
                 <mat-icon>event_repeat</mat-icon> Renovar {{renewDurationLabel}}
