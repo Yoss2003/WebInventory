@@ -18,11 +18,9 @@
       <main class="movement-body">
 
       <div class="field"><label>Artículo <span>*</span></label>
-        <mat-form-field appearance="outline" class="inventory-select">
-          <mat-select formControlName="articleId" placeholder="Seleccionar artículo" panelClass="inventory-select-options">
+        <app-ui-select formControlName="articleId" placeholder="Seleccionar artículo" panelClass="inventory-select-options">
             <mat-option *ngFor="let a of articles" [value]="a.id" [disabled]="isEntry && a.tracking === 1">{{ a.name }} · {{ a.stock }} {{ a.measurementUnit }}{{isEntry && a.tracking === 1 ? ' (gestionar por series)' : ''}}</mat-option>
-          </mat-select>
-        </mat-form-field>
+          </app-ui-select>
       </div>
       <!-- WEBINVENTORY_UNIDADES_INGRESOS_2026_V1: la cantidad es de compra, el movimiento se registra en stock -->
       <div class="movement-grid">
