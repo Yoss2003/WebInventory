@@ -51,7 +51,7 @@
 .active-inventory-label{font-size:12px;color:#c5d6e3;white-space:nowrap}
 app-ui-select.active-inventory-select{display:block;flex:0 1 245px;width:min(245px,36vw);max-width:min(245px,36vw);min-width:115px;padding:0;border:0;border-radius:0;background:transparent;font-size:12px}
 app-ui-select.active-inventory-select:focus-within{outline:2px solid var(--inv-brand);outline-offset:2px;border-radius:8px}
-app-ui-select.active-inventory-select:disabled{opacity:.6}
+app-ui-select.active-inventory-select.is-disabled{opacity:.6}
 @media(max-width:700px){.active-inventory-label{display:none}app-ui-select.active-inventory-select{width:min(42vw,245px);max-width:42vw;min-width:90px}}
 
 /* UX_FINAL_SIDEBAR */
