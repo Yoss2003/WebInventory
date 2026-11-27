@@ -1,4 +1,5 @@
 import { UiControlDirective } from '../../shared/ui/directives/ui-control.directive';
+import { UiSelectComponent } from '../../shared/ui/components/ui-select/ui-select.component';
 import { UiButtonDirective } from '../../shared/ui/directives/ui-button.directive';
 import { UiTableActionDirective } from '../../shared/ui/directives/ui-table-action.directive';
 import { UiPageHeadingComponent } from '../../shared/ui/components/ui-page-heading.component';
@@ -7,7 +8,6 @@ import { TemplateRef, ViewChild } from '@angular/core';
 import { ChangeDetectorRef, Component, OnDestroy, OnInit, PLATFORM_ID, inject } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
-import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatSelectModule } from '@angular/material/select';
 import { MatIconModule } from '@angular/material/icon';
 import { MatDialog, MatDialogRef } from '@angular/material/dialog';
@@ -31,7 +31,7 @@ import { ModalShellComponent } from '../../shared/ui/components/modal-shell/moda
 @Component({
   selector: 'app-dev-management',
   standalone: true,
-  imports: [UiControlDirective, UiButtonDirective, UiTableActionDirective, UiPageHeadingComponent, UiEmptyStateComponent, UiStatusComponent, CommonModule, FormsModule, MatFormFieldModule, MatSelectModule, MatIconModule,UiSearchComponent,UiTablePagingDirective, UiPaginationComponent, ModalShellComponent],
+  imports: [UiSelectComponent, UiControlDirective, UiButtonDirective, UiTableActionDirective, UiPageHeadingComponent, UiEmptyStateComponent, UiStatusComponent, CommonModule, FormsModule, MatSelectModule, MatIconModule,UiSearchComponent,UiTablePagingDirective, UiPaginationComponent, ModalShellComponent],
   templateUrl: './dev-management.html',
   styleUrl: './dev-management.scss'
 })
