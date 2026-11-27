@@ -1,6 +1,7 @@
 import { UiButtonDirective } from '../../shared/ui/directives/ui-button.directive';
 import { UiPageHeadingComponent } from '../../shared/ui/components/ui-page-heading.component';
 import { UiPaginationComponent } from '../../shared/ui/components/ui-pagination/ui-pagination.component';
+import { UiEmptyStateComponent } from '../../shared/ui/components/ui-empty-state.component';
 import { UiTablePanelComponent } from '../../shared/ui/components/ui-table-panel/ui-table-panel.component';
 import { UiSelectComponent, UiSelectOption, UiSelectValue } from '../../shared/ui/components/ui-select/ui-select.component';
 import { UiTablePagingDirective } from '../../shared/ui/directives/ui-table-paging.directive';
@@ -64,6 +65,7 @@ interface HistoryUser {
     UiPageHeadingComponent,
     UiSelectComponent,
     UiTablePanelComponent,
+    UiEmptyStateComponent,
     UiTablePagingDirective, UiPaginationComponent,
     CleanArticleNamePipe,
     CommonModule,
