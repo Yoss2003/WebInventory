@@ -151,6 +151,91 @@
   min-width: 0;
 }
 
+.inv-secondary-page.catalog-page .catalog-form-modal .supplier-ruc-control {
+  display: grid;
+  grid-column: 1 / -1;
+  grid-template-columns: minmax(0, 1fr) auto auto;
+  gap: 10px;
+  align-items: end;
+  max-width: 700px;
+  min-width: 0;
+}
+
+.inv-secondary-page.catalog-page .catalog-form-modal .supplier-ruc-label {
+  display: grid;
+  gap: 5px;
+  min-width: 0;
+}
+
+.inv-secondary-page.catalog-page .catalog-form-modal .supplier-ruc-heading {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  min-height: 20px;
+  color: #c8d9e8;
+  font-size: 12px;
+}
+
+.inv-secondary-page.catalog-page .catalog-form-modal .supplier-ruc-heading label {
+  display: inline;
+  margin: 0;
+}
+
+.inv-secondary-page.catalog-page .catalog-form-modal .supplier-ruc-control input {
+  height: 39px;
+  padding: 8px 11px;
+  border: 1px solid #5b7588;
+  background: var(--secondary-input);
+  color: #eff6fb;
+}
+
+.inv-secondary-page.catalog-page .catalog-form-modal .supplier-ruc-control button {
+  height: 39px;
+  min-height: 39px;
+  white-space: nowrap;
+}
+
+.inv-secondary-page.catalog-page .catalog-form-modal .supplier-communication-trigger {
+  padding-inline: 10px;
+}
+
+.inv-secondary-page.catalog-page .catalog-form-modal .parameter-form-heading {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  min-width: 0;
+}
+
+.inv-secondary-page.catalog-page .catalog-form-modal .parameter-form-heading h2 {
+  margin: 0;
+  font-size: 16px;
+}
+
+.inv-secondary-page.catalog-page .catalog-form-modal .parameter-type-field,
+.inv-secondary-page.catalog-page .catalog-form-modal .parameter-type-locked {
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  gap: 5px;
+  min-width: 0;
+  color: #c8d9e8;
+  font-size: 12px;
+}
+
+.inv-secondary-page.catalog-page .catalog-form-modal .parameter-type-locked strong {
+  display: flex;
+  align-items: center;
+  box-sizing: border-box;
+  min-height: var(--inv-control-height, 39px);
+  padding: 9px 12px;
+  border: 1px solid var(--inv-border, #455d6f);
+  border-radius: var(--inv-radius-control, 9px);
+  background: var(--inv-input-bg, #101c26);
+  color: var(--inv-muted, #abc0d1);
+  font-size: 12px;
+  font-weight: 600;
+}
+
 .inv-secondary-page.catalog-page .catalog-form-modal .fields > label {
   display: flex;
   flex-direction: column;
@@ -267,6 +352,8 @@
 }
 
 @media (max-width: 560px) {
+  .inv-secondary-page.catalog-page .catalog-form-modal .supplier-ruc-control { grid-template-columns: minmax(0, 1fr) auto; }
+  .inv-secondary-page.catalog-page .catalog-form-modal .supplier-communication-trigger { grid-column: 1 / -1; }
   .inv-secondary-page.catalog-page .catalog-form-modal .fields,
   .inv-secondary-page.catalog-page .catalog-form-modal .supplier-fields {
     grid-template-columns: minmax(0, 1fr);
