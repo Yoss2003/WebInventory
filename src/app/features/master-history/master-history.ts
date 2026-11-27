@@ -129,10 +129,20 @@ export class MasterHistoryComponent implements OnInit {
   to = '';
   error = '';
 
-  get fromDate(): Date | null { return this.from ? new Date(this.from + 'T12:00:00') : null; }
-  get toDate(): Date | null { return this.to ? new Date(this.to + 'T12:00:00') : null; }
-  setFromDate(date: Date | null): void { this.from = this.dateOnly(date); }
-  setToDate(date: Date | null): void { this.to = this.dateOnly(date); }
+  // Mantener referencias estables: Angular Material recibe estos valores en cada
+  // ciclo de detección y no debe recibir una instancia Date nueva continuamente.
+  fromDate: Date | null = null;
+  toDate: Date | null = null;
+
+  setFromDate(date: Date | null): void {
+    this.fromDate = date;
+    this.from = this.dateOnly(date);
+  }
+
+  setToDate(date: Date | null): void {
+    this.toDate = date;
+    this.to = this.dateOnly(date);
+  }
 
   private dateOnly(date: Date | null): string {
     if (!date || Number.isNaN(date.getTime())) return '';
