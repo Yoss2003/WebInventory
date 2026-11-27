@@ -98,15 +98,7 @@
       icon="apartment" [sections]="[]" [sectionsVisible]="false"
       [infoVisible]="false" [closeVisible]="true" [footerVisible]="false"
       (closeRequested)="closeCompanyEditor()">
-        <section class="dev-card company-editor" aria-label="Formulario de empresa">
-          <div class="section-head">
-            <div>
-              <h2>{{editing ? 'Editar empresa' : 'Registrar empresa'}}</h2>
-              <small>{{editing ? 'Los cambios empresariales no renuevan la licencia.' : 'El vencimiento se calculará en la API al registrar.'}}</small>
-            </div>
-            <button type="button" appUiButton="secondary" (click)="closeCompanyEditor()" [disabled]="saving || renewing"><mat-icon>close</mat-icon> Cerrar</button>
-          </div>
-      
+        <section class="dev-modal-content company-editor" aria-label="Formulario de empresa">
           <form (ngSubmit)="save()" class="dev-form" #companyForm="ngForm">
             <fieldset class="form-lock" [disabled]="saving || renewing" [attr.aria-busy]="saving">
             <div class="editor-group">
@@ -222,32 +214,33 @@
       icon="lock_reset" [sections]="[]" [sectionsVisible]="false"
       [infoVisible]="false" [closeVisible]="true" [footerVisible]="false"
       (closeRequested)="closeRecoveryRequests()">
-        <section class="dev-card" aria-label="Solicitudes de recuperación">
-          <div class="section-head section-head--table"><div><h2>Solicitudes de recuperación <span class="count-chip">{{pending.length}}</span></h2><small>Revisa las solicitudes antes de aprobar o rechazar el acceso.</small></div>
+        <section class="dev-modal-content recovery-modal-content" aria-label="Solicitudes de recuperación">
+          <div class="dev-modal-toolbar">
+            <span class="count-chip">{{pending.length}} pendientes</span>
             <button type="button" appUiButton="secondary" (click)="loadPending()" [disabled]="loadingPending" [uiButtonLoading]="loadingPending" [uiButtonLoadingText]="'Cargando...'">
-                  <mat-icon>refresh</mat-icon> Actualizar
-                  </button>
-            <button type="button" appUiButton="secondary" (click)="closeRecoveryRequests()">
-              <mat-icon>close</mat-icon>Cerrar
+              <mat-icon>refresh</mat-icon>Actualizar
             </button>
           </div>
           <p *ngIf="pendingError" class="inline-alert inline-alert--error" role="alert"><mat-icon>error_outline</mat-icon>{{pendingError}}</p>
-          <div *ngIf="pending.length || loadingPending" class="overflow recovery-table inv-core-table-wrap" appUiTablePaging="dev-pending" [uiTablePagingLoading]="loadingPending"><table>
-            <thead><tr><th>Usuario</th><th>Empresa</th><th>Fecha de solicitud</th><th>Estado</th><th>Acciones</th></tr></thead>
-            <tbody>
-              <tr *ngFor="let r of paginatedPending; trackBy: trackPending">
-                <td class="company-cell"><strong>{{r.username}}</strong><small>ID {{r.userId}}</small></td>
-                <td>{{r.company}}</td>
-                <td>{{r.requestedAt | date:'dd/MM/yyyy HH:mm'}}</td>
-                <td><app-ui-status label="Pendiente" tone="warning" /></td>
-                <td class="action-cell"><div class="table-actions"><button type="button" appUiTableAction="success" class="action-edit" (click)="review(r,true)" [disabled]="workingRecoveryId !== null"><mat-icon>check_circle</mat-icon> Aprobar</button><button type="button" appUiTableAction="danger" class="danger-button" (click)="review(r,false)" [disabled]="workingRecoveryId !== null"><mat-icon>close</mat-icon> Rechazar</button></div></td>
-              </tr>
-            </tbody>
-          </table></div>
-          <app-ui-pagination *ngIf="pending.length" [totalItems]="pending.length" [page]="pendingPage" [pageSize]="pendingPageSize" (pageChange)="pendingPage=$event" (pageSizeChange)="pendingPageSize=$event;pendingPage=1" label="solicitudes" loadingId="dev-pending" />
-          <app-ui-empty-state
-            *ngIf="!pending.length && !loadingPending"
-            icon="task_alt"
+          <app-ui-table-panel class="inv-page-table-panel dev-recovery-table-panel"
+            *ngIf="pending.length || loadingPending" mode="fill" [loading]="loadingPending" label="solicitudes de recuperación">
+            <div uiTablePanelContent class="overflow recovery-table inv-core-table-wrap" appUiTablePaging="dev-pending">
+              <table>
+                <thead><tr><th>Usuario</th><th>Empresa</th><th>Fecha de solicitud</th><th>Estado</th><th>Acciones</th></tr></thead>
+                <tbody>
+                  <tr *ngFor="let r of paginatedPending; trackBy: trackPending">
+                    <td class="company-cell"><strong>{{r.username}}</strong><small>ID {{r.userId}}</small></td>
+                    <td>{{r.company}}</td>
+                    <td>{{r.requestedAt | date:'dd/MM/yyyy HH:mm'}}</td>
+                    <td><app-ui-status label="Pendiente" tone="warning" /></td>
+                    <td class="action-cell"><div class="table-actions"><button type="button" appUiTableAction="success" class="action-edit" (click)="review(r,true)" [disabled]="workingRecoveryId !== null"><mat-icon>check_circle</mat-icon>Aprobar</button><button type="button" appUiTableAction="danger" class="danger-button" (click)="review(r,false)" [disabled]="workingRecoveryId !== null"><mat-icon>close</mat-icon>Rechazar</button></div></td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+            <app-ui-pagination *ngIf="pending.length" [totalItems]="pending.length" [page]="pendingPage" [pageSize]="pendingPageSize" (pageChange)="pendingPage=$event" (pageSizeChange)="pendingPageSize=$event;pendingPage=1" label="solicitudes" loadingId="dev-pending" />
+          </app-ui-table-panel>
+          <app-ui-empty-state *ngIf="!pending.length && !loadingPending" icon="task_alt"
             [message]="pendingError ? 'No se pudieron consultar las solicitudes' : 'Todo al día'"
             [hint]="pendingError ? '' : 'No hay solicitudes de recuperación pendientes.'" />
         </section>
