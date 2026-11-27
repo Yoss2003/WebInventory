@@ -1,0 +1,38 @@
+:host {
+  display: flex;
+  flex: 1 1 auto;
+  flex-direction: column;
+  min-width: 0;
+  min-height: 0;
+  width: 100%;
+}
+.ui-table-panel {
+  display: flex;
+  flex: 1 1 auto;
+  flex-direction: column;
+  min-width: 0;
+  min-height: 0;
+  width: 100%;
+}
+.ui-table-panel__viewport {
+  position: relative;
+  display: flex;
+  flex: 1 1 auto;
+  min-width: 0;
+  min-height: 0;
+  overflow: hidden;
+}
+:host ::ng-deep .ui-table-panel__viewport > [uiTablePanelContent] {
+  display: block;
+  flex: 1 1 auto;
+  width: 100%;
+  min-width: 0;
+  min-height: 0;
+  max-height: none !important;
+  overflow: auto;
+}
+.ui-table-panel--fill { height: 100%; }
+.ui-table-panel--content { flex: 0 0 auto; height: auto; min-height: auto; }
+.ui-table-panel--content .ui-table-panel__viewport { flex: 0 0 auto; min-height: auto; }
+:host ::ng-deep .ui-table-panel--content .ui-table-panel__viewport > [uiTablePanelContent] { flex: 0 0 auto; min-height: auto; }
+.ui-table-panel__pagination { flex: 0 0 auto; min-width: 0; }

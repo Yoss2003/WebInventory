@@ -136,3 +136,22 @@
   border: 1px solid #538469; border-radius: 10px; background: #203e31;
   color: #b5f0c5; padding: 11px 13px; font-size: 12px; line-height: 1.5;
 }
+
+.remember-me {
+  display: inline-flex;
+  align-items: center;
+  align-self: flex-start;
+  gap: 9px;
+  margin-top: -3px;
+  color: #bfd0dd;
+  font-size: 12px;
+  font-weight: 600;
+  cursor: pointer;
+}
+.remember-me input {
+  width: 16px;
+  height: 16px;
+  margin: 0;
+  accent-color: var(--company-accent);
+  cursor: pointer;
+}

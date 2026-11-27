@@ -18,8 +18,7 @@
     </nav>
     <div class="assignment-tab-content">
       <div *ngIf="errorMessage" class="assignment-state assignment-state--error" role="alert"><mat-icon>error_outline</mat-icon>{{errorMessage}}</div>
-      <div *ngIf="loading && !hasLoaded" class="assignment-state" role="status"><app-loading-indicator message="Cargando asignaciones..." /></div>
-      <div class="assignment-table-wrap inv-core-table-wrap" appUiTablePaging="assignments-history" *ngIf="hasLoaded && filteredRows.length" [class.assignment-table-wrap--scroll]="filteredRows.length > pageSize">
+      <div class="assignment-table-wrap inv-core-table-wrap" appUiTablePaging="assignments-history" [uiTablePagingLoading]="loading" *ngIf="loading || (hasLoaded && filteredRows.length)" [class.assignment-table-wrap--scroll]="filteredRows.length > pageSize">
         <table class="assignment-table"><thead><tr><th>Artículo</th><th>Responsable / entidad</th><th>Fecha</th><th>Entregado</th><th>Pendiente</th><th>Estado</th><th class="assignment-table__end">Detalle</th></tr></thead>
           <tbody><tr *ngFor="let row of paginatedRows" (click)="openDetail(row)" (keydown.enter)="openDetail(row)" tabindex="0" role="button" [attr.aria-label]="'Ver asignación de '+row.articleName"><td><strong>{{row.articleName | cleanArticleName}}</strong><small>{{row.articleCode}}</small></td><td>{{row.recipientName}}</td><td>{{row.assignedAt|date:'dd/MM/yyyy HH:mm'}}</td><td>{{row.quantity|number:'1.0-2'}}</td><td>{{row.remainingQuantity|number:'1.0-2'}}</td><td><span class="assignment-tag">{{row.status}}</span></td><td class="assignment-table__end"><mat-icon>chevron_right</mat-icon></td></tr></tbody>
         </table>

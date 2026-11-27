@@ -4,7 +4,6 @@
     <button type="button" role="tab" [attr.aria-selected]="tab==='suppliers'" [class.active]="tab==='suppliers'" (click)="switchCatalogTab('suppliers')">Proveedores</button>
     <button type="button" role="tab" [attr.aria-selected]="tab==='parameters'" [class.active]="tab==='parameters'" (click)="switchCatalogTab('parameters')">Parámetros generales</button>
   </div>
-  <app-loading-indicator *ngIf="initialLoading" message="Consultando catálogos..." />
   <!-- FASE 4.1.1: PROVEEDORES UI -->
   <div class="panel supplier-panel" *ngIf="tab==='suppliers'">
     <form (ngSubmit)="saveSupplier()">
@@ -49,7 +48,7 @@
         </div>
       </header>
       <div class="inv-core-toolbar"><app-ui-search [value]="supplierSearch" (valueChange)="supplierSearch=$event;supplierPage=1" placeholder="Buscar proveedor, RUC o contacto" label="Buscar proveedores" /></div>
-      <div class="supplier-table-viewport inv-core-table-wrap" appUiTablePaging="master-suppliers" [class.supplier-table-viewport--scroll]="suppliers.length > 2"><table class="supplier-table" [class.supplier-table-readonly]="!canManage">
+      <div class="supplier-table-viewport inv-core-table-wrap" appUiTablePaging="master-suppliers" [uiTablePagingLoading]="initialLoading" [class.supplier-table-viewport--scroll]="suppliers.length > 2"><table class="supplier-table" [class.supplier-table-readonly]="!canManage">
         <thead><tr>
           <th scope="col">RUC</th>
           <th scope="col">Razón social</th>
@@ -150,7 +149,7 @@
         <app-ui-search [value]="parameterSearch" (valueChange)="parameterSearch=$event;parameterPage=1" placeholder="Buscar parámetro" label="Buscar parámetros" />
         <mat-form-field appearance="outline" class="inventory-select parameter-type-filter"><mat-label>Filtrar por tipo</mat-label><mat-select id="parameter-type-filter" [(ngModel)]="parameterTypeFilter" (ngModelChange)="parameterPage=1" name="parameterTypeFilter" panelClass="inventory-select-options"><mat-option value="">Todos los tipos</mat-option><mat-option *ngFor="let type of parameterFilterOptions" [value]="type">{{parameterTypeLabel(type)}}</mat-option></mat-select></mat-form-field>
       </div>
-      <div class="parameter-table-viewport inv-core-table-wrap" appUiTablePaging="master-parameters">
+      <div class="parameter-table-viewport inv-core-table-wrap" appUiTablePaging="master-parameters" [uiTablePagingLoading]="initialLoading">
         <table>
           <thead>
             <tr>

@@ -89,6 +89,7 @@ export class Login implements OnInit {
   loginError = '';
   requiresTwoFactor = false;
   showPassword = false;
+  rememberMe = false;
   logoFailed = false;
 
   ngOnInit(): void { this.companyTheme.reset(); this.loadCompanies(); }
@@ -174,7 +175,8 @@ export class Login implements OnInit {
       username: String(raw.username).trim(),
       password: String(raw.password),
       companyId: id,
-      twoFactorCode: this.requiresTwoFactor ? String(raw.twoFactorCode).trim() : undefined
+      twoFactorCode: this.requiresTwoFactor ? String(raw.twoFactorCode).trim() : undefined,
+      rememberMe: this.rememberMe
     };
     if (!payload.username) {
       this.loginError = 'Ingresa un nombre de usuario válido.';

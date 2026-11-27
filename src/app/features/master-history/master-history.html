@@ -13,7 +13,6 @@
     <button type="submit" appUiButton="primary" [disabled]="loading">Filtrar</button>
   </form>
   <div role="alert" *ngIf="optionsError" class="error">{{optionsError}}</div>
-  <div role="status" *ngIf="loading" class="status">Consultando movimientos...</div>
   <div role="alert" *ngIf="error" class="error">{{error}}</div>
   <div class="table-wrapper inv-core-table-wrap" appUiTablePaging="master-history" [uiTablePagingLoading]="loading" *ngIf="!error && (items.length > 0 || loading)">
     <table>

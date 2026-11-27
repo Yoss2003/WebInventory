@@ -1,4 +1,4 @@
-import { Injectable, inject } from '@angular/core';
+import { Injectable, TemplateRef, inject } from '@angular/core';
 import type { ComponentType } from '@angular/cdk/portal';
 import { MatDialog, MatDialogConfig, MatDialogRef } from '@angular/material/dialog';
 import { MODAL_STANDARDS } from '../config/modal-standards.config';
@@ -87,6 +87,14 @@ export class ModalStandardService {
     overrides: MatDialogConfig<D> = {}
   ): MatDialogRef<T, R> {
     return this.dialog.open<T, D, R>(component, this.createDialogConfig(type, overrides));
+  }
+
+  openTemplate<C = unknown, D = any, R = any>(
+    template: TemplateRef<C>,
+    type: ModalStandardType,
+    overrides: MatDialogConfig<D> = {}
+  ): MatDialogRef<C, R> {
+    return this.dialog.open<C, D, R>(template, this.createDialogConfig(type, overrides));
   }
 
   getSelectorPanelClass(kind: 'combo' | 'autocomplete'): string {

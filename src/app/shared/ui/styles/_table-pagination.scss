@@ -81,7 +81,7 @@
 .inv-secondary-page.catalog-page { --ui-table-reserved-height: 620px; }
 .inv-admin-page.master-history { --ui-table-reserved-height: 500px; }
 
-.inv-core-page .inv-core-table-wrap:not(.registered-suppliers__table-viewport):not(.supplier-table-viewport):not(.history-rates-scroll),
+.inv-core-page .inv-core-table-wrap:not(.registered-suppliers__table-viewport):not(.supplier-table-viewport):not(.history-rates-scroll):not(.ui-table-panel__viewport > *),
 .inv-core-page .overflow {
   max-height: var(--core-table-max-height, min(560px, max(140px, calc(100dvh - var(--ui-table-reserved-height, 390px))))) !important;
   min-height: 0;
@@ -119,4 +119,15 @@
     animation: none;
     background: #263b48;
   }
+}
+
+/* Una tabla dentro del panel compartido calcula su altura por flex; no por reservas fijas. */
+.inv-core-page .ui-table-panel .ui-table-panel__viewport > [uiTablePanelContent] {
+  max-height: none !important;
+  min-height: 0;
+  overflow: auto;
+}
+.inv-core-page .ui-table-panel {
+  flex: 1 1 auto;
+  min-height: 0;
 }

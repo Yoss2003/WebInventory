@@ -66,10 +66,7 @@
                [disabled]="isLoading || isSaving" />
       </label>
 
-      <div class="table-scroll" aria-live="polite" appUiTablePaging="brands-list">
-        <div class="brand-loading" *ngIf="isLoading" role="status">
-          <app-loading-indicator message="Cargando marcas..." />
-        </div>
+      <div class="table-scroll" aria-live="polite" appUiTablePaging="brands-list" [uiTablePagingLoading]="isLoading">
         <div *ngIf="errorMessage && !isLoading" class="feedback error list-error" role="alert">
           {{ errorMessage }}
           <button type="button" appUiButton="secondary" (click)="loadBrands(true)">Reintentar</button>

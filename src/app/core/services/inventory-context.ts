@@ -2,11 +2,13 @@ import { isPlatformBrowser } from '@angular/common';
 import { Injectable, PLATFORM_ID, inject } from '@angular/core';
 import { BehaviorSubject } from 'rxjs';
 import { InventorySummary } from './inventories';
+import { AuthService } from './auth.service';
 
 /** Inventario operativo elegido por el usuario; el maestro nunca es operativo. */
 @Injectable({ providedIn: 'root' })
 export class InventoryContextService {
   private readonly platformId = inject(PLATFORM_ID);
+  private readonly auth = inject(AuthService);
   private readonly state = new BehaviorSubject<number | null>(null);
   private available: InventorySummary[] = [];
   readonly activeInventoryId$ = this.state.asObservable();
@@ -16,10 +18,8 @@ export class InventoryContextService {
 
   private get key(): string {
     if (!isPlatformBrowser(this.platformId)) return 'inventory-active-unknown';
-    try {
-      const session = JSON.parse(localStorage.getItem('userSession') || '{}');
-      return `inventory-active-${Number(session.companyId) || 0}-${Number(session.id) || 0}`;
-    } catch { return 'inventory-active-unknown'; }
+    const session = this.auth.getSession();
+    return 'inventory-active-' + (session?.companyId ?? 0) + '-' + (session?.id ?? 0);
   }
 
   initialize(inventories: InventorySummary[], userId: number): void {

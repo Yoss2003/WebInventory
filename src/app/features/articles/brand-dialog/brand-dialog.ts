@@ -14,6 +14,7 @@ import { LoadingIndicatorComponent } from '../../../shared/loading/loading-indic
 import { MatIconModule } from '@angular/material/icon';
 import { Brand } from '../../../core/models/brand.model';
 import { BrandService } from '../../../core/services/brands';
+import { AuthService } from '../../../core/services/auth.service';
 import { UiButtonDirective } from '../../../shared/ui/directives/ui-button.directive';
 import { UiControlDirective } from '../../../shared/ui/directives/ui-control.directive';
 import { UiTableActionDirective } from '../../../shared/ui/directives/ui-table-action.directive';
@@ -44,11 +45,9 @@ export class BrandDialogComponent implements OnInit {
   private readonly dialogs = inject(MatDialog);
   private readonly modalStandards = inject(ModalStandardService);
   private readonly confirms = inject(ConfirmationDialogService);
-  private readonly platformId = inject(PLATFORM_ID);
+  private readonly authService = inject(AuthService);
   get canManage(): boolean {
-    if (!isPlatformBrowser(this.platformId)) return false;
-    try { return [1,2].includes(Number(JSON.parse(localStorage.getItem('userSession') || '{}').roleId)); }
-    catch { return false; }
+    return [1, 2].includes(Number(this.authService.getSession()?.roleId));
   }
   readonly dialogRef = inject(MatDialogRef<BrandDialogComponent, boolean | { brandId: number }>);
   readonly data: BrandDialogData = inject(MAT_DIALOG_DATA);

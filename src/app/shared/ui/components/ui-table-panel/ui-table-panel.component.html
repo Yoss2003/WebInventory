@@ -1,0 +1,13 @@
+<section class="ui-table-panel" [class.ui-table-panel--fill]="mode === 'fill'"
+  [class.ui-table-panel--content]="mode === 'content'" [attr.aria-label]="'Tabla de ' + label">
+  <div class="ui-table-panel__viewport" [attr.aria-busy]="loading ? 'true' : 'false'">
+    <ng-content select="[uiTablePanelContent]"></ng-content>
+    <div class="ui-table-paging-skeleton" *ngIf="loading" role="status"
+      [attr.aria-label]="'Cargando ' + label" aria-live="polite">
+      <div class="ui-table-paging-skeleton__row" *ngFor="let row of skeletonItems | slice:0:skeletonRows">
+        <span class="ui-table-paging-skeleton__cell" *ngFor="let cell of skeletonItems | slice:0:5"></span>
+      </div>
+    </div>
+  </div>
+  <div class="ui-table-panel__pagination"><ng-content select="app-ui-pagination"></ng-content></div>
+</section>

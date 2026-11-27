@@ -24,10 +24,9 @@
         label="Buscar inventarios maestros" />
     </div>
 
-    <app-loading-indicator *ngIf="loading && !hasLoaded" message="Cargando inventarios maestros..." />
     <p class="master-error" *ngIf="error" role="alert">{{ error }}</p>
 
-    <div class="inv-core-table-wrap master-table" appUiTablePaging="master-inventories" *ngIf="filtered.length">
+    <div class="inv-core-table-wrap master-table" appUiTablePaging="master-inventories" [uiTablePagingLoading]="loading" *ngIf="filtered.length || loading">
       <table>
         <thead>
           <tr><th>Empresa</th><th>Inventario</th><th>Estado</th><th>Acciones</th></tr>

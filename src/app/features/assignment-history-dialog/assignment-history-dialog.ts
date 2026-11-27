@@ -7,6 +7,7 @@ import { MatDialogModule, MatDialogRef, MAT_DIALOG_DATA } from '@angular/materia
 import { MatIconModule } from '@angular/material/icon';
 import { AssignmentService, AssignedArticle, AssignmentEvent } from '../../core/services/assignments';
 import { SerialUnitsService, SerialUnit } from '../../core/services/serial-units';
+import { AuthService } from '../../core/services/auth.service';
 import { UiButtonDirective } from '../../shared/ui/directives/ui-button.directive';
 import { ModalShellComponent } from '../../shared/ui/components/modal-shell/modal-shell.component';
 import { LoadingIndicatorComponent } from '../../shared/loading/loading-indicator';
@@ -22,6 +23,7 @@ export class AssignmentHistoryDialogComponent implements OnInit, OnDestroy {
   readonly dialogRef = inject(MatDialogRef<AssignmentHistoryDialogComponent>);
   private readonly api = inject(AssignmentService);
   private readonly serialsApi = inject(SerialUnitsService);
+  private readonly authService = inject(AuthService);
 
   get inventoryLabel(): string {
     const inventory = this.inventoryContext.options.find(i => i.id === this.data.inventoryId);
@@ -53,18 +55,9 @@ export class AssignmentHistoryDialogComponent implements OnInit, OnDestroy {
   evidenceUploading = false;
 
   get canManageEvidence(): boolean {
-    if (typeof window === 'undefined') return false;
-
-    try {
-      const session = JSON.parse(
-        window.localStorage.getItem('userSession') || '{}'
-      );
-
-      return Number(session.id) > 0 &&
-        Number(session.id) === this.data.assignedByUserId;
-    } catch {
-      return false;
-    }
+    const session = this.authService.getSession();
+    return Number(session?.id) > 0 &&
+      Number(session?.id) === this.data.assignedByUserId;
   }
 
   onEvidenceSelected(event: Event): void {

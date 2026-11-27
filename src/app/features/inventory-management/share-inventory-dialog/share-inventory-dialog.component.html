@@ -106,17 +106,12 @@
         </div>
       </div>
 
-      <div class="current-access-table-wrap" [class.has-overflow]="totalAccessCount > 2" appUiTablePaging="share-inventory-current-access">
+      <div class="current-access-table-wrap" [class.has-overflow]="totalAccessCount > 2" appUiTablePaging="share-inventory-current-access" [uiTablePagingLoading]="loadingShares">
         <table class="current-access-table">
           <thead>
             <tr><th scope="col">Usuario</th><th scope="col">Rol de acceso</th><th scope="col">Fecha</th></tr>
           </thead>
           <tbody>
-            <tr *ngIf="loadingShares" class="current-access-state-row">
-              <td colspan="3">
-                <app-loading-indicator [compact]="true" message="Consultando accesos..." />
-              </td>
-            </tr>
             <tr *ngIf="!loadingShares && sharesError" class="current-access-state-row">
               <td colspan="3">
                 <span>No se pudieron cargar los accesos.</span>

@@ -22,6 +22,7 @@ import { CategoryParentFormComponent } from '../category-parent-form/category-pa
 import { CategoryChildFormComponent } from '../category-child-form/category-child-form';
 import { LoadingIndicatorComponent } from '../../../shared/loading/loading-indicator';
 import { ToastService } from '../../../shared/toast/toast.service';
+import { AuthService } from '../../../core/services/auth.service';
 
 import { UiSearchComponent } from '../../../shared/ui/components/ui-search.component';
 import { UiPaginationComponent } from '../../../shared/ui/components/ui-pagination/ui-pagination.component';
@@ -39,10 +40,9 @@ import { UiTablePagingDirective } from '../../../shared/ui/directives/ui-table-p
 })
 export class CategoryListComponent implements OnInit {
   private readonly categoryService=inject(CategoryService);
-  private readonly platformId=inject(PLATFORM_ID);
+  private readonly authService=inject(AuthService);
   get canManage():boolean {
-    if(!isPlatformBrowser(this.platformId))return false;
-    try{return [1,2].includes(Number(JSON.parse(localStorage.getItem('userSession')||'{}').roleId));}catch{return false;}
+    return [1, 2].includes(Number(this.authService.getSession()?.roleId));
   }
   private readonly modalStandards = inject(ModalStandardService);
   private readonly confirms=inject(ConfirmationDialogService);

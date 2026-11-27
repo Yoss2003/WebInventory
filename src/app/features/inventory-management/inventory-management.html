@@ -24,18 +24,12 @@
       </a>
     </div>
 
-    <div *ngIf="loading && !refreshing" class="inv-manage-loading" role="status" aria-label="Cargando inventarios">
-      <div class="inv-manage-skeleton" aria-hidden="true">
-        <span></span><span></span><span></span>
-      </div>
-    </div>
-
     <p *ngIf="error && !loading" class="inv-manage-error" role="alert">
       <mat-icon aria-hidden="true">error_outline</mat-icon>
       <span>{{ error }}</span>
     </p>
 
-    <div class="inv-core-table-wrap inv-manage-table" appUiTablePaging="inventory-directory" *ngIf="!loading && operational.length > 0">
+    <div class="inv-core-table-wrap inv-manage-table" appUiTablePaging="inventory-directory" [uiTablePagingLoading]="loading" *ngIf="loading || operational.length > 0">
       <table>
         <thead>
           <tr>

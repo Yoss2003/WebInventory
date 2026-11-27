@@ -46,10 +46,9 @@
               <mat-icon aria-hidden="true">refresh</mat-icon>
             </button>
           </div>
-          <p class="registered-suppliers__state" *ngIf="suppliersLoading" role="status">Consultando proveedores registrados...</p>
           <p class="registered-suppliers__error" *ngIf="suppliersError" role="alert">{{ suppliersError }}</p>
-          <div class="registered-suppliers__table-viewport inv-core-table-wrap" appUiTablePaging="consultas-suppliers"
-               *ngIf="!suppliersLoading && !suppliersError && filteredSuppliers.length">
+          <div class="registered-suppliers__table-viewport inv-core-table-wrap" appUiTablePaging="consultas-suppliers" [uiTablePagingLoading]="suppliersLoading"
+               *ngIf="suppliersLoading || (!suppliersError && filteredSuppliers.length)">
             <table class="registered-suppliers__table">
               <thead>
                 <tr>
@@ -204,8 +203,8 @@
               </p>
 
               <div
-                *ngIf="historyRequested && !historyError && !loadingHistory"
-                class="history-rates-scroll inv-core-table-wrap" appUiTablePaging="consultas-rates">
+                *ngIf="historyRequested && !historyError"
+                class="history-rates-scroll inv-core-table-wrap" appUiTablePaging="consultas-rates" [uiTablePagingLoading]="loadingHistory">
 
                 <table>
                   <thead>

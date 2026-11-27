@@ -54,8 +54,8 @@ export class MainLayoutComponent {
     return !this.loadingInventories && !this.inventoryLoadFailed && this.inventories.length === 0;
   }
   private readonly platform=inject(PLATFORM_ID);
-  get isDeveloper(): boolean { if(!isPlatformBrowser(this.platform))return false;try{return Number(JSON.parse(localStorage.getItem('userSession')||'{}').roleId)===1;}catch{return false;} }
-  get isAdmin(): boolean { if(!isPlatformBrowser(this.platform))return false;try{return [1,2].includes(Number(JSON.parse(localStorage.getItem('userSession')||'{}').roleId));}catch{return false;} }
+  get isDeveloper(): boolean { return Number(this.authService.getSession()?.roleId) === 1; }
+  get isAdmin(): boolean { return [1, 2].includes(Number(this.authService.getSession()?.roleId)); }
   canPermission(code: string): boolean {
     return this.isAdmin || this.permissionCodes.includes(code);
   }
@@ -152,7 +152,7 @@ export class MainLayoutComponent {
     });
   }
   ngOnInit():void {
-    const session = isPlatformBrowser(this.platform) ? JSON.parse(localStorage.getItem('userSession') || '{}') : {};
+    const session = this.authService.getSession();
     this.companyTheme.reset();
     this.accessApi.me().pipe(takeUntilDestroyed(this.destroyRef)).subscribe({
       next: access => { this.permissionCodes = access.permissions || []; },
@@ -160,7 +160,7 @@ export class MainLayoutComponent {
     });
     this.publicCompanies.getActiveCompanies().pipe(takeUntilDestroyed(this.destroyRef)).subscribe({
       next: companies => {
-        const company = companies.find(c => Number(c.id) === Number(session.companyId));
+        const company = companies.find(c => Number(c.id) === Number(session?.companyId));
         this.companyTheme.apply(company?.primaryColorHex);
       },
       error: () => this.companyTheme.reset()
@@ -169,7 +169,7 @@ export class MainLayoutComponent {
       next: rows => {
         this.inventoryLoadFailed = false;
         this.generalInventoryExists = rows.some(i => i.isMaster && i.isActive);
-        this.inventoryContext.initialize(rows, Number(session.id) || 0);
+        this.inventoryContext.initialize(rows, Number(session?.id) || 0);
         this.inventories = this.inventoryContext.options;
         this.selectedInventoryId = this.inventoryContext.activeInventoryId;
         this.loadingInventories = false;
