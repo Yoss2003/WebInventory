@@ -9,6 +9,7 @@ import { UiEmptyStateComponent } from '../../shared/ui/components/ui-empty-state
 import { UiButtonDirective } from '../../shared/ui/directives/ui-button.directive';
 import { UiTableActionDirective } from '../../shared/ui/directives/ui-table-action.directive';
 import { UiPaginationComponent } from '../../shared/ui/components/ui-pagination/ui-pagination.component';
+import { UiTablePanelComponent } from '../../shared/ui/components/ui-table-panel/ui-table-panel.component';
 import { UiTablePagingDirective } from '../../shared/ui/directives/ui-table-paging.directive';
 import { ToastService } from '../../shared/toast/toast.service';
 import { AccessService } from '../../core/services/access';
