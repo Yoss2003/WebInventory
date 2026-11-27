@@ -1,10 +1,9 @@
 import { CommonModule } from '@angular/common';
-import { AfterContentInit, Component, ContentChildren, EventEmitter, Input, OnDestroy, Output, QueryList, forwardRef } from '@angular/core';
+import { Component, ContentChildren, EventEmitter, Input, Output, QueryList, forwardRef } from '@angular/core';
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatSelectModule } from '@angular/material/select';
 import { MatOption } from '@angular/material/core';
-import { Subscription } from 'rxjs';
 
 export type UiSelectValue = string | number | null | Array<string | number>;
 
@@ -32,7 +31,7 @@ export interface UiSelectOption {
   styleUrl: './ui-select.component.scss',
   host: { class: 'inventory-select' }
 })
-export class UiSelectComponent implements ControlValueAccessor, AfterContentInit, OnDestroy {
+export class UiSelectComponent implements ControlValueAccessor {
   @Input() id = '';
   @Input() value: UiSelectValue = '';
   @Input() options: UiSelectOption[] = [];
@@ -51,10 +50,13 @@ export class UiSelectComponent implements ControlValueAccessor, AfterContentInit
   @ContentChildren(MatOption, { descendants: true })
   private projectedOptionsQuery!: QueryList<MatOption>;
   private projectedOptions: UiSelectOption[] = [];
-  private projectedOptionsSubscription?: Subscription;
-
   get effectiveOptions(): UiSelectOption[] {
-    return this.options.length ? this.options : this.projectedOptions;
+    if (this.options.length) return this.options;
+    return this.projectedOptionsQuery?.map(option => ({
+      value: option.value,
+      label: option.viewValue,
+      disabled: option.disabled
+    })) ?? [];
   }
 
   @Output() readonly valueChange = new EventEmitter<UiSelectValue>();
@@ -63,25 +65,6 @@ export class UiSelectComponent implements ControlValueAccessor, AfterContentInit
 
   private onChange: (value: UiSelectValue) => void = () => undefined;
   private onTouched: () => void = () => undefined;
-
-  ngAfterContentInit(): void {
-    this.syncProjectedOptions();
-    this.projectedOptionsSubscription = this.projectedOptionsQuery.changes.subscribe(() => {
-      this.syncProjectedOptions();
-    });
-  }
-
-  ngOnDestroy(): void {
-    this.projectedOptionsSubscription?.unsubscribe();
-  }
-
-  private syncProjectedOptions(): void {
-    this.projectedOptions = this.projectedOptionsQuery.map(option => ({
-      value: option.value,
-      label: option.viewValue,
-      disabled: option.disabled
-    }));
-  }
 
   writeValue(value: UiSelectValue): void {
     this.value = value ?? (this.multiple ? [] : '');
