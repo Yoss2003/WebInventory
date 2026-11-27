@@ -73,8 +73,10 @@
 }
 
 /* Catálogo general: cada pestaña conserva su propio panel y su propia tabla. */
-.inv-secondary-page.catalog-page .inv-page-workspace {
+.inv-secondary-page.catalog-page .panel.inv-page-workspace {
+  display: flex;
   flex: 1 1 auto;
+  flex-direction: column;
   min-height: 0;
 }
 
