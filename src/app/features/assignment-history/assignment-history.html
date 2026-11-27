@@ -12,7 +12,7 @@
     <div class="assignment-stat"><span>Cantidad fuera de stock</span><strong>{{!hasLoaded?'…':(pendingQuantity|number:'1.0-2')}}</strong><small>Saldo pendiente de devolución</small></div>
   </div>
 
-  <section class="assignment-section inv-page-workspace">
+  <section class="assignment-section inv-page-workspace inv-page-workspace--flush">
     <div class="inv-core-toolbar assignment-search-row"><app-ui-search [value]="search" (valueChange)="search=$event;page=1" placeholder="Buscar artículo o destinatario" label="Buscar asignaciones" /></div>
     <nav class="assignment-tabs inv-secondary-tabs" aria-label="Vistas de asignaciones">
       <button type="button" [class.active]="currentTab==='history'" (click)="switchAssignmentTab('history');search='';page=1" [attr.aria-pressed]="currentTab==='history'"><mat-icon>outbox</mat-icon>Entregados</button>
