@@ -1,4 +1,4 @@
-<mat-form-field appearance="outline" class="inventory-select" subscriptSizing="dynamic">
+<mat-form-field appearance="outline" class="inventory-select" [class.invalid]="invalid" subscriptSizing="dynamic">
   <mat-label *ngIf="label">{{label}}</mat-label>
   <mat-select
     [id]="id"
