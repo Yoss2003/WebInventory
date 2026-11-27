@@ -316,6 +316,8 @@ export class DevManagementComponent implements OnInit, OnDestroy {
   }
 
   private openCompanyEditor(): void {
+    // During isolated component tests the template is not rendered; normal routed views have it available.
+    if (!this.companyEditorTemplate) return;
     this.companyDialogRef?.close();
     this.companyDialogRef = this.modalStandards.openTemplate(this.companyEditorTemplate, 'mainForm', {
       panelClass: ['inv-seven-modal', 'dev-company-editor-modal'],
@@ -335,6 +337,7 @@ export class DevManagementComponent implements OnInit, OnDestroy {
   }
 
   openRecoveryRequests(): void {
+    if (!this.recoveryRequestsTemplate) return;
     this.recoveryDialogRef?.close();
     this.recoveryDialogRef = this.modalStandards.openTemplate(this.recoveryRequestsTemplate, 'subTask', {
       panelClass: ['inv-seven-modal', 'dev-recovery-modal'],
