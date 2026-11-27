@@ -8,8 +8,6 @@ import { catchError, finalize, forkJoin, of } from 'rxjs';
 import { FormsModule } from '@angular/forms';
 import { MatIconModule } from '@angular/material/icon';
 import { MatDialogRef } from '@angular/material/dialog';
-import { MatFormFieldModule } from '@angular/material/form-field';
-import { MatSelectModule } from '@angular/material/select';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { ModalStandardService } from '../../shared/ui/services/modal-standard.service';
 import { ModalShellComponent } from '../../shared/ui/components/modal-shell/modal-shell.component';
@@ -88,8 +86,6 @@ interface ParameterRecord {
     CommonModule,
     FormsModule,
     MatIconModule,
-    MatFormFieldModule,
-    MatSelectModule,
     MatTooltipModule,
     UiSearchComponent,
     UiTablePagingDirective, UiPaginationComponent
