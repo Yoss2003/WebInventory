@@ -1,4 +1,5 @@
 import { ModalStandardService } from '../../shared/ui/services/modal-standard.service';
+import { UiSelectComponent } from '../../shared/ui/components/ui-select/ui-select.component';
 import { WorkerPickerDialogComponent } from '../inventory-management/worker-picker-dialog/worker-picker-dialog.component';
 import { InventoryShareRecipient } from '../../core/services/inventories';
 import { UiControlDirective } from '../../shared/ui/directives/ui-control.directive';
@@ -14,7 +15,6 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { ToastService } from '../../shared/toast/toast.service';
 import { ConfirmationDialogService } from '../../shared/confirm-dialog/confirmation-dialog.service';
-import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatSelectModule } from '@angular/material/select';
 import { InventoryService, InventoryShare, InventorySummary } from '../../core/services/inventories';
 import { AccessService } from '../../core/services/access';
@@ -23,7 +23,7 @@ import { finalize, timeout } from 'rxjs';
 
 @Component({
   selector: 'app-inventory-sharing', standalone: true,
-  imports: [UiControlDirective, UiPageHeadingComponent, UiButtonDirective, UiTableActionDirective, CommonModule, FormsModule, MatIconModule, MatTooltipModule, MatFormFieldModule, MatSelectModule, LoadingIndicatorComponent, UiTablePagingDirective, UiPaginationComponent],
+  imports: [UiSelectComponent, UiControlDirective, UiPageHeadingComponent, UiButtonDirective, UiTableActionDirective, CommonModule, FormsModule, MatIconModule, MatTooltipModule, MatSelectModule, LoadingIndicatorComponent, UiTablePagingDirective, UiPaginationComponent],
   templateUrl: './inventory-sharing.html', styleUrl: './inventory-sharing.scss'
 })
 export class InventorySharingComponent implements OnInit {
