@@ -147,8 +147,10 @@ export class MasterCatalogsComponent implements OnInit {
     return this.parameterTypeOptions.map(value => ({ value, label: this.parameterTypeLabel(value) }));
   }
 
-  get parameterTypeFilterSelectOptions(): UiSelectOption[] {
-    return [
+  parameterTypeFilterSelectOptions: UiSelectOption[] = [{ value: '', label: 'Todos los tipos' }];
+
+  private rebuildParameterFilterOptions(): void {
+    this.parameterTypeFilterSelectOptions = [
       { value: '', label: 'Todos los tipos' },
       ...this.parameterFilterOptions.map(value => ({ value, label: this.parameterTypeLabel(value) }))
     ];
@@ -293,7 +295,10 @@ export class MasterCatalogsComponent implements OnInit {
       this.cdr.markForCheck();
     })).subscribe(({ suppliers, parameters }) => {
       if (suppliers) this.suppliers = suppliers;
-      if (parameters) this.parameters = parameters;
+      if (parameters) {
+        this.parameters = parameters;
+        this.rebuildParameterFilterOptions();
+      }
       if (suppliersFailed) this.toast.error('No se pudieron consultar los proveedores.');
       if (parametersFailed) this.toast.error('No se pudieron consultar los parámetros generales.');
       this.cdr.markForCheck();
@@ -664,20 +669,7 @@ export class MasterCatalogsComponent implements OnInit {
 
   switchCatalogTab(tab: 'suppliers' | 'parameters'): void {
     if (this.tab === tab) return;
-
-    const update = () => {
-      this.tab = tab;
-      this.cdr.detectChanges();
-    };
-
-    const doc = document as Document & {
-      startViewTransition?: (callback: () => void) => unknown;
-    };
-
-    if (doc.startViewTransition) {
-      doc.startViewTransition(update);
-    } else {
-      update();
-    }
+    this.tab = tab;
+    this.cdr.markForCheck();
   }
 }
