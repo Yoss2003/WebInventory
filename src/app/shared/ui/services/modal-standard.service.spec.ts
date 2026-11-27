@@ -86,6 +86,15 @@ describe('ModalStandardService', () => {
     expect(config.maxHeight).toBe('calc(100dvh - 24px)');
   });
 
+  it('respeta las duraciones de animación definidas por una vista', () => {
+    const config = service.createDialogConfig('mainForm', {
+      enterAnimationDuration: 260,
+      exitAnimationDuration: 220
+    });
+    expect(config.enterAnimationDuration).toBe(260);
+    expect(config.exitAnimationDuration).toBe(220);
+  });
+
   it('permite que cada vista sobrescriba los límites del viewport', () => {
     const config = service.createDialogConfig('wizard', {
       width: 'min(900px, calc(100vw - 32px))',
