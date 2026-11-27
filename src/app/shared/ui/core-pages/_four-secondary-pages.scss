@@ -538,3 +538,13 @@
   }
   .inv-secondary-page.lookup-page .lookup-grid > section { min-height: auto; }
 }
+
+
+/* Inset propio del panel de Artículos fuera de stock: la tabla no toca sus bordes. */
+.inv-secondary-page.assignment-page .assignment-table-panel .ui-table-panel__viewport {
+  box-sizing: border-box;
+  padding: 12px 16px 8px;
+}
+.inv-secondary-page.assignment-page .assignment-table-panel .ui-table-panel__pagination {
+  padding: 0 16px 12px;
+}
