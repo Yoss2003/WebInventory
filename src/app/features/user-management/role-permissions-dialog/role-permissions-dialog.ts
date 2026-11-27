@@ -3,20 +3,19 @@ import { ChangeDetectorRef, Component, inject } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { MatDialogModule, MatDialogRef } from '@angular/material/dialog';
 import { MatIconModule } from '@angular/material/icon';
-import { MatFormFieldModule } from '@angular/material/form-field';
-import { MatSelectModule } from '@angular/material/select';
 import { forkJoin } from 'rxjs';
 import {  ManagedRole, PermissionItem, UserManagementService } from '../../../core/services/user-management';
 import { ConfirmationDialogService } from '../../../shared/confirm-dialog/confirmation-dialog.service';
 import { ModalShellComponent } from '../../../shared/ui/components/modal-shell/modal-shell.component';
 import { LoadingIndicatorComponent } from '../../../shared/loading/loading-indicator';
+import { UiSelectComponent, UiSelectOption } from '../../../shared/ui/components/ui-select/ui-select.component';
 import type { ModalActionId, ModalFooterAction } from '../../../shared/ui/models/modal-standard.model';
 
 @Component({
   selector: 'app-role-permissions-dialog',
   standalone: true,
   imports: [CommonModule, FormsModule, MatDialogModule, MatIconModule,
-    MatFormFieldModule, MatSelectModule, ModalShellComponent, LoadingIndicatorComponent],
+    ModalShellComponent, LoadingIndicatorComponent, UiSelectComponent],
   templateUrl: './role-permissions-dialog.html',
   styleUrl: './role-permissions-dialog.scss'
 })
@@ -26,6 +25,9 @@ export class RolePermissionsDialogComponent {
   private readonly confirms = inject(ConfirmationDialogService);
   private readonly cdr = inject(ChangeDetectorRef);
   roles: ManagedRole[] = [];
+  get roleSelectOptions(): UiSelectOption[] {
+    return this.roles.map(role => ({ value: role.id, label: role.name }));
+  }
   permissions: PermissionItem[] = [];
   roleId = 0;
   selectedIds = new Set<number>();
