@@ -83,7 +83,7 @@
           label="proveedores" loadingId="master-suppliers" />
       </app-ui-table-panel>
 
-      <app-ui-empty-state *ngIf="!filteredSuppliers.length"
+      <app-ui-empty-state *ngIf="!initialLoading && !filteredSuppliers.length"
         icon="inventory_2"
         [message]="supplierSearch ? 'Sin coincidencias' : 'Aún no hay proveedores registrados'"
         [hint]="supplierSearch ? 'Prueba otra búsqueda de proveedor o RUC.' : 'Consulta un RUC y registra tu primer proveedor desde el formulario.'" />
@@ -156,7 +156,7 @@
           label="parámetros" loadingId="master-parameters" />
       </app-ui-table-panel>
 
-      <app-ui-empty-state *ngIf="!filteredParameters.length"
+      <app-ui-empty-state *ngIf="!initialLoading && !filteredParameters.length"
         icon="tune"
         [message]="parameterSearch ? 'Sin resultados para la búsqueda.' : 'Sin parámetros generales visibles.'" />
     </div>
