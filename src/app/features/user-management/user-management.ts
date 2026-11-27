@@ -2,7 +2,6 @@ import { CommonModule } from '@angular/common';
 import { ChangeDetectorRef, Component, OnInit, inject } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { MatIconModule } from '@angular/material/icon';
-import { MatDialog } from '@angular/material/dialog';
 import { ModalStandardService } from '../../shared/ui/services/modal-standard.service';
 import { forkJoin } from 'rxjs';
 import { UiPageHeadingComponent } from '../../shared/ui/components/ui-page-heading.component';
@@ -34,7 +33,6 @@ export class UserManagementComponent implements OnInit {
   private readonly access = inject(AccessService);
   private readonly toast = inject(ToastService);
   private readonly confirms = inject(ConfirmationDialogService);
-  private readonly dialogs = inject(MatDialog);
   private readonly modalStandards = inject(ModalStandardService);
   private readonly cdr = inject(ChangeDetectorRef);
 
@@ -196,15 +194,13 @@ export class UserManagementComponent implements OnInit {
       currentUserId: this.currentUserId,
       canManageIndividualPermissions: this.canManageIndividualPermissions
     };
-    this.dialogs.open<UserEditorDialogComponent, UserEditorDialogData, UserEditorDialogResult>(
-      UserEditorDialogComponent, {
+    this.modalStandards.open<UserEditorDialogComponent, UserEditorDialogData, UserEditorDialogResult>(
+      UserEditorDialogComponent, 'mainForm', {
         data,
         panelClass: 'inv-seven-modal',
         width: 'min(800px, calc(100vw - 24px))',
         maxWidth: 'calc(100vw - 24px)',
         maxHeight: 'calc(100dvh - 24px)',
-        enterAnimationDuration: 260,
-        exitAnimationDuration: 220,
         autoFocus: 'first-tabbable',
         restoreFocus: true,
         disableClose: true
