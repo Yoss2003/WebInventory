@@ -11,7 +11,6 @@ import { catchError, forkJoin, of } from 'rxjs';
 import type { Observable } from 'rxjs';
 import { MatIconModule } from '@angular/material/icon';
 import { MatSelectModule } from '@angular/material/select';
-import { MatFormFieldModule } from '@angular/material/form-field';
 import { ToastService } from '../../../shared/toast/toast.service';
 import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
 import { BarcodeFormat, BrowserMultiFormatReader } from '@zxing/browser';
@@ -47,7 +46,7 @@ interface AttributeField {
   standalone: true,
   imports: [
     UiButtonDirective, UiSelectComponent, UiControlDirective, CommonModule, ReactiveFormsModule, MatDialogModule,
-    MatIconModule, MatSelectModule, MatFormFieldModule, MatTooltipModule,
+    MatIconModule, MatSelectModule, MatTooltipModule,
     InventoryDialogMotionDirective, ModalShellComponent
   ],
   templateUrl: './article-form.html',
