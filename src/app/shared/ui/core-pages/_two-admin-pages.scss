@@ -565,7 +565,7 @@ app-dev-management > p.error { margin: 12px 0; padding: 14px; color: #ffc0c0; }
 .cdk-overlay-pane.dev-company-editor-modal .renew-controls .dev-select { min-width: 155px; flex: 1 1 180px; }
 .cdk-overlay-pane.dev-company-editor-modal .form-actions { display: flex; justify-content: flex-end; }
 .cdk-overlay-pane.dev-company-editor-modal .form-actions button.save { min-height: 39px; padding: 8px 12px; }
-.cdk-overlay-pane.dev-company-editor-modal .dev-form button:not([appUiTableAction]) {
+.cdk-overlay-pane.dev-company-editor-modal .dev-form button:not([appUiTableAction]):not([appUiButton='primary']):not(.palette-launch) {
   display: inline-flex;
   align-items: center;
   justify-content: center;
@@ -588,4 +588,17 @@ app-dev-management > p.error { margin: 12px 0; padding: 14px; color: #ffc0c0; }
   .cdk-overlay-pane.dev-company-editor-modal .dev-ruc-inline { grid-template-columns: 1fr; }
   .cdk-overlay-pane.dev-company-editor-modal .renew-controls { align-items: stretch; flex-direction: column; }
   .cdk-overlay-pane.dev-company-editor-modal .renew-controls .dev-select { min-width: 0; width: 100%; }
+}
+
+.cdk-overlay-pane.dev-company-editor-modal .dev-form button[appUiButton='primary'],
+.cdk-overlay-pane.dev-company-editor-modal .renew-controls button[appUiButton='primary'] {
+  border-color: var(--inv-company-accent,#a2d149);
+  background: var(--inv-company-accent,#a2d149);
+  color: var(--inv-company-on-accent,#12202b);
+  font-weight: 750;
+}
+.cdk-overlay-pane.dev-company-editor-modal .dev-form button.palette-launch {
+  border-color: #637b8a;
+  background: #253846;
+  color: #edf4fb;
 }
