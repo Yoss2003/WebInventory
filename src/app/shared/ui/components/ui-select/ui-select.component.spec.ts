@@ -14,7 +14,7 @@ describe('UiSelectComponent', () => {
   it('emite el valor seleccionado al enlace y al ControlValueAccessor', () => {
     const changed = vi.fn();
     const touched = vi.fn();
-    const valueChange = vi.fn<(value: UiSelectValue) => void>();
+    const valueChange = vi.fn();
     const selectionChange = vi.fn();
 
     component.registerOnChange(changed);
