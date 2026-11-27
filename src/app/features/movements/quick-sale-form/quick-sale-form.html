@@ -37,18 +37,13 @@
             Artículo <span class="required">*</span>
           </label>
 
-          <mat-form-field appearance="outline" class="inventory-select">
-            <mat-select
-              formControlName="articleId"
-              placeholder="Seleccionar artículo"
-              panelClass="inventory-select-options">
+          <app-ui-select formControlName="articleId" placeholder="Seleccionar artículo" panelClass="inventory-select-options">
               <mat-option
                 *ngFor="let item of articles"
                 [value]="item.id">
                 {{ item.name }} · Stock {{ item.stock }}
               </mat-option>
-            </mat-select>
-          </mat-form-field>
+            </app-ui-select>
         </div>
 
         <div class="article-summary wide" aria-live="polite">
@@ -214,11 +209,7 @@
             Método de pago <span class="required">*</span>
           </label>
 
-          <mat-form-field appearance="outline" class="inventory-select">
-            <mat-select
-              formControlName="paymentMethod"
-              panelClass="inventory-select-options"
-              (selectionChange)="onPaymentTypeChanged()">
+          <app-ui-select formControlName="paymentMethod" panelClass="inventory-select-options" (selectionChange)="onPaymentTypeChanged()">
 
               <mat-option
                 *ngFor="let method of paymentMethods"
@@ -226,8 +217,7 @@
                 {{ method === 'Cuotas' ? 'Venta a cuotas' : method }}
               </mat-option>
 
-            </mat-select>
-          </mat-form-field>
+            </app-ui-select>
         </div>
 
         <!-- BILLETERA DIGITAL -->
@@ -237,11 +227,7 @@
             <span class="required">*</span>
           </label>
 
-          <mat-form-field appearance="outline" class="inventory-select">
-            <mat-select
-              formControlName="walletProvider"
-              placeholder="Seleccionar billetera"
-              panelClass="inventory-select-options">
+          <app-ui-select formControlName="walletProvider" placeholder="Seleccionar billetera" panelClass="inventory-select-options">
 
               <mat-option
                 *ngFor="let wallet of wallets"
@@ -249,8 +235,7 @@
                 {{ wallet }}
               </mat-option>
 
-            </mat-select>
-          </mat-form-field>
+            </app-ui-select>
         </div>
 
         <!-- CONFIGURACIÓN DE CUOTAS -->
@@ -271,10 +256,7 @@
                 Frecuencia <span class="required">*</span>
               </label>
 
-              <mat-form-field appearance="outline" class="inventory-select">
-                <mat-select
-                  formControlName="installmentFrequency"
-                  panelClass="inventory-select-options">
+              <app-ui-select formControlName="installmentFrequency" panelClass="inventory-select-options">
 
                   <mat-option
                     *ngFor="let frequency of installmentFrequencies"
@@ -282,8 +264,7 @@
                     {{ frequency }}
                   </mat-option>
 
-                </mat-select>
-              </mat-form-field>
+                </app-ui-select>
             </div>
 
             <div class="sale-field">
