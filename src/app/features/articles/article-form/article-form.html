@@ -77,7 +77,7 @@
                     <ng-template #categoryStandard>{{ isInvalid('identity','categoryId') ? 'Selecciona una categoría.' : isLoadingCategories ? 'Cargando categorías...' : currentTrackingMode ? 'Rastreo: ' + currentTrackingMode : 'Elige una categoría hija.' }}</ng-template>
                   </span>
                 </div>
-                <app-ui-select id="article-category" formControlName="categoryId" placeholder="Seleccionar categoría" [panelClass]="articleSelectPanelClass" (openedChange)="$event && resetFieldMessage('identity','categoryId')" [class.invalid]="isInvalid('identity', 'categoryId')" class="inventory-select">
+                <app-ui-select id="article-category" formControlName="categoryId" placeholder="Seleccionar categoría" [panelClass]="articleSelectPanelClass" (openedChange)="$event && resetFieldMessage('identity','categoryId')" [invalid]="isInvalid('identity', 'categoryId')" class="inventory-select">
                     <mat-option [value]="null">Seleccionar categoría</mat-option>
                     <mat-option *ngFor="let cat of categoriasHijas" [value]="cat.id">{{ cat.name }}</mat-option>
                   </app-ui-select>
@@ -92,7 +92,7 @@
                 <div class="field-with-button">
                   <app-ui-select id="article-brand" formControlName="brandId" placeholder="Seleccionar marca"
                                 [disabled]="!selectedCategory || isLoadingBrands"
-                                [panelClass]="articleSelectPanelClass" (openedChange)="$event && resetFieldMessage('identity','brandId')" [class.invalid]="isInvalid('identity', 'brandId')" class="inventory-select">
+                                [panelClass]="articleSelectPanelClass" (openedChange)="$event && resetFieldMessage('identity','brandId')" [invalid]="isInvalid('identity', 'brandId')" class="inventory-select">
                       <mat-option [value]="null">Seleccionar marca</mat-option>
                       <mat-option *ngFor="let marca of marcasFiltradas" [value]="marca.id">{{ marca.name }}</mat-option>
                     </app-ui-select>
