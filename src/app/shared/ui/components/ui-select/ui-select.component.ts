@@ -44,8 +44,10 @@ export class UiSelectComponent implements ControlValueAccessor {
   @Input() allowEmpty = false;
   @Input() emptyLabel = 'Todos';
   @Input() panelClass: string | string[] = ['inventory-select-options', 'inv-standard-select-panel'];
+  @Input() ariaLabelledby: string | null = null;
 
   @Output() readonly valueChange = new EventEmitter<UiSelectValue>();
+  @Output() readonly selectionChange = new EventEmitter<{ value: UiSelectValue }>();
   @Output() readonly openedChange = new EventEmitter<boolean>();
 
   private onChange: (value: UiSelectValue) => void = () => undefined;
@@ -63,6 +65,7 @@ export class UiSelectComponent implements ControlValueAccessor {
     if (this.disabled) return;
     this.value = value;
     this.valueChange.emit(value);
+    this.selectionChange.emit({ value });
     this.onChange(value);
     this.onTouched();
   }
