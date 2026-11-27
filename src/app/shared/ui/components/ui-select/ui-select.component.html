@@ -8,6 +8,7 @@
     [multiple]="multiple"
     [placeholder]="placeholder"
     [attr.aria-label]="ariaLabel || label || placeholder || 'Seleccionar opción'"
+    [attr.aria-labelledby]="ariaLabelledby"
     [panelClass]="panelClass"
     (selectionChange)="select($event.value)"
     (openedChange)="openedChange.emit($event)">
