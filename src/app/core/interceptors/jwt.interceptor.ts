@@ -1,17 +1,41 @@
-import { HttpInterceptorFn } from '@angular/common/http';
+import { HttpErrorResponse, HttpInterceptorFn } from '@angular/common/http';
 import { inject } from '@angular/core';
+import { catchError, switchMap, throwError } from 'rxjs';
 import { AuthService } from '../services/auth.service';
 
 export const jwtInterceptor: HttpInterceptorFn = (req, next) => {
+  const auth = inject(AuthService);
   const path = req.url.toLowerCase();
-  // Estas rutas son públicas: no enviar una sesión anterior al cargar el login.
-  if (path.includes('/api/users/login') || path.includes('/api/companies/active')) {
-    return next(req);
-  }
+  const isSessionEndpoint = path.includes('/api/users/login') ||
+    path.includes('/api/users/refreshsession') ||
+    path.includes('/api/users/logout');
+  const request = req.clone({ withCredentials: true });
 
-  const token = inject(AuthService).getToken();
-  if (token && token !== 'null') {
-    req = req.clone({ setHeaders: { Authorization: `Bearer ${token}` } });
-  }
-  return next(req);
+  if (isSessionEndpoint || path.includes('/api/companies/active')) return next(request);
+
+  const token = auth.getToken();
+  const authenticatedRequest = token
+    ? request.clone({ setHeaders: { Authorization: `Bearer ${token}` } })
+    : request;
+
+  return next(authenticatedRequest).pipe(catchError((error: unknown) => {
+    if (!(error instanceof HttpErrorResponse) || error.status !== 401 || !token) {
+      return throwError(() => error);
+    }
+    return auth.refreshSession(true).pipe(
+      switchMap(session => {
+        if (!session?.token) {
+          auth.clearSession();
+          return throwError(() => error);
+        }
+        return next(request.clone({
+          setHeaders: { Authorization: `Bearer ${session.token}` }
+        }));
+      }),
+      catchError(refreshError => {
+        auth.clearSession();
+        return throwError(() => refreshError);
+      })
+    );
+  }));
 };

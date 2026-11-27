@@ -3,6 +3,7 @@ export interface LoginRequest {
   password?: string;
   twoFactorCode?: string;
   companyId: number;
+  rememberMe?: boolean;
 }
 
 export interface AuthResponse {

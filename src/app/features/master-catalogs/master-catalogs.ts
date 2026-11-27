@@ -16,6 +16,7 @@ import { ConfirmationDialogService } from '../../shared/confirm-dialog/confirmat
 import { InventoryContextService } from '../../core/services/inventory-context';
 import { MasterCatalogsService } from '../../core/services/master-catalogs';
 import { ToastService } from '../../shared/toast/toast.service';
+import { AuthService } from '../../core/services/auth.service';
 import { UiSearchComponent } from '../../shared/ui/components/ui-search.component';
 import { UiPaginationComponent } from '../../shared/ui/components/ui-pagination/ui-pagination.component';
 import { UiTablePagingDirective } from '../../shared/ui/directives/ui-table-paging.directive';
@@ -97,7 +98,7 @@ export class MasterCatalogsComponent implements OnInit {
   private readonly modalStandards = inject(ModalStandardService);
   private readonly confirms = inject(ConfirmationDialogService);
   private readonly cdr = inject(ChangeDetectorRef);
-  private readonly platformId = inject(PLATFORM_ID);
+  private readonly authService = inject(AuthService);
 
   tab: 'suppliers' | 'parameters' = 'suppliers';
   suppliers: SupplierRecord[] = [];
@@ -208,12 +209,7 @@ export class MasterCatalogsComponent implements OnInit {
   parameter: ParameterRecord = this.emptyParameter();
 
   get canManage(): boolean {
-    if (!isPlatformBrowser(this.platformId)) return false;
-    try {
-      return [1, 2].includes(Number(JSON.parse(localStorage.getItem('userSession') || '{}').roleId));
-    } catch {
-      return false;
-    }
+    return [1, 2].includes(Number(this.authService.getSession()?.roleId));
   }
 
   ngOnInit(): void {

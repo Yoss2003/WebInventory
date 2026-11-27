@@ -21,6 +21,7 @@ import {
 import { CompanyPublicService } from '../../core/services/companies';
 import { LoadingIndicatorComponent } from '../../shared/loading/loading-indicator';
 import { ToastService } from '../../shared/toast/toast.service';
+import { AuthService } from '../../core/services/auth.service';
 import { UiEmptyStateComponent } from '../../shared/ui/components/ui-empty-state.component';
 import { UiStatusComponent } from '../../shared/ui/components/ui-status.component';
 import { UiSearchComponent } from '../../shared/ui/components/ui-search.component';
@@ -42,6 +43,7 @@ export class DevManagementComponent implements OnInit, OnDestroy {
   private readonly platform = inject(PLATFORM_ID);
   private readonly cdr = inject(ChangeDetectorRef);
   private readonly toasts = inject(ToastService);
+  private readonly authService = inject(AuthService);
   private readonly dialog = inject(MatDialog);
   private readonly modalStandards = inject(ModalStandardService);
   @ViewChild('companyEditorTemplate') private companyEditorTemplate!: TemplateRef<unknown>;
@@ -210,9 +212,8 @@ export class DevManagementComponent implements OnInit, OnDestroy {
   }
 
   private getSession(): { roleId?: number; companyId?: number } {
-    if (!isPlatformBrowser(this.platform)) return {};
-    try { return JSON.parse(localStorage.getItem('userSession') || '{}'); }
-    catch { return {}; }
+    const session = this.authService.getSession();
+    return session ? { roleId: session.roleId, companyId: session.companyId } : {};
   }
   private isDeveloper(): boolean { return Number(this.getSession().roleId) === 1; }
   private getDeveloperCompanyId(): number | null {

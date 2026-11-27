@@ -25,6 +25,10 @@
       <form *ngIf="!initialPasswordToken" [formGroup]="loginForm" (ngSubmit)="onSubmit()" class="login-form" autocomplete="on">
         <div class="form-field"><label for="login-username">Usuario <span>*</span></label><div class="input-wrap"><mat-icon>person_outline</mat-icon><input id="login-username" type="text" formControlName="username" maxlength="150" autocomplete="username" spellcheck="false" placeholder="Ingresa tu usuario" /></div></div>
         <div class="form-field"><label for="login-password">Contraseña <span>*</span></label><div class="input-wrap"><mat-icon>lock_outline</mat-icon><input id="login-password" [type]="showPassword ? 'text' : 'password'" formControlName="password" autocomplete="current-password" placeholder="Ingresa tu contraseña" /><button type="button" class="password-toggle" (click)="showPassword = !showPassword" [attr.aria-label]="showPassword ? 'Ocultar contraseña' : 'Mostrar contraseña'"><mat-icon>{{ showPassword ? 'visibility_off' : 'visibility' }}</mat-icon></button></div></div>
+        <label class="remember-me">
+          <input type="checkbox" [checked]="rememberMe" (change)="rememberMe = $any($event.target).checked" />
+          <span>Recuérdame</span>
+        </label>
         <div *ngIf="requiresTwoFactor" class="form-field two-factor-field"><label for="login-2fa">Código de verificación <span>*</span></label><div class="input-wrap"><mat-icon>pin</mat-icon><input id="login-2fa" type="text" formControlName="twoFactorCode" maxlength="6" inputmode="numeric" autocomplete="one-time-code" placeholder="000000" /></div><small>Introduce los 6 dígitos generados por tu aplicación de autenticación.</small></div>
         <div class="login-error" *ngIf="loginError" role="alert"><mat-icon>error_outline</mat-icon><span>{{ loginError }}</span></div>
         <button type="submit" appUiButton="primary" class="login-submit" [disabled]="submitting || loadingCompanies || !companies.length || loginForm.invalid" [uiButtonLoading]="submitting" [uiButtonLoadingText]="'Validando acceso...'">
