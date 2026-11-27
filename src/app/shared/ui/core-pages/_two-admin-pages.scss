@@ -78,7 +78,7 @@
   color: var(--core-accent-text);
   font-size: 12px; font-weight: 700;
 }
-.inv-admin-page.master-history .table-wrapper { max-height: 310px; overflow-y:auto; }
+.inv-admin-page.master-history .table-wrapper { max-height: none; min-height: 0; overflow: auto; }
 .inv-admin-page.master-history .table-wrapper > table { min-width: 980px; }
 .inv-admin-page.master-history .table-wrapper > table > tbody > tr { height:66px; }
 .inv-admin-page.master-history .table-wrapper > table > tbody > tr > td { min-height:66px; }
