@@ -89,6 +89,17 @@
   min-height: 0;
 }
 
+.inv-secondary-page.catalog-page .panel.inv-page-workspace--flush > .list {
+  border: 0;
+  border-radius: 0;
+  background: transparent;
+}
+
+.inv-secondary-page.catalog-page .parameter-list {
+  padding: 16px;
+  gap: 12px;
+}
+
 .inv-secondary-page.catalog-page .supplier-list-heading,
 .inv-secondary-page.catalog-page .parameter-list-heading {
   display: flex;
