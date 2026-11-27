@@ -25,11 +25,12 @@ import { AuthService } from '../../../core/services/auth.service';
 
 import { UiSearchComponent } from '../../../shared/ui/components/ui-search.component';
 import { UiPaginationComponent } from '../../../shared/ui/components/ui-pagination/ui-pagination.component';
+import { UiTablePanelComponent } from '../../../shared/ui/components/ui-table-panel/ui-table-panel.component';
 import { UiTablePagingDirective } from '../../../shared/ui/directives/ui-table-paging.directive';
 
 @Component({
   selector:'app-category-list',standalone:true,
-  imports:[UiEmptyStateComponent, UiStatusComponent, UiTableActionDirective, UiButtonDirective, UiPageHeadingComponent, MatTableModule,MatCardModule,MatButtonModule,MatIconModule,MatInputModule,MatCheckboxModule,FormsModule,CommonModule,UiSearchComponent,UiTablePagingDirective, UiPaginationComponent],
+  imports:[UiEmptyStateComponent, UiStatusComponent, UiTableActionDirective, UiButtonDirective, UiPageHeadingComponent, MatTableModule,MatCardModule,MatButtonModule,MatIconModule,MatInputModule,MatCheckboxModule,FormsModule,CommonModule,UiSearchComponent,UiTablePagingDirective, UiPaginationComponent, UiTablePanelComponent],
   templateUrl:'./category-list.html',styleUrl:'./category-list.scss',
   animations:[trigger('detailExpand',[
     state('collapsed,void',style({height:'0px',minHeight:'0'})),
