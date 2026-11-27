@@ -1,9 +1,9 @@
 import { ChangeDetectorRef, Component, inject, OnInit } from '@angular/core';
+import { UiSelectComponent } from '../../../shared/ui/components/ui-select/ui-select.component';
 import { CommonModule } from '@angular/common';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { MatDialogRef, MAT_DIALOG_DATA, MatDialog } from '@angular/material/dialog';
 import { MatIconModule } from '@angular/material/icon';
-import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatSelectModule } from '@angular/material/select';
 import type { Observable } from 'rxjs';
 import { HttpErrorResponse } from '@angular/common/http';
@@ -22,7 +22,7 @@ import type { ModalActionId, ModalFooterAction } from '../../../shared/ui/models
 @Component({
   selector: 'app-category-parent-form',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule, MatIconModule, MatSelectModule, MatFormFieldModule,
+  imports: [UiSelectComponent, CommonModule, ReactiveFormsModule, MatIconModule, MatSelectModule,
     LoadingIndicatorComponent, UiControlDirective, ModalShellComponent],
   templateUrl: './category-parent-form.html',
   styleUrl: './category-parent-form.scss'
