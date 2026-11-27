@@ -47,12 +47,9 @@
               </div>
               <div class="category-field">
                 <label for="child-category-parent">Grupo (categoría padre) <span class="required">*</span></label>
-                <mat-form-field appearance="outline" class="inventory-select">
-                  <mat-select id="child-category-parent" formControlName="parentCategoryId"
-                    panelClass="inventory-select-options" placeholder="Selecciona un grupo">
+                <app-ui-select id="child-category-parent" formControlName="parentCategoryId" panelClass="inventory-select-options" placeholder="Selecciona un grupo">
                     <mat-option *ngFor="let padre of padres" [value]="padre.id">{{ padre.name }}</mat-option>
-                  </mat-select>
-                </mat-form-field>
+                  </app-ui-select>
                 <span class="field-error"
                   *ngIf="identityForm.get('parentCategoryId')?.invalid && identityForm.get('parentCategoryId')?.touched">Selecciona
                   un grupo.</span>
@@ -82,11 +79,9 @@
             <div class="rules-grid">
               <div class="category-field rules-tracking-field">
                 <label for="child-category-tracking">Modo de tracking <span class="required">*</span></label>
-                <mat-form-field appearance="outline" class="inventory-select">
-                  <mat-select id="child-category-tracking" formControlName="trackingMode" panelClass="inventory-select-options">
+                <app-ui-select id="child-category-tracking" formControlName="trackingMode" panelClass="inventory-select-options">
                     <mat-option *ngFor="let opt of trackingOptions" [value]="opt.value">{{ opt.label }}</mat-option>
-                  </mat-select>
-                </mat-form-field>
+                  </app-ui-select>
               </div>
               <div class="category-field units-selection">
                 <label>Unidades de medida permitidas <span class="required">*</span></label>
@@ -134,11 +129,9 @@
                     <mat-icon aria-hidden="true">info_outline</mat-icon>
                   </button>
                 </span>
-                <mat-form-field appearance="outline" class="inventory-select">
-                  <mat-select id="child-category-naming" formControlName="namingMethod" panelClass="inventory-select-options">
+                <app-ui-select id="child-category-naming" formControlName="namingMethod" panelClass="inventory-select-options">
                     <mat-option *ngFor="let option of namingOptions" [value]="option">{{ option }}</mat-option>
-                  </mat-select>
-                </mat-form-field>
+                  </app-ui-select>
               </div>
               <div class="rules-bulk-note" *ngIf="!isTrackingConfigurable">
                 <span>A granel: nombre libre</span>
