@@ -1,21 +1,17 @@
 import { CommonModule } from '@angular/common';
 import { Component, computed, input, output } from '@angular/core';
 import { CompanyPublic } from '../../core/models/company-public.model';
-import { MatSelectModule } from '@angular/material/select';
-import { UiSelectComponent, UiSelectValue } from '../ui/components/ui-select/ui-select.component';
+import { UiSelectComponent, UiSelectOption, UiSelectValue } from '../ui/components/ui-select/ui-select.component';
 
 @Component({
   selector: 'app-company-selector', standalone: true,
-  imports: [CommonModule, MatSelectModule, UiSelectComponent],
+  imports: [CommonModule, UiSelectComponent],
   template: `
     <app-ui-select [id]="selectId()" ariaLabel="Empresa / sucursal" [value]="value()"
+      [options]="companySelectOptions()"
       [disabled]="disabled() || loading() || !companies().length"
       [placeholder]="loading() ? 'Consultando empresas…' : 'Seleccionar empresa'"
-      (valueChange)="selectCompany($event)">
-      <mat-option *ngFor="let company of companies(); trackBy: trackCompany" [value]="company.id">
-        {{ company.businessName }}<span *ngIf="duplicate(company)"> (ID {{ company.id }})</span>
-      </mat-option>
-    </app-ui-select>`,
+      (valueChange)="selectCompany($event)" />`,
   styles: [':host { display: block; min-width: 0; } .inventory-select { width: 100%; }']
 })
 export class CompanySelectorComponent {
@@ -25,6 +21,13 @@ export class CompanySelectorComponent {
   readonly loading = input(false);
   readonly selectId = input('company-selector');
   readonly valueChange = output<number>();
+  readonly companySelectOptions = computed<UiSelectOption[]>(() => {
+    const duplicateNames = this.duplicateNames();
+    return this.companies().map(company => ({
+      value: company.id,
+      label: company.businessName + (duplicateNames.has(this.normalizeName(company.businessName)) ? ' (ID ' + company.id + ')' : '')
+    }));
+  });
 
   selectCompany(value: UiSelectValue): void {
     if (typeof value === 'number') this.valueChange.emit(value);
