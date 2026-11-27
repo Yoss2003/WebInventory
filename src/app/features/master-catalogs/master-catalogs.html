@@ -5,7 +5,7 @@
     <button type="button" role="tab" [attr.aria-selected]="tab==='parameters'" [class.active]="tab==='parameters'" (click)="switchCatalogTab('parameters')">Parámetros generales</button>
   </div>
   <!-- FASE 4.1.1: PROVEEDORES UI -->
-  <div class="panel supplier-panel inv-page-workspace" *ngIf="tab==='suppliers'">
+  <div class="panel supplier-panel inv-page-workspace inv-page-workspace--flush" *ngIf="tab==='suppliers'">
     <div class="list supplier-list" aria-label="Proveedores de la empresa">
       <header class="supplier-list-heading">
         <div class="supplier-heading-title">
@@ -55,7 +55,7 @@
         [hint]="supplierSearch ? 'Prueba otra búsqueda de proveedor o RUC.' : 'Consulta un RUC y registra tu primer proveedor desde el formulario.'" />
     </div>
   </div>
-  <div class="panel parameter-panel inv-page-workspace" *ngIf="tab==='parameters'">
+  <div class="panel parameter-panel inv-page-workspace inv-page-workspace--flush" *ngIf="tab==='parameters'">
     <div class="list parameter-list">
       <header class="parameter-list-heading">
         <h2>Parámetros visibles ({{parameters.length}})</h2>
