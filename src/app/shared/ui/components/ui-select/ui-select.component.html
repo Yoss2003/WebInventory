@@ -1,0 +1,14 @@
+<mat-form-field appearance="outline" class="inventory-select" subscriptSizing="dynamic">
+  <mat-select
+    [value]="value"
+    [disabled]="disabled"
+    [placeholder]="placeholder"
+    [attr.aria-label]="ariaLabel || placeholder || 'Seleccionar opción'"
+    panelClass="inventory-select-options inv-standard-select-panel"
+    (selectionChange)="select($event.value)">
+    <mat-option *ngIf="allowEmpty" value="">{{emptyLabel}}</mat-option>
+    <mat-option *ngFor="let option of options" [value]="option.value" [disabled]="option.disabled">
+      {{option.label}}
+    </mat-option>
+  </mat-select>
+</mat-form-field>
