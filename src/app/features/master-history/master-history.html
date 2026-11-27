@@ -19,7 +19,8 @@
     <div role="alert" *ngIf="error" class="error">{{error}}</div>
 
     <app-ui-table-panel class="inv-page-table-panel history-table-panel" *ngIf="!error" mode="fill" [loading]="loading" label="movimientos">
-      <div uiTablePanelContent class="table-wrapper inv-core-table-wrap" appUiTablePaging="master-history">
+      <div uiTablePanelContent class="table-wrapper inv-core-table-wrap"
+        appUiTablePaging="master-history" [uiTablePagingLoading]="loading && items.length > 0">
         <table *ngIf="items.length">
           <thead><tr><th>Fecha</th><th>Tipo</th><th>Inventario</th><th>Propietario</th><th>Responsable</th><th>Artículo</th><th>Cantidad</th><th>Observación</th></tr></thead>
           <tbody><tr *ngFor="let row of items">
