@@ -199,18 +199,6 @@
   padding-inline: 10px;
 }
 
-.cdk-overlay-pane:is(.catalog-supplier-form-modal, .catalog-parameter-form-modal) .catalog-form-modal .parameter-form-heading {
-  display: flex;
-  align-items: center;
-  gap: 7px;
-  min-width: 0;
-}
-
-.cdk-overlay-pane:is(.catalog-supplier-form-modal, .catalog-parameter-form-modal) .catalog-form-modal .parameter-form-heading h2 {
-  margin: 0;
-  font-size: 16px;
-}
-
 .cdk-overlay-pane:is(.catalog-supplier-form-modal, .catalog-parameter-form-modal) .catalog-form-modal .parameter-type-field,
 .cdk-overlay-pane:is(.catalog-supplier-form-modal, .catalog-parameter-form-modal) .catalog-form-modal .parameter-type-locked {
   display: flex;
