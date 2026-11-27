@@ -31,7 +31,7 @@ export interface UiSelectOption {
   host: { class: 'inventory-select' }
 })
 export class UiSelectComponent implements ControlValueAccessor {
-  @Input() id: string | null = null;
+  @Input() id = '';
   @Input() value: UiSelectValue = '';
   @Input() options: UiSelectOption[] = [];
   @Input() ariaLabel = '';
