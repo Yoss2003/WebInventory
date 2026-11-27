@@ -7,9 +7,9 @@
   </header>
 
   <div class="assignment-stats">
-    <div class="assignment-stat"><span>Asignaciones vigentes</span><strong>{{!hasLoaded?'…':activeAssignments}}</strong><small>Entregas con cantidad pendiente</small></div>
-    <div class="assignment-stat"><span>Artículos asignados</span><strong>{{!hasLoaded?'…':distinctArticles}}</strong><small>Referencias diferentes</small></div>
-    <div class="assignment-stat"><span>Cantidad fuera de stock</span><strong>{{!hasLoaded?'…':(pendingQuantity|number:'1.0-2')}}</strong><small>Saldo pendiente de devolución</small></div>
+    <div class="assignment-stat"><div class="assignment-stat__heading"><span>Asignaciones vigentes</span><button type="button" class="inv-info-button" matTooltip="Entregas con cantidad pendiente." matTooltipPosition="above" aria-label="Información sobre asignaciones vigentes"><mat-icon>info_outline</mat-icon></button></div><strong>{{!hasLoaded?'…':activeAssignments}}</strong></div>
+    <div class="assignment-stat"><div class="assignment-stat__heading"><span>Artículos asignados</span><button type="button" class="inv-info-button" matTooltip="Cantidad de artículos diferentes que tienen asignaciones." matTooltipPosition="above" aria-label="Información sobre artículos asignados"><mat-icon>info_outline</mat-icon></button></div><strong>{{!hasLoaded?'…':distinctArticles}}</strong></div>
+    <div class="assignment-stat"><div class="assignment-stat__heading"><span>Cantidad fuera de stock</span><button type="button" class="inv-info-button" matTooltip="Saldo de artículos que todavía está pendiente de devolución." matTooltipPosition="above" aria-label="Información sobre cantidad fuera de stock"><mat-icon>info_outline</mat-icon></button></div><strong>{{!hasLoaded?'…':(pendingQuantity|number:'1.0-2')}}</strong></div>
   </div>
 
   <section class="assignment-section inv-page-workspace inv-page-workspace--flush">
