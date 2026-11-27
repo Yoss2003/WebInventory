@@ -214,19 +214,12 @@
 <ng-template #parameterFormDialog>
   <app-modal-shell class="catalog-form-modal parameter-form-modal" type="mainForm"
     [title]="editingParameterId ? 'Editar parámetro general' : 'Nuevo parámetro general'"
-    [subtitleVisible]="false" [infoVisible]="false" [sectionsVisible]="false"
-    [closeVisible]="true" [footerActions]="parameterModalActions"
+    [subtitleVisible]="false" [infoVisible]="true"
+    [infoTooltip]="'Para parámetros comunes. Las contraseñas, tokens y claves de API tienen una gestión separada.'"
+    [sectionsVisible]="false" [closeVisible]="true" [footerActions]="parameterModalActions"
     [busyActionId]="saving ? 'primary' : null"
     (actionClicked)="handleParameterModalAction($event)" (closeRequested)="closeParameterForm()">
     <form class="catalog-modal-form" (ngSubmit)="saveParameter()">
-      <div class="parameter-form-heading">
-        <h2>{{editingParameterId ? 'Editar parámetro' : 'Nuevo parámetro general'}}</h2>
-        <button type="button" class="inv-info-button"
-          matTooltip="Para parámetros comunes. Las contraseñas, tokens y claves de API tienen una gestión separada."
-          matTooltipPosition="above" aria-label="Información sobre los parámetros generales">
-          <mat-icon aria-hidden="true">info_outline</mat-icon>
-        </button>
-      </div>
       <div class="fields parameter-fields">
         <div class="parameter-type-field" *ngIf="!isSystemManagedParameter; else systemParameterType">
           <label>Tipo <span class="required">*</span></label>
