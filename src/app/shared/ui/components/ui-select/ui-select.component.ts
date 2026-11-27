@@ -49,13 +49,37 @@ export class UiSelectComponent implements ControlValueAccessor, AfterContentInit
 
   @ContentChildren(MatOption, { descendants: true })
   private projectedOptionsQuery!: QueryList<MatOption>;
+  private projectedOptions: UiSelectOption[] = [];
+
   get effectiveOptions(): UiSelectOption[] {
-    if (this.options.length) return this.options;
-    return this.projectedOptionsQuery?.map(option => ({
+    return this.options.length ? this.options : this.projectedOptions;
+  }
+
+  ngAfterContentInit(): void {
+    this.syncProjectedOptions();
+  }
+
+  ngAfterContentChecked(): void {
+    this.syncProjectedOptions();
+  }
+
+  private syncProjectedOptions(): void {
+    if (this.options.length || !this.projectedOptionsQuery) return;
+
+    const next = this.projectedOptionsQuery.map(option => ({
       value: option.value,
       label: option.viewValue,
       disabled: option.disabled
-    })) ?? [];
+    }));
+    const unchanged = next.length === this.projectedOptions.length &&
+      next.every((option, index) => {
+        const current = this.projectedOptions[index];
+        return current &&
+          Object.is(current.value, option.value) &&
+          current.label === option.label &&
+          current.disabled === option.disabled;
+      });
+    if (!unchanged) this.projectedOptions = next;
   }
 
   @Output() readonly valueChange = new EventEmitter<UiSelectValue>();
