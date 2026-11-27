@@ -86,15 +86,24 @@ export class MasterHistoryComponent implements OnInit {
 
   inventoryOptions: HistoryInventory[] = [];
   userOptions: HistoryUser[] = [];
-  get inventorySelectOptions(): UiSelectOption[] {
-    return [{ value: '', label: 'Todos' }, ...this.inventoryOptions.map(item => ({
-      value: String(item.id), label: this.inventoryLabel(item)
-    }))];
-  }
-  get userSelectOptions(): UiSelectOption[] {
-    return [{ value: '', label: 'Todos' }, ...this.userOptions.map(item => ({
-      value: String(item.id), label: this.userLabel(item)
-    }))];
+  inventorySelectOptions: UiSelectOption[] = [{ value: '', label: 'Todos' }];
+  userSelectOptions: UiSelectOption[] = [{ value: '', label: 'Todos' }];
+
+  private rebuildSelectOptions(): void {
+    this.userSelectOptions = [
+      { value: '', label: 'Todos' },
+      ...this.userOptions.map(item => ({
+        value: String(item.id),
+        label: this.userLabel(item)
+      }))
+    ];
+    this.inventorySelectOptions = [
+      { value: '', label: 'Todos' },
+      ...this.inventoryOptions.map(item => ({
+        value: String(item.id),
+        label: this.inventoryLabel(item)
+      }))
+    ];
   }
   readonly actionSelectOptions: UiSelectOption[] = [
     { value: '', label: 'Todos' },
@@ -120,10 +129,20 @@ export class MasterHistoryComponent implements OnInit {
   to = '';
   error = '';
 
-  get fromDate(): Date | null { return this.from ? new Date(this.from + 'T12:00:00') : null; }
-  get toDate(): Date | null { return this.to ? new Date(this.to + 'T12:00:00') : null; }
-  setFromDate(date: Date | null): void { this.from = this.dateOnly(date); }
-  setToDate(date: Date | null): void { this.to = this.dateOnly(date); }
+  // Mantener referencias estables: Angular Material recibe estos valores en cada
+  // ciclo de detección y no debe recibir una instancia Date nueva continuamente.
+  fromDate: Date | null = null;
+  toDate: Date | null = null;
+
+  setFromDate(date: Date | null): void {
+    this.fromDate = date;
+    this.from = this.dateOnly(date);
+  }
+
+  setToDate(date: Date | null): void {
+    this.toDate = date;
+    this.to = this.dateOnly(date);
+  }
 
   private dateOnly(date: Date | null): string {
     if (!date || Number.isNaN(date.getTime())) return '';
@@ -162,6 +181,7 @@ export class MasterHistoryComponent implements OnInit {
         this.inventoryOptions = (Array.isArray(rows) ? rows : [])
           .filter(x => !x.isMaster)
           .sort((a, b) => this.inventoryLabel(a).localeCompare(this.inventoryLabel(b), 'es'));
+        this.rebuildSelectOptions();
         this.cdr.markForCheck();
       },
       error: () => {
@@ -173,6 +193,7 @@ export class MasterHistoryComponent implements OnInit {
       next: rows => {
         this.userOptions = (Array.isArray(rows) ? rows : [])
           .sort((a, b) => this.userLabel(a).localeCompare(this.userLabel(b), 'es'));
+        this.rebuildSelectOptions();
         this.cdr.markForCheck();
       },
       error: () => {
