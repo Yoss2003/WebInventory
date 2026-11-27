@@ -344,3 +344,68 @@ app-dev-management > p.error { margin: 12px 0; padding: 14px; color: #ffc0c0; }
   max-height: min(520px, 55dvh);
   overflow: auto;
 }
+
+
+/* Modales de Gestión Dev: el shell compartido controla encabezado, cierre y scroll.
+   El contenido no duplica tarjetas ni cabeceras dentro del modal. */
+.inv-admin-page.dev-page .dev-modal-content {
+  display: flex;
+  flex: 1 1 auto;
+  flex-direction: column;
+  gap: 16px;
+  box-sizing: border-box;
+  width: 100%;
+  min-width: 0;
+  min-height: 0;
+  padding: 0;
+  border: 0;
+  border-radius: 0;
+  background: transparent;
+}
+.inv-admin-page.dev-page .dev-modal-content.company-editor { display: flex; }
+.inv-admin-page.dev-page .dev-modal-content .editor-group {
+  padding: 15px;
+  border: 1px solid #455d6e;
+  border-radius: 12px;
+  background: #182936;
+}
+.inv-admin-page.dev-page .dev-modal-content .group-heading {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 6px 12px;
+  margin-bottom: 12px;
+}
+.inv-admin-page.dev-page .dev-modal-content .group-heading h3 { margin: 0; font-size: 14px; }
+.inv-admin-page.dev-page .dev-modal-content .group-heading p { margin: 0; color: #a9bfcd; font-size: 11px; }
+.inv-admin-page.dev-page .dev-modal-content .form-actions { display: flex; justify-content: flex-end; padding-top: 4px; }
+.inv-admin-page.dev-page .dev-modal-toolbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  min-width: 0;
+  padding-bottom: 12px;
+  border-bottom: 1px solid var(--admin-border);
+}
+.inv-admin-page.dev-page .dev-recovery-table-panel {
+  flex: 1 1 auto;
+  min-width: 0;
+  min-height: 180px;
+}
+.inv-admin-page.dev-page .dev-recovery-table-panel .ui-table-panel__viewport {
+  padding: 0 4px;
+}
+.inv-admin-page.dev-page .dev-recovery-table-panel .ui-table-panel__pagination {
+  padding: 0 4px 8px;
+}
+.cdk-overlay-pane.dev-company-editor-modal .modal-shell__content,
+.cdk-overlay-pane.dev-recovery-modal .modal-shell__content {
+  padding: 16px 20px 20px;
+}
+@media (max-width: 640px) {
+  .cdk-overlay-pane.dev-company-editor-modal .modal-shell__content,
+  .cdk-overlay-pane.dev-recovery-modal .modal-shell__content { padding: 12px; }
+  .inv-admin-page.dev-page .dev-modal-content .editor-group { padding: 12px; }
+}
