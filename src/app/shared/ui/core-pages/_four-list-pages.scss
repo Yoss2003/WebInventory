@@ -414,3 +414,58 @@ html.inv-movement-tab-transition::view-transition-new(root) {
     --tab-index: #{$i - 1};
   }
 }
+
+/* Workspace flexible para vistas con pestañas y tablas por categoría. */
+.inv-core-page .category-workspace,
+.inv-core-page .entries-workspace,
+.inv-core-page .outputs-workspace {
+  flex: 1 1 auto;
+  min-width: 0;
+  min-height: 0;
+}
+.inv-core-page .category-workspace .category-table-panel {
+  flex: 1 1 auto;
+  min-width: 0;
+  min-height: 0;
+}
+.inv-core-page .entries-workspace,
+.inv-core-page .outputs-workspace {
+  display: flex;
+  flex-direction: column;
+}
+.inv-core-page .entries-workspace > .entries-tabs,
+.inv-core-page .outputs-workspace > .outputs-tabs {
+  display: flex;
+  flex: 1 1 auto;
+  flex-direction: column;
+  min-width: 0;
+  min-height: 0;
+}
+.inv-core-page :is(.entries-tabs,.outputs-tabs) .mat-mdc-tab-body-wrapper {
+  display: flex;
+  flex: 1 1 auto;
+  min-width: 0;
+  min-height: 0;
+}
+.inv-core-page :is(.entries-tabs,.outputs-tabs) .mat-mdc-tab-body {
+  flex: 1 1 auto;
+  min-width: 0;
+  min-height: 0;
+}
+.inv-core-page :is(.entries-tabs,.outputs-tabs) .mat-mdc-tab-body-content {
+  display: flex;
+  flex-direction: column;
+  box-sizing: border-box;
+  height: 100%;
+  min-width: 0;
+  min-height: 0;
+  overflow: hidden;
+}
+.inv-core-page :is(.entries-tabs,.outputs-tabs) .mat-mdc-tab-body-content > app-ui-table-panel {
+  flex: 1 1 auto;
+  min-width: 0;
+  min-height: 0;
+}
+.inv-core-page :is(.entries-tabs,.outputs-tabs) .mat-mdc-tab-body-content .inv-core-table-wrap {
+  margin-top: 0;
+}

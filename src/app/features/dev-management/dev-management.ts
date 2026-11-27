@@ -25,13 +25,14 @@ import { UiEmptyStateComponent } from '../../shared/ui/components/ui-empty-state
 import { UiStatusComponent } from '../../shared/ui/components/ui-status.component';
 import { UiSearchComponent } from '../../shared/ui/components/ui-search.component';
 import { UiPaginationComponent } from '../../shared/ui/components/ui-pagination/ui-pagination.component';
+import { UiTablePanelComponent } from '../../shared/ui/components/ui-table-panel/ui-table-panel.component';
 import { UiTablePagingDirective } from '../../shared/ui/directives/ui-table-paging.directive';
 import { ModalShellComponent } from '../../shared/ui/components/modal-shell/modal-shell.component';
 
 @Component({
   selector: 'app-dev-management',
   standalone: true,
-  imports: [UiSelectComponent, UiControlDirective, UiButtonDirective, UiTableActionDirective, UiPageHeadingComponent, UiEmptyStateComponent, UiStatusComponent, CommonModule, FormsModule, MatSelectModule, MatIconModule,UiSearchComponent,UiTablePagingDirective, UiPaginationComponent, ModalShellComponent],
+  imports: [UiSelectComponent, UiControlDirective, UiButtonDirective, UiTableActionDirective, UiPageHeadingComponent, UiEmptyStateComponent, UiStatusComponent, CommonModule, FormsModule, MatSelectModule, MatIconModule,UiSearchComponent,UiTablePagingDirective, UiPaginationComponent, UiTablePanelComponent, ModalShellComponent],
   templateUrl: './dev-management.html',
   styleUrl: './dev-management.scss'
 })

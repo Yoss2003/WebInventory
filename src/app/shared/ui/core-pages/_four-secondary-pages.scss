@@ -493,3 +493,58 @@
     animation: none;
   }
 }
+
+/* Los formularios de Catálogo general viven en modales; sus paneles principales
+   usan una sola columna y entregan todo el ancho al buscador y a la tabla. */
+.inv-secondary-page.catalog-page > .supplier-panel,
+.inv-secondary-page.catalog-page > .parameter-panel {
+  display: flex;
+  flex: 1 1 auto;
+  flex-direction: column;
+  min-width: 0;
+  min-height: 0;
+}
+.inv-secondary-page.catalog-page .supplier-list {
+  width: 100%;
+  flex: 1 1 auto;
+  gap: 12px;
+}
+.inv-secondary-page.catalog-page .supplier-toolbar > button {
+  height: 42px;
+  min-height: 42px;
+}
+.inv-secondary-page.lookup-page .lookup-grid {
+  flex: 1 1 auto;
+  grid-template-columns: minmax(0, .95fr) minmax(0, 1.05fr);
+  align-items: stretch;
+  min-height: 0;
+}
+.inv-secondary-page.lookup-page .lookup-grid > section {
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
+}
+.inv-secondary-page.lookup-page .ruc-panel .registered-suppliers {
+  margin-top: auto;
+}
+.inv-secondary-page.lookup-page .fx-dashboard .fx-disclaimer {
+  margin-top: auto;
+  padding-top: 14px;
+}
+@media (max-width: 900px) {
+  .inv-secondary-page.lookup-page .lookup-grid {
+    grid-template-columns: minmax(0, 1fr);
+    flex: 0 0 auto;
+  }
+  .inv-secondary-page.lookup-page .lookup-grid > section { min-height: auto; }
+}
+
+
+/* Inset propio del panel de Artículos fuera de stock: la tabla no toca sus bordes. */
+.inv-secondary-page.assignment-page .assignment-table-panel .ui-table-panel__viewport {
+  box-sizing: border-box;
+  padding: 12px 16px 8px;
+}
+.inv-secondary-page.assignment-page .assignment-table-panel .ui-table-panel__pagination {
+  padding: 0 16px 12px;
+}

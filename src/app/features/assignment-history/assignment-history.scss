@@ -2,3 +2,26 @@
 
 .assignment-table-wrap--scroll{max-height:none!important;flex:1 1 auto;min-height:0}
 .assignment-table-wrap--scroll .assignment-table{min-width:760px}
+
+
+/* Separación interior de la tabla respecto al panel de trabajo. */
+:host .assignment-table-panel .ui-table-panel__viewport {
+  box-sizing: border-box;
+  padding: 12px 16px 8px;
+}
+:host .assignment-table-panel .ui-table-panel__pagination {
+  padding: 0 16px 12px;
+}
+:host .assignment-stat__heading {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  min-width: 0;
+}
+:host .assignment-stat__heading > span { flex: 0 1 auto; }
+:host .assignment-stat__heading .inv-info-button {
+  flex: 0 0 25px;
+  width: 25px;
+  height: 25px;
+  min-height: 25px;
+}
