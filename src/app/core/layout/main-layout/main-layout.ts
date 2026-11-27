@@ -152,7 +152,7 @@ export class MainLayoutComponent {
     });
   }
   ngOnInit():void {
-    const session = this.authService.getSession() ?? {};
+    const session = this.authService.getSession();
     this.companyTheme.reset();
     this.accessApi.me().pipe(takeUntilDestroyed(this.destroyRef)).subscribe({
       next: access => { this.permissionCodes = access.permissions || []; },
@@ -160,7 +160,7 @@ export class MainLayoutComponent {
     });
     this.publicCompanies.getActiveCompanies().pipe(takeUntilDestroyed(this.destroyRef)).subscribe({
       next: companies => {
-        const company = companies.find(c => Number(c.id) === Number(session.companyId));
+        const company = companies.find(c => Number(c.id) === Number(session?.companyId));
         this.companyTheme.apply(company?.primaryColorHex);
       },
       error: () => this.companyTheme.reset()
@@ -169,7 +169,7 @@ export class MainLayoutComponent {
       next: rows => {
         this.inventoryLoadFailed = false;
         this.generalInventoryExists = rows.some(i => i.isMaster && i.isActive);
-        this.inventoryContext.initialize(rows, Number(session.id) || 0);
+        this.inventoryContext.initialize(rows, Number(session?.id) || 0);
         this.inventories = this.inventoryContext.options;
         this.selectedInventoryId = this.inventoryContext.activeInventoryId;
         this.loadingInventories = false;
