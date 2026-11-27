@@ -7,7 +7,7 @@ describe('MainLayoutComponent', () => {
   beforeEach(async () => {
     await TestBed.configureTestingModule({
       imports: [MainLayoutComponent],
-      providers: [provideRouter([]), { provide: AuthService, useValue: { logout: () => {} } }],
+      providers: [provideRouter([]), { provide: AuthService, useValue: { logout: () => {}, getSession: () => null } }],
     }).compileComponents();
   });
 
