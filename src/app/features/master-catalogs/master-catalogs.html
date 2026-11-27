@@ -73,7 +73,7 @@
       <div class="inv-core-toolbar parameter-toolbar">
         <app-ui-search [value]="parameterSearch" (valueChange)="parameterSearch=$event;parameterPage=1" placeholder="Buscar parámetro" label="Buscar parámetros" />
         <div class="parameter-type-filter"><app-ui-select [options]="parameterTypeFilterSelectOptions" [value]="parameterTypeFilter"
-          (valueChange)="parameterTypeFilter=String($event ?? '');parameterPage=1" ariaLabel="Filtrar por tipo" /></div>
+          (valueChange)="setParameterTypeFilter($event)" ariaLabel="Filtrar por tipo" /></div>
       </div>
       <app-ui-table-panel class="catalog-table-panel parameter-table-panel"
         *ngIf="filteredParameters.length || initialLoading" mode="fill" [loading]="initialLoading" label="parámetros generales">
@@ -182,7 +182,7 @@
         <div class="parameter-type-field" *ngIf="!isSystemManagedParameter; else systemParameterType">
           <label>Tipo</label>
           <app-ui-select [options]="parameterTypeSelectOptions" [value]="parameter.parameterType"
-            (valueChange)="parameter.parameterType=String($event ?? '')"
+            (valueChange)="setParameterType($event)"
             ariaLabel="Tipo" placeholder="Selecciona un tipo" />
         </div>
         <ng-template #systemParameterType>
