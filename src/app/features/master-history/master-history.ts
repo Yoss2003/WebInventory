@@ -1,6 +1,7 @@
 import { UiButtonDirective } from '../../shared/ui/directives/ui-button.directive';
 import { UiPageHeadingComponent } from '../../shared/ui/components/ui-page-heading.component';
 import { UiPaginationComponent } from '../../shared/ui/components/ui-pagination/ui-pagination.component';
+import { UiSelectComponent, UiSelectOption, UiSelectValue } from '../../shared/ui/components/ui-select/ui-select.component';
 import { UiTablePagingDirective } from '../../shared/ui/directives/ui-table-paging.directive';
 import { CleanArticleNamePipe } from '../../shared/clean-article-name.pipe';
 import { CommonModule } from '@angular/common';
@@ -61,6 +62,7 @@ interface HistoryUser {
   imports: [
     UiButtonDirective,
     UiPageHeadingComponent,
+    UiSelectComponent,
     UiTablePagingDirective, UiPaginationComponent,
     CleanArticleNamePipe,
     CommonModule,
@@ -82,6 +84,26 @@ export class MasterHistoryComponent implements OnInit {
 
   inventoryOptions: HistoryInventory[] = [];
   userOptions: HistoryUser[] = [];
+  get inventorySelectOptions(): UiSelectOption[] {
+    return [{ value: '', label: 'Todos' }, ...this.inventoryOptions.map(item => ({
+      value: String(item.id), label: this.inventoryLabel(item)
+    }))];
+  }
+  get userSelectOptions(): UiSelectOption[] {
+    return [{ value: '', label: 'Todos' }, ...this.userOptions.map(item => ({
+      value: String(item.id), label: this.userLabel(item)
+    }))];
+  }
+  readonly actionSelectOptions: UiSelectOption[] = [
+    { value: '', label: 'Todos' },
+    { value: '1', label: 'Entradas' },
+    { value: '2', label: 'Salidas' },
+    { value: '3', label: 'Custodias' }
+  ];
+
+  updateFilter(field: 'inventoryId' | 'userId' | 'actorUserId' | 'actionId', value: UiSelectValue): void {
+    this[field] = value == null ? '' : String(value);
+  }
   optionsError = '';
   items: MasterMovementRow[] = [];
   total = 0;
