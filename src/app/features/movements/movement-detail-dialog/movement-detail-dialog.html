@@ -1,7 +1,7 @@
 <app-modal-shell type="detail" title="Detalle del movimiento" [subtitle]="'Movimiento #' + data.movement.id" icon="receipt_long" [infoVisible]="true" [closeVisible]="true" [footerVisible]="false" [contentScrollable]="false" (closeRequested)="dialogRef.close()">
   <div class="movement-dialog ui-v2-dialog ui-v2-dialog--simple">
     <main>
-      <div class="movement-record-loading" *ngIf="detailLoading" role="status"><app-loading-indicator message="Consultando información del movimiento..." /><div class="movement-record-skeleton" aria-hidden="true"><span></span><span></span><span></span><span></span><span></span><span></span></div></div>
+      <div class="movement-record-loading" *ngIf="detailLoading" role="status"><div class="movement-record-skeleton" aria-hidden="true"><span></span><span></span><span></span><span></span><span></span><span></span></div></div>
       <ng-container *ngIf="!detailLoading">
       <div class="movement-detail-layout" [class.movement-detail-layout--credit]="isCreditSale">
         <section class="movement-primary-card">

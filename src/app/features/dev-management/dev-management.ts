@@ -3,13 +3,14 @@ import { UiButtonDirective } from '../../shared/ui/directives/ui-button.directiv
 import { UiTableActionDirective } from '../../shared/ui/directives/ui-table-action.directive';
 import { UiPageHeadingComponent } from '../../shared/ui/components/ui-page-heading.component';
 import { CommonModule, isPlatformBrowser } from '@angular/common';
+import { TemplateRef, ViewChild } from '@angular/core';
 import { ChangeDetectorRef, Component, OnDestroy, OnInit, PLATFORM_ID, inject } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatSelectModule } from '@angular/material/select';
 import { MatIconModule } from '@angular/material/icon';
-import { MatDialog } from '@angular/material/dialog';
+import { MatDialog, MatDialogRef } from '@angular/material/dialog';
 import { ModalStandardService } from '../../shared/ui/services/modal-standard.service';
 import { DevConfirmDialogComponent, DevConfirmDialogData } from '../../shared/confirm-dialog/dev-confirm-dialog';
 import { FirstAdminDialogComponent, FirstAdminCreated } from './first-admin-dialog/first-admin-dialog';
@@ -25,11 +26,12 @@ import { UiStatusComponent } from '../../shared/ui/components/ui-status.componen
 import { UiSearchComponent } from '../../shared/ui/components/ui-search.component';
 import { UiPaginationComponent } from '../../shared/ui/components/ui-pagination/ui-pagination.component';
 import { UiTablePagingDirective } from '../../shared/ui/directives/ui-table-paging.directive';
+import { ModalShellComponent } from '../../shared/ui/components/modal-shell/modal-shell.component';
 
 @Component({
   selector: 'app-dev-management',
   standalone: true,
-  imports: [UiControlDirective, UiButtonDirective, UiTableActionDirective, UiPageHeadingComponent, UiEmptyStateComponent, UiStatusComponent, CommonModule, FormsModule, MatFormFieldModule, MatSelectModule, MatIconModule, LoadingIndicatorComponent,UiSearchComponent,UiTablePagingDirective, UiPaginationComponent],
+  imports: [UiControlDirective, UiButtonDirective, UiTableActionDirective, UiPageHeadingComponent, UiEmptyStateComponent, UiStatusComponent, CommonModule, FormsModule, MatFormFieldModule, MatSelectModule, MatIconModule, LoadingIndicatorComponent,UiSearchComponent,UiTablePagingDirective, UiPaginationComponent, ModalShellComponent],
   templateUrl: './dev-management.html',
   styleUrl: './dev-management.scss'
 })
@@ -42,6 +44,10 @@ export class DevManagementComponent implements OnInit, OnDestroy {
   private readonly toasts = inject(ToastService);
   private readonly dialog = inject(MatDialog);
   private readonly modalStandards = inject(ModalStandardService);
+  @ViewChild('companyEditorTemplate') private companyEditorTemplate!: TemplateRef<unknown>;
+  @ViewChild('recoveryRequestsTemplate') private recoveryRequestsTemplate!: TemplateRef<unknown>;
+  private companyDialogRef: MatDialogRef<unknown> | null = null;
+  private recoveryDialogRef: MatDialogRef<unknown> | null = null;
 
   readonly plans: LicensePlan[] = ['Básico', 'Pro', 'Plus', 'Max'];
   readonly developer = this.isDeveloper();
@@ -300,6 +306,49 @@ export class DevManagementComponent implements OnInit, OnDestroy {
     this.renewPlan = this.isKnownPlan(currentPlan) ? currentPlan : 'Básico';
     this.logoFailed = false;
     this.cdr.markForCheck();
+    this.openCompanyEditor();
+  }
+
+  openNewCompany(): void {
+    if (this.saving || this.renewing) return;
+    this.newCompany();
+    this.openCompanyEditor();
+  }
+
+  private openCompanyEditor(): void {
+    this.companyDialogRef?.close();
+    this.companyDialogRef = this.modalStandards.openTemplate(this.companyEditorTemplate, 'mainForm', {
+      panelClass: ['inv-seven-modal', 'dev-company-editor-modal'],
+      width: 'min(900px, calc(100vw - 24px))',
+      maxWidth: 'calc(100vw - 24px)',
+      maxHeight: 'calc(100dvh - 24px)',
+      autoFocus: 'first-tabbable',
+      restoreFocus: true,
+      disableClose: true
+    });
+  }
+
+  closeCompanyEditor(): void {
+    if (this.saving || this.renewing) return;
+    this.companyDialogRef?.close();
+    this.companyDialogRef = null;
+  }
+
+  openRecoveryRequests(): void {
+    this.recoveryDialogRef?.close();
+    this.recoveryDialogRef = this.modalStandards.openTemplate(this.recoveryRequestsTemplate, 'subTask', {
+      panelClass: ['inv-seven-modal', 'dev-recovery-modal'],
+      width: 'min(1080px, calc(100vw - 24px))',
+      maxWidth: 'calc(100vw - 24px)',
+      maxHeight: 'calc(100dvh - 24px)',
+      autoFocus: false,
+      restoreFocus: true
+    });
+  }
+
+  closeRecoveryRequests(): void {
+    this.recoveryDialogRef?.close();
+    this.recoveryDialogRef = null;
   }
 
   newCompany(): void {
@@ -413,6 +462,8 @@ export class DevManagementComponent implements OnInit, OnDestroy {
 
   private finishSave(wasEditing: boolean, logoUploaded: boolean): void {
     this.saving = false;
+    this.companyDialogRef?.close(true);
+    this.companyDialogRef = null;
     this.newCompany();
     this.toasts.success(wasEditing
       ? (logoUploaded ? 'Empresa y logo actualizados sin renovar la licencia.' : 'Datos de empresa actualizados sin renovar la licencia.')

@@ -5,10 +5,26 @@
 }
 
 .master-page {
-  --core-table-max-height: 430px;
-  display: grid;
+  --core-table-max-height: none;
+  display: flex;
+  flex: 1 1 auto;
+  flex-direction: column;
   gap: 17px;
   min-width: 0;
+  min-height: 0;
+}
+.master-page > .inv-core-header { flex: 0 0 auto; }
+.master-page > .master-section {
+  display: flex;
+  flex: 1 1 auto;
+  flex-direction: column;
+  min-height: 0;
+}
+.master-page .master-table {
+  flex: 1 1 auto;
+  min-height: 0;
+  max-height: none !important;
+  overflow: auto;
 }
 
 .master-section {

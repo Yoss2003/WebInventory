@@ -317,3 +317,30 @@
 }
 
 app-dev-management > p.error { margin: 12px 0; padding: 14px; color: #ffc0c0; }
+/* Gestión Dev: el directorio es el área principal; formularios y recuperaciones se consultan en modales. */
+.inv-admin-page.dev-page {
+  display: flex;
+  flex: 1 1 auto;
+  flex-direction: column;
+  min-height: 0;
+}
+.inv-admin-page.dev-page > .dev-card[aria-label="Empresas registradas"] {
+  display: flex;
+  flex: 1 1 auto;
+  flex-direction: column;
+  min-height: 0;
+}
+.inv-admin-page.dev-page .companies-table {
+  flex: 1 1 auto;
+  min-height: 0;
+  max-height: none;
+}
+.inv-seven-modal.dev-company-editor-modal .company-editor,
+.inv-seven-modal.dev-recovery-modal .dev-card {
+  max-height: calc(100dvh - 72px);
+  overflow: auto;
+}
+.inv-seven-modal.dev-recovery-modal .recovery-table {
+  max-height: min(520px, 55dvh);
+  overflow: auto;
+}

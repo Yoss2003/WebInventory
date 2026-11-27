@@ -56,6 +56,14 @@ export class AuthService {
     return Number.isInteger(value) && value > 0 ? value : null;
   }
 
+  getCacheScope(): string {
+    if (!isPlatformBrowser(this.platformId)) return 'anonymous';
+    try {
+      const session = JSON.parse(localStorage.getItem('userSession') || '{}');
+      return 'company:' + (Number(session.companyId) || 0) + '|user:' + (Number(session.id) || 0);
+    } catch { return 'anonymous'; }
+  }
+
   getToken(): string | null {
     if (!isPlatformBrowser(this.platformId)) return null;
     return localStorage.getItem('token');
