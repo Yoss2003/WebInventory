@@ -201,6 +201,8 @@ export class UserManagementComponent implements OnInit {
         width: 'min(800px, calc(100vw - 24px))',
         maxWidth: 'calc(100vw - 24px)',
         maxHeight: 'calc(100dvh - 24px)',
+        enterAnimationDuration: 260,
+        exitAnimationDuration: 220,
         autoFocus: 'first-tabbable',
         restoreFocus: true,
         disableClose: true
