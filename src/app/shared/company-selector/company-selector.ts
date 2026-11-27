@@ -42,12 +42,6 @@ export class CompanySelectorComponent {
     return new Set([...counts.entries()].filter(([, count]) => count > 1).map(([name]) => name));
   });
 
-  readonly trackCompany = (_index: number, company: CompanyPublic): number => company.id;
-
-  duplicate(company: CompanyPublic): boolean {
-    return this.duplicateNames().has(this.normalizeName(company.businessName));
-  }
-
   private normalizeName(value: string): string {
     return value.trim().toLocaleLowerCase('es');
   }
