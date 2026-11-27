@@ -47,7 +47,7 @@ export class UiSelectComponent implements ControlValueAccessor {
   @Input() ariaLabelledby: string | null = null;
 
   @Output() readonly valueChange = new EventEmitter<UiSelectValue>();
-  @Output() readonly selectionChange = new EventEmitter<{ value: UiSelectValue }>();
+  @Output() readonly selectionChange = new EventEmitter<{ value: any }>();
   @Output() readonly openedChange = new EventEmitter<boolean>();
 
   private onChange: (value: UiSelectValue) => void = () => undefined;
