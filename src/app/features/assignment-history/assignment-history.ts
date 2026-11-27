@@ -7,6 +7,7 @@ import { FormsModule } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
 import { ModalStandardService } from '../../shared/ui/services/modal-standard.service';
 import { MatIconModule } from '@angular/material/icon';
+import { MatTooltipModule } from '@angular/material/tooltip';
 import { forkJoin } from 'rxjs';
 import { AssignmentService, AssignedArticle } from '../../core/services/assignments';
 import { AssignmentHistoryDialogComponent } from '../assignment-history-dialog/assignment-history-dialog';
@@ -16,7 +17,7 @@ import { UiTablePanelComponent } from '../../shared/ui/components/ui-table-panel
 import { UiTablePagingDirective } from '../../shared/ui/directives/ui-table-paging.directive';
 
 @Component({selector:'app-assignment-history',standalone:true,
-  imports:[UiButtonDirective, UiPageHeadingComponent, CleanArticleNamePipe, CommonModule,FormsModule,MatIconModule,UiSearchComponent,UiTablePagingDirective, UiPaginationComponent, UiTablePanelComponent],
+  imports:[UiButtonDirective, UiPageHeadingComponent, CleanArticleNamePipe, CommonModule,FormsModule,MatIconModule,MatTooltipModule,UiSearchComponent,UiTablePagingDirective, UiPaginationComponent, UiTablePanelComponent],
   templateUrl:'./assignment-history.html',styleUrl:'./assignment-history.scss'})
 export class AssignmentHistoryComponent implements OnInit {
   private readonly api=inject(AssignmentService);
