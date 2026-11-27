@@ -9,7 +9,6 @@ import { ToastService } from '../../../shared/toast/toast.service';
 import { ConfirmationDialogService } from '../../../shared/confirm-dialog/confirmation-dialog.service';
 import { UiButtonDirective } from '../../../shared/ui/directives/ui-button.directive';
 import { UiTableActionDirective } from '../../../shared/ui/directives/ui-table-action.directive';
-import { LoadingIndicatorComponent } from '../../../shared/loading/loading-indicator';
 import { ModalShellComponent } from '../../../shared/ui/components/modal-shell/modal-shell.component';
 import { UiPaginationComponent } from '../../../shared/ui/components/ui-pagination/ui-pagination.component';
 import { UiTablePagingDirective } from '../../../shared/ui/directives/ui-table-paging.directive';
@@ -25,7 +24,7 @@ export interface InventorySharesDialogData {
 @Component({
   selector: 'app-inventory-shares-dialog',
   standalone: true,
-  imports: [CommonModule, MatIconModule, UiButtonDirective, UiTableActionDirective, LoadingIndicatorComponent, ModalShellComponent, UiTablePagingDirective, UiPaginationComponent],
+  imports: [CommonModule, MatIconModule, UiButtonDirective, UiTableActionDirective, ModalShellComponent, UiTablePagingDirective, UiPaginationComponent],
   templateUrl: './inventory-shares-dialog.component.html',
   styleUrl: './inventory-shares-dialog.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush

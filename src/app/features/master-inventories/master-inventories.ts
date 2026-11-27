@@ -3,7 +3,6 @@ import { ChangeDetectorRef, Component, OnInit, inject } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { InventoryService } from '../../core/services/inventories';
 import { MatIconModule } from '@angular/material/icon';
-import { LoadingIndicatorComponent } from '../../shared/loading/loading-indicator';
 import { UiPageHeadingComponent } from '../../shared/ui/components/ui-page-heading.component';
 import { UiSearchComponent } from '../../shared/ui/components/ui-search.component';
 import { UiEmptyStateComponent } from '../../shared/ui/components/ui-empty-state.component';
@@ -32,7 +31,6 @@ interface MasterInventory {
     CommonModule,
     FormsModule,
     MatIconModule,
-    LoadingIndicatorComponent,
     UiPageHeadingComponent,
     UiSearchComponent,
     UiEmptyStateComponent,

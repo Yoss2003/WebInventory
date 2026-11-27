@@ -5,8 +5,6 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatDialog } from '@angular/material/dialog';
 import { ModalStandardService } from '../../shared/ui/services/modal-standard.service';
 import { forkJoin } from 'rxjs';
-
-import { LoadingIndicatorComponent } from '../../shared/loading/loading-indicator';
 import { UiPageHeadingComponent } from '../../shared/ui/components/ui-page-heading.component';
 import { UiSearchComponent } from '../../shared/ui/components/ui-search.component';
 import { UiPaginationComponent } from '../../shared/ui/components/ui-pagination/ui-pagination.component';
@@ -26,7 +24,7 @@ import { ResendCredentialsDialogComponent } from './resend-credentials-dialog/re
 @Component({
   selector: 'app-user-management',
   standalone: true,
-  imports: [CommonModule, FormsModule, MatIconModule, LoadingIndicatorComponent,
+  imports: [CommonModule, FormsModule, MatIconModule,
     UiPageHeadingComponent, UiSearchComponent, UiEmptyStateComponent, UiButtonDirective, UiTableActionDirective, UiTablePagingDirective, UiPaginationComponent, UiTablePanelComponent],
   templateUrl: './user-management.html',
   styleUrl: './user-management.scss'

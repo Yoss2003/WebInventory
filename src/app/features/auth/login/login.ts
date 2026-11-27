@@ -12,12 +12,10 @@ import { CompanyPublicService } from '../../../core/services/companies';
 import { CompanyThemeService } from '../../../shared/ui/services/company-theme.service';
 import { CompanyPublic } from '../../../core/models/company-public.model';
 import { LoginRequest } from '../../../core/models/auth.model';
-import { LoadingIndicatorComponent } from '../../../shared/loading/loading-indicator';
-
 @Component({
   selector: 'app-login',
   standalone: true,
-  imports: [UiButtonDirective, CommonModule, ReactiveFormsModule, MatIconModule, CompanySelectorComponent, LoadingIndicatorComponent],
+  imports: [UiButtonDirective, CommonModule, ReactiveFormsModule, MatIconModule, CompanySelectorComponent],
   templateUrl: './login.html',
   styleUrl: './login.scss'
 })

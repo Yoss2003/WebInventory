@@ -7,8 +7,6 @@ import { AuthService } from '../../core/services/auth.service';
 import { CompanyPublicService } from '../../core/services/companies';
 import { CompanySelectorComponent } from '../../shared/company-selector/company-selector';
 import { CompanyPublic } from '../../core/models/company-public.model';
-import { LoadingIndicatorComponent } from '../../shared/loading/loading-indicator';
-
 @Component({
   selector: 'app-password-recovery',
   standalone: true,
@@ -17,8 +15,7 @@ import { LoadingIndicatorComponent } from '../../shared/loading/loading-indicato
     CommonModule,
     FormsModule,
     RouterModule,
-    CompanySelectorComponent,
-    LoadingIndicatorComponent
+    CompanySelectorComponent
   ],
   templateUrl: './password-recovery.html',
   styleUrl: './password-recovery.scss'

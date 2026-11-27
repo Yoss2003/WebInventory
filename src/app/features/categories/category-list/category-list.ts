@@ -20,7 +20,6 @@ import { CategoryService } from '../../../core/services/category';
 import { Category } from '../../../core/models/category.model';
 import { CategoryParentFormComponent } from '../category-parent-form/category-parent-form';
 import { CategoryChildFormComponent } from '../category-child-form/category-child-form';
-import { LoadingIndicatorComponent } from '../../../shared/loading/loading-indicator';
 import { ToastService } from '../../../shared/toast/toast.service';
 import { AuthService } from '../../../core/services/auth.service';
 
@@ -30,7 +29,7 @@ import { UiTablePagingDirective } from '../../../shared/ui/directives/ui-table-p
 
 @Component({
   selector:'app-category-list',standalone:true,
-  imports:[UiEmptyStateComponent, UiStatusComponent, UiTableActionDirective, UiButtonDirective, UiPageHeadingComponent, MatTableModule,MatCardModule,MatButtonModule,MatIconModule,MatInputModule,MatCheckboxModule,FormsModule,CommonModule,LoadingIndicatorComponent,UiSearchComponent,UiTablePagingDirective, UiPaginationComponent],
+  imports:[UiEmptyStateComponent, UiStatusComponent, UiTableActionDirective, UiButtonDirective, UiPageHeadingComponent, MatTableModule,MatCardModule,MatButtonModule,MatIconModule,MatInputModule,MatCheckboxModule,FormsModule,CommonModule,UiSearchComponent,UiTablePagingDirective, UiPaginationComponent],
   templateUrl:'./category-list.html',styleUrl:'./category-list.scss',
   animations:[trigger('detailExpand',[
     state('collapsed,void',style({height:'0px',minHeight:'0'})),

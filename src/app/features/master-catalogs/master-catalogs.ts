@@ -22,7 +22,6 @@ import { UiPaginationComponent } from '../../shared/ui/components/ui-pagination/
 import { UiTablePagingDirective } from '../../shared/ui/directives/ui-table-paging.directive';
 import { UiEmptyStateComponent } from '../../shared/ui/components/ui-empty-state.component';
 import { UiStatusComponent } from '../../shared/ui/components/ui-status.component';
-import { LoadingIndicatorComponent } from '../../shared/loading/loading-indicator';
 import { SupplierCommunicationDialogComponent } from './supplier-communication-dialog/supplier-communication-dialog';
 import type { SupplierCommunicationData } from './supplier-communication-dialog/supplier-communication-dialog';
 import { SupplierFiscalInfoDialogComponent } from './supplier-fiscal-info-dialog/supplier-fiscal-info-dialog';
@@ -72,7 +71,6 @@ interface ParameterRecord {
   selector: 'app-master-catalogs',
   standalone: true,
   imports: [
-    LoadingIndicatorComponent,
     UiControlDirective,
     UiTableActionDirective,
     UiButtonDirective,

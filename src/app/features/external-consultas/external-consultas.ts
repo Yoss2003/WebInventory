@@ -14,7 +14,6 @@ import { provideNativeDateAdapter, MAT_DATE_LOCALE } from '@angular/material/cor
 import { finalize, timeout } from 'rxjs';
 import { FormsModule } from '@angular/forms';
 import { ExternalConsultasService, SupplierContact, SunatRuc, ExchangeRate } from '../../core/services/external-consultas';
-import { LoadingIndicatorComponent } from '../../shared/loading/loading-indicator';
 import { ToastService } from '../../shared/toast/toast.service';
 import { ModalStandardService } from '../../shared/ui/services/modal-standard.service';
 import { ModalShellComponent } from '../../shared/ui/components/modal-shell/modal-shell.component';
@@ -22,7 +21,7 @@ import type { ModalActionId, ModalFooterAction } from '../../shared/ui/models/mo
 import { UiPaginationComponent } from '../../shared/ui/components/ui-pagination/ui-pagination.component';
 import { UiTablePagingDirective } from '../../shared/ui/directives/ui-table-paging.directive';
 
-@Component({selector:'app-external-consultas',standalone:true,imports:[MoneyPipe, UiControlDirective, UiTableActionDirective, UiButtonDirective, UiPageHeadingComponent, CommonModule,FormsModule,LoadingIndicatorComponent,MatIconModule,MatDatepickerModule,MatFormFieldModule,MatInputModule,ModalShellComponent,UiTablePagingDirective, UiPaginationComponent],providers:[provideNativeDateAdapter(),{provide:MAT_DATE_LOCALE,useValue:'es-PE'}],templateUrl:'./external-consultas.html',styleUrl:'./external-consultas.scss'})
+@Component({selector:'app-external-consultas',standalone:true,imports:[MoneyPipe, UiControlDirective, UiTableActionDirective, UiButtonDirective, UiPageHeadingComponent, CommonModule,FormsModule,MatIconModule,MatDatepickerModule,MatFormFieldModule,MatInputModule,ModalShellComponent,UiTablePagingDirective, UiPaginationComponent],providers:[provideNativeDateAdapter(),{provide:MAT_DATE_LOCALE,useValue:'es-PE'}],templateUrl:'./external-consultas.html',styleUrl:'./external-consultas.scss'})
 export class ExternalConsultasComponent implements OnInit {
   private readonly api=inject(ExternalConsultasService);
   private readonly cdr=inject(ChangeDetectorRef);

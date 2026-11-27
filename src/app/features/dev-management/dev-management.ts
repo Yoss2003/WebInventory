@@ -19,7 +19,6 @@ import {
   DevManagementService, DevCompany, CompanyEdit, ResetPending, LicensePlan, RucLookupResult
 } from '../../core/services/dev-management';
 import { CompanyPublicService } from '../../core/services/companies';
-import { LoadingIndicatorComponent } from '../../shared/loading/loading-indicator';
 import { ToastService } from '../../shared/toast/toast.service';
 import { AuthService } from '../../core/services/auth.service';
 import { UiEmptyStateComponent } from '../../shared/ui/components/ui-empty-state.component';
@@ -32,7 +31,7 @@ import { ModalShellComponent } from '../../shared/ui/components/modal-shell/moda
 @Component({
   selector: 'app-dev-management',
   standalone: true,
-  imports: [UiControlDirective, UiButtonDirective, UiTableActionDirective, UiPageHeadingComponent, UiEmptyStateComponent, UiStatusComponent, CommonModule, FormsModule, MatFormFieldModule, MatSelectModule, MatIconModule, LoadingIndicatorComponent,UiSearchComponent,UiTablePagingDirective, UiPaginationComponent, ModalShellComponent],
+  imports: [UiControlDirective, UiButtonDirective, UiTableActionDirective, UiPageHeadingComponent, UiEmptyStateComponent, UiStatusComponent, CommonModule, FormsModule, MatFormFieldModule, MatSelectModule, MatIconModule,UiSearchComponent,UiTablePagingDirective, UiPaginationComponent, ModalShellComponent],
   templateUrl: './dev-management.html',
   styleUrl: './dev-management.scss'
 })

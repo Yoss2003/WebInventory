@@ -8,7 +8,6 @@ import { MatIconModule } from '@angular/material/icon';
 import { Movement } from '../../../core/models/movement.model';
 import { SalesService, SaleInstallmentsSummary } from '../../../core/services/sales';
 import { ModalShellComponent } from '../../../shared/ui/components/modal-shell/modal-shell.component';
-import { LoadingIndicatorComponent } from '../../../shared/loading/loading-indicator';
 import { UiPaginationComponent } from '../../../shared/ui/components/ui-pagination/ui-pagination.component';
 import { UiTablePagingDirective } from '../../../shared/ui/directives/ui-table-paging.directive';
 
@@ -22,7 +21,6 @@ import { UiTablePagingDirective } from '../../../shared/ui/directives/ui-table-p
     MatDialogModule,
     MatIconModule,
     ModalShellComponent,
-    LoadingIndicatorComponent,
     UiTablePagingDirective, UiPaginationComponent
   ],
   templateUrl: './movement-detail-dialog.html',
