@@ -1,5 +1,5 @@
 import { TestBed } from '@angular/core/testing';
-import { UiSelectComponent, UiSelectValue } from './ui-select.component';
+import { UiSelectComponent } from './ui-select.component';
 
 describe('UiSelectComponent', () => {
   let component: UiSelectComponent;
@@ -12,10 +12,10 @@ describe('UiSelectComponent', () => {
   });
 
   it('emite el valor seleccionado al enlace y al ControlValueAccessor', () => {
-    const changed = vi.fn<(value: UiSelectValue) => void>();
+    const changed = vi.fn();
     const touched = vi.fn();
     const valueChange = vi.fn<(value: UiSelectValue) => void>();
-    const selectionChange = vi.fn<(event: { value: any }) => void>();
+    const selectionChange = vi.fn();
 
     component.registerOnChange(changed);
     component.registerOnTouched(touched);
