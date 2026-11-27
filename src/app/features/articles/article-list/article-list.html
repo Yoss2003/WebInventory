@@ -18,7 +18,7 @@
     <div class="catalog-state err" *ngIf="error" role="alert">{{error}}</div>
 
     <app-ui-table-panel class="inv-page-table-panel article-table-panel"
-      *ngIf="hasOperationalInventory && (loading || (hasLoaded && (!error || dataSource.length)))"
+      *ngIf="hasOperationalInventory && (loading || filtered.length > 0 || (error && dataSource.length > 0))"
       mode="fill" [loading]="loading" label="artículos">
       <div uiTablePanelContent class="inv-core-table-wrap catalog-table-wrap" appUiTablePaging="articles-main">
         <table>
