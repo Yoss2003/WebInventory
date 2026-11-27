@@ -1,5 +1,5 @@
 import { Component, DestroyRef, PLATFORM_ID, inject, signal } from '@angular/core';
-import { UiSelectComponent } from '../../shared/ui/components/ui-select/ui-select.component';
+import { UiSelectComponent } from '../../../shared/ui/components/ui-select/ui-select.component';
 import { CommonModule, isPlatformBrowser } from '@angular/common';
 import { Router, RouterModule, NavigationEnd } from '@angular/router';
 import { MatSidenavModule } from '@angular/material/sidenav';
