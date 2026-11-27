@@ -48,7 +48,7 @@
           </div>
           <p class="registered-suppliers__error" *ngIf="suppliersError" role="alert">{{ suppliersError }}</p>
           <div class="registered-suppliers__table-viewport inv-core-table-wrap" appUiTablePaging="consultas-suppliers" [uiTablePagingLoading]="suppliersLoading"
-               *ngIf="suppliersLoading || (!suppliersError && filteredSuppliers.length)>
+               *ngIf="suppliersLoading || (!suppliersError && filteredSuppliers.length)">
             <table class="registered-suppliers__table">
               <thead>
                 <tr>
