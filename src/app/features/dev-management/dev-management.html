@@ -27,7 +27,6 @@
     </div>
     <p *ngIf="companiesError" class="inline-alert inline-alert--error" role="alert"><mat-icon>error_outline</mat-icon>{{companiesError}}</p>
     <button *ngIf="companiesError" type="button" appUiButton="secondary" (click)="loadCompanies()" [disabled]="loadingCompanies">Reintentar empresas</button>
-    <app-loading-indicator *ngIf="loadingCompanies && !companies.length" message="Cargando empresas..." />
     <div class="overflow companies-table inv-core-table-wrap" appUiTablePaging="dev-companies" [uiTablePagingLoading]="loadingCompanies" *ngIf="companies.length || loadingCompanies">
       <table>
         <thead><tr><th>Empresa</th><th>Usuarios</th><th>Inventarios</th><th>Licencia</th><th>Vencimiento</th><th>Estado</th><th>Acciones</th></tr></thead>
@@ -238,7 +237,6 @@
             </button>
           </div>
           <p *ngIf="pendingError" class="inline-alert inline-alert--error" role="alert"><mat-icon>error_outline</mat-icon>{{pendingError}}</p>
-          <app-loading-indicator *ngIf="loadingPending && !pending.length" message="Cargando recuperaciones..." />
           <div *ngIf="pending.length || loadingPending" class="overflow recovery-table inv-core-table-wrap" appUiTablePaging="dev-pending" [uiTablePagingLoading]="loadingPending"><table>
             <thead><tr><th>Usuario</th><th>Empresa</th><th>Fecha de solicitud</th><th>Estado</th><th>Acciones</th></tr></thead>
             <tbody>
