@@ -49,7 +49,6 @@ export class UiSelectComponent implements ControlValueAccessor {
 
   @ContentChildren(MatOption, { descendants: true })
   private projectedOptionsQuery!: QueryList<MatOption>;
-  private projectedOptions: UiSelectOption[] = [];
   get effectiveOptions(): UiSelectOption[] {
     if (this.options.length) return this.options;
     return this.projectedOptionsQuery?.map(option => ({
