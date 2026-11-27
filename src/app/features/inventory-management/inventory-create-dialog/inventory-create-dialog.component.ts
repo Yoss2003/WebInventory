@@ -1,10 +1,10 @@
 import { Component, inject } from '@angular/core';
+import { UiSelectComponent } from '../../../shared/ui/components/ui-select/ui-select.component';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { MatIconModule } from '@angular/material/icon';
 import { MatSelectModule } from '@angular/material/select';
-import { MatFormFieldModule } from '@angular/material/form-field';
 import { UiControlDirective } from '../../../shared/ui/directives/ui-control.directive';
 import { InventoryService, InventorySummary } from '../../../core/services/inventories';
 import { ManagedUser } from '../../../core/services/user-management';
@@ -21,12 +21,11 @@ export interface InventoryCreateDialogData {
 @Component({
   selector: 'app-inventory-create-dialog',
   standalone: true,
-  imports: [
+  imports: [UiSelectComponent, 
     CommonModule,
     FormsModule,
     MatIconModule,
     MatSelectModule,
-    MatFormFieldModule,
     UiControlDirective,
     ModalShellComponent
   ],
