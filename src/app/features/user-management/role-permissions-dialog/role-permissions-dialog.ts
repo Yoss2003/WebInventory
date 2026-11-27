@@ -1,7 +1,7 @@
 import { CommonModule } from '@angular/common';
 import { ChangeDetectorRef, Component, inject } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { MatDialogModule, MatDialogRef } from '@angular/material/dialog';
+import { MatDialogRef } from '@angular/material/dialog';
 import { MatIconModule } from '@angular/material/icon';
 import { forkJoin } from 'rxjs';
 import {  ManagedRole, PermissionItem, UserManagementService } from '../../../core/services/user-management';
@@ -14,7 +14,7 @@ import type { ModalActionId, ModalFooterAction } from '../../../shared/ui/models
 @Component({
   selector: 'app-role-permissions-dialog',
   standalone: true,
-  imports: [CommonModule, FormsModule, MatDialogModule, MatIconModule,
+  imports: [CommonModule, FormsModule, MatIconModule,
     ModalShellComponent, LoadingIndicatorComponent, UiSelectComponent],
   templateUrl: './role-permissions-dialog.html',
   styleUrl: './role-permissions-dialog.scss'
