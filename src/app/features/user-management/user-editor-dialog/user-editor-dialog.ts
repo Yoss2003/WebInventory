@@ -31,7 +31,7 @@ export type UserEditorDialogResult =
 @Component({
   selector: 'app-user-editor-dialog',
   standalone: true,
-  imports: [CommonModule, FormsModule, MatIconModule, MatFormFieldModule,
+  imports: [CommonModule, FormsModule, MatIconModule,
     InventoryDialogMotionDirective, UiButtonDirective, UiControlDirective, ModalShellComponent, UiSelectComponent],
   templateUrl: './user-editor-dialog.html',
   styleUrl: './user-editor-dialog.scss'
