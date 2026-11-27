@@ -1,0 +1,16 @@
+:host {
+  display: block;
+  width: 100%;
+  min-width: 0;
+}
+
+:host .inventory-select {
+  display: block;
+  width: 100%;
+  min-width: 0;
+  margin: 0;
+}
+
+:host .mat-mdc-form-field-subscript-wrapper {
+  display: none;
+}
