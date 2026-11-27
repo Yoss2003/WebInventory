@@ -12,7 +12,6 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
-import { MatSelectModule } from '@angular/material/select';
 import { provideNativeDateAdapter, MAT_DATE_LOCALE } from '@angular/material/core';
 import { MasterHistoryService } from '../../core/services/master-history';
 import { ToastService } from '../../shared/toast/toast.service';
@@ -72,7 +71,6 @@ interface HistoryUser {
     MatDatepickerModule,
     MatFormFieldModule,
     MatInputModule,
-    MatSelectModule
   ],
   providers: [provideNativeDateAdapter(), { provide: MAT_DATE_LOCALE, useValue: 'es-PE' }],
   templateUrl: './master-history.html',
