@@ -23,10 +23,11 @@ import { ModalStandardService } from '../../../shared/ui/services/modal-standard
 interface ArticleRow extends Article { categoryName: string; brandName: string; }
 import { UiSearchComponent } from '../../../shared/ui/components/ui-search.component';
 import { UiPaginationComponent } from '../../../shared/ui/components/ui-pagination/ui-pagination.component';
+import { UiTablePanelComponent } from '../../../shared/ui/components/ui-table-panel/ui-table-panel.component';
 import { UiTablePagingDirective } from '../../../shared/ui/directives/ui-table-paging.directive';
 
 @Component({selector:'app-article-list',standalone:true,
-  imports:[MoneyPipe, UiEmptyStateComponent, UiStatusComponent, UiTableActionDirective, UiButtonDirective, UiPageHeadingComponent, CommonModule,FormsModule,MatIconModule,UiSearchComponent,UiTablePagingDirective, UiPaginationComponent],
+  imports:[MoneyPipe, UiEmptyStateComponent, UiStatusComponent, UiTableActionDirective, UiButtonDirective, UiPageHeadingComponent, CommonModule,FormsModule,MatIconModule,UiSearchComponent,UiTablePagingDirective, UiPaginationComponent, UiTablePanelComponent],
   templateUrl:'./article-list.html',styleUrl:'./article-list.scss'})
 export class ArticleListComponent implements OnInit {
   private readonly articles=inject(ArticleService);
