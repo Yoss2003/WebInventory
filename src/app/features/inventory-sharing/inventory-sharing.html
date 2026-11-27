@@ -94,18 +94,13 @@
         <span class="sharing-members-count">{{ shares.length }} autorizados</span>
       </div>
 
-      <div class="sharing-loading-skeleton" *ngIf="loadingShares && !sharesLoaded"
-        role="status" aria-label="Consultando colaboradores" aria-hidden="true">
-        <span></span><span></span><span></span>
-      </div>
-
       <p *ngIf="sharesError" class="sharing-error sharing-members-error" role="alert">
         <mat-icon aria-hidden="true">error_outline</mat-icon>
         <span>{{ sharesError }}</span>
         <button type="button" appUiButton="secondary" (click)="loadShares()">Reintentar</button>
       </p>
 
-      <div class="sharing-table-wrap inv-core-table-wrap" appUiTablePaging="inventory-shares" *ngIf="!loadingShares || sharesLoaded">
+      <div class="sharing-table-wrap inv-core-table-wrap" appUiTablePaging="inventory-shares" [uiTablePagingLoading]="loadingShares" *ngIf="loadingShares || sharesLoaded">
         <table>
           <thead>
             <tr><th>Usuario</th><th>Permiso</th><th>Desde</th><th>Acciones</th></tr>

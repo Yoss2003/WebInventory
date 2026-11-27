@@ -234,9 +234,6 @@
               </div>
               <app-ui-pagination *ngIf="historyRates.length" [totalItems]="historyRates.length" [page]="historyPage" [pageSize]="historyPageSize" (pageChange)="historyPage=$event" (pageSizeChange)="historyPageSize=$event;historyPage=1" label="cotizaciones" loadingId="consultas-rates" />
 
-              <p *ngIf="loadingHistory" role="status" class="fx-loading">
-                Consultando el historial almacenado...
-              </p>
             </div>
           </div>
           </div>

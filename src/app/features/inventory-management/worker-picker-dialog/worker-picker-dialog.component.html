@@ -22,11 +22,8 @@
       </button>
     </div>
     <div class="worker-dialog-content">
-      <div *ngIf="loading && !refreshing" class="worker-picker-skeleton" role="status" aria-label="Cargando empleados activos" aria-hidden="true">
-        <span></span><span></span><span></span><span></span>
-      </div>
       <p *ngIf="error && !loading" class="error-notice" role="alert"><mat-icon aria-hidden="true">error_outline</mat-icon><span>{{ error }}</span><button type="button" appUiButton="secondary" (click)="refresh()">Reintentar</button></p>
-      <div class="inv-core-table-wrap worker-table-wrap" appUiTablePaging="worker-picker" *ngIf="!loading && !error && filteredEmployees.length">
+      <div class="inv-core-table-wrap worker-table-wrap" appUiTablePaging="worker-picker" [uiTablePagingLoading]="loading" *ngIf="loading || (!error && filteredEmployees.length)>
         <table class="worker-table">
           <thead><tr><th scope="col">DNI</th><th scope="col">Nombre</th><th scope="col">Nombre de usuario</th><th scope="col" class="action-col">Acción</th></tr></thead>
           <tbody>
