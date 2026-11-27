@@ -24,13 +24,13 @@
       <div class="card-heading"><mat-icon>inventory_2</mat-icon><div><strong>Datos de la operación</strong><small>Elige un artículo y la cantidad que saldrá del almacén.</small></div></div>
       <div class="form-grid">
         <div class="field"><label>Operación <span class="required">*</span></label>
-          <mat-form-field appearance="outline" class="inventory-select"><mat-select formControlName="operationType" panelClass="inventory-select-options"><mat-option value="Asignar">Asignación de custodia</mat-option><mat-option value="Baja">Baja / consumo definitivo</mat-option></mat-select></mat-form-field>
+          <app-ui-select formControlName="operationType" panelClass="inventory-select-options"><mat-option value="Asignar">Asignación de custodia</mat-option><mat-option value="Baja">Baja / consumo definitivo</mat-option></app-ui-select>
         </div>
         <div class="field"><label>Tipo de retiro <span class="required">*</span></label>
-          <mat-form-field appearance="outline" class="inventory-select"><mat-select formControlName="retireType" panelClass="inventory-select-options"><mat-option value="Parcial">Cantidad parcial</mat-option><mat-option value="Total">Todo el stock disponible</mat-option></mat-select></mat-form-field>
+          <app-ui-select formControlName="retireType" panelClass="inventory-select-options"><mat-option value="Parcial">Cantidad parcial</mat-option><mat-option value="Total">Todo el stock disponible</mat-option></app-ui-select>
         </div>
         <div class="field wide"><label>Artículo <span class="required">*</span></label>
-          <mat-form-field appearance="outline" class="inventory-select"><mat-select formControlName="articleId" placeholder="Seleccionar artículo" panelClass="inventory-select-options"><mat-option *ngFor="let a of articles" [value]="a.id">{{a.name | cleanArticleName}} — {{a.stock}} {{a.measurementUnit}}</mat-option></mat-select></mat-form-field>
+          <app-ui-select formControlName="articleId" placeholder="Seleccionar artículo" panelClass="inventory-select-options"><mat-option *ngFor="let a of articles" [value]="a.id">{{a.name | cleanArticleName}} — {{a.stock}} {{a.measurementUnit}}</mat-option></app-ui-select>
         </div>
         <div class="field"><label>Cantidad a retirar <span class="required">*</span></label>
           <input type="number" min="0.01" step="0.01" appUiControl formControlName="amount" />
@@ -69,12 +69,9 @@
         </div>
         <div class="field wide" *ngIf="operationType==='Asignar' && recipientMode==='internal'">
           <label>Usuario destinatario <span class="required">*</span></label>
-          <mat-form-field appearance="outline" class="inventory-select">
-            <mat-select formControlName="recipientUserId" panelClass="inventory-select-options"
-              placeholder="Seleccionar usuario de la empresa">
+          <app-ui-select formControlName="recipientUserId" panelClass="inventory-select-options" placeholder="Seleccionar usuario de la empresa">
               <mat-option *ngFor="let person of recipients" [value]="person.id">{{person.name}}</mat-option>
-            </mat-select>
-          </mat-form-field>
+            </app-ui-select>
           <small *ngIf="recipientsLoading">Cargando usuarios de la empresa...</small>
           <small *ngIf="!recipientsLoading && recipients.length===0">No hay usuarios disponibles. Puedes registrar un destinatario externo.</small>
           <small *ngIf="recipientsError" class="transfer-error">{{recipientsError}}</small>
