@@ -61,6 +61,11 @@ export class UiSelectComponent implements ControlValueAccessor {
   registerOnTouched(fn: () => void): void { this.onTouched = fn; }
   setDisabledState(disabled: boolean): void { this.disabled = disabled; }
 
+  handleOpenedChange(open: boolean): void {
+    this.openedChange.emit(open);
+    if (!open) this.onTouched();
+  }
+
   select(value: UiSelectValue): void {
     if (this.disabled) return;
     this.value = value;
