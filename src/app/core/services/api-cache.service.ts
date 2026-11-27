@@ -1,5 +1,6 @@
+import { HttpEvent, HttpResponse } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { HttpResponse } from '@angular/common/http';
+import { Observable, finalize, shareReplay, tap } from 'rxjs';
 
 interface CacheEntry {
   expiresAt: number;
@@ -10,6 +11,8 @@ interface CacheEntry {
 @Injectable({ providedIn: 'root' })
 export class ApiCacheService {
   private readonly entries = new Map<string, CacheEntry>();
+  private readonly inFlight = new Map<string, Observable<HttpEvent<unknown>>>();
+  private generation = 0;
 
   ttlFor(url: string): number {
     const path = url.toLowerCase();
@@ -33,11 +36,49 @@ export class ApiCacheService {
   }
 
   set(key: string, response: HttpResponse<unknown>, ttl: number): void {
-    if (ttl > 0 && response.status === 200) this.entries.set(key, { response: response.clone(), expiresAt: Date.now() + ttl });
+    if (ttl > 0 && response.status === 200) {
+      this.entries.set(key, { response: response.clone(), expiresAt: Date.now() + ttl });
+    }
   }
 
-  clearAll(): void { this.entries.clear(); }
+  /**
+   * Coalesces simultaneous GETs for the same scoped key. The first request is
+   * shared by all subscribers and its successful response becomes the cache.
+   */
+  coalesce<T extends HttpEvent<unknown>>(
+    key: string,
+    ttl: number,
+    load: () => Observable<T>
+  ): Observable<T> {
+    const pending = this.inFlight.get(key);
+    if (pending) return pending as Observable<T>;
+
+    const generation = this.generation;
+    let sharedRequest: Observable<T>;
+    sharedRequest = load().pipe(
+      tap(event => {
+        if (generation === this.generation && event instanceof HttpResponse && event.status === 200) {
+          this.set(key, event, ttl);
+        }
+      }),
+      finalize(() => {
+        if (this.inFlight.get(key) === sharedRequest) this.inFlight.delete(key);
+      }),
+      shareReplay({ bufferSize: 1, refCount: false })
+    );
+    this.inFlight.set(key, sharedRequest as Observable<HttpEvent<unknown>>);
+    return sharedRequest;
+  }
+
+  clearAll(): void {
+    this.generation++;
+    this.entries.clear();
+    this.inFlight.clear();
+  }
+
   clearByPrefix(prefix: string): void {
+    this.generation++;
     for (const key of this.entries.keys()) if (key.includes(prefix)) this.entries.delete(key);
+    this.inFlight.clear();
   }
 }

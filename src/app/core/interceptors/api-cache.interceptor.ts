@@ -20,9 +20,7 @@ export const apiCacheInterceptor: HttpInterceptorFn = (req, next) => {
       const key = scope + '|inventory:' + inventoryId + '|' + req.urlWithParams;
       const cached = cache.get(key);
       if (cached) return of(cached);
-      return next(req).pipe(tap(event => {
-        if (event instanceof HttpResponse && event.status === 200) cache.set(key, event, ttl);
-      }));
+      return cache.coalesce(key, ttl, () => next(req));
     }
     return next(req);
   }
