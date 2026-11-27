@@ -37,7 +37,7 @@ interface MasterInventory {
     UiEmptyStateComponent,
     UiButtonDirective,
     UiTableActionDirective,
-    UiTablePagingDirective, UiPaginationComponent
+    UiTablePagingDirective, UiPaginationComponent, UiTablePanelComponent
   ],
   templateUrl: './master-inventories.html',
   styleUrl: './master-inventories.scss'
