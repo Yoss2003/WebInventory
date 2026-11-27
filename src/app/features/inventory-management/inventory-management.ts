@@ -16,7 +16,6 @@ import { ToastService } from '../../shared/toast/toast.service';
 import { AccessService } from '../../core/services/access';
 import { InventoryService, InventorySummary } from '../../core/services/inventories';
 import { UserManagementService, ManagedUser } from '../../core/services/user-management';
-import { LoadingIndicatorComponent } from '../../shared/loading/loading-indicator';
 import { UiPaginationComponent } from '../../shared/ui/components/ui-pagination/ui-pagination.component';
 import { UiTablePagingDirective } from '../../shared/ui/directives/ui-table-paging.directive';
 import { InventoryEditDialogComponent } from './inventory-edit-dialog/inventory-edit-dialog.component';
@@ -32,7 +31,7 @@ import { UiEmptyStateComponent } from '../../shared/ui/components/ui-empty-state
     UiEmptyStateComponent, UiStatusComponent,
     CommonModule, FormsModule, MatIconModule, MatSelectModule, MatFormFieldModule,
     RouterLink, UiPageHeadingComponent, UiButtonDirective,
-    UiTableActionDirective, LoadingIndicatorComponent, UiTablePagingDirective, UiPaginationComponent
+    UiTableActionDirective, UiTablePagingDirective, UiPaginationComponent
   ],
   templateUrl: './inventory-management.html',
   styleUrl: './inventory-management.scss',

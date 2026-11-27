@@ -10,7 +10,6 @@ import { isPlatformBrowser } from '@angular/common';
 import { ToastService } from '../../../shared/toast/toast.service';
 import { ConfirmationDialogService } from '../../../shared/confirm-dialog/confirmation-dialog.service';
 import { CatalogSimilarDialogComponent, CatalogSimilarChoice } from '../../../shared/catalog-similar-dialog/catalog-similar-dialog';
-import { LoadingIndicatorComponent } from '../../../shared/loading/loading-indicator';
 import { MatIconModule } from '@angular/material/icon';
 import { Brand } from '../../../core/models/brand.model';
 import { BrandService } from '../../../core/services/brands';
@@ -33,7 +32,7 @@ export interface BrandDialogData {
 @Component({
   selector: 'app-brand-dialog',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule, MatDialogModule, MatIconModule, LoadingIndicatorComponent, UiButtonDirective, UiControlDirective, UiTableActionDirective, ModalShellComponent, UiTablePagingDirective, UiPaginationComponent],
+  imports: [CommonModule, ReactiveFormsModule, MatDialogModule, MatIconModule, UiButtonDirective, UiControlDirective, UiTableActionDirective, ModalShellComponent, UiTablePagingDirective, UiPaginationComponent],
   templateUrl: './brand-dialog.html',
   styleUrls: ['./brand-dialog.scss']
 })

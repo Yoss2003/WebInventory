@@ -10,14 +10,12 @@ import { MatIconModule } from '@angular/material/icon';
 import { forkJoin } from 'rxjs';
 import { AssignmentService, AssignedArticle } from '../../core/services/assignments';
 import { AssignmentHistoryDialogComponent } from '../assignment-history-dialog/assignment-history-dialog';
-import { LoadingIndicatorComponent } from '../../shared/loading/loading-indicator';
-
 import { UiSearchComponent } from '../../shared/ui/components/ui-search.component';
 import { UiPaginationComponent } from '../../shared/ui/components/ui-pagination/ui-pagination.component';
 import { UiTablePagingDirective } from '../../shared/ui/directives/ui-table-paging.directive';
 
 @Component({selector:'app-assignment-history',standalone:true,
-  imports:[UiButtonDirective, UiPageHeadingComponent, CleanArticleNamePipe, CommonModule,FormsModule,MatIconModule,LoadingIndicatorComponent,UiSearchComponent,UiTablePagingDirective, UiPaginationComponent],
+  imports:[UiButtonDirective, UiPageHeadingComponent, CleanArticleNamePipe, CommonModule,FormsModule,MatIconModule,UiSearchComponent,UiTablePagingDirective, UiPaginationComponent],
   templateUrl:'./assignment-history.html',styleUrl:'./assignment-history.scss'})
 export class AssignmentHistoryComponent implements OnInit {
   private readonly api=inject(AssignmentService);

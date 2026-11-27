@@ -18,7 +18,6 @@ import { Article } from '../../../core/models/article.model';
 import { ArticleDetailDialogComponent } from '../article-detail-dialog/article-detail-dialog';
 import { ArticleFormComponent } from '../article-form/article-form';
 import { ToastService } from '../../../shared/toast/toast.service';
-import { LoadingIndicatorComponent } from '../../../shared/loading/loading-indicator';
 import { ModalStandardService } from '../../../shared/ui/services/modal-standard.service';
 
 interface ArticleRow extends Article { categoryName: string; brandName: string; }
@@ -27,7 +26,7 @@ import { UiPaginationComponent } from '../../../shared/ui/components/ui-paginati
 import { UiTablePagingDirective } from '../../../shared/ui/directives/ui-table-paging.directive';
 
 @Component({selector:'app-article-list',standalone:true,
-  imports:[MoneyPipe, UiEmptyStateComponent, UiStatusComponent, UiTableActionDirective, UiButtonDirective, UiPageHeadingComponent, CommonModule,FormsModule,MatIconModule,LoadingIndicatorComponent,UiSearchComponent,UiTablePagingDirective, UiPaginationComponent],
+  imports:[MoneyPipe, UiEmptyStateComponent, UiStatusComponent, UiTableActionDirective, UiButtonDirective, UiPageHeadingComponent, CommonModule,FormsModule,MatIconModule,UiSearchComponent,UiTablePagingDirective, UiPaginationComponent],
   templateUrl:'./article-list.html',styleUrl:'./article-list.scss'})
 export class ArticleListComponent implements OnInit {
   private readonly articles=inject(ArticleService);

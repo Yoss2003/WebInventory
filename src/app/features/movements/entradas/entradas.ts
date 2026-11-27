@@ -25,13 +25,11 @@ import { ArticleFormComponent } from '../../articles/article-form/article-form';
 import { ArticleDetailDialogComponent } from '../../articles/article-detail-dialog/article-detail-dialog';
 import { MovementForm } from '../movement-form/movement-form';
 import { MovementDetailDialogComponent } from '../movement-detail-dialog/movement-detail-dialog';
-import { LoadingIndicatorComponent } from '../../../shared/loading/loading-indicator';
-
 import { UiSearchComponent } from '../../../shared/ui/components/ui-search.component';
 import { UiPaginationComponent } from '../../../shared/ui/components/ui-pagination/ui-pagination.component';
 import { UiTablePagingDirective } from '../../../shared/ui/directives/ui-table-paging.directive';
 
-@Component({selector:'app-entradas',standalone:true,imports:[MoneyPipe, UiEmptyStateComponent, UiTableActionDirective, UiButtonDirective, UiPageHeadingComponent, CommonModule,MatIconModule,MatTabsModule,TabViewTransitionDirective,LoadingIndicatorComponent,UiSearchComponent,UiTablePagingDirective, UiPaginationComponent],templateUrl:'./entradas.html',styleUrl:'./entradas.scss'})
+@Component({selector:'app-entradas',standalone:true,imports:[MoneyPipe, UiEmptyStateComponent, UiTableActionDirective, UiButtonDirective, UiPageHeadingComponent, CommonModule,MatIconModule,MatTabsModule,TabViewTransitionDirective,UiSearchComponent,UiTablePagingDirective, UiPaginationComponent],templateUrl:'./entradas.html',styleUrl:'./entradas.scss'})
 export class EntradasComponent implements OnInit {
   private readonly dialog=inject(MatDialog);
   private readonly modalStandards = inject(ModalStandardService);
