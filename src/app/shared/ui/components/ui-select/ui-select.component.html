@@ -13,9 +13,11 @@
     (selectionChange)="select($event.value)"
     (openedChange)="handleOpenedChange($event)">
     <mat-option *ngIf="allowEmpty && !multiple" value="">{{emptyLabel}}</mat-option>
-    <mat-option *ngFor="let option of options" [value]="option.value" [disabled]="option.disabled">
+    <mat-option *ngFor="let option of effectiveOptions" [value]="option.value" [disabled]="option.disabled">
       {{option.label}}
     </mat-option>
-    <ng-content select="mat-option"></ng-content>
   </mat-select>
 </mat-form-field>
+<div class="ui-select-option-source" aria-hidden="true">
+  <ng-content select="mat-option"></ng-content>
+</div>
