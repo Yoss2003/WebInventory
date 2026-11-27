@@ -1,1 +1,13 @@
 /* Estilos de esta vista centralizados en shared/ui/core-pages/_four-secondary-pages.scss. */
+
+
+/* El panel de proveedores mantiene el mismo inset interior que las demás tablas. */
+:host .supplier-list { padding: 16px; }
+:host .supplier-toolbar { align-items: center; gap: 12px; }
+:host .supplier-toolbar > app-ui-search { flex: 1 1 360px; min-width: 220px; }
+:host .supplier-toolbar > button { flex: 0 0 auto; white-space: nowrap; }
+@media (max-width: 600px) {
+  :host .supplier-list { padding: 12px; }
+  :host .supplier-toolbar { align-items: stretch; }
+  :host .supplier-toolbar > button { align-self: flex-end; }
+}
