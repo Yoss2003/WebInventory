@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, ContentChildren, EventEmitter, Input, Output, QueryList, forwardRef } from '@angular/core';
+import { AfterContentChecked, AfterContentInit, Component, ContentChildren, EventEmitter, Input, Output, QueryList, forwardRef } from '@angular/core';
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatSelectModule } from '@angular/material/select';
@@ -31,7 +31,7 @@ export interface UiSelectOption {
   styleUrl: './ui-select.component.scss',
   host: { class: 'inventory-select' }
 })
-export class UiSelectComponent implements ControlValueAccessor {
+export class UiSelectComponent implements ControlValueAccessor, AfterContentInit, AfterContentChecked {
   @Input() id = '';
   @Input() value: UiSelectValue = '';
   @Input() options: UiSelectOption[] = [];
