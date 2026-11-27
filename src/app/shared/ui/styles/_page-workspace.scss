@@ -1,0 +1,277 @@
+/* Contrato compartido para el panel de trabajo de las páginas principales.
+   La vista conserva su contenido; este contenedor define crecimiento, separación y límites. */
+.inv-page-workspace {
+  display: flex;
+  flex: 1 1 auto;
+  flex-direction: column;
+  box-sizing: border-box;
+  min-width: 0;
+  min-height: 0;
+  gap: 12px;
+  padding: 16px;
+  border: 1px solid var(--core-border, #4f697b);
+  border-radius: 15px;
+  background: var(--core-bg, #172630);
+  color: #e7f1f9;
+}
+
+.inv-page-workspace--flush {
+  gap: 0;
+  padding: 0;
+  overflow: hidden;
+}
+
+.inv-page-workspace > .inv-core-toolbar,
+.inv-page-workspace > .users-panel__head {
+  flex: 0 0 auto;
+  min-width: 0;
+}
+
+.inv-page-table-panel,
+.inv-page-workspace > app-ui-table-panel {
+  display: flex;
+  flex: 1 1 auto;
+  width: 100%;
+  min-width: 0;
+  min-height: 0;
+}
+
+.inv-page-workspace .inv-page-table-panel {
+  flex: 1 1 auto;
+  min-width: 0;
+  min-height: 0;
+}
+
+.inv-page-workspace .ui-table-panel {
+  min-width: 0;
+  min-height: 0;
+}
+
+.inv-page-workspace .ui-table-panel__pagination {
+  flex: 0 0 auto;
+  min-width: 0;
+}
+
+/* Historial general: filtros fijos y tabla flexible dentro del mismo panel. */
+.history-workspace {
+  gap: 14px;
+}
+
+.history-workspace .filters {
+  flex: 0 0 auto;
+}
+
+.history-workspace .history-table-panel {
+  flex: 1 1 auto;
+  min-height: 0;
+}
+
+.history-workspace .table-wrapper {
+  max-height: none !important;
+  min-height: 0;
+  overflow: auto;
+}
+
+/* Catálogo general: cada pestaña conserva su propio panel y su propia tabla. */
+.inv-secondary-page.catalog-page .inv-page-workspace {
+  flex: 1 1 auto;
+  min-height: 0;
+}
+
+.inv-secondary-page.catalog-page .supplier-list,
+.inv-secondary-page.catalog-page .parameter-list {
+  display: flex;
+  flex: 1 1 auto;
+  flex-direction: column;
+  min-width: 0;
+  min-height: 0;
+}
+
+.inv-secondary-page.catalog-page .supplier-list-heading,
+.inv-secondary-page.catalog-page .parameter-list-heading {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.inv-secondary-page.catalog-page .supplier-list-heading > button,
+.inv-secondary-page.catalog-page .parameter-list-heading__actions {
+  flex: 0 0 auto;
+}
+
+.inv-secondary-page.catalog-page .parameter-list-heading__actions {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.inv-secondary-page.catalog-page .catalog-table-panel {
+  flex: 1 1 auto;
+  min-width: 0;
+  min-height: 0;
+}
+
+.inv-secondary-page.catalog-page .supplier-table-panel .supplier-table-viewport {
+  width: 100%;
+  max-width: 100%;
+  min-width: 0;
+  margin: 0;
+  overflow-x: auto;
+  overflow-y: auto;
+}
+
+.inv-secondary-page.catalog-page .supplier-table-panel .supplier-table-viewport--scroll {
+  max-height: 190px !important;
+  overflow-y: auto;
+}
+
+.inv-secondary-page.catalog-page .parameter-table-panel .parameter-table-viewport {
+  max-height: min(282px, 42dvh) !important;
+  overflow: auto;
+}
+
+/* Los formularios de catálogo ahora se proyectan dentro del shell compartido. */
+.inv-secondary-page.catalog-page .catalog-form-modal .catalog-modal-form {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  box-sizing: border-box;
+  min-width: 0;
+  padding: 18px;
+}
+
+.inv-secondary-page.catalog-page .catalog-form-modal .fields {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 12px;
+  min-width: 0;
+}
+
+.inv-secondary-page.catalog-page .catalog-form-modal .fields > label {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  min-width: 0;
+  color: #c8d9e8;
+  font-size: 12px;
+}
+
+.inv-secondary-page.catalog-page .catalog-form-modal .fields input,
+.inv-secondary-page.catalog-page .catalog-form-modal .fields textarea {
+  box-sizing: border-box;
+  width: 100%;
+  min-width: 0;
+}
+
+.inv-secondary-page.catalog-page .catalog-form-modal .fields input {
+  height: 39px;
+}
+
+.inv-secondary-page.catalog-page .catalog-form-modal .supplier-fields {
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+
+.inv-secondary-page.catalog-page .catalog-form-modal .supplier-relationship-field {
+  grid-column: 1 / -1;
+}
+
+.inv-secondary-page.catalog-page .catalog-form-modal .supplier-relationship-field textarea {
+  height: 39px;
+  min-height: 39px;
+  max-height: 39px;
+  resize: none;
+  overflow: auto;
+}
+
+.inv-secondary-page.catalog-page .catalog-form-modal .parameter-fields .parameter-description-field {
+  grid-column: 1 / -1;
+}
+
+.inv-secondary-page.catalog-page .catalog-form-modal .parameter-description-field textarea {
+  height: 68px;
+  min-height: 68px;
+  max-height: 68px;
+  resize: none;
+  overflow: auto;
+}
+
+.inv-secondary-page.catalog-page .catalog-modal-inline-actions {
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  gap: 8px;
+}
+
+.inv-secondary-page.catalog-page .parameter-list-heading h2 {
+  margin: 0;
+}
+
+.inv-secondary-page.assignment-page .assignment-section.inv-page-workspace--flush {
+  display: flex;
+  flex: 1 1 auto;
+  flex-direction: column;
+  min-height: 0;
+}
+
+.inv-secondary-page.assignment-page .assignment-tab-content {
+  display: flex;
+  flex: 1 1 auto;
+  flex-direction: column;
+  min-width: 0;
+  min-height: 0;
+}
+
+.inv-secondary-page.assignment-page .assignment-tab-content > app-ui-table-panel {
+  flex: 1 1 auto;
+  min-height: 0;
+}
+
+@media (max-width: 900px) {
+  .history-workspace .filters {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 700px) {
+  .inv-page-workspace {
+    padding: 12px;
+  }
+
+  .inv-page-workspace--flush {
+    padding: 0;
+  }
+
+  .inv-secondary-page.catalog-page .catalog-form-modal .supplier-fields {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .inv-secondary-page.catalog-page .catalog-form-modal .supplier-ruc-control {
+    grid-column: 1 / -1;
+  }
+
+  .history-workspace .filters {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 560px) {
+  .inv-secondary-page.catalog-page .catalog-form-modal .fields,
+  .inv-secondary-page.catalog-page .catalog-form-modal .supplier-fields {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .inv-secondary-page.catalog-page .catalog-form-modal .supplier-ruc-control {
+    grid-column: 1 / -1;
+    grid-template-columns: minmax(0, 1fr) auto;
+  }
+
+  .inv-secondary-page.catalog-page .catalog-form-modal .supplier-communication-trigger {
+    grid-column: 1 / -1;
+  }
+
+  .history-workspace .filters {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
