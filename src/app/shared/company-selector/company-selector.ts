@@ -1,11 +1,12 @@
 import { CommonModule } from '@angular/common';
 import { Component, computed, input, output } from '@angular/core';
 import { CompanyPublic } from '../../core/models/company-public.model';
+import { MatSelectModule } from '@angular/material/select';
 import { UiSelectComponent, UiSelectValue } from '../ui/components/ui-select/ui-select.component';
 
 @Component({
   selector: 'app-company-selector', standalone: true,
-  imports: [CommonModule, UiSelectComponent],
+  imports: [CommonModule, MatSelectModule, UiSelectComponent],
   template: `
     <app-ui-select [id]="selectId()" ariaLabel="Empresa / sucursal" [value]="value()"
       [disabled]="disabled() || loading() || !companies().length"
