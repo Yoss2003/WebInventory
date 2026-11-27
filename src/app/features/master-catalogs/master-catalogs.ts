@@ -3,14 +3,19 @@ import { UiTableActionDirective } from '../../shared/ui/directives/ui-table-acti
 import { UiButtonDirective } from '../../shared/ui/directives/ui-button.directive';
 import { UiPageHeadingComponent } from '../../shared/ui/components/ui-page-heading.component';
 import { CommonModule, isPlatformBrowser } from '@angular/common';
-import { ChangeDetectorRef, Component, OnInit, PLATFORM_ID, inject } from '@angular/core';
+import { ChangeDetectorRef, Component, OnInit, PLATFORM_ID, TemplateRef, ViewChild, inject } from '@angular/core';
 import { catchError, finalize, forkJoin, of } from 'rxjs';
 import { FormsModule } from '@angular/forms';
 import { MatIconModule } from '@angular/material/icon';
+import { MatDialogRef } from '@angular/material/dialog';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatSelectModule } from '@angular/material/select';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { ModalStandardService } from '../../shared/ui/services/modal-standard.service';
+import { ModalShellComponent } from '../../shared/ui/components/modal-shell/modal-shell.component';
+import type { ModalActionId, ModalFooterAction } from '../../shared/ui/models/modal-standard.model';
+import { UiTablePanelComponent } from '../../shared/ui/components/ui-table-panel/ui-table-panel.component';
+import { UiSelectComponent, UiSelectOption, UiSelectValue } from '../../shared/ui/components/ui-select/ui-select.component';
 import { SupplierDetailDialogComponent } from './supplier-detail-dialog/supplier-detail-dialog';
 import { ConfirmationDialogService } from '../../shared/confirm-dialog/confirmation-dialog.service';
 import { InventoryContextService } from '../../core/services/inventory-context';
@@ -75,6 +80,9 @@ interface ParameterRecord {
     UiTableActionDirective,
     UiButtonDirective,
     UiPageHeadingComponent,
+    ModalShellComponent,
+    UiTablePanelComponent,
+    UiSelectComponent,
     UiEmptyStateComponent,
     UiStatusComponent,
     CommonModule,
@@ -90,6 +98,11 @@ interface ParameterRecord {
   styleUrl: './master-catalogs.scss'
 })
 export class MasterCatalogsComponent implements OnInit {
+  @ViewChild('supplierFormDialog', { static: true }) private supplierFormTemplate!: TemplateRef<unknown>;
+  @ViewChild('parameterFormDialog', { static: true }) private parameterFormTemplate!: TemplateRef<unknown>;
+  private supplierFormRef?: MatDialogRef<unknown, boolean>;
+  private parameterFormRef?: MatDialogRef<unknown, boolean>;
+
   private readonly masterCatalogsApi = inject(MasterCatalogsService);
   private readonly inventories = inject(InventoryContextService);
   private readonly toast = inject(ToastService);
@@ -133,6 +146,26 @@ export class MasterCatalogsComponent implements OnInit {
 
   private readonly standardParameterTypes = ['Estado', 'Condicion', 'Area', 'TipoContrato', 'PosicionTrabajo', 'Ubicacion'];
   parameterTypeFilter = '';
+
+  get parameterTypeSelectOptions(): UiSelectOption[] {
+    return this.parameterTypeOptions.map(value => ({ value, label: this.parameterTypeLabel(value) }));
+  }
+
+  get parameterTypeFilterSelectOptions(): UiSelectOption[] {
+    return [
+      { value: '', label: 'Todos los tipos' },
+      ...this.parameterFilterOptions.map(value => ({ value, label: this.parameterTypeLabel(value) }))
+    ];
+  }
+
+  setParameterType(value: UiSelectValue): void {
+    this.parameter.parameterType = value == null ? '' : String(value);
+  }
+
+  setParameterTypeFilter(value: UiSelectValue): void {
+    this.parameterTypeFilter = value == null ? '' : String(value);
+    this.parameterPage = 1;
+  }
 
   get parameterTypeOptions(): string[] {
     const values = [...this.standardParameterTypes];
@@ -319,11 +352,71 @@ export class MasterCatalogsComponent implements OnInit {
     });
   }
 
-  newSupplier(): void {
+  private resetSupplierForm(): void {
     this.supplier = this.emptySupplier();
     this.editingSupplierId = null;
     this.advancedInfo = null;
     this.consultedRuc = '';
+  }
+
+  openNewSupplier(): void {
+    if (!this.canManage) return;
+    this.resetSupplierForm();
+    this.openSupplierFormDialog();
+  }
+
+  clearSupplierFields(): void {
+    if (this.saving) return;
+    this.supplier = this.emptySupplier();
+    this.advancedInfo = null;
+    this.consultedRuc = '';
+  }
+
+  private openSupplierFormDialog(): void {
+    if (this.supplierFormRef) return;
+    const ref = this.modalStandards.openTemplate<unknown, unknown, boolean>(
+      this.supplierFormTemplate, 'mainForm', {
+        panelClass: ['inv-seven-modal', 'catalog-supplier-form-modal'],
+        width: 'min(780px, calc(100vw - 24px))',
+        maxWidth: 'calc(100vw - 24px)',
+        maxHeight: 'calc(100dvh - 24px)',
+        autoFocus: false,
+        restoreFocus: true,
+        disableClose: true
+      }
+    );
+    this.supplierFormRef = ref;
+    ref.afterClosed().subscribe(() => {
+      if (this.supplierFormRef === ref) this.supplierFormRef = undefined;
+    });
+  }
+
+  get supplierModalActions(): ModalFooterAction[] {
+    return [
+      { id: 'cancel', label: 'Cancelar', tone: 'secondary', order: 0 },
+      { id: 'primary', label: this.editingSupplierId ? 'Guardar cambios' : 'Registrar proveedor', tone: 'primary', order: 1 }
+    ];
+  }
+
+  handleSupplierModalAction(action: ModalActionId): void {
+    if (action === 'cancel') this.closeSupplierForm();
+    else if (action === 'primary') this.saveSupplier();
+  }
+
+  closeSupplierForm(): void {
+    if (this.saving) return;
+    this.supplierFormRef?.close(false);
+  }
+
+  editSupplier(item: SupplierRecord): void {
+    if (!this.canManage) return;
+    this.advancedInfo = null;
+    this.supplier = { ...item };
+    // Los datos fiscales guardados pertenecen a este RUC; habilita el mismo flujo informativo que tras consultar.
+    this.consultedRuc = String(item.ruc ?? '').trim();
+    this.editingSupplierId = item.id;
+    this.tab = 'suppliers';
+    this.openSupplierFormDialog();
   }
 
   openSupplierCommunication(): void {
@@ -416,16 +509,6 @@ export class MasterCatalogsComponent implements OnInit {
     });
   }
 
-  editSupplier(item: SupplierRecord): void {
-    if (!this.canManage) return;
-    this.advancedInfo = null;
-    this.supplier = { ...item };
-    // Los datos fiscales guardados pertenecen a este RUC; habilita el mismo flujo informativo que tras consultar.
-    this.consultedRuc = String(item.ruc ?? '').trim();
-    this.editingSupplierId = item.id;
-    this.tab = 'suppliers';
-  }
-
   saveSupplier(): void {
     const ruc = String(this.supplier.ruc).trim();
     const businessName = String(this.supplier.businessName).trim();
@@ -447,7 +530,8 @@ export class MasterCatalogsComponent implements OnInit {
           this.toast.info('El proveedor ya estaba registrado. Se reutilizó el mismo ID.', 'Proveedor existente');
         else
           this.toast.success(this.editingSupplierId ? 'Proveedor actualizado.' : 'Proveedor incorporado al catálogo maestro.');
-        this.newSupplier();
+        this.resetSupplierForm();
+        this.supplierFormRef?.close(true);
         this.refresh();
       },
       error: err => {
@@ -477,9 +561,51 @@ export class MasterCatalogsComponent implements OnInit {
     });
   }
 
-  newParameter(): void {
+  private resetParameterForm(): void {
     this.parameter = this.emptyParameter();
     this.editingParameterId = null;
+  }
+
+  openNewParameter(): void {
+    if (!this.canManage) return;
+    this.resetParameterForm();
+    this.openParameterFormDialog();
+  }
+
+  private openParameterFormDialog(): void {
+    if (this.parameterFormRef) return;
+    const ref = this.modalStandards.openTemplate<unknown, unknown, boolean>(
+      this.parameterFormTemplate, 'mainForm', {
+        panelClass: ['inv-seven-modal', 'catalog-parameter-form-modal'],
+        width: 'min(680px, calc(100vw - 24px))',
+        maxWidth: 'calc(100vw - 24px)',
+        maxHeight: 'calc(100dvh - 24px)',
+        autoFocus: false,
+        restoreFocus: true,
+        disableClose: true
+      }
+    );
+    this.parameterFormRef = ref;
+    ref.afterClosed().subscribe(() => {
+      if (this.parameterFormRef === ref) this.parameterFormRef = undefined;
+    });
+  }
+
+  get parameterModalActions(): ModalFooterAction[] {
+    return [
+      { id: 'cancel', label: 'Cancelar', tone: 'secondary', order: 0 },
+      { id: 'primary', label: this.editingParameterId ? 'Guardar cambios' : 'Registrar parámetro', tone: 'primary', order: 1 }
+    ];
+  }
+
+  handleParameterModalAction(action: ModalActionId): void {
+    if (action === 'cancel') this.closeParameterForm();
+    else if (action === 'primary') this.saveParameter();
+  }
+
+  closeParameterForm(): void {
+    if (this.saving) return;
+    this.parameterFormRef?.close(false);
   }
 
   editParameter(item: ParameterRecord): void {
@@ -487,6 +613,7 @@ export class MasterCatalogsComponent implements OnInit {
     this.parameter = { ...item };
     this.editingParameterId = item.id;
     this.tab = 'parameters';
+    this.openParameterFormDialog();
   }
 
   saveParameter(): void {
@@ -508,7 +635,8 @@ export class MasterCatalogsComponent implements OnInit {
           this.toast.info('Este parámetro ya existe. Se reutilizó su ID.', 'Parámetro existente');
         else
           this.toast.success(this.editingParameterId ? 'Parámetro actualizado.' : 'Parámetro creado en el maestro.');
-        this.newParameter();
+        this.resetParameterForm();
+        this.parameterFormRef?.close(true);
         this.refresh();
       },
       error: err => {
