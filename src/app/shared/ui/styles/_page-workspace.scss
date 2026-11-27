@@ -135,7 +135,7 @@
 }
 
 /* Los formularios de catálogo ahora se proyectan dentro del shell compartido. */
-.inv-secondary-page.catalog-page .catalog-form-modal .catalog-modal-form {
+.cdk-overlay-pane:is(.catalog-supplier-form-modal, .catalog-parameter-form-modal) .catalog-form-modal .catalog-modal-form {
   display: flex;
   flex-direction: column;
   gap: 14px;
@@ -144,14 +144,14 @@
   padding: 18px;
 }
 
-.inv-secondary-page.catalog-page .catalog-form-modal .fields {
+.cdk-overlay-pane:is(.catalog-supplier-form-modal, .catalog-parameter-form-modal) .catalog-form-modal .fields {
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
   gap: 12px;
   min-width: 0;
 }
 
-.inv-secondary-page.catalog-page .catalog-form-modal .supplier-ruc-control {
+.cdk-overlay-pane:is(.catalog-supplier-form-modal, .catalog-parameter-form-modal) .catalog-form-modal .supplier-ruc-control {
   display: grid;
   grid-column: 1 / -1;
   grid-template-columns: minmax(0, 1fr) auto auto;
@@ -161,13 +161,13 @@
   min-width: 0;
 }
 
-.inv-secondary-page.catalog-page .catalog-form-modal .supplier-ruc-label {
+.cdk-overlay-pane:is(.catalog-supplier-form-modal, .catalog-parameter-form-modal) .catalog-form-modal .supplier-ruc-label {
   display: grid;
   gap: 5px;
   min-width: 0;
 }
 
-.inv-secondary-page.catalog-page .catalog-form-modal .supplier-ruc-heading {
+.cdk-overlay-pane:is(.catalog-supplier-form-modal, .catalog-parameter-form-modal) .catalog-form-modal .supplier-ruc-heading {
   display: flex;
   align-items: center;
   gap: 5px;
@@ -176,12 +176,12 @@
   font-size: 12px;
 }
 
-.inv-secondary-page.catalog-page .catalog-form-modal .supplier-ruc-heading label {
+.cdk-overlay-pane:is(.catalog-supplier-form-modal, .catalog-parameter-form-modal) .catalog-form-modal .supplier-ruc-heading label {
   display: inline;
   margin: 0;
 }
 
-.inv-secondary-page.catalog-page .catalog-form-modal .supplier-ruc-control input {
+.cdk-overlay-pane:is(.catalog-supplier-form-modal, .catalog-parameter-form-modal) .catalog-form-modal .supplier-ruc-control input {
   height: 39px;
   padding: 8px 11px;
   border: 1px solid #5b7588;
@@ -189,30 +189,30 @@
   color: #eff6fb;
 }
 
-.inv-secondary-page.catalog-page .catalog-form-modal .supplier-ruc-control button {
+.cdk-overlay-pane:is(.catalog-supplier-form-modal, .catalog-parameter-form-modal) .catalog-form-modal .supplier-ruc-control button {
   height: 39px;
   min-height: 39px;
   white-space: nowrap;
 }
 
-.inv-secondary-page.catalog-page .catalog-form-modal .supplier-communication-trigger {
+.cdk-overlay-pane:is(.catalog-supplier-form-modal, .catalog-parameter-form-modal) .catalog-form-modal .supplier-communication-trigger {
   padding-inline: 10px;
 }
 
-.inv-secondary-page.catalog-page .catalog-form-modal .parameter-form-heading {
+.cdk-overlay-pane:is(.catalog-supplier-form-modal, .catalog-parameter-form-modal) .catalog-form-modal .parameter-form-heading {
   display: flex;
   align-items: center;
   gap: 7px;
   min-width: 0;
 }
 
-.inv-secondary-page.catalog-page .catalog-form-modal .parameter-form-heading h2 {
+.cdk-overlay-pane:is(.catalog-supplier-form-modal, .catalog-parameter-form-modal) .catalog-form-modal .parameter-form-heading h2 {
   margin: 0;
   font-size: 16px;
 }
 
-.inv-secondary-page.catalog-page .catalog-form-modal .parameter-type-field,
-.inv-secondary-page.catalog-page .catalog-form-modal .parameter-type-locked {
+.cdk-overlay-pane:is(.catalog-supplier-form-modal, .catalog-parameter-form-modal) .catalog-form-modal .parameter-type-field,
+.cdk-overlay-pane:is(.catalog-supplier-form-modal, .catalog-parameter-form-modal) .catalog-form-modal .parameter-type-locked {
   display: flex;
   flex-direction: column;
   align-items: stretch;
@@ -222,7 +222,7 @@
   font-size: 12px;
 }
 
-.inv-secondary-page.catalog-page .catalog-form-modal .parameter-type-locked strong {
+.cdk-overlay-pane:is(.catalog-supplier-form-modal, .catalog-parameter-form-modal) .catalog-form-modal .parameter-type-locked strong {
   display: flex;
   align-items: center;
   box-sizing: border-box;
@@ -236,7 +236,7 @@
   font-weight: 600;
 }
 
-.inv-secondary-page.catalog-page .catalog-form-modal .fields > label {
+.cdk-overlay-pane:is(.catalog-supplier-form-modal, .catalog-parameter-form-modal) .catalog-form-modal .fields > label {
   display: flex;
   flex-direction: column;
   gap: 5px;
@@ -245,26 +245,26 @@
   font-size: 12px;
 }
 
-.inv-secondary-page.catalog-page .catalog-form-modal .fields input,
-.inv-secondary-page.catalog-page .catalog-form-modal .fields textarea {
+.cdk-overlay-pane:is(.catalog-supplier-form-modal, .catalog-parameter-form-modal) .catalog-form-modal .fields input,
+.cdk-overlay-pane:is(.catalog-supplier-form-modal, .catalog-parameter-form-modal) .catalog-form-modal .fields textarea {
   box-sizing: border-box;
   width: 100%;
   min-width: 0;
 }
 
-.inv-secondary-page.catalog-page .catalog-form-modal .fields input {
+.cdk-overlay-pane:is(.catalog-supplier-form-modal, .catalog-parameter-form-modal) .catalog-form-modal .fields input {
   height: 39px;
 }
 
-.inv-secondary-page.catalog-page .catalog-form-modal .supplier-fields {
+.cdk-overlay-pane:is(.catalog-supplier-form-modal, .catalog-parameter-form-modal) .catalog-form-modal .supplier-fields {
   grid-template-columns: repeat(3, minmax(0, 1fr));
 }
 
-.inv-secondary-page.catalog-page .catalog-form-modal .supplier-relationship-field {
+.cdk-overlay-pane:is(.catalog-supplier-form-modal, .catalog-parameter-form-modal) .catalog-form-modal .supplier-relationship-field {
   grid-column: 1 / -1;
 }
 
-.inv-secondary-page.catalog-page .catalog-form-modal .supplier-relationship-field textarea {
+.cdk-overlay-pane:is(.catalog-supplier-form-modal, .catalog-parameter-form-modal) .catalog-form-modal .supplier-relationship-field textarea {
   height: 39px;
   min-height: 39px;
   max-height: 39px;
@@ -272,11 +272,11 @@
   overflow: auto;
 }
 
-.inv-secondary-page.catalog-page .catalog-form-modal .parameter-fields .parameter-description-field {
+.cdk-overlay-pane:is(.catalog-supplier-form-modal, .catalog-parameter-form-modal) .catalog-form-modal .parameter-fields .parameter-description-field {
   grid-column: 1 / -1;
 }
 
-.inv-secondary-page.catalog-page .catalog-form-modal .parameter-description-field textarea {
+.cdk-overlay-pane:is(.catalog-supplier-form-modal, .catalog-parameter-form-modal) .catalog-form-modal .parameter-description-field textarea {
   height: 68px;
   min-height: 68px;
   max-height: 68px;
@@ -338,11 +338,11 @@
     padding: 0;
   }
 
-  .inv-secondary-page.catalog-page .catalog-form-modal .supplier-fields {
+  .cdk-overlay-pane:is(.catalog-supplier-form-modal, .catalog-parameter-form-modal) .catalog-form-modal .supplier-fields {
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 
-  .inv-secondary-page.catalog-page .catalog-form-modal .supplier-ruc-control {
+  .cdk-overlay-pane:is(.catalog-supplier-form-modal, .catalog-parameter-form-modal) .catalog-form-modal .supplier-ruc-control {
     grid-column: 1 / -1;
   }
 
@@ -352,19 +352,17 @@
 }
 
 @media (max-width: 560px) {
-  .inv-secondary-page.catalog-page .catalog-form-modal .supplier-ruc-control { grid-template-columns: minmax(0, 1fr) auto; }
-  .inv-secondary-page.catalog-page .catalog-form-modal .supplier-communication-trigger { grid-column: 1 / -1; }
-  .inv-secondary-page.catalog-page .catalog-form-modal .fields,
-  .inv-secondary-page.catalog-page .catalog-form-modal .supplier-fields {
+  .cdk-overlay-pane:is(.catalog-supplier-form-modal, .catalog-parameter-form-modal) .catalog-form-modal .fields,
+  .cdk-overlay-pane:is(.catalog-supplier-form-modal, .catalog-parameter-form-modal) .catalog-form-modal .supplier-fields {
     grid-template-columns: minmax(0, 1fr);
   }
 
-  .inv-secondary-page.catalog-page .catalog-form-modal .supplier-ruc-control {
+  .cdk-overlay-pane:is(.catalog-supplier-form-modal, .catalog-parameter-form-modal) .catalog-form-modal .supplier-ruc-control {
     grid-column: 1 / -1;
     grid-template-columns: minmax(0, 1fr) auto;
   }
 
-  .inv-secondary-page.catalog-page .catalog-form-modal .supplier-communication-trigger {
+  .cdk-overlay-pane:is(.catalog-supplier-form-modal, .catalog-parameter-form-modal) .catalog-form-modal .supplier-communication-trigger {
     grid-column: 1 / -1;
   }
 
