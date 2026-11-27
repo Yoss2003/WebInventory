@@ -1,4 +1,5 @@
 import { UiButtonDirective } from '../../../shared/ui/directives/ui-button.directive';
+import { UiSelectComponent } from '../../../shared/ui/components/ui-select/ui-select.component';
 import { ChangeDetectorRef, Component, ElementRef, OnDestroy, OnInit, ViewChild, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { InventoryDialogMotionDirective } from '../../../shared/ui/directives/inv-dialog-motion.directive';
@@ -45,7 +46,7 @@ interface AttributeField {
   selector: 'app-article-form',
   standalone: true,
   imports: [
-    UiButtonDirective, UiControlDirective, CommonModule, ReactiveFormsModule, MatDialogModule,
+    UiButtonDirective, UiSelectComponent, UiControlDirective, CommonModule, ReactiveFormsModule, MatDialogModule,
     MatIconModule, MatSelectModule, MatFormFieldModule, MatTooltipModule,
     InventoryDialogMotionDirective, ModalShellComponent
   ],
