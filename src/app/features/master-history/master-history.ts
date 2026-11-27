@@ -63,6 +63,7 @@ interface HistoryUser {
     UiButtonDirective,
     UiPageHeadingComponent,
     UiSelectComponent,
+    UiTablePanelComponent,
     UiTablePagingDirective, UiPaginationComponent,
     CleanArticleNamePipe,
     CommonModule,
