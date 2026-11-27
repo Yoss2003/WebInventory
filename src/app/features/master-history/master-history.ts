@@ -86,15 +86,24 @@ export class MasterHistoryComponent implements OnInit {
 
   inventoryOptions: HistoryInventory[] = [];
   userOptions: HistoryUser[] = [];
-  get inventorySelectOptions(): UiSelectOption[] {
-    return [{ value: '', label: 'Todos' }, ...this.inventoryOptions.map(item => ({
-      value: String(item.id), label: this.inventoryLabel(item)
-    }))];
-  }
-  get userSelectOptions(): UiSelectOption[] {
-    return [{ value: '', label: 'Todos' }, ...this.userOptions.map(item => ({
-      value: String(item.id), label: this.userLabel(item)
-    }))];
+  inventorySelectOptions: UiSelectOption[] = [{ value: '', label: 'Todos' }];
+  userSelectOptions: UiSelectOption[] = [{ value: '', label: 'Todos' }];
+
+  private rebuildSelectOptions(): void {
+    this.userSelectOptions = [
+      { value: '', label: 'Todos' },
+      ...this.userOptions.map(item => ({
+        value: String(item.id),
+        label: this.userLabel(item)
+      }))
+    ];
+    this.inventorySelectOptions = [
+      { value: '', label: 'Todos' },
+      ...this.inventoryOptions.map(item => ({
+        value: String(item.id),
+        label: this.inventoryLabel(item)
+      }))
+    ];
   }
   readonly actionSelectOptions: UiSelectOption[] = [
     { value: '', label: 'Todos' },
@@ -162,6 +171,7 @@ export class MasterHistoryComponent implements OnInit {
         this.inventoryOptions = (Array.isArray(rows) ? rows : [])
           .filter(x => !x.isMaster)
           .sort((a, b) => this.inventoryLabel(a).localeCompare(this.inventoryLabel(b), 'es'));
+        this.rebuildSelectOptions();
         this.cdr.markForCheck();
       },
       error: () => {
@@ -173,6 +183,7 @@ export class MasterHistoryComponent implements OnInit {
       next: rows => {
         this.userOptions = (Array.isArray(rows) ? rows : [])
           .sort((a, b) => this.userLabel(a).localeCompare(this.userLabel(b), 'es'));
+        this.rebuildSelectOptions();
         this.cdr.markForCheck();
       },
       error: () => {
