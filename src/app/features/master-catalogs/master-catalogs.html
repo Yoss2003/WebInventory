@@ -7,22 +7,12 @@
   <!-- Catálogo de proveedores -->
   <section class="panel supplier-panel inv-page-workspace inv-page-workspace--flush" *ngIf="tab==='suppliers'">
     <div class="list supplier-list" aria-label="Proveedores de la empresa">
-      <header class="supplier-list-heading">
-        <div class="supplier-heading-title">
-          <span class="supplier-heading-icon"><mat-icon aria-hidden="true">storefront</mat-icon></span>
-          <div>
-            <h2>Proveedores de la empresa</h2>
-            <p>{{suppliers.length}} {{suppliers.length === 1 ? 'proveedor registrado' : 'proveedores registrados'}}</p>
-          </div>
-        </div>
+      <div class="inv-core-toolbar supplier-toolbar">
+        <app-ui-search [value]="supplierSearch" (valueChange)="supplierSearch=$event;supplierPage=1"
+          placeholder="Buscar proveedor, RUC o contacto" label="Buscar proveedores" />
         <button *ngIf="canManage" type="button" appUiButton="primary" (click)="openNewSupplier()">
           <mat-icon aria-hidden="true">add</mat-icon>Nuevo proveedor
         </button>
-      </header>
-
-      <div class="inv-core-toolbar">
-        <app-ui-search [value]="supplierSearch" (valueChange)="supplierSearch=$event;supplierPage=1"
-          placeholder="Buscar proveedor, RUC o contacto" label="Buscar proveedores" />
       </div>
 
       <app-ui-table-panel class="catalog-table-panel supplier-table-panel"
